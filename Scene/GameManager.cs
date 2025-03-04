@@ -95,7 +95,7 @@ public class GameManager : Game
     {
         GraphicsDevice.Clear(new Color(64, 28, 4));
 
-        _spriteBatch.Begin();
+        // _spriteBatch.Begin();
 
        
         switch (Singleton.Instance.CurrentGameState)
@@ -116,7 +116,7 @@ public class GameManager : Game
         //         break;
         }
 
-        _spriteBatch.End();
+        // _spriteBatch.End();
 
         base.Draw(gameTime);
     }
