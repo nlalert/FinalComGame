@@ -10,7 +10,7 @@ class Singleton
 {
     public static int SCREEN_HEIGHT = 700;
     public static int SCREEN_WIDTH = 700;
-    public static int GRAVITY = 1500;
+    public static int GRAVITY = 5000;
     public Random Random;
 
     public enum GameState

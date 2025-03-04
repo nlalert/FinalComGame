@@ -15,6 +15,9 @@ public class MainScene : Game
 
     List<GameObject> _gameObjects;
     int _numObject;
+    private Camera _camera;
+
+    private Player player;
 
     public MainScene()
     {
@@ -30,6 +33,8 @@ public class MainScene : Game
         _graphics.ApplyChanges();
 
         _gameObjects = new List<GameObject>();
+
+        _camera = new Camera(GraphicsDevice.Viewport); // Initialize camera
 
         base.Initialize();
     }
@@ -49,21 +54,15 @@ public class MainScene : Game
 
         //Update
         _numObject = _gameObjects.Count;
-
-        for (int i = 0; i < _numObject; i++)
+        
+        switch (Singleton.Instance.CurrentGameState)
         {
-            if(_gameObjects[i].IsActive)
-                _gameObjects[i].Update(gameTime, _gameObjects);
-        }
+            case Singleton.GameState.Playing:
+                UpdateAllObjects(gameTime);
+                RemoveInactiveObjects();
 
-        for (int i = 0; i < _numObject; i++)
-        {
-            if(!_gameObjects[i].IsActive)
-            {
-                _gameObjects.RemoveAt(i);
-                i--;
-                _numObject--;
-            }
+                _camera.Follow(player); // Make camera follow the player
+            break;
         }
 
         Singleton.Instance.PreviousKey = Singleton.Instance.CurrentKey;
@@ -77,13 +76,19 @@ public class MainScene : Game
     {
         GraphicsDevice.Clear(Color.Black);
 
-        _spriteBatch.Begin();
+        // _spriteBatch.Begin();
+        _spriteBatch.Begin(transformMatrix: _camera.GetTransformation()); // Apply camera matrix
 
         _numObject = _gameObjects.Count;
 
-        for (int i = 0; i < _numObject; i++)
+        switch (Singleton.Instance.CurrentGameState)
         {
-            _gameObjects[i].Draw(_spriteBatch);
+            case Singleton.GameState.Playing:
+                for (int i = 0; i < _numObject; i++)
+                {
+                    _gameObjects[i].Draw(_spriteBatch);
+                }
+            break;
         }
 
         _spriteBatch.End();
@@ -93,16 +98,39 @@ public class MainScene : Game
         base.Draw(gameTime);
     }
 
+    protected void UpdateAllObjects(GameTime gameTime)
+    {
+        for (int i = 0; i < _numObject; i++)
+        {
+            if(_gameObjects[i].IsActive)
+                _gameObjects[i].Update(gameTime, _gameObjects);
+        }
+    }
+
+    protected void RemoveInactiveObjects()
+    {
+        for (int i = 0; i < _numObject; i++)
+        {
+            if(!_gameObjects[i].IsActive)
+            {
+                _gameObjects.RemoveAt(i);
+                i--;
+                _numObject--;
+            }
+        }
+    }
+
     protected void Reset()
     {
-        // Singleton.Instance.CurrentGameState = Singleton.GameState.StartNewLife;
+        Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
 
         Singleton.Instance.Random = new System.Random();
 
         Texture2D spaceInvaderTexture = Content.Load<Texture2D>("SpaceInvaderSheet");
     
         _gameObjects.Clear();
-        _gameObjects.Add(new Player(spaceInvaderTexture)
+
+        player = new Player(spaceInvaderTexture)
         {
             Name = "Player",
             Viewport = new Rectangle(51, 30, 54, 30),
@@ -117,7 +145,9 @@ public class MainScene : Game
                 Viewport = new Rectangle(216, 36, 3, 24),
                 Velocity = new Vector2(0, -600f)
             }
-        });
+        };
+
+        _gameObjects.Add(player);
 
         foreach (GameObject s in _gameObjects)
         {

@@ -12,7 +12,7 @@ namespace FinalComGame
         public Keys Left, Right, Fire, Jump;
 
         private bool isJumping = false;
-        private float jumpStrength = 750f;
+        private float jumpStrength = 1250f;
         
         public Player(Texture2D texture) : base(texture)
         {
