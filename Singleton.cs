@@ -26,7 +26,7 @@ class Singleton
     public GameState CurrentGameState;
 
     public KeyboardState PreviousKey, CurrentKey;
-
+    public MouseState PreviousMouseState,CurrentMouseState;
     private static Singleton instance;
 
     private Singleton() { 
