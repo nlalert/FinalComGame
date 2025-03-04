@@ -13,7 +13,9 @@ namespace FinalComGame
 
         private bool isJumping = false;
         private float jumpStrength = 1250f;
-        
+
+        private int direction = 1; // 1 = Right, -1 = Left
+
         public Player(Texture2D texture) : base(texture)
         {
 
@@ -28,6 +30,7 @@ namespace FinalComGame
         public override void Reset()
         {
             Position = new Vector2(62, 640);
+            direction = 1; // Reset direction to right
             base.Reset();
         }
 
@@ -38,18 +41,21 @@ namespace FinalComGame
             if(Singleton.Instance.CurrentKey.IsKeyDown(Left))
             {
                 Velocity.X = -500;
+                direction = -1; // Facing left
             }
             if(Singleton.Instance.CurrentKey.IsKeyDown(Right))
             {
                 Velocity.X = 500;
+                direction = 1; // Facing right
             }
 
-            if( Singleton.Instance.CurrentKey.IsKeyDown(Fire) &&
+            if (Singleton.Instance.CurrentKey.IsKeyDown(Fire) &&
                 Singleton.Instance.PreviousKey != Singleton.Instance.CurrentKey)
             {
                 var newBullet = Bullet.Clone() as Bullet;
                 newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
-                                                Position.Y);
+                                                 Position.Y);
+                newBullet.Velocity = new Vector2(800 * direction, 0); // Bullet moves in facing direction
                 newBullet.Reset();
                 gameObjects.Add(newBullet);
             }
