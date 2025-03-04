@@ -1,3 +1,0 @@
-Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"d:/GitHub/FinalComGame/FinalComGame/Content/GameFont.spritefont","d:/GitHub/FinalComGame/FinalComGame/Content/bin/DesktopGL/GameFont.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21538,0.0973695
-"d:/GitHub/FinalComGame/FinalComGame/Content/SpaceInvaderSheet.png","d:/GitHub/FinalComGame/FinalComGame/Content/bin/DesktopGL/SpaceInvaderSheet.xnb","TextureProcessor","Texture2DContent",5980,129685,0.0166833
