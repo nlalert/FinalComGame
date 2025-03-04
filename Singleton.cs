@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 class Singleton
 {
+    public static int SCREEN_HEIGHT = 700;
+    public static int SCREEN_WIDTH = 700;
     public Random Random;
 
     public enum GameState

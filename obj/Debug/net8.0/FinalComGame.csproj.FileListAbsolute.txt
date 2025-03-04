@@ -24,3 +24,5 @@ d:\GitHub\FinalComGame\FinalComGame\obj\Debug\net8.0\refint\FinalComGame.dll
 d:\GitHub\FinalComGame\FinalComGame\obj\Debug\net8.0\FinalComGame.pdb
 d:\GitHub\FinalComGame\FinalComGame\obj\Debug\net8.0\FinalComGame.genruntimeconfig.cache
 d:\GitHub\FinalComGame\FinalComGame\obj\Debug\net8.0\ref\FinalComGame.dll
+d:\GitHub\FinalComGame\FinalComGame\bin\Debug\net8.0\Content\GameFont.xnb
+d:\GitHub\FinalComGame\FinalComGame\bin\Debug\net8.0\Content\SpaceInvaderSheet.xnb
