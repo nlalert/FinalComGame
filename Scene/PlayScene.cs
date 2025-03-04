@@ -43,7 +43,7 @@ public class PlayScene
 
     public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
     {
-        _spriteBatch = new SpriteBatch(_graphicsDevice);
+        _spriteBatch = spriteBatch;
         _font = content.Load<SpriteFont>("GameFont");
         _spaceInvaderTexture = content.Load<Texture2D>("SpaceInvaderSheet");
         Reset();
