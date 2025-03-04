@@ -9,7 +9,10 @@ namespace FinalComGame
     class Player : GameObject
     {
         public Bullet Bullet;
-        public Keys Left, Right, Fire;
+        public Keys Left, Right, Fire, Jump;
+
+        private bool isJumping = false;
+        private float jumpStrength = 750f;
         
         public Player(Texture2D texture) : base(texture)
         {
@@ -30,6 +33,8 @@ namespace FinalComGame
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects)
         {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             if(Singleton.Instance.CurrentKey.IsKeyDown(Left))
             {
                 Velocity.X = -500;
@@ -38,6 +43,7 @@ namespace FinalComGame
             {
                 Velocity.X = 500;
             }
+
             if( Singleton.Instance.CurrentKey.IsKeyDown(Fire) &&
                 Singleton.Instance.PreviousKey != Singleton.Instance.CurrentKey)
             {
@@ -48,11 +54,33 @@ namespace FinalComGame
                 gameObjects.Add(newBullet);
             }
 
-            float newX = Position.X + Velocity.X * gameTime.ElapsedGameTime.Ticks / TimeSpan.TicksPerSecond;
-            newX = MathHelper.Clamp(newX, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
-            Position = new Vector2(newX, Position.Y);
+            // Jumping logic
+            if (Singleton.Instance.CurrentKey.IsKeyDown(Jump) && !isJumping)
+            {
+                Velocity.Y = -jumpStrength;
+                isJumping = true;
+            }
 
-            Velocity = Vector2.Zero;
+            // Apply gravity
+            Velocity.Y += Singleton.GRAVITY * deltaTime;
+
+            // Update position
+            float newX = Position.X + Velocity.X * deltaTime;
+            newX = MathHelper.Clamp(newX, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
+
+            float newY = Position.Y + Velocity.Y * deltaTime;
+
+            // Check if the player lands on the ground
+            if (newY >= Singleton.SCREEN_HEIGHT - Rectangle.Height)
+            {
+                newY = Singleton.SCREEN_HEIGHT - Rectangle.Height;
+                Velocity.Y = 0;
+                isJumping = false; // Reset jump state
+            }
+
+            Position = new Vector2(newX, newY);
+
+            Velocity.X = 0;
 
             base.Update(gameTime, gameObjects);
         }

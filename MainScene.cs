@@ -109,7 +109,8 @@ public class MainScene : Game
             Position = new Vector2(62, 640),
             Left = Keys.Left,
             Right = Keys.Right,
-            Fire = Keys.Space,
+            Fire = Keys.E,
+            Jump = Keys.Space,
             Bullet = new Bullet(spaceInvaderTexture)
             {
                 Name = "BulletPlayer",
