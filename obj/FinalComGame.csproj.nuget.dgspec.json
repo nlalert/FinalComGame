@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitHub\\FinalComGame\\FinalComGame\\FinalComGame.csproj": {}
+    "d:\\GitHub\\FinalComGame\\FinalComGame\\FinalComGame.csproj": {}
   },
   "projects": {
-    "D:\\GitHub\\FinalComGame\\FinalComGame\\FinalComGame.csproj": {
+    "d:\\GitHub\\FinalComGame\\FinalComGame\\FinalComGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitHub\\FinalComGame\\FinalComGame\\FinalComGame.csproj",
+        "projectUniqueName": "d:\\GitHub\\FinalComGame\\FinalComGame\\FinalComGame.csproj",
         "projectName": "FinalComGame",
-        "projectPath": "D:\\GitHub\\FinalComGame\\FinalComGame\\FinalComGame.csproj",
+        "projectPath": "d:\\GitHub\\FinalComGame\\FinalComGame\\FinalComGame.csproj",
         "packagesPath": "C:\\Users\\nutth\\.nuget\\packages\\",
-        "outputPath": "D:\\GitHub\\FinalComGame\\FinalComGame\\obj\\",
+        "outputPath": "d:\\GitHub\\FinalComGame\\FinalComGame\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
