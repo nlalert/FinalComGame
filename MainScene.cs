@@ -76,22 +76,25 @@ public class MainScene : Game
     {
         GraphicsDevice.Clear(Color.Black);
 
-        // _spriteBatch.Begin();
-        _spriteBatch.Begin(transformMatrix: _camera.GetTransformation()); // Apply camera matrix
-
         _numObject = _gameObjects.Count;
 
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
+                // Draw the Game World (Apply Camera)
+                _spriteBatch.Begin(transformMatrix: _camera.GetTransformation()); // Apply camera matrix
                 for (int i = 0; i < _numObject; i++)
                 {
                     _gameObjects[i].Draw(_spriteBatch);
-                }
+                }    
+                _spriteBatch.End();
+
+                //  Draw the UI (No Camera Transformation)
+                _spriteBatch.Begin(); 
+                _spriteBatch.DrawString(_font, "Test UI always move with player, must not move out of screen", new Vector2(10, 10), Color.White);
+                _spriteBatch.End();
             break;
         }
-
-        _spriteBatch.End();
 
         _graphics.BeginDraw();
 
