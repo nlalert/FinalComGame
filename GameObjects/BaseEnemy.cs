@@ -47,13 +47,9 @@ abstract class BaseEnemy : GameObject
     public bool HasSpawned { get; protected set; } = false;
     public bool IsDead() => CurrentState == EnemyState.Dead;
 
-    // Constructor
-    public BaseEnemy(Player player)
-    {
-        this.player = player;
-        CurrentState = EnemyState.Idle;
-    }
+    public BaseEnemy(Texture2D texture) : base(texture){
 
+    }
     // Spawn method with optional spawn effects
     public virtual void Spawn(float x, float y)
     {
@@ -144,5 +140,9 @@ abstract class BaseEnemy : GameObject
             32
         );
     }
-}
+        public override void Reset()
+        {
+            base.Reset();
+        }
+    }
 }

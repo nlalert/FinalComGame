@@ -22,6 +22,7 @@ public class PlayScene
     private Camera _camera;
 
     private Player player;
+    private BaseEnemy baseSkeleton;
     private Tile tileTest;
 
     public void Initialize(GraphicsDevice graphicsDevice,GraphicsDeviceManager graphicsDeviceManager)
@@ -156,7 +157,13 @@ public class PlayScene
                 _gameObjects.Add(tileTest);
             }
         }
-
+        
+        baseSkeleton = new SkeletonEnemy(_spaceInvaderTexture){
+            Name = "Skeleton",
+            Viewport = new Rectangle(0, 30, 54, 30),
+            Position = new Vector2(162, 640),
+        };
+        _gameObjects.Add(baseSkeleton);
 
         foreach (GameObject s in _gameObjects)
         {

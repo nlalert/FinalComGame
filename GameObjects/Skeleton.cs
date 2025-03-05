@@ -7,35 +7,37 @@ namespace FinalComGame
 {
     class SkeletonEnemy : BaseEnemy
     {
-        private float decayTimer = 2f; // Time for skeleton to decay after death
+        public SkeletonEnemy (Texture2D texture) : base(texture){
 
-        public SkeletonEnemy(Player player) : base(player) 
+        }
+        public override void Reset()
         {
             maxHealth = 80f;
             attackDamage = 5f;
+            base.Reset();
         }
-
         public override void Update(GameTime gameTime, List<GameObject> gameObjects)
         {
+            Console.WriteLine(IsActive + " " + CurrentState);
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             switch (CurrentState)
             {
-                case EnemyState.Dying:
-                    HandleDecay(gameTime);
+                case EnemyState.Idle :
+                    Console.WriteLine(Position);
+                    Velocity.Y += 300*(float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 // Other state logic similar to previous implementation
             }
+            float newX = Position.X + Velocity.X * deltaTime;
+            float newY = Position.Y + Velocity.Y * deltaTime;
+            Position = new Vector2(newX, newY);
+
+            this.Velocity.Y =0;
+            this.Velocity.X =0;
             UpdateHitbox();
             base.Update(gameTime, gameObjects);
         }
 
-        private void HandleDecay(GameTime gameTime)
-        {
-            decayTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (decayTimer <= 0)
-            {
-                CurrentState = EnemyState.Dead;
-            }
-        }
 
         public override void OnSpawn()
         {
@@ -51,16 +53,7 @@ namespace FinalComGame
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // Draw with potential decay effect
-            Color drawColor = Color.White;
-            if (CurrentState == EnemyState.Dying)
-            {
-                byte alphaValue = (byte)(255 * (decayTimer / 2f));
-                // drawColor = new Color(255, 255, 255, alphaValue);
-                drawColor = new Color(255,255,255,255f);
-            }
-            
-            spriteBatch.Draw(_texture, Position, drawColor);
+            base.Draw(spriteBatch);
         }
     }
 }
