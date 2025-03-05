@@ -17,17 +17,12 @@ public class PlayScene
     List<GameObject> _gameObjects;
     private GraphicsDevice _graphicsDevice;
     private Texture2D _spaceInvaderTexture;
+    private Texture2D dirtTexture;
     int _numObject;
     private Camera _camera;
 
     private Player player;
-
-    // public PlayScene()
-    // {
-    //     _graphics = new GraphicsDeviceManager(this);
-    //     Content.RootDirectory = "Content";
-    //     IsMouseVisible = true;
-    // }
+    private Tile tileTest;
 
     public void Initialize(GraphicsDevice graphicsDevice,GraphicsDeviceManager graphicsDeviceManager)
     {
@@ -36,6 +31,7 @@ public class PlayScene
         _graphics.PreferredBackBufferWidth = Singleton.SCREEN_WIDTH;
         _graphics.PreferredBackBufferHeight = Singleton.SCREEN_HEIGHT;
         _graphics.ApplyChanges();
+
         _gameObjects = new List<GameObject>();
         _camera = new Camera(_graphicsDevice.Viewport); // Initialize camera
         Reset();
@@ -46,6 +42,7 @@ public class PlayScene
         _spriteBatch = spriteBatch;
         _font = content.Load<SpriteFont>("GameFont");
         _spaceInvaderTexture = content.Load<Texture2D>("SpaceInvaderSheet");
+        dirtTexture = content.Load<Texture2D>("dirt");
         Reset();
     }
 
@@ -63,7 +60,7 @@ public class PlayScene
                 RemoveInactiveObjects();
 
                 _camera.Follow(player); // Make camera follow the player
-            break;
+                break;
         }
 
         Singleton.Instance.PreviousKey = Singleton.Instance.CurrentKey;
@@ -91,7 +88,7 @@ public class PlayScene
                 _spriteBatch.Begin(); 
                 _spriteBatch.DrawString(_font, "Test UI always move with player, must not move out of screen", new Vector2(10, 10), Color.White);
                 _spriteBatch.End();
-            break;
+                break;
         }
 
         _graphics.BeginDraw();
@@ -126,8 +123,6 @@ public class PlayScene
 
         Singleton.Instance.Random = new System.Random();
 
-        
-    
         _gameObjects.Clear();
 
         player = new Player(_spaceInvaderTexture)
@@ -142,12 +137,26 @@ public class PlayScene
             Bullet = new Bullet(_spaceInvaderTexture)
             {
                 Name = "BulletPlayer",
-                Viewport = new Rectangle(216, 36, 3, 24),
-                Velocity = new Vector2(0, -600f)
+                Viewport = new Rectangle(216, 36, 3, 24)
             }
         };
 
         _gameObjects.Add(player);
+
+        for (int j = 0; j < 10; j++)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                tileTest = new Tile(dirtTexture)
+                {
+                    Name = "Tile",
+                    Position = new Vector2(i * Singleton.BLOCK_SIZE,2 * j * Singleton.BLOCK_SIZE),
+                    IsSolid = true
+                };
+                _gameObjects.Add(tileTest);
+            }
+        }
+
 
         foreach (GameObject s in _gameObjects)
         {

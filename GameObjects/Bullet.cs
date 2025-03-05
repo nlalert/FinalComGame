@@ -28,10 +28,10 @@ namespace FinalComGame
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects)
         {
-            DistantMoved += Math.Abs(Velocity.Y * gameTime.ElapsedGameTime.Ticks / TimeSpan.TicksPerSecond);
+            DistantMoved += Math.Abs(Velocity.X * gameTime.ElapsedGameTime.Ticks / TimeSpan.TicksPerSecond);
             Position += Velocity * gameTime.ElapsedGameTime.Ticks / TimeSpan.TicksPerSecond;
 
-            if (DistantMoved >= Singleton.SCREEN_HEIGHT)
+            if (DistantMoved >= Singleton.SCREEN_WIDTH)
                 IsActive = false;
 
             foreach (GameObject s in gameObjects)

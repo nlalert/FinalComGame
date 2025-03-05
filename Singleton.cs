@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 class Singleton
 {
-    public static int SCREEN_HEIGHT = 700;
-    public static int SCREEN_WIDTH = 700;
-    public static int GRAVITY = 5000;
+    public const int SCREEN_HEIGHT = 700;
+    public const int SCREEN_WIDTH = 700;
+    public const int BLOCK_SIZE = 16;
+    public const int GRAVITY = 5000;
     public Random Random;
 
     public enum GameState
