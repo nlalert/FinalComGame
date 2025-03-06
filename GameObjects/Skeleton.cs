@@ -44,15 +44,14 @@ namespace FinalComGame
 
         public override void OnSpawn()
         {
-            // Skeleton-specific spawn effect
+            // can be add spawn effect.. even out of screen
+            // but why 
             Console.WriteLine("Skeleton rises from the ground!");
-            // Could add particle effects, sound, etc.
         }
 
         public override void OnDead()
         {
             Console.WriteLine("Skeleton slowly crumbles to dust...");
-            // Could add visual decay effect, bone scatter, etc.
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -60,8 +59,8 @@ namespace FinalComGame
         }
         public override void OnHit(GameObject projectile, float damageAmount)
         {
-            Console.WriteLine("Damage " + damageAmount + "CurHP" +this.Health);
             base.OnHit(projectile, damageAmount);
+            Console.WriteLine("Damage " + damageAmount + "CurHP" +this.Health);
         }
     }
 }
