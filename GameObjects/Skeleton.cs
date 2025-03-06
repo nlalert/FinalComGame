@@ -18,16 +18,18 @@ namespace FinalComGame
         }
         public override void Update(GameTime gameTime, List<GameObject> gameObjects)
         {
-            Console.WriteLine(IsActive + " " + CurrentState);
+            // Console.WriteLine(IsActive + " " + CurrentState); //debug ai 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             switch (CurrentState)
             {
                 case EnemyState.Idle :
-                    Console.WriteLine(Position);
+                    // Console.WriteLine(Position);
                     Velocity.Y += 300*(float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 // Other state logic similar to previous implementation
             }
+
+            //update position
             float newX = Position.X + Velocity.X * deltaTime;
             float newY = Position.Y + Velocity.Y * deltaTime;
             Position = new Vector2(newX, newY);
@@ -54,6 +56,10 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+        }
+        public override void OnHit(GameObject projectile, float damageAmount)
+        {
+            base.OnHit(projectile, damageAmount);
         }
     }
 }

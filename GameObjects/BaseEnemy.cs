@@ -76,7 +76,7 @@ abstract class BaseEnemy : GameObject
         Console.WriteLine($"Enemy died at {Position}");
     }
 
-    public virtual bool CanHitByPlayer()
+    public virtual bool CanBeHitByPlayer()
     {
         // Determines if enemy can be hit by player
         // Can be overridden for specific enemy types
@@ -84,7 +84,7 @@ abstract class BaseEnemy : GameObject
                CurrentState != EnemyState.Dying;
     }
 
-    public virtual void OnHit(float damageAmount)
+    public virtual void OnHit(GameObject projectile,float damageAmount)
     {
         // Generic hit handling
         Health -= damageAmount;
@@ -121,6 +121,10 @@ abstract class BaseEnemy : GameObject
     }
 
     public override void Update(GameTime gameTime, List<GameObject> gameObjects){
+
+        if(CurrentState == EnemyState.Dead){
+            this.IsActive = false;
+        }
         base.Update(gameTime,gameObjects);
     }
     public override void Draw(SpriteBatch spriteBatch)
