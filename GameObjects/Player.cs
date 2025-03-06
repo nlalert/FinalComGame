@@ -80,7 +80,7 @@ namespace FinalComGame
             }
 
             // Apply coyote time: Reset if on ground
-            if (Velocity.Y == 0)
+            if (isOnGround())
             {
                 coyoteTimeCounter = coyoteTime; // Reset coyote time when on ground
             }
@@ -150,5 +150,9 @@ namespace FinalComGame
             base.Update(gameTime, gameObjects);
         }
 
+        private bool isOnGround()
+        {
+            return Velocity.Y == 0;
+        }
     }
 }
