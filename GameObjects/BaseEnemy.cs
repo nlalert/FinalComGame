@@ -46,21 +46,22 @@ abstract class BaseEnemy : GameObject
     // Spawn and Death Tracking
     public bool HasSpawned { get; protected set; } = false;
     public bool IsDead() => CurrentState == EnemyState.Dead;
-
+    
     public BaseEnemy(Texture2D texture) : base(texture){
 
     }
     // Spawn method with optional spawn effects
-    public virtual void Spawn(float x, float y)
+    public virtual void Spawn(float x, float y, List<GameObject> gameObjects)
     {
-        Position = new Vector2(x, y);
-        patrolBoundaryLeft = x - 100f;
-        patrolBoundaryRight = x + 100f;
-        Health = maxHealth;
-        HasSpawned = true;
-
-        // Call spawn effect method
-        OnSpawn();
+        BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
+        newEnemy.Position = new Vector2(x, y);
+        newEnemy.patrolBoundaryLeft = x - 100f;
+        newEnemy.patrolBoundaryRight = x + 100f;
+        newEnemy.Health = maxHealth;
+        newEnemy.HasSpawned = true;
+        newEnemy.IsActive =true;
+        gameObjects.Add(newEnemy);
+        newEnemy.OnSpawn();
     }
 
     // Virtual methods for extensibility

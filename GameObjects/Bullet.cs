@@ -40,7 +40,11 @@ namespace FinalComGame
                 {
                     if(IsTouching(s) && (s.Name.Equals("Enemy") || s.Name.Equals("BulletEnemy")))
                     {
-                        s.IsActive = false;
+                        // s.IsActive = false;
+                        if(s is BaseEnemy enemy){
+                            // enemy.OnHit(this,this.damage)
+                            enemy.OnHit(this,10);
+                        } 
                         // if(s is Enemy)
                         // {
                         //     Singleton.Instance.Score += (s as Enemy).Score;

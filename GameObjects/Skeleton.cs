@@ -12,13 +12,14 @@ namespace FinalComGame
         }
         public override void Reset()
         {
+            Console.WriteLine("Reset Skeleton");
             maxHealth = 80f;
             attackDamage = 5f;
             base.Reset();
         }
         public override void Update(GameTime gameTime, List<GameObject> gameObjects)
         {
-            // Console.WriteLine(IsActive + " " + CurrentState); //debug ai 
+            // Console.WriteLine(this.Health); //debug ai 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             switch (CurrentState)
             {
@@ -59,6 +60,7 @@ namespace FinalComGame
         }
         public override void OnHit(GameObject projectile, float damageAmount)
         {
+            Console.WriteLine("Damage " + damageAmount + "CurHP" +this.Health);
             base.OnHit(projectile, damageAmount);
         }
     }
