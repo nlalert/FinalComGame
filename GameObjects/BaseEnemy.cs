@@ -137,7 +137,7 @@ abstract class BaseEnemy : GameObject
             (int)Position.X, 
             (int)Position.Y, 
             32,  // Assume 32x32 sprite
-            32
+            64
         );
     }
         public override void Reset()

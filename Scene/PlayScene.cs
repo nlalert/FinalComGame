@@ -16,7 +16,8 @@ public class PlayScene
 
     List<GameObject> _gameObjects;
     private GraphicsDevice _graphicsDevice;
-    private Texture2D _spaceInvaderTexture;
+    private Texture2D _playerTexture;
+    private Texture2D _enemyTexture;
     private Texture2D dirtTexture;
     int _numObject;
     private Camera _camera;
@@ -42,7 +43,8 @@ public class PlayScene
     {
         _spriteBatch = spriteBatch;
         _font = content.Load<SpriteFont>("GameFont");
-        _spaceInvaderTexture = content.Load<Texture2D>("SpaceInvaderSheet");
+        _playerTexture = content.Load<Texture2D>("Player");
+        _enemyTexture = content.Load<Texture2D>("EnemyRed");
         dirtTexture = content.Load<Texture2D>("dirt");
         Reset();
     }
@@ -126,19 +128,19 @@ public class PlayScene
 
         _gameObjects.Clear();
 
-        player = new Player(_spaceInvaderTexture)
+        player = new Player(_playerTexture)
         {
             Name = "Player",
-            Viewport = new Rectangle(51, 30, 54, 30),
+            Viewport = new Rectangle(0, 0, 32, 64),
             Position = new Vector2(62, 640),
             Left = Keys.Left,
             Right = Keys.Right,
             Fire = Keys.E,
             Jump = Keys.Space,
-            Bullet = new Bullet(_spaceInvaderTexture)
+            Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",
-                Viewport = new Rectangle(216, 36, 3, 24)
+                Viewport = new Rectangle(0, 0, 15, 10)
             }
         };
 
@@ -158,9 +160,9 @@ public class PlayScene
             }
         }
         
-        baseSkeleton = new SkeletonEnemy(_spaceInvaderTexture){
+        baseSkeleton = new SkeletonEnemy(_enemyTexture){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            Viewport = new Rectangle(0, 30, 54, 30),
+            Viewport = new Rectangle(0, 0, 32, 64),
             // Position = new Vector2(162, 640),
         };
         _gameObjects.Add(baseSkeleton);
