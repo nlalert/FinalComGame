@@ -12,10 +12,11 @@ namespace FinalComGame
         public Bullet Bullet;
         public Keys Left, Right, Fire, Jump;
 
-        private bool isJumping = false;
         private float jumpStrength = 1250f;
 
         private int direction = 1; // 1 = Right, -1 = Left
+        private float coyoteTime = 0.1f; // Allow 100ms for coyote time
+        private float coyoteTimeCounter = 0f; // Tracks remaining coyote time
 
         public Player(Texture2D texture) : base(texture)
         {
@@ -60,12 +61,21 @@ namespace FinalComGame
                 gameObjects.Add(newBullet);
             }
 
+            // Apply coyote time: Reset if on ground
+            if (Velocity.Y == 0)
+            {
+                coyoteTimeCounter = coyoteTime; // Reset coyote time when on ground
+            }
+            else
+            {
+                coyoteTimeCounter -= deltaTime; // Decrease coyote time when falling
+            }
+
             if (Singleton.Instance.IsKeyJustPressed(Jump) &&
-                !isJumping &&
-                Velocity.Y == 0)
+                coyoteTimeCounter > 0)
             {
                 Velocity.Y = -jumpStrength;
-                isJumping = true;
+                coyoteTimeCounter = 0; // Prevent multiple jumps
             }
 
             Position.X += Velocity.X * deltaTime;
@@ -96,7 +106,6 @@ namespace FinalComGame
                     if (Velocity.Y > 0) // Falling down
                     {
                         Position.Y = tile.Rectangle.Top - Rectangle.Height;
-                        isJumping = false; // Allow jumping again
                     }
                     else if (Velocity.Y < 0) // Moving up
                     {
@@ -110,6 +119,7 @@ namespace FinalComGame
             Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
             
             Velocity.X = 0; // Reset horizontal velocity each frame
+            Console.WriteLine(coyoteTimeCounter);
 
             base.Update(gameTime, gameObjects);
         }
