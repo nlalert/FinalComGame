@@ -15,7 +15,6 @@ abstract class BaseEnemy : GameObject
         Chase,
         Attack,
         Cooldown,
-        TakeDamage,
         Dying,
         Dead
     }
@@ -94,10 +93,6 @@ abstract class BaseEnemy : GameObject
         {
             CurrentState = EnemyState.Dying;
             OnDead();
-        }
-        else
-        {
-            CurrentState = EnemyState.TakeDamage;
         }
     }
 
