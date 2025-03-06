@@ -22,6 +22,7 @@ public class PlayScene
     private Camera _camera;
 
     private Player player;
+    private BaseEnemy baseSkeleton;
     private Tile tileTest;
 
     public void Initialize(GraphicsDevice graphicsDevice,GraphicsDeviceManager graphicsDeviceManager)
@@ -65,7 +66,7 @@ public class PlayScene
 
         Singleton.Instance.PreviousKey = Singleton.Instance.CurrentKey;
 
-        Console.WriteLine(_gameObjects.Count);
+        // Console.WriteLine(_gameObjects.Count);
 
     }
 
@@ -156,7 +157,16 @@ public class PlayScene
                 _gameObjects.Add(tileTest);
             }
         }
-
+        
+        baseSkeleton = new SkeletonEnemy(_spaceInvaderTexture){
+            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            Viewport = new Rectangle(0, 30, 54, 30),
+            // Position = new Vector2(162, 640),
+        };
+        _gameObjects.Add(baseSkeleton);
+        baseSkeleton.Spawn(162, 640, _gameObjects);
+        baseSkeleton.Spawn(262, 640, _gameObjects);
+        baseSkeleton.Spawn(362, 640, _gameObjects);
 
         foreach (GameObject s in _gameObjects)
         {
