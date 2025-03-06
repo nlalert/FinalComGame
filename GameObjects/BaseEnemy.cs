@@ -118,7 +118,7 @@ abstract class BaseEnemy : GameObject
 
     public override void Update(GameTime gameTime, List<GameObject> gameObjects){
 
-        if(CurrentState == EnemyState.Dead){
+        if(CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying){
             this.IsActive = false;
         }
         base.Update(gameTime,gameObjects);
