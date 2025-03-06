@@ -39,19 +39,18 @@ namespace FinalComGame
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (Singleton.Instance.CurrentKey.IsKeyDown(Left))
+            if (Singleton.Instance.IsKeyPressed(Left))
             {
                 Velocity.X = -500;
                 direction = -1;
             }
-            if (Singleton.Instance.CurrentKey.IsKeyDown(Right))
+            if (Singleton.Instance.IsKeyPressed(Right))
             {
                 Velocity.X = 500;
                 direction = 1;
             }
 
-            if (Singleton.Instance.CurrentKey.IsKeyDown(Fire) &&
-                Singleton.Instance.PreviousKey != Singleton.Instance.CurrentKey)
+            if (Singleton.Instance.IsKeyJustPressed(Fire))
             {
                 var newBullet = Bullet.Clone() as Bullet;
                 newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
@@ -61,7 +60,9 @@ namespace FinalComGame
                 gameObjects.Add(newBullet);
             }
 
-            if (Singleton.Instance.CurrentKey.IsKeyDown(Jump) && !isJumping)
+            if (Singleton.Instance.IsKeyJustPressed(Jump) &&
+                !isJumping &&
+                Velocity.Y == 0)
             {
                 Velocity.Y = -jumpStrength;
                 isJumping = true;
@@ -106,11 +107,8 @@ namespace FinalComGame
             }
 
             // Keep player within screen bounds
-            Position = new Vector2(
-                MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width),
-                MathHelper.Clamp(Position.Y, 0, Singleton.SCREEN_HEIGHT - Rectangle.Height)
-            );
-
+            Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
+            
             Velocity.X = 0; // Reset horizontal velocity each frame
 
             base.Update(gameTime, gameObjects);

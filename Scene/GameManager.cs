@@ -23,7 +23,7 @@ public class GameManager : Game
 
     public GameManager()
     {
-        Window.Title = "Chip Dealer";
+        Window.Title = "Unfinished History";
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -59,9 +59,7 @@ public class GameManager : Game
 
     protected override void Update(GameTime gameTime)
     {
-        Singleton.Instance.CurrentKey = Keyboard.GetState();
-        Singleton.Instance.CurrentMouseState = Mouse.GetState();
-
+        Singleton.Instance.UpdateCurrentInput();
 
         //assume game state as playing
         switch (Singleton.Instance.CurrentGameState)
@@ -85,8 +83,7 @@ public class GameManager : Game
         //         break;
         }
 
-        Singleton.Instance.PreviousKey = Singleton.Instance.CurrentKey;
-        Singleton.Instance.PreviousMouseState = Singleton.Instance.CurrentMouseState;
+        Singleton.Instance.UpdatePreviousInput();
 
         base.Update(gameTime);
     }

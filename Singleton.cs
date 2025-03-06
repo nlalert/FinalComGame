@@ -45,5 +45,36 @@ class Singleton
             return instance;
         }
     }
+    
+    public void UpdateCurrentInput()
+    {
+        CurrentKey = Keyboard.GetState();
+        CurrentMouseState = Mouse.GetState();
+    }
+
+    public void UpdatePreviousInput()
+    {
+        PreviousKey = CurrentKey;
+        PreviousMouseState = CurrentMouseState;
+    }
+
+    // Checks if a key is being held down
+    public bool IsKeyPressed(Keys key)
+    {
+        return CurrentKey.IsKeyDown(key);
+    }
+
+    // Checks if a key was JUST pressed (prevents holding issues)
+    public bool IsKeyJustPressed(Keys key)
+    {
+        return CurrentKey.IsKeyDown(key) && PreviousKey.IsKeyUp(key);
+    }
+
+    // Checks if a key was JUST released
+    public bool IsKeyJustReleased(Keys key)
+    {
+        return CurrentKey.IsKeyUp(key) && PreviousKey.IsKeyDown(key);
+    }
+
 }
 

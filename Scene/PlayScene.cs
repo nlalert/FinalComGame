@@ -51,8 +51,6 @@ public class PlayScene
 
     public void Update(GameTime gameTime)
     {
-        Singleton.Instance.CurrentKey = Keyboard.GetState();
-
         //Update
         _numObject = _gameObjects.Count;
         
@@ -65,11 +63,6 @@ public class PlayScene
                 _camera.Follow(player); // Make camera follow the player
                 break;
         }
-
-        Singleton.Instance.PreviousKey = Singleton.Instance.CurrentKey;
-
-        // Console.WriteLine(_gameObjects.Count);
-
     }
 
     public void Draw(GameTime gameTime)
@@ -147,7 +140,7 @@ public class PlayScene
         _gameObjects.Add(player);
 
         int level = Singleton.SCREEN_HEIGHT/Singleton.BLOCK_SIZE + 1;
-        for (int i = 0; i < Singleton.SCREEN_WIDTH/Singleton.BLOCK_SIZE; i++)
+        for (int i = 0; i <= Singleton.SCREEN_WIDTH/Singleton.BLOCK_SIZE; i++)
         {
             tileTest = new Tile(_blockTexture)
             {
