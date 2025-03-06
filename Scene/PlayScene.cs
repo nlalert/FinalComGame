@@ -18,7 +18,7 @@ public class PlayScene
     private GraphicsDevice _graphicsDevice;
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
-    private Texture2D dirtTexture;
+    private Texture2D _blockTexture;
     int _numObject;
     private Camera _camera;
 
@@ -45,7 +45,7 @@ public class PlayScene
         _font = content.Load<SpriteFont>("GameFont");
         _playerTexture = content.Load<Texture2D>("Player");
         _enemyTexture = content.Load<Texture2D>("EnemyRed");
-        dirtTexture = content.Load<Texture2D>("dirt");
+        _blockTexture = content.Load<Texture2D>("Tile32");
         Reset();
     }
 
@@ -146,19 +146,47 @@ public class PlayScene
 
         _gameObjects.Add(player);
 
-        for (int j = 0; j < 10; j++)
+        int level = Singleton.SCREEN_HEIGHT/Singleton.BLOCK_SIZE + 1;
+        for (int i = 0; i < Singleton.SCREEN_WIDTH/Singleton.BLOCK_SIZE; i++)
         {
-            for (int i = 0; i < 20; i++)
+            tileTest = new Tile(_blockTexture)
             {
-                tileTest = new Tile(dirtTexture)
-                {
-                    Name = "Tile",
-                    Position = new Vector2(i * Singleton.BLOCK_SIZE,2 * j * Singleton.BLOCK_SIZE),
-                    IsSolid = true
-                };
-                _gameObjects.Add(tileTest);
-            }
+                Name = "Tile",
+                Position = new Vector2(i * Singleton.BLOCK_SIZE,level * Singleton.BLOCK_SIZE),
+                Viewport = new Rectangle(0, 0, Singleton.BLOCK_SIZE, Singleton.BLOCK_SIZE),
+                IsSolid = true
+            };
+            _gameObjects.Add(tileTest);
         }
+
+        List<Vector2> tilePositions = new List<Vector2>
+        {
+            new Vector2(5, 18),
+            new Vector2(6, 17),
+            new Vector2(7, 17),
+            new Vector2(8, 17),
+            new Vector2(4, 14),
+            new Vector2(10, 12),
+            new Vector2(11, 11),
+            new Vector2(12, 10),
+            new Vector2(13, 9),
+            new Vector2(14, 8)
+        };
+
+        foreach (var pos in tilePositions)
+        {
+            Tile tile = new Tile(_blockTexture)
+            {
+                Name = "Tile",
+                Position = pos * Singleton.BLOCK_SIZE, // Convert grid position to pixel position
+                Viewport = new Rectangle(0, 0, Singleton.BLOCK_SIZE, Singleton.BLOCK_SIZE),
+                IsSolid = true
+            };
+
+            _gameObjects.Add(tile);
+        }
+
+
         
         baseSkeleton = new SkeletonEnemy(_enemyTexture){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
@@ -166,9 +194,9 @@ public class PlayScene
             // Position = new Vector2(162, 640),
         };
         _gameObjects.Add(baseSkeleton);
-        baseSkeleton.Spawn(162, 640, _gameObjects);
-        baseSkeleton.Spawn(262, 640, _gameObjects);
-        baseSkeleton.Spawn(362, 640, _gameObjects);
+        baseSkeleton.Spawn(162, 600, _gameObjects);
+        baseSkeleton.Spawn(262, 600, _gameObjects);
+        baseSkeleton.Spawn(362, 600, _gameObjects);
 
         foreach (GameObject s in _gameObjects)
         {

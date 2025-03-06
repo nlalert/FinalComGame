@@ -38,20 +38,27 @@ namespace FinalComGame
             {
                 if(Name.Equals("BulletPlayer"))
                 {
-                    if(IsTouching(s) && (s.Name.Equals("Enemy") || s.Name.Equals("BulletEnemy")))
+                    if(IsTouching(s))
                     {
-                        // s.IsActive = false;
-                        if(s is BaseEnemy enemy){
-                            // enemy.OnHit(this,this.damage)
-                            enemy.OnHit(this,10);
-                        } 
-                        // if(s is Enemy)
-                        // {
-                        //     Singleton.Instance.Score += (s as Enemy).Score;
-                        //     Singleton.Instance.InvaderLeft--;
-                        // }
-                        IsActive = false;
-                    }
+                        if(s.Name.Equals("Enemy") || s.Name.Equals("BulletEnemy"))
+                        {
+                            // s.IsActive = false;
+                            if(s is BaseEnemy enemy){
+                                // enemy.OnHit(this,this.damage)
+                                enemy.OnHit(this,10);
+                            } 
+                            // if(s is Enemy)
+                            // {
+                            //     Singleton.Instance.Score += (s as Enemy).Score;
+                            //     Singleton.Instance.InvaderLeft--;
+                            // }
+                            IsActive = false;
+                        }
+                        else if(s.Name.Equals("Tile"))
+                        {
+                            IsActive = false;
+                        }
+                    } 
                 }
                 else if(Name.Equals("BulletEnemy"))
                 {

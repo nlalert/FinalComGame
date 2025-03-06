@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -38,15 +39,15 @@ namespace FinalComGame
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if(Singleton.Instance.CurrentKey.IsKeyDown(Left))
+            if (Singleton.Instance.CurrentKey.IsKeyDown(Left))
             {
                 Velocity.X = -500;
-                direction = -1; // Facing left
+                direction = -1;
             }
-            if(Singleton.Instance.CurrentKey.IsKeyDown(Right))
+            if (Singleton.Instance.CurrentKey.IsKeyDown(Right))
             {
                 Velocity.X = 500;
-                direction = 1; // Facing right
+                direction = 1;
             }
 
             if (Singleton.Instance.CurrentKey.IsKeyDown(Fire) &&
@@ -54,41 +55,66 @@ namespace FinalComGame
             {
                 var newBullet = Bullet.Clone() as Bullet;
                 newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
-                                                 Position.Y);
-                newBullet.Velocity = new Vector2(800 * direction, 0); // Bullet moves in facing direction
+                                                Position.Y);
+                newBullet.Velocity = new Vector2(800 * direction, 0);
                 newBullet.Reset();
                 gameObjects.Add(newBullet);
             }
 
-            // Jumping logic
             if (Singleton.Instance.CurrentKey.IsKeyDown(Jump) && !isJumping)
             {
                 Velocity.Y = -jumpStrength;
                 isJumping = true;
             }
 
+            Position.X += Velocity.X * deltaTime;
+            foreach (var tile in gameObjects.OfType<Tile>())
+            {
+                if (IsTouchingLeft(tile) || IsTouchingRight(tile))
+                {
+                    if (Velocity.X > 0) // Moving right
+                    {
+                        Position.X = tile.Rectangle.Left - Rectangle.Width;
+                    }
+                    else if (Velocity.X < 0) // Moving left
+                    {
+                        Position.X = tile.Rectangle.Right;
+                    }
+                    Velocity.X = 0;
+                }
+            }
+
             // Apply gravity
             Velocity.Y += Singleton.GRAVITY * deltaTime;
 
-            // Update position
-            float newX = Position.X + Velocity.X * deltaTime;
-            newX = MathHelper.Clamp(newX, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
-
-            float newY = Position.Y + Velocity.Y * deltaTime;
-
-            // Check if the player lands on the ground
-            if (newY >= Singleton.SCREEN_HEIGHT - Rectangle.Height)
+            Position.Y += Velocity.Y * deltaTime;
+            foreach (var tile in gameObjects.OfType<Tile>())
             {
-                newY = Singleton.SCREEN_HEIGHT - Rectangle.Height;
-                Velocity.Y = 0;
-                isJumping = false; // Reset jump state
+                if (IsTouchingTop(tile) || IsTouchingBottom(tile))
+                {
+                    if (Velocity.Y > 0) // Falling down
+                    {
+                        Position.Y = tile.Rectangle.Top - Rectangle.Height;
+                        isJumping = false; // Allow jumping again
+                    }
+                    else if (Velocity.Y < 0) // Moving up
+                    {
+                        Position.Y = tile.Rectangle.Bottom;
+                    }
+                    Velocity.Y = 0;
+                }
             }
 
-            Position = new Vector2(newX, newY);
+            // Keep player within screen bounds
+            Position = new Vector2(
+                MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width),
+                MathHelper.Clamp(Position.Y, 0, Singleton.SCREEN_HEIGHT - Rectangle.Height)
+            );
 
-            Velocity.X = 0;
+            Velocity.X = 0; // Reset horizontal velocity each frame
 
             base.Update(gameTime, gameObjects);
         }
+
     }
 }
