@@ -14,6 +14,7 @@ namespace FinalComGame
 
         private float jumpStrength = 1250f;
         public int Speed;
+        private bool isJumping = false;
 
         private int direction = 1; // 1 = Right, -1 = Left
 
@@ -94,6 +95,14 @@ namespace FinalComGame
                 Velocity.Y = -jumpStrength;
                 jumpBufferCounter = 0; // Prevent multiple jumps
                 coyoteTimeCounter = 0; // Consume coyote time
+                isJumping = true;
+            }
+
+            // Jump Modulation 
+            if (Singleton.Instance.IsKeyJustReleased(Jump) && isJumping)
+            {
+                Velocity.Y *= 0.5f; // Reduce upwards velocity to shorten jump
+                isJumping = false;
             }
 
             Position.X += Velocity.X * deltaTime;
