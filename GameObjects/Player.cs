@@ -13,10 +13,17 @@ namespace FinalComGame
         public Keys Left, Right, Fire, Jump;
 
         private float jumpStrength = 1250f;
+        public int Speed;
 
         private int direction = 1; // 1 = Right, -1 = Left
-        private float coyoteTime = 0.1f; // Allow 100ms for coyote time
-        private float coyoteTimeCounter = 0f; // Tracks remaining coyote time
+
+        // Constants
+        private float coyoteTime = 0.1f; // 100ms of coyote time
+        private float jumpBufferTime = 0.15f; // 150ms jump buffer
+
+        // Timers
+        private float coyoteTimeCounter = 0f;
+        private float jumpBufferCounter = 0f;
 
         public Player(Texture2D texture) : base(texture)
         {
@@ -42,12 +49,12 @@ namespace FinalComGame
 
             if (Singleton.Instance.IsKeyPressed(Left))
             {
-                Velocity.X = -500;
+                Velocity.X = -Speed;
                 direction = -1;
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
-                Velocity.X = 500;
+                Velocity.X = Speed;
                 direction = 1;
             }
 
@@ -61,6 +68,16 @@ namespace FinalComGame
                 gameObjects.Add(newBullet);
             }
 
+            // Jump Buffer: Store jump input for a short period
+            if (Singleton.Instance.IsKeyJustPressed(Jump))
+            {
+                jumpBufferCounter = jumpBufferTime; // Store jump input
+            }
+            else if(Velocity.Y != 0)
+            {
+                jumpBufferCounter -= deltaTime; // Decrease over time
+            }
+
             // Apply coyote time: Reset if on ground
             if (Velocity.Y == 0)
             {
@@ -71,11 +88,12 @@ namespace FinalComGame
                 coyoteTimeCounter -= deltaTime; // Decrease coyote time when falling
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Jump) &&
-                coyoteTimeCounter > 0)
+            // Jumping logic with Coyote Time and Jump Buffer
+            if (jumpBufferCounter > 0 && coyoteTimeCounter > 0)
             {
                 Velocity.Y = -jumpStrength;
-                coyoteTimeCounter = 0; // Prevent multiple jumps
+                jumpBufferCounter = 0; // Prevent multiple jumps
+                coyoteTimeCounter = 0; // Consume coyote time
             }
 
             Position.X += Velocity.X * deltaTime;
@@ -119,7 +137,6 @@ namespace FinalComGame
             Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
             
             Velocity.X = 0; // Reset horizontal velocity each frame
-            Console.WriteLine(coyoteTimeCounter);
 
             base.Update(gameTime, gameObjects);
         }

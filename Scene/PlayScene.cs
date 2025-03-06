@@ -126,6 +126,7 @@ public class PlayScene
             Name = "Player",
             Viewport = new Rectangle(0, 0, 32, 64),
             Position = new Vector2(62, 640),
+            Speed = 400,
             Left = Keys.Left,
             Right = Keys.Right,
             Fire = Keys.E,
