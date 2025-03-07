@@ -28,7 +28,7 @@ public class GameObject : ICloneable
     {
         get
         {
-            return new Rectangle((int)Position.X, (int)Position.Y, Viewport.Width, Viewport.Height);
+            return new Rectangle((int)Position.X, (int)Position.Y, (int)(Viewport.Width * Scale.X), (int)(Viewport.Height * Scale.Y)) ;
         }
     }
 
@@ -98,7 +98,7 @@ public class GameObject : ICloneable
     {
         return  this.Rectangle.Right > g.Rectangle.Left &&
                 this.Rectangle.Left < g.Rectangle.Right &&
-                this.Rectangle.Bottom > g.Rectangle.Top &&
+                this.Rectangle.Bottom >= g.Rectangle.Top &&
                 this.Rectangle.Top < g.Rectangle.Top;
     }
 
@@ -107,38 +107,50 @@ public class GameObject : ICloneable
         return  this.Rectangle.Right > g.Rectangle.Left     &&
                 this.Rectangle.Left < g.Rectangle.Right     &&
                 this.Rectangle.Bottom > g.Rectangle.Bottom  &&
-                this.Rectangle.Top < g.Rectangle.Bottom;
+                this.Rectangle.Top <= g.Rectangle.Bottom;
     }
 
     protected void ResolveHorizontalCollision(GameObject g)
     {
-        if (IsTouchingLeft(g) || IsTouchingRight(g))
+        if (IsTouchingLeft(g))
         {
             if (Velocity.X > 0) // Moving right
             {
                 Position.X = g.Rectangle.Left - Rectangle.Width;
+                Velocity.X = 0;
+                Console.WriteLine("touch left");
             }
-            else if (Velocity.X < 0) // Moving left
+        }
+        if(IsTouchingRight(g))
+        {            
+            if (Velocity.X < 0) // Moving left
             {
                 Position.X = g.Rectangle.Right;
+                Velocity.X = 0;
+                Console.WriteLine("touch right");
             }
-            Velocity.X = 0;
         }
     }
 
     protected void ResolveVerticalCollision(GameObject g)
     {
-        if (IsTouchingTop(g) || IsTouchingBottom(g))
+        if (IsTouchingTop(g))
         {
             if (Velocity.Y > 0) // Falling down
             {
                 Position.Y = g.Rectangle.Top - Rectangle.Height;
+                // Console.WriteLine("SnapUp");
+                // Console.WriteLine("g.Rectangle.Top: "+g.Rectangle.Top);
+                Velocity.Y = 0;
             }
-            else if (Velocity.Y < 0) // Moving up
+        }
+        if(IsTouchingBottom(g))
+        {
+            if (Velocity.Y < 0) // Moving up
             {
                 Position.Y = g.Rectangle.Bottom;
+                Velocity.Y = 0;
             }
-            Velocity.Y = 0;
         }
     }
 

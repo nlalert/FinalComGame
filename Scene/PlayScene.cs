@@ -159,7 +159,7 @@ public class PlayScene
             new Vector2(6, 17),
             new Vector2(7, 17),
             new Vector2(8, 17),
-            new Vector2(4, 14),
+            new Vector2(4, 14), // 28*16 = 448
             new Vector2(10, 12),
             new Vector2(11, 11),
             new Vector2(12, 10),

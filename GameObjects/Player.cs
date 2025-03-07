@@ -33,7 +33,11 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Position, Viewport, Color.White);
+            spriteBatch.Draw(
+                _texture, 
+                new Rectangle((int)Position.X, (int)Position.Y, (int)(Viewport.Width * Scale.X), (int)(Viewport.Height * Scale.Y)), 
+                Viewport, 
+                Color.White);
             base.Draw(spriteBatch);
         }
 
@@ -47,7 +51,7 @@ namespace FinalComGame
         public override void Update(GameTime gameTime, List<GameObject> gameObjects)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+        
             HandleInput(deltaTime, gameObjects);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
@@ -55,9 +59,12 @@ namespace FinalComGame
             UpdateHorizontalMovement(deltaTime, gameObjects);
             UpdateVerticalMovement(deltaTime, gameObjects);
 
+            Console.WriteLine("Y velo:" +Velocity.Y);
             // Keep player within screen bounds for now 
             Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
             Velocity.X = 0; // Reset horizontal velocity each frame
+            // Console.WriteLine("Foot:" +(Position.Y + Rectangle.Height));
+            // Console.WriteLine(Position.X - lastX);
             base.Update(gameTime, gameObjects);
         }
 

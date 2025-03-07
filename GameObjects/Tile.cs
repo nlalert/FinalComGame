@@ -14,7 +14,11 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Position, Color.White);
+            spriteBatch.Draw(
+                _texture, 
+                new Rectangle((int)Position.X, (int)Position.Y, (int)(Viewport.Width * Scale.X), (int)(Viewport.Height * Scale.Y)), 
+                Viewport, 
+                Color.White);
             base.Draw(spriteBatch);
         }
     }
