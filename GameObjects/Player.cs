@@ -12,7 +12,7 @@ namespace FinalComGame
         public Bullet Bullet;
         public Keys Left, Right, Fire, Jump;
 
-        private float jumpStrength = 1250f;
+        private float jumpStrength = 1000f;
         public int Speed;
         private bool isJumping = false;
 
@@ -48,6 +48,28 @@ namespace FinalComGame
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            HandleInput(deltaTime, gameObjects);
+            UpdateCoyoteTime(deltaTime);
+            CheckAndJump();
+            ApplyGravity(deltaTime);
+            UpdateHorizontalMovement(deltaTime, gameObjects);
+            UpdateVerticalMovement(deltaTime, gameObjects);
+
+            // Keep player within screen bounds for now 
+            Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
+            Velocity.X = 0; // Reset horizontal velocity each frame
+            base.Update(gameTime, gameObjects);
+        }
+
+        private void ApplyGravity(float deltaTime)
+        {
+            Velocity.Y += Singleton.GRAVITY * deltaTime; // gravity
+
+            //TODO: Check and cap terminal velocity of player if want later
+        }
+
+        private void HandleInput(float deltaTime, List<GameObject> gameObjects)
+        {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
                 Velocity.X = -Speed;
@@ -60,27 +82,19 @@ namespace FinalComGame
             }
 
             if (Singleton.Instance.IsKeyJustPressed(Fire))
-            {
-                var newBullet = Bullet.Clone() as Bullet;
-                newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
-                                                Position.Y);
-                newBullet.Velocity = new Vector2(800 * direction, 0);
-                newBullet.Reset();
-                gameObjects.Add(newBullet);
-            }
+                Shoot(gameObjects);
 
             // Jump Buffer: Store jump input for a short period
             if (Singleton.Instance.IsKeyJustPressed(Jump))
-            {
                 jumpBufferCounter = jumpBufferTime; // Store jump input
-            }
-            else if(Velocity.Y != 0)
-            {
+            else
                 jumpBufferCounter -= deltaTime; // Decrease over time
-            }
+        }
 
+        private void UpdateCoyoteTime(float deltaTime)
+        {
             // Apply coyote time: Reset if on ground
-            if (isOnGround())
+            if (IsOnGround())
             {
                 coyoteTimeCounter = coyoteTime; // Reset coyote time when on ground
             }
@@ -88,7 +102,10 @@ namespace FinalComGame
             {
                 coyoteTimeCounter -= deltaTime; // Decrease coyote time when falling
             }
+        }
 
+        private void CheckAndJump()
+        {
             // Jumping logic with Coyote Time and Jump Buffer
             if (jumpBufferCounter > 0 && coyoteTimeCounter > 0)
             {
@@ -104,53 +121,37 @@ namespace FinalComGame
                 Velocity.Y *= 0.5f; // Reduce upwards velocity to shorten jump
                 isJumping = false;
             }
+        }
 
+        private void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects)
+        {
             Position.X += Velocity.X * deltaTime;
             foreach (var tile in gameObjects.OfType<Tile>())
             {
-                if (IsTouchingLeft(tile) || IsTouchingRight(tile))
-                {
-                    if (Velocity.X > 0) // Moving right
-                    {
-                        Position.X = tile.Rectangle.Left - Rectangle.Width;
-                    }
-                    else if (Velocity.X < 0) // Moving left
-                    {
-                        Position.X = tile.Rectangle.Right;
-                    }
-                    Velocity.X = 0;
-                }
+                ResolveHorizontalCollision(tile);
             }
+        }
 
-            // Apply gravity
-            Velocity.Y += Singleton.GRAVITY * deltaTime;
-
+        private void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects)
+        {
             Position.Y += Velocity.Y * deltaTime;
             foreach (var tile in gameObjects.OfType<Tile>())
             {
-                if (IsTouchingTop(tile) || IsTouchingBottom(tile))
-                {
-                    if (Velocity.Y > 0) // Falling down
-                    {
-                        Position.Y = tile.Rectangle.Top - Rectangle.Height;
-                    }
-                    else if (Velocity.Y < 0) // Moving up
-                    {
-                        Position.Y = tile.Rectangle.Bottom;
-                    }
-                    Velocity.Y = 0;
-                }
+                ResolveVerticalCollision(tile);
             }
-
-            // Keep player within screen bounds
-            Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
-            
-            Velocity.X = 0; // Reset horizontal velocity each frame
-
-            base.Update(gameTime, gameObjects);
         }
 
-        private bool isOnGround()
+        private void Shoot(List<GameObject> gameObjects)
+        {
+            var newBullet = Bullet.Clone() as Bullet;
+            newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
+                                            Position.Y);
+            newBullet.Velocity = new Vector2(800 * direction, 0);
+            newBullet.Reset();
+            gameObjects.Add(newBullet);
+        }
+
+        private bool IsOnGround()
         {
             return Velocity.Y == 0;
         }

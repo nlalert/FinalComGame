@@ -98,7 +98,7 @@ public class GameManager : Game
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
-                GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.Clear(Color.DarkGray);
                 _playScene.Draw(gameTime);
                 break;
         //     case Singleton.GameState.MainMenu:

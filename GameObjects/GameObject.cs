@@ -110,6 +110,38 @@ public class GameObject : ICloneable
                 this.Rectangle.Top < g.Rectangle.Bottom;
     }
 
+    protected void ResolveHorizontalCollision(GameObject g)
+    {
+        if (IsTouchingLeft(g) || IsTouchingRight(g))
+        {
+            if (Velocity.X > 0) // Moving right
+            {
+                Position.X = g.Rectangle.Left - Rectangle.Width;
+            }
+            else if (Velocity.X < 0) // Moving left
+            {
+                Position.X = g.Rectangle.Right;
+            }
+            Velocity.X = 0;
+        }
+    }
+
+    protected void ResolveVerticalCollision(GameObject g)
+    {
+        if (IsTouchingTop(g) || IsTouchingBottom(g))
+        {
+            if (Velocity.Y > 0) // Falling down
+            {
+                Position.Y = g.Rectangle.Top - Rectangle.Height;
+            }
+            else if (Velocity.Y < 0) // Moving up
+            {
+                Position.Y = g.Rectangle.Bottom;
+            }
+            Velocity.Y = 0;
+        }
+    }
+
     protected bool IsTouchingAsCircle(GameObject g)
     {
         float distance = Vector2.Distance(this.Position, g.Position);

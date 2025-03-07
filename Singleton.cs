@@ -11,7 +11,7 @@ class Singleton
     public const int SCREEN_HEIGHT = 700;
     public const int SCREEN_WIDTH = 700;
     public const int BLOCK_SIZE = 32;
-    public const int GRAVITY = 5000;
+    public const int GRAVITY = 3500;
     public Random Random;
 
     public enum GameState
