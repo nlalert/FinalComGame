@@ -114,20 +114,18 @@ public class GameObject : ICloneable
     {
         if (IsTouchingLeft(g))
         {
-            if (Velocity.X > 0) // Moving right
+            if (this.Velocity.X > 0) // Moving right
             {
-                Position.X = g.Rectangle.Left - Rectangle.Width;
-                Velocity.X = 0;
-                Console.WriteLine("touch left");
+                this.Position.X = g.Rectangle.Left - this.Rectangle.Width;
+                this.Velocity.X = 0;
             }
         }
         if(IsTouchingRight(g))
         {            
-            if (Velocity.X < 0) // Moving left
+            if (this.Velocity.X < 0) // Moving left
             {
-                Position.X = g.Rectangle.Right;
-                Velocity.X = 0;
-                Console.WriteLine("touch right");
+                this.Position.X = g.Rectangle.Right;
+                this.Velocity.X = 0;
             }
         }
     }
@@ -136,20 +134,18 @@ public class GameObject : ICloneable
     {
         if (IsTouchingTop(g))
         {
-            if (Velocity.Y > 0) // Falling down
+            if (this.Velocity.Y > 0) // Falling down
             {
-                Position.Y = g.Rectangle.Top - Rectangle.Height;
-                // Console.WriteLine("SnapUp");
-                // Console.WriteLine("g.Rectangle.Top: "+g.Rectangle.Top);
-                Velocity.Y = 0;
+                this.Position.Y = g.Rectangle.Top - this.Rectangle.Height;
+                this.Velocity.Y = 0;
             }
         }
         if(IsTouchingBottom(g))
         {
-            if (Velocity.Y < 0) // Moving up
+            if (this.Velocity.Y < 0) // Moving up
             {
-                Position.Y = g.Rectangle.Bottom;
-                Velocity.Y = 0;
+                this.Position.Y = g.Rectangle.Bottom;
+                this.Velocity.Y = 0;
             }
         }
     }

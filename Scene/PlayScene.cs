@@ -155,6 +155,8 @@ public class PlayScene
 
         List<Vector2> tilePositions = new List<Vector2>
         {
+            new Vector2(0, 18),
+            new Vector2(21, 18),
             new Vector2(5, 18),
             new Vector2(6, 17),
             new Vector2(7, 17),
