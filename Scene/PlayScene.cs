@@ -73,7 +73,7 @@ public class PlayScene
         {
             case Singleton.GameState.Playing:
                 // Draw the Game World (Apply Camera)
-                _spriteBatch.Begin(transformMatrix: _camera.GetTransformation()); // Apply camera matrix
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransformation()); // Apply camera matrix
                 for (int i = 0; i < _numObject; i++)
                 {
                     _gameObjects[i].Draw(_spriteBatch);
