@@ -43,9 +43,9 @@ public class PlayScene
     {
         _spriteBatch = spriteBatch;
         _font = content.Load<SpriteFont>("GameFont");
-        _playerTexture = content.Load<Texture2D>("Player");
+        _playerTexture = content.Load<Texture2D>("Char_test");
         _enemyTexture = content.Load<Texture2D>("EnemyRed");
-        _blockTexture = content.Load<Texture2D>("Tile32");
+        _blockTexture = content.Load<Texture2D>("Ground_test");
         Reset();
     }
 
@@ -124,7 +124,7 @@ public class PlayScene
         player = new Player(_playerTexture)
         {
             Name = "Player",
-            Viewport = new Rectangle(0, 0, 32, 64),
+            Viewport = new Rectangle(0, 0, 16, 32),
             Position = new Vector2(62, 640),
             Speed = 400,
             Left = Keys.Left,
@@ -172,7 +172,7 @@ public class PlayScene
             Tile tile = new Tile(_blockTexture)
             {
                 Name = "Tile",
-                Position = pos * Singleton.BLOCK_SIZE, // Convert grid position to pixel position
+                Position = new Vector2(pos.X * Singleton.BLOCK_SIZE, 2 *pos.Y * Singleton.BLOCK_SIZE), // Convert grid position to pixel position
                 Viewport = new Rectangle(0, 0, Singleton.BLOCK_SIZE, Singleton.BLOCK_SIZE),
                 IsSolid = true
             };
