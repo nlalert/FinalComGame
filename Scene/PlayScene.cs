@@ -18,13 +18,13 @@ public class PlayScene
     private GraphicsDevice _graphicsDevice;
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
-    private Texture2D _blockTexture;
+
     int _numObject;
     private Camera _camera;
+    private TileMap _tileMap;
 
     private Player player;
     private BaseEnemy baseSkeleton;
-    private Tile tileTest;
 
     public void Initialize(GraphicsDevice graphicsDevice,GraphicsDeviceManager graphicsDeviceManager)
     {
@@ -39,13 +39,15 @@ public class PlayScene
         Reset();
     }
 
-    public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+    public void LoadContent(ContentManager content, SpriteBatch spriteBatch)
     {
         _spriteBatch = spriteBatch;
         _font = content.Load<SpriteFont>("GameFont");
         _playerTexture = content.Load<Texture2D>("Char_test");
         _enemyTexture = content.Load<Texture2D>("EnemyRed");
-        _blockTexture = content.Load<Texture2D>("Ground_test");
+
+        Texture2D textureAtlas = content.Load<Texture2D>("atlas");
+        _tileMap = new TileMap(textureAtlas, "../../../Data/level1.csv", 2);
         Reset();
     }
 
@@ -57,6 +59,7 @@ public class PlayScene
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
+                UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
                 RemoveInactiveObjects();
 
@@ -74,10 +77,8 @@ public class PlayScene
             case Singleton.GameState.Playing:
                 // Draw the Game World (Apply Camera)
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransformation()); // Apply camera matrix
-                for (int i = 0; i < _numObject; i++)
-                {
-                    _gameObjects[i].Draw(_spriteBatch);
-                }    
+                DrawTileMap();
+                DrawAllObjects();
                 _spriteBatch.End();
 
                 //  Draw the UI (No Camera Transformation)
@@ -88,7 +89,11 @@ public class PlayScene
         }
 
         _graphics.BeginDraw();
+    }
 
+    private void UpdateTileMap(GameTime gameTime)
+    {
+        _tileMap.Update(gameTime, _gameObjects);
     }
 
     public void UpdateAllObjects(GameTime gameTime)
@@ -96,7 +101,7 @@ public class PlayScene
         for (int i = 0; i < _numObject; i++)
         {
             if(_gameObjects[i].IsActive)
-                _gameObjects[i].Update(gameTime, _gameObjects);
+                _gameObjects[i].Update(gameTime, _gameObjects, _tileMap);
         }
     }
 
@@ -113,6 +118,19 @@ public class PlayScene
         }
     }
 
+    private void DrawTileMap()
+    {
+        _tileMap.Draw(_spriteBatch);
+    }
+
+    private void DrawAllObjects()
+    {
+        for (int i = 0; i < _numObject; i++)
+        {
+            _gameObjects[i].Draw(_spriteBatch);
+        }   
+    }
+
     public void Reset()
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
@@ -125,7 +143,7 @@ public class PlayScene
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
-            Position = new Vector2(62, 640),
+            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2),
             Speed = 400,
             Left = Keys.Left,
             Right = Keys.Right,
@@ -139,50 +157,6 @@ public class PlayScene
         };
 
         _gameObjects.Add(player);
-
-        int level = Singleton.SCREEN_HEIGHT/Singleton.BLOCK_SIZE + 1;
-        for (int i = 0; i <= Singleton.SCREEN_WIDTH/Singleton.BLOCK_SIZE; i++)
-        {
-            tileTest = new Tile(_blockTexture)
-            {
-                Name = "Tile",
-                Position = new Vector2(i * Singleton.BLOCK_SIZE,level * Singleton.BLOCK_SIZE),
-                Viewport = new Rectangle(0, 0, Singleton.BLOCK_SIZE, Singleton.BLOCK_SIZE),
-                IsSolid = true
-            };
-            _gameObjects.Add(tileTest);
-        }
-
-        List<Vector2> tilePositions = new List<Vector2>
-        {
-            new Vector2(0, 18),
-            new Vector2(21, 18),
-            new Vector2(5, 18),
-            new Vector2(6, 17),
-            new Vector2(7, 17),
-            new Vector2(8, 17),
-            new Vector2(4, 14), // 28*16 = 448
-            new Vector2(10, 12),
-            new Vector2(11, 11),
-            new Vector2(12, 10),
-            new Vector2(13, 9),
-            new Vector2(14, 8)
-        };
-
-        foreach (var pos in tilePositions)
-        {
-            Tile tile = new Tile(_blockTexture)
-            {
-                Name = "Tile",
-                Position = new Vector2(pos.X * Singleton.BLOCK_SIZE, 2 *pos.Y * Singleton.BLOCK_SIZE), // Convert grid position to pixel position
-                Viewport = new Rectangle(0, 0, Singleton.BLOCK_SIZE, Singleton.BLOCK_SIZE),
-                IsSolid = true
-            };
-
-            _gameObjects.Add(tile);
-        }
-
-
         
         baseSkeleton = new SkeletonEnemy(_enemyTexture){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name

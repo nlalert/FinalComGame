@@ -1,15 +1,21 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
 {
-    class Tile : GameObject
+    public class Tile : GameObject
     {
         public bool IsSolid;
 
         public Tile(Texture2D texture)
         {
             _texture = texture;
+        }
+        
+        public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)

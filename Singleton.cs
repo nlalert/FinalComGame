@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 class Singleton
 {
-    public const int SCREEN_HEIGHT = 700;
-    public const int SCREEN_WIDTH = 700;
+    public const int SCREEN_HEIGHT = 640;
+    public const int SCREEN_WIDTH = 640;
     public const int BLOCK_SIZE = 16;
     public const int GRAVITY = 3500;
     public Random Random;

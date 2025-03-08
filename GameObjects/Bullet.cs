@@ -26,7 +26,7 @@ namespace FinalComGame
             base.Reset();
         }
 
-        public override void Update(GameTime gameTime, List<GameObject> gameObjects)
+        public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             DistantMoved += Math.Abs(Velocity.X * gameTime.ElapsedGameTime.Ticks / TimeSpan.TicksPerSecond);
             Position += Velocity * gameTime.ElapsedGameTime.Ticks / TimeSpan.TicksPerSecond;
@@ -54,10 +54,6 @@ namespace FinalComGame
                             // }
                             IsActive = false;
                         }
-                        else if(s.Name.Equals("Tile"))
-                        {
-                            IsActive = false;
-                        }
                     } 
                 }
                 else if(Name.Equals("BulletEnemy"))
@@ -72,7 +68,18 @@ namespace FinalComGame
                 }
             }
 
-            base.Update(gameTime, gameObjects);
+            foreach (Tile tile in tileMap.tiles)
+            {
+                if(Name.Equals("BulletPlayer"))
+                {
+                    if(IsTouching(tile))
+                    {
+                        IsActive = false;
+                    }
+                }
+            }
+
+            base.Update(gameTime, gameObjects, tileMap);
         }
     }
 }

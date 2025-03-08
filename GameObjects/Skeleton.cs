@@ -17,7 +17,7 @@ namespace FinalComGame
             attackDamage = 5f;
             base.Reset();
         }
-        public override void Update(GameTime gameTime, List<GameObject> gameObjects)
+        public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             // Console.WriteLine(this.Health); //debug ai 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -38,7 +38,7 @@ namespace FinalComGame
             this.Velocity.Y =0;
             this.Velocity.X =0;
             UpdateHitbox();
-            base.Update(gameTime, gameObjects);
+            base.Update(gameTime, gameObjects, tileMap);
         }
 
 

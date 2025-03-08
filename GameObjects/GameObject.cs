@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FinalComGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -51,7 +52,7 @@ public class GameObject : ICloneable
         IsActive = true;
     }
 
-    public virtual void Update(GameTime gameTime, List<GameObject> gameObjects)
+    public virtual void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
     {
     }
 
