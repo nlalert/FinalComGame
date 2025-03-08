@@ -137,10 +137,6 @@ namespace FinalComGame
         private void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.X += Velocity.X * deltaTime;
-            foreach (Tile tile in gameObjects.OfType<Tile>())
-            {
-                ResolveHorizontalCollision(tile);
-            }
             foreach (Tile tile in tileMap.tiles)
             {
                 ResolveHorizontalCollision(tile);
@@ -150,10 +146,6 @@ namespace FinalComGame
         private void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.Y += Velocity.Y * deltaTime;
-            foreach (Tile tile in gameObjects.OfType<Tile>())
-            {
-                ResolveVerticalCollision(tile);
-            }
             foreach (Tile tile in tileMap.tiles)
             {
                 ResolveVerticalCollision(tile);
