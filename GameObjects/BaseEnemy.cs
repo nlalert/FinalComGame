@@ -116,12 +116,12 @@ abstract class BaseEnemy : GameObject
         // player.TakeDamage(attackDamage);
     }
 
-    public override void Update(GameTime gameTime, List<GameObject> gameObjects){
+    public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
 
         if(CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying){
             this.IsActive = false;
         }
-        base.Update(gameTime,gameObjects);
+        base.Update(gameTime,gameObjects, tileMap);
     }
     public override void Draw(SpriteBatch spriteBatch)
     {

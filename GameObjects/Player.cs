@@ -49,12 +49,12 @@ namespace FinalComGame
 
         public override void Reset()
         {
-            Position = new Vector2(62, 640);
+            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2);
             direction = 1; // Reset direction to right
             base.Reset();
         }
 
-        public override void Update(GameTime gameTime, List<GameObject> gameObjects)
+        public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         
@@ -62,14 +62,14 @@ namespace FinalComGame
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
             ApplyGravity(deltaTime);
-            UpdateHorizontalMovement(deltaTime, gameObjects);
-            UpdateVerticalMovement(deltaTime, gameObjects);
+            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
 
             // Keep player within screen bounds for now 
             Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
             Velocity.X = 0; // Reset horizontal velocity each frame
 
-            base.Update(gameTime, gameObjects);
+            base.Update(gameTime, gameObjects, tileMap);
         }
 
         private void ApplyGravity(float deltaTime)
@@ -134,19 +134,19 @@ namespace FinalComGame
             }
         }
 
-        private void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects)
+        private void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.X += Velocity.X * deltaTime;
-            foreach (var tile in gameObjects.OfType<Tile>())
+            foreach (Tile tile in tileMap.tiles)
             {
                 ResolveHorizontalCollision(tile);
             }
         }
 
-        private void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects)
+        private void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.Y += Velocity.Y * deltaTime;
-            foreach (var tile in gameObjects.OfType<Tile>())
+            foreach (Tile tile in tileMap.tiles)
             {
                 ResolveVerticalCollision(tile);
             }

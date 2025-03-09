@@ -40,7 +40,7 @@ public class GameManager : Game
      
         _playScene = new PlayScene();
         _playScene.Initialize(GraphicsDevice,_graphics);
-        _playScene.LoadContent(Content, GraphicsDevice, _spriteBatch);
+        _playScene.LoadContent(Content, _spriteBatch);
         
         // _mainMenu = new MainMenu();
         // _mainMenu.Initialize();
