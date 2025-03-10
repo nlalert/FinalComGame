@@ -33,7 +33,7 @@ namespace FinalComGame
 
                     for (int x = 0; x < items.Length; x++)
                     {
-                        if (int.TryParse(items[x], out int tileID) && tileID > 0)
+                        if (int.TryParse(items[x], out int tileID) && tileID >= 0)
                         {
                             int tileX = tileID % numTilesPerRow;
                             int tileY = tileID / numTilesPerRow;
