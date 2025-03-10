@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FinalComGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 public class GameObject : ICloneable
 {
@@ -23,12 +20,13 @@ public class GameObject : ICloneable
     public string Name;
 
     public bool IsActive;
+    public Animation Animation;
 
     public Rectangle Rectangle
     {
         get
         {
-            return new Rectangle((int)Position.X, (int)Position.Y, Viewport.Width, Viewport.Height);
+            return new Rectangle((int)Position.X, (int)Position.Y, (int)(Viewport.Width * Scale.X), (int)(Viewport.Height * Scale.Y)) ;
         }
     }
 
@@ -51,7 +49,7 @@ public class GameObject : ICloneable
         IsActive = true;
     }
 
-    public virtual void Update(GameTime gameTime, List<GameObject> gameObjects)
+    public virtual void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
     {
     }
 
@@ -98,7 +96,7 @@ public class GameObject : ICloneable
     {
         return  this.Rectangle.Right > g.Rectangle.Left &&
                 this.Rectangle.Left < g.Rectangle.Right &&
-                this.Rectangle.Bottom > g.Rectangle.Top &&
+                this.Rectangle.Bottom >= g.Rectangle.Top &&
                 this.Rectangle.Top < g.Rectangle.Top;
     }
 
@@ -107,7 +105,47 @@ public class GameObject : ICloneable
         return  this.Rectangle.Right > g.Rectangle.Left     &&
                 this.Rectangle.Left < g.Rectangle.Right     &&
                 this.Rectangle.Bottom > g.Rectangle.Bottom  &&
-                this.Rectangle.Top < g.Rectangle.Bottom;
+                this.Rectangle.Top <= g.Rectangle.Bottom;
+    }
+
+    protected void ResolveHorizontalCollision(GameObject g)
+    {
+        if (IsTouchingLeft(g))
+        {
+            if (this.Velocity.X > 0) // Moving right
+            {
+                this.Position.X = g.Rectangle.Left - this.Rectangle.Width;
+                this.Velocity.X = 0;
+            }
+        }
+        if(IsTouchingRight(g))
+        {            
+            if (this.Velocity.X < 0) // Moving left
+            {
+                this.Position.X = g.Rectangle.Right;
+                this.Velocity.X = 0;
+            }
+        }
+    }
+
+    protected void ResolveVerticalCollision(GameObject g)
+    {
+        if (IsTouchingTop(g))
+        {
+            if (this.Velocity.Y > 0) // Falling down
+            {
+                this.Position.Y = g.Rectangle.Top - this.Rectangle.Height;
+                this.Velocity.Y = 0;
+            }
+        }
+        if(IsTouchingBottom(g))
+        {
+            if (this.Velocity.Y < 0) // Moving up
+            {
+                this.Position.Y = g.Rectangle.Bottom;
+                this.Velocity.Y = 0;
+            }
+        }
     }
 
     protected bool IsTouchingAsCircle(GameObject g)

@@ -11,21 +11,22 @@ public class PlayScene
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private ContentManager _content;
 
     SpriteFont _font;
 
     List<GameObject> _gameObjects;
     private GraphicsDevice _graphicsDevice;
-    private Texture2D _spaceInvaderTexture;
-    private Texture2D dirtTexture;
+    private Texture2D _playerTexture;
+    private Texture2D _enemyTexture;
+
     int _numObject;
     private Camera _camera;
+    private TileMap _tileMap;
 
     private Player player;
     private BaseEnemy baseSkeleton;
-    private Tile tileTest;
-
-    public void Initialize(GraphicsDevice graphicsDevice,GraphicsDeviceManager graphicsDeviceManager)
+    public void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         _graphics = graphicsDeviceManager;
         _graphicsDevice = graphicsDevice;
@@ -33,41 +34,40 @@ public class PlayScene
         _graphics.PreferredBackBufferHeight = Singleton.SCREEN_HEIGHT;
         _graphics.ApplyChanges();
 
+        _content = content;
+
         _gameObjects = new List<GameObject>();
         _camera = new Camera(_graphicsDevice.Viewport); // Initialize camera
-        Reset();
     }
 
-    public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+    public void LoadContent(SpriteBatch spriteBatch)
     {
         _spriteBatch = spriteBatch;
-        _font = content.Load<SpriteFont>("GameFont");
-        _spaceInvaderTexture = content.Load<Texture2D>("SpaceInvaderSheet");
-        dirtTexture = content.Load<Texture2D>("dirt");
+        _font = _content.Load<SpriteFont>("GameFont");
+        _playerTexture = _content.Load<Texture2D>("Char_test");
+        _enemyTexture = _content.Load<Texture2D>("EnemyRed");
+
+        Texture2D textureAtlas = _content.Load<Texture2D>("atlas");
+        _tileMap = new TileMap(textureAtlas, "../../../Data/level1.csv", 2);
+
         Reset();
     }
 
     public void Update(GameTime gameTime)
     {
-        Singleton.Instance.CurrentKey = Keyboard.GetState();
-
         //Update
         _numObject = _gameObjects.Count;
         
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
+                UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
                 RemoveInactiveObjects();
 
                 _camera.Follow(player); // Make camera follow the player
                 break;
         }
-
-        Singleton.Instance.PreviousKey = Singleton.Instance.CurrentKey;
-
-        // Console.WriteLine(_gameObjects.Count);
-
     }
 
     public void Draw(GameTime gameTime)
@@ -78,11 +78,9 @@ public class PlayScene
         {
             case Singleton.GameState.Playing:
                 // Draw the Game World (Apply Camera)
-                _spriteBatch.Begin(transformMatrix: _camera.GetTransformation()); // Apply camera matrix
-                for (int i = 0; i < _numObject; i++)
-                {
-                    _gameObjects[i].Draw(_spriteBatch);
-                }    
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransformation()); // Apply camera matrix
+                DrawTileMap();
+                DrawAllObjects();
                 _spriteBatch.End();
 
                 //  Draw the UI (No Camera Transformation)
@@ -93,7 +91,11 @@ public class PlayScene
         }
 
         _graphics.BeginDraw();
+    }
 
+    private void UpdateTileMap(GameTime gameTime)
+    {
+        _tileMap.Update(gameTime, _gameObjects);
     }
 
     public void UpdateAllObjects(GameTime gameTime)
@@ -101,7 +103,7 @@ public class PlayScene
         for (int i = 0; i < _numObject; i++)
         {
             if(_gameObjects[i].IsActive)
-                _gameObjects[i].Update(gameTime, _gameObjects);
+                _gameObjects[i].Update(gameTime, _gameObjects, _tileMap);
         }
     }
 
@@ -118,55 +120,60 @@ public class PlayScene
         }
     }
 
+    private void DrawTileMap()
+    {
+        _tileMap.Draw(_spriteBatch);
+    }
+
+    private void DrawAllObjects()
+    {
+        for (int i = 0; i < _numObject; i++)
+        {
+            _gameObjects[i].Draw(_spriteBatch);
+        }   
+    }
+
     public void Reset()
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
 
-        Singleton.Instance.Random = new System.Random();
+        Singleton.Instance.Random = new Random();
 
         _gameObjects.Clear();
 
-        player = new Player(_spaceInvaderTexture)
+        // Load sprite sheets
+        Texture2D playerIdle = _content.Load<Texture2D>("Char_Animation_Test");
+        Texture2D playerRun = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerJump = _content.Load<Texture2D>("Player");
+
+        player = new Player(playerIdle, playerRun, playerJump)
         {
             Name = "Player",
-            Viewport = new Rectangle(51, 30, 54, 30),
-            Position = new Vector2(62, 640),
+            Viewport = new Rectangle(0, 0, 16, 32),
+            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2),
+            Speed = 400,
             Left = Keys.Left,
             Right = Keys.Right,
             Fire = Keys.E,
             Jump = Keys.Space,
-            Bullet = new Bullet(_spaceInvaderTexture)
+            Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",
-                Viewport = new Rectangle(216, 36, 3, 24)
+                Viewport = new Rectangle(0, 0, 15, 10)
             }
         };
 
         _gameObjects.Add(player);
-
-        for (int j = 0; j < 10; j++)
-        {
-            for (int i = 0; i < 20; i++)
-            {
-                tileTest = new Tile(dirtTexture)
-                {
-                    Name = "Tile",
-                    Position = new Vector2(i * Singleton.BLOCK_SIZE,2 * j * Singleton.BLOCK_SIZE),
-                    IsSolid = true
-                };
-                _gameObjects.Add(tileTest);
-            }
-        }
         
-        baseSkeleton = new SkeletonEnemy(_spaceInvaderTexture){
+        baseSkeleton = new SkeletonEnemy(_enemyTexture){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            Viewport = new Rectangle(0, 30, 54, 30),
+            Viewport = new Rectangle(0, 0, 32, 64),
             // Position = new Vector2(162, 640),
         };
         _gameObjects.Add(baseSkeleton);
-        baseSkeleton.Spawn(162, 640, _gameObjects);
-        baseSkeleton.Spawn(262, 640, _gameObjects);
-        baseSkeleton.Spawn(362, 640, _gameObjects);
+        baseSkeleton.Spawn(162, 600, _gameObjects);
+        baseSkeleton.Spawn(262, 600, _gameObjects);
+        baseSkeleton.Spawn(362, 600, _gameObjects);
 
         foreach (GameObject s in _gameObjects)
         {

@@ -23,7 +23,7 @@ public class GameManager : Game
 
     public GameManager()
     {
-        Window.Title = "Chip Dealer";
+        Window.Title = "Unfinished History";
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -39,8 +39,8 @@ public class GameManager : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
      
         _playScene = new PlayScene();
-        _playScene.Initialize(GraphicsDevice,_graphics);
-        _playScene.LoadContent(Content, GraphicsDevice, _spriteBatch);
+        _playScene.Initialize(GraphicsDevice, _graphics, Content);
+        _playScene.LoadContent(_spriteBatch);
         
         // _mainMenu = new MainMenu();
         // _mainMenu.Initialize();
@@ -59,9 +59,7 @@ public class GameManager : Game
 
     protected override void Update(GameTime gameTime)
     {
-        Singleton.Instance.CurrentKey = Keyboard.GetState();
-        Singleton.Instance.CurrentMouseState = Mouse.GetState();
-
+        Singleton.Instance.UpdateCurrentInput();
 
         //assume game state as playing
         switch (Singleton.Instance.CurrentGameState)
@@ -85,8 +83,7 @@ public class GameManager : Game
         //         break;
         }
 
-        Singleton.Instance.PreviousKey = Singleton.Instance.CurrentKey;
-        Singleton.Instance.PreviousMouseState = Singleton.Instance.CurrentMouseState;
+        Singleton.Instance.UpdatePreviousInput();
 
         base.Update(gameTime);
     }
@@ -101,7 +98,7 @@ public class GameManager : Game
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
-                GraphicsDevice.Clear(Color.Black);
+                GraphicsDevice.Clear(Color.DarkGray);
                 _playScene.Draw(gameTime);
                 break;
         //     case Singleton.GameState.MainMenu:

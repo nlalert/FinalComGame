@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
 {
-    class Tile : GameObject
+    public class Tile : GameObject
     {
         public bool IsSolid;
 
@@ -11,10 +12,25 @@ namespace FinalComGame
         {
             _texture = texture;
         }
+        
+        public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Position, Color.White);
+            spriteBatch.Draw(
+                _texture,
+                Position,
+                Viewport,
+                Color.White,
+                Rotation, 
+                Vector2.Zero,
+                Scale,
+                SpriteEffects.None,
+                0f
+            );
             base.Draw(spriteBatch);
         }
     }

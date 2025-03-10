@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 class Singleton
 {
-    public const int SCREEN_HEIGHT = 700;
-    public const int SCREEN_WIDTH = 700;
+    public const int SCREEN_HEIGHT = 640;
+    public const int SCREEN_WIDTH = 640;
     public const int BLOCK_SIZE = 16;
-    public const int GRAVITY = 5000;
+    public const int GRAVITY = 3500;
     public Random Random;
 
     public enum GameState
@@ -45,5 +45,36 @@ class Singleton
             return instance;
         }
     }
+    
+    public void UpdateCurrentInput()
+    {
+        CurrentKey = Keyboard.GetState();
+        CurrentMouseState = Mouse.GetState();
+    }
+
+    public void UpdatePreviousInput()
+    {
+        PreviousKey = CurrentKey;
+        PreviousMouseState = CurrentMouseState;
+    }
+
+    // Checks if a key is being held down
+    public bool IsKeyPressed(Keys key)
+    {
+        return CurrentKey.IsKeyDown(key);
+    }
+
+    // Checks if a key was JUST pressed (prevents holding issues)
+    public bool IsKeyJustPressed(Keys key)
+    {
+        return CurrentKey.IsKeyDown(key) && PreviousKey.IsKeyUp(key);
+    }
+
+    // Checks if a key was JUST released
+    public bool IsKeyJustReleased(Keys key)
+    {
+        return CurrentKey.IsKeyUp(key) && PreviousKey.IsKeyDown(key);
+    }
+
 }
 
