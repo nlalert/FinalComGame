@@ -46,8 +46,9 @@ abstract class BaseEnemy : GameObject
     public bool HasSpawned { get; protected set; } = false;
     public bool IsDead() => CurrentState == EnemyState.Dead;
     
-    public BaseEnemy(Texture2D texture) : base(texture){
-
+    protected SpriteFont _DebugFont;
+    public BaseEnemy(Texture2D texture,SpriteFont font) : base(texture){
+        _DebugFont = font;
     }
     // Spawn method with optional spawn effects
     public virtual void Spawn(float x, float y, List<GameObject> gameObjects)
@@ -117,7 +118,8 @@ abstract class BaseEnemy : GameObject
     }
 
     public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
-
+        if(HasSpawned == false)
+                return;
         if(CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying){
             this.IsActive = false;
         }
@@ -125,6 +127,8 @@ abstract class BaseEnemy : GameObject
     }
     public override void Draw(SpriteBatch spriteBatch)
     {
+        if(HasSpawned == false)
+        return;
         spriteBatch.Draw(_texture, Position, Viewport, Color.White);
         base.Draw(spriteBatch);
     }
@@ -145,4 +149,5 @@ abstract class BaseEnemy : GameObject
             base.Reset();
         }
     }
+    
 }
