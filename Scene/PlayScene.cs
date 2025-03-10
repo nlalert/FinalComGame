@@ -173,8 +173,8 @@ public class PlayScene
         };
         _gameObjects.Add(baseSkeleton);
         baseSkeleton.Spawn(162, 400, _gameObjects);
-        // baseSkeleton.Spawn(262, 400, _gameObjects);
-        // baseSkeleton.Spawn(462, 100, _gameObjects);
+        baseSkeleton.Spawn(262, 400, _gameObjects);
+        baseSkeleton.Spawn(462, 100, _gameObjects);
 
         foreach (GameObject s in _gameObjects)
         {

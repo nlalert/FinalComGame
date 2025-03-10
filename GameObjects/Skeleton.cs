@@ -7,7 +7,7 @@ namespace FinalComGame
 {
     class SkeletonEnemy : BaseEnemy
     {
-        private int _LimitIdlePatrol = 300;
+        private int _LimitIdlePatrol = 100;
         private Vector2 _PatrolCenterPoint;
         private int _patrolDirection = 1; // 1 = right, -1 = left
         public SkeletonEnemy (Texture2D texture,SpriteFont font) : base(texture,font){
@@ -27,23 +27,21 @@ namespace FinalComGame
             // Console.WriteLine(this.Health); //debug ai 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             ApplyGravity(deltaTime);
-            UpdateHorizontalMovement(deltaTime,gameObjects,tileMap);
-            UpdateVerticalMovement(deltaTime,gameObjects,tileMap);
+            
             switch (CurrentState)
             {
                 case EnemyState.Idle :
                     //move left right in idle state
                     IdlePatrol();
-                    Console.WriteLine();
                     break;
                 // Other state logic similar to previous implementation
             }
-
+            UpdateHorizontalMovement(deltaTime,gameObjects,tileMap);
+            UpdateVerticalMovement(deltaTime,gameObjects,tileMap);
             //update position
             float newX = Position.X + Velocity.X * deltaTime;
             float newY = Position.Y + Velocity.Y * deltaTime;
             Position = new Vector2(newX, newY);
-            UpdateHitbox();
             base.Update(gameTime, gameObjects, tileMap);
         }
 
@@ -63,8 +61,12 @@ namespace FinalComGame
         {
             base.Draw(spriteBatch);
             // Position text slightly above the enemy
+            DrawDebug(spriteBatch);
+        }
+        private void DrawDebug(SpriteBatch spriteBatch){
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20); // 20 pixels above the enemy
-            string displayText = "HP: " + this.Health; /
+            string direction = _patrolDirection != 1 ? "Left" : "right";
+            string displayText = "Dir " + direction+  "\n PatrolDis" + (Position.X - _PatrolCenterPoint.X); 
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
         }
         public override void OnHit(GameObject projectile, float damageAmount)
@@ -83,9 +85,7 @@ namespace FinalComGame
             Position.X += Velocity.X * deltaTime;
             foreach (Tile tile in tileMap.tiles)
             {
-                if(ResolveHorizontalCollision(tile)){
-                    _patrolDirection *=-1;
-                }
+                ResolveHorizontalCollision(tile);
             }
         }
 
@@ -94,19 +94,18 @@ namespace FinalComGame
             Position.Y += Velocity.Y * deltaTime;
             foreach (Tile tile in tileMap.tiles)
             {
-                if(ResolveVerticalCollision(tile)){
-                    _PatrolCenterPoint.X = 0;
-                }
+                ResolveVerticalCollision(tile);
             }
         }
-        private void IdlePatrol(){
-            // Move in the current direction
-            Velocity.X = 50f * _patrolDirection; // Adjust speed as needed
-            // Reverse direction if exceeding patrol limit
+        private void IdlePatrol()
+        {
+
             if (Math.Abs(Position.X - _PatrolCenterPoint.X) >= _LimitIdlePatrol)
             {
                 _patrolDirection *= -1; // Switch direction
             }
+
+            Velocity.X = 50f * _patrolDirection; // Adjust speed as needed
         }
     }
 }
