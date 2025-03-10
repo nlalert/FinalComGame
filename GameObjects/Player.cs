@@ -29,12 +29,14 @@ namespace FinalComGame
         private Animation _idleAnimation;
         private Animation _runAnimation;
         private Animation _jumpAnimation;
+        private Animation _fallAnimation;
 
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D jumpTexture) : base(idleTexture)
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D jumpTexture, Texture2D fallTexture) : base(idleTexture)
         {
-            _idleAnimation = new Animation(idleTexture, 16, 32, 16, 24); // 24 fps
-            _runAnimation = new Animation(runTexture, 16, 32, 16, 24); //  24 fps
-            _jumpAnimation = new Animation(jumpTexture, 16, 32, 16, 24); //  24 fps
+            _idleAnimation = new Animation(idleTexture, 48, 64, 16, 24); // 24 fps
+            _runAnimation = new Animation(runTexture, 48, 64, 8, 24); //  24 fps
+            _jumpAnimation = new Animation(jumpTexture, 48, 64, 4, 24); //  24 fps
+            _fallAnimation = new Animation(fallTexture, 48, 64, 4, 24); //  24 fps
 
             Animation = _idleAnimation;
         }
@@ -42,10 +44,12 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             SpriteEffects spriteEffect = direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            Vector2 _spritePosition = new Vector2(Position.X - (Animation.GetFrameSize().X - Viewport.Width) / 2 
+            , Position.Y - (Animation.GetFrameSize().Y - Viewport.Height) / 2);
 
             spriteBatch.Draw(
                 Animation.GetTexture(),
-                Position,
+                _spritePosition,
                 Animation.GetCurrentFrame(),
                 Color.White,
                 0f, 
@@ -78,7 +82,6 @@ namespace FinalComGame
             UpdateAnimation(deltaTime);
 
             // Keep player within screen bounds for now 
-            Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
 
             Velocity.X = 0; // Reset horizontal velocity each frame
 
@@ -87,8 +90,10 @@ namespace FinalComGame
 
         private void UpdateAnimation(float deltaTime)
         {
-            if (isJumping || Velocity.Y != 0) 
+            if (Velocity.Y < 0) 
                 Animation = _jumpAnimation;
+            else if (Velocity.Y > 0)
+                Animation = _fallAnimation;
             else if (Velocity.X != 0)
                 Animation = _runAnimation;
             else // Not moving

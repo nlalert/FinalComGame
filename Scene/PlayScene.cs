@@ -150,16 +150,17 @@ public class PlayScene
         _gameObjects.Clear();
 
         // Load sprite sheets
-        Texture2D playerIdle = _content.Load<Texture2D>("Char_Animation_Test");
-        Texture2D playerRun = _content.Load<Texture2D>("EnemyRed");
-        Texture2D playerJump = _content.Load<Texture2D>("Player");
+        Texture2D playerIdle = _content.Load<Texture2D>("Char_Idle");
+        Texture2D playerRun = _content.Load<Texture2D>("Char_Run");
+        Texture2D playerJump = _content.Load<Texture2D>("Char_Jump");
+        Texture2D playerFall = _content.Load<Texture2D>("Char_Fall");
 
-        player = new Player(playerIdle, playerRun, playerJump)
+        player = new Player(playerIdle, playerRun, playerJump, playerFall)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
             Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2),
-            Speed = 400,
+            Speed = 300,
             Left = Keys.Left,
             Right = Keys.Right,
             Fire = Keys.E,
