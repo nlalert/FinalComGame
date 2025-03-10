@@ -120,14 +120,18 @@ namespace FinalComGame
             if (Singleton.Instance.IsKeyPressed(Left))
             {
                 if (!isDashing) 
+                {
+                    direction = -1;
                     Velocity.X = -Speed;
-                direction = -1;
+                }
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
                 if (!isDashing) 
+                {
+                    direction = 1;
                     Velocity.X = Speed;
-                direction = 1;
+                }
             }
 
             if (Singleton.Instance.IsKeyJustPressed(Fire))
