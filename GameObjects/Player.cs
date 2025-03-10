@@ -77,9 +77,6 @@ namespace FinalComGame
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             UpdateAnimation(deltaTime);
 
-            // Keep player within screen bounds for now 
-            Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
-
             Velocity.X = 0; // Reset horizontal velocity each frame
 
             base.Update(gameTime, gameObjects, tileMap);
