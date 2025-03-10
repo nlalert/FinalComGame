@@ -10,31 +10,41 @@ namespace FinalComGame
     class Player : GameObject
     {
         public Bullet Bullet;
-        public Keys Left, Right, Fire, Jump;
+        public Keys Left, Right, Fire, Jump, Dash;
 
-        private float jumpStrength = 1000f;
         public int Speed;
-        private bool isJumping = false;
-
         private int direction = 1; // 1 = Right, -1 = Left
 
-        // Constants
+        //Jump
+        private bool isJumping = false;
+        private float jumpStrength = 1000f;
         private float coyoteTime = 0.1f; // 100ms of coyote time
-        private float jumpBufferTime = 0.15f; // 150ms jump buffer
-
-        // Timers
         private float coyoteTimeCounter = 0f;
+        private float jumpBufferTime = 0.15f; // 150ms jump buffer
         private float jumpBufferCounter = 0f;
 
+        // Dash 
+        private bool isDashing = false;
+        private float dashSpeed = 800f;
+        private float dashDuration = 0.2f; // Dash lasts for 0.2 seconds
+        private float dashCooldown = 0.5f; // Cooldown before dashing again
+        private float dashTimer = 0f;
+        private float dashCooldownTimer = 0f;
+
+        //Animation
         private Animation _idleAnimation;
         private Animation _runAnimation;
         private Animation _jumpAnimation;
+        private Animation _dashAnimation;
+        private Animation _glideAnimation;
 
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D jumpTexture) : base(idleTexture)
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D jumpTexture, Texture2D dashTexture, Texture2D glideTexture) : base(idleTexture)
         {
             _idleAnimation = new Animation(idleTexture, 16, 32, 16, 24); // 24 fps
             _runAnimation = new Animation(runTexture, 16, 32, 16, 24); //  24 fps
             _jumpAnimation = new Animation(jumpTexture, 16, 32, 16, 24); //  24 fps
+            _dashAnimation = new Animation(dashTexture, 16, 32, 16, 24); //  24 fps
+            _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
 
             Animation = _idleAnimation;
         }
@@ -72,23 +82,27 @@ namespace FinalComGame
             HandleInput(deltaTime, gameObjects);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
-            ApplyGravity(deltaTime);
+            if (!isDashing) 
+                ApplyGravity(deltaTime);
+            UpdateDash(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             UpdateAnimation(deltaTime);
 
-            Velocity.X = 0; // Reset horizontal velocity each frame
+            if (!isDashing) Velocity.X = 0;
 
             base.Update(gameTime, gameObjects, tileMap);
         }
 
         private void UpdateAnimation(float deltaTime)
         {
-            if (isJumping || Velocity.Y != 0) 
+            if (isDashing)
+                Animation = _dashAnimation;
+            else if (isJumping || Velocity.Y != 0)
                 Animation = _jumpAnimation;
             else if (Velocity.X != 0)
                 Animation = _runAnimation;
-            else // Not moving
+            else
                 Animation = _idleAnimation;
 
             Animation?.Update(deltaTime);
@@ -105,23 +119,55 @@ namespace FinalComGame
         {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
-                Velocity.X = -Speed;
+                if (!isDashing) 
+                    Velocity.X = -Speed;
                 direction = -1;
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
-                Velocity.X = Speed;
+                if (!isDashing) 
+                    Velocity.X = Speed;
                 direction = 1;
             }
 
             if (Singleton.Instance.IsKeyJustPressed(Fire))
                 Shoot(gameObjects);
 
-            // Jump Buffer: Store jump input for a short period
             if (Singleton.Instance.IsKeyJustPressed(Jump))
-                jumpBufferCounter = jumpBufferTime; // Store jump input
+                jumpBufferCounter = jumpBufferTime;
             else
-                jumpBufferCounter -= deltaTime; // Decrease over time
+                jumpBufferCounter -= deltaTime;
+
+            if (Singleton.Instance.IsKeyJustPressed(Dash))
+                StartDash();
+        }
+
+        private void StartDash()
+        {
+            if (dashCooldownTimer <= 0 && !isDashing)
+            {
+                isDashing = true;
+                dashTimer = dashDuration;
+                dashCooldownTimer = dashCooldown;
+                Velocity.X = dashSpeed * direction;
+            }
+        }
+
+        private void UpdateDash(float deltaTime)
+        {
+            if (isDashing)
+            {
+                dashTimer -= deltaTime;
+                if (dashTimer <= 0)
+                {
+                    isDashing = false;
+                    Velocity.X = 0;
+                }
+            }
+            else
+            {
+                dashCooldownTimer -= deltaTime;
+            }
         }
 
         private void UpdateCoyoteTime(float deltaTime)

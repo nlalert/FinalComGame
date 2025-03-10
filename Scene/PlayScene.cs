@@ -145,8 +145,10 @@ public class PlayScene
         Texture2D playerIdle = _content.Load<Texture2D>("Char_Animation_Test");
         Texture2D playerRun = _content.Load<Texture2D>("EnemyRed");
         Texture2D playerJump = _content.Load<Texture2D>("Player");
+        Texture2D playerDash = _content.Load<Texture2D>("Char_Animation_Test");
+        Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
 
-        player = new Player(playerIdle, playerRun, playerJump)
+        player = new Player(playerIdle, playerRun, playerJump, playerDash, playerGlide)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
@@ -156,6 +158,7 @@ public class PlayScene
             Right = Keys.Right,
             Fire = Keys.E,
             Jump = Keys.Space,
+            Dash = Keys.LeftShift,
             Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",
