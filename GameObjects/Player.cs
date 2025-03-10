@@ -75,7 +75,7 @@ namespace FinalComGame
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-            UpdateAnimation();
+            UpdateAnimation(deltaTime);
 
             // Keep player within screen bounds for now 
             Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
@@ -85,7 +85,7 @@ namespace FinalComGame
             base.Update(gameTime, gameObjects, tileMap);
         }
 
-        private void UpdateAnimation()
+        private void UpdateAnimation(float deltaTime)
         {
             if (isJumping || Velocity.Y != 0) 
                 Animation = _jumpAnimation;
@@ -93,6 +93,8 @@ namespace FinalComGame
                 Animation = _runAnimation;
             else // Not moving
                 Animation = _idleAnimation;
+
+            Animation?.Update(deltaTime);
         }
 
         private void ApplyGravity(float deltaTime)
