@@ -29,11 +29,11 @@ namespace FinalComGame
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(float deltaTime)
         {
             if (IsFinished) return;
 
-            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _timer += deltaTime;
 
             if (_timer >= 1 / _fps)
             {
