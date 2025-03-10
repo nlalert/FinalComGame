@@ -134,16 +134,6 @@ abstract class BaseEnemy : GameObject
     }
 
         // Protected helper methods
-    protected virtual void UpdateHitbox()
-    {
-        // Update hitbox based on current position and sprite size
-        Hitbox = new Rectangle(
-            (int)Position.X, 
-            (int)Position.Y, 
-            32,  // Assume 32x32 sprite
-            64
-        );
-    }
         public override void Reset()
         {
             base.Reset();
