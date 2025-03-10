@@ -57,7 +57,8 @@ public class PlayScene
     {
         //Update
         _numObject = _gameObjects.Count;
-        
+        if(Singleton.Instance.IsKeyPressed(Keys.R))
+            this.Reset();
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
@@ -171,9 +172,9 @@ public class PlayScene
             // Position = new Vector2(162, 640),
         };
         _gameObjects.Add(baseSkeleton);
-        baseSkeleton.Spawn(162, 600, _gameObjects);
-        baseSkeleton.Spawn(262, 600, _gameObjects);
-        baseSkeleton.Spawn(362, 600, _gameObjects);
+        baseSkeleton.Spawn(162, 700, _gameObjects);
+        // baseSkeleton.Spawn(262, 600, _gameObjects);
+        // baseSkeleton.Spawn(362, 600, _gameObjects);
 
         foreach (GameObject s in _gameObjects)
         {
