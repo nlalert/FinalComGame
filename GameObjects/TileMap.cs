@@ -33,10 +33,16 @@ namespace FinalComGame
 
                     for (int x = 0; x < items.Length; x++)
                     {
-                        if (int.TryParse(items[x], out int tileID) && tileID >= 0)
+                        if (int.TryParse(items[x], out int tileID) && tileID > 0)
                         {
                             int tileX = tileID % numTilesPerRow;
                             int tileY = tileID / numTilesPerRow;
+                            bool collision = false;
+
+                            if (tileID == 19 || tileID == 20)
+                            {
+                                collision = true;
+                            }
 
                             Tile tile = new Tile(textureAtlas)
                             {
@@ -47,8 +53,8 @@ namespace FinalComGame
                                     tileY * Singleton.BLOCK_SIZE, 
                                     Singleton.BLOCK_SIZE, 
                                     Singleton.BLOCK_SIZE
-                                ),
-                                IsSolid = true
+                                ),                            
+                                IsSolid = collision
 
                             };
 

@@ -22,7 +22,9 @@ public class PlayScene
 
     int _numObject;
     private Camera _camera;
-    private TileMap _tileMap;
+    private TileMap _collisionTileMap;
+    private TileMap _foreGroundTileMap;
+    private TileMap _middleGroundTileMap;
 
     private Player player;
     private BaseEnemy baseSkeleton;
@@ -47,8 +49,10 @@ public class PlayScene
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
 
-        Texture2D textureAtlas = _content.Load<Texture2D>("atlas");
-        _tileMap = new TileMap(textureAtlas, "../../../Data/level1.csv", 2);
+        Texture2D textureAtlas = _content.Load<Texture2D>("Tiles_Test");
+        _middleGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_Test/Level_Test_Mg.csv", 8);
+        _foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_Test/Level_Test_Fg.csv", 8);
+        _collisionTileMap = new TileMap(textureAtlas, "../../../Data/Level_Test/Level_Test_Collision.csv", 8);
 
         Reset();
     }
@@ -95,7 +99,7 @@ public class PlayScene
 
     private void UpdateTileMap(GameTime gameTime)
     {
-        _tileMap.Update(gameTime, _gameObjects);
+        _collisionTileMap.Update(gameTime, _gameObjects);
     }
 
     public void UpdateAllObjects(GameTime gameTime)
@@ -103,7 +107,7 @@ public class PlayScene
         for (int i = 0; i < _numObject; i++)
         {
             if(_gameObjects[i].IsActive)
-                _gameObjects[i].Update(gameTime, _gameObjects, _tileMap);
+                _gameObjects[i].Update(gameTime, _gameObjects, _collisionTileMap);
         }
     }
 
@@ -122,7 +126,11 @@ public class PlayScene
 
     private void DrawTileMap()
     {
-        _tileMap.Draw(_spriteBatch);
+        _middleGroundTileMap.Draw(_spriteBatch);
+        _foreGroundTileMap.Draw(_spriteBatch);
+        
+        //Should be hidden
+        _collisionTileMap.Draw(_spriteBatch);
     }
 
     private void DrawAllObjects()

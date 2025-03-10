@@ -60,7 +60,7 @@ namespace FinalComGame
 
         public override void Reset()
         {
-            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2);
+            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/8);
             direction = 1; // Reset direction to right
             base.Reset();
         }
