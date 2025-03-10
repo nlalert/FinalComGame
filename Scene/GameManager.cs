@@ -39,8 +39,8 @@ public class GameManager : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
      
         _playScene = new PlayScene();
-        _playScene.Initialize(GraphicsDevice,_graphics);
-        _playScene.LoadContent(Content, _spriteBatch);
+        _playScene.Initialize(GraphicsDevice, _graphics, Content);
+        _playScene.LoadContent(_spriteBatch);
         
         // _mainMenu = new MainMenu();
         // _mainMenu.Initialize();

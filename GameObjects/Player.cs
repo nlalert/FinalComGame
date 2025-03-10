@@ -26,24 +26,35 @@ namespace FinalComGame
         private float coyoteTimeCounter = 0f;
         private float jumpBufferCounter = 0f;
 
-        public Player(Texture2D texture) : base(texture)
-        {
+        private Animation _idleAnimation;
+        private Animation _runAnimation;
+        private Animation _jumpAnimation;
 
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D jumpTexture) : base(idleTexture)
+        {
+            _idleAnimation = new Animation(idleTexture, 16, 32, 16, 24); // 24 fps
+            _runAnimation = new Animation(runTexture, 16, 32, 16, 24); //  24 fps
+            _jumpAnimation = new Animation(jumpTexture, 16, 32, 16, 24); //  24 fps
+
+            Animation = _idleAnimation;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            SpriteEffects spriteEffect = direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
             spriteBatch.Draw(
-                _texture,
+                Animation.GetTexture(),
                 Position,
-                Viewport,
+                Animation.GetCurrentFrame(),
                 Color.White,
-                Rotation, 
+                0f, 
                 Vector2.Zero,
-                Scale,
-                SpriteEffects.None,
+                1f,
+                spriteEffect, 
                 0f
             );
+
             base.Draw(spriteBatch);
         }
 
@@ -64,12 +75,24 @@ namespace FinalComGame
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+            UpdateAnimation();
 
             // Keep player within screen bounds for now 
             Position.X = MathHelper.Clamp(Position.X, 0, Singleton.SCREEN_WIDTH - Rectangle.Width);
+
             Velocity.X = 0; // Reset horizontal velocity each frame
 
             base.Update(gameTime, gameObjects, tileMap);
+        }
+
+        private void UpdateAnimation()
+        {
+            if (isJumping || Velocity.Y != 0) 
+                Animation = _jumpAnimation;
+            else if (Velocity.X != 0)
+                Animation = _runAnimation;
+            else // Not moving
+                Animation = _idleAnimation;
         }
 
         private void ApplyGravity(float deltaTime)

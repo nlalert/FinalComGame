@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FinalComGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 public class GameObject : ICloneable
 {
@@ -24,6 +20,7 @@ public class GameObject : ICloneable
     public string Name;
 
     public bool IsActive;
+    public Animation Animation;
 
     public Rectangle Rectangle
     {

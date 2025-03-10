@@ -11,6 +11,7 @@ public class PlayScene
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private ContentManager _content;
 
     SpriteFont _font;
 
@@ -25,8 +26,7 @@ public class PlayScene
 
     private Player player;
     private BaseEnemy baseSkeleton;
-
-    public void Initialize(GraphicsDevice graphicsDevice,GraphicsDeviceManager graphicsDeviceManager)
+    public void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         _graphics = graphicsDeviceManager;
         _graphicsDevice = graphicsDevice;
@@ -34,20 +34,22 @@ public class PlayScene
         _graphics.PreferredBackBufferHeight = Singleton.SCREEN_HEIGHT;
         _graphics.ApplyChanges();
 
+        _content = content;
+
         _gameObjects = new List<GameObject>();
         _camera = new Camera(_graphicsDevice.Viewport); // Initialize camera
-        Reset();
     }
 
-    public void LoadContent(ContentManager content, SpriteBatch spriteBatch)
+    public void LoadContent(SpriteBatch spriteBatch)
     {
         _spriteBatch = spriteBatch;
-        _font = content.Load<SpriteFont>("GameFont");
-        _playerTexture = content.Load<Texture2D>("Char_test");
-        _enemyTexture = content.Load<Texture2D>("EnemyRed");
+        _font = _content.Load<SpriteFont>("GameFont");
+        _playerTexture = _content.Load<Texture2D>("Char_test");
+        _enemyTexture = _content.Load<Texture2D>("EnemyRed");
 
-        Texture2D textureAtlas = content.Load<Texture2D>("atlas");
+        Texture2D textureAtlas = _content.Load<Texture2D>("atlas");
         _tileMap = new TileMap(textureAtlas, "../../../Data/level1.csv", 2);
+
         Reset();
     }
 
@@ -135,11 +137,16 @@ public class PlayScene
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
 
-        Singleton.Instance.Random = new System.Random();
+        Singleton.Instance.Random = new Random();
 
         _gameObjects.Clear();
 
-        player = new Player(_playerTexture)
+        // Load sprite sheets
+        Texture2D playerIdle = _content.Load<Texture2D>("Char_Animation_Test");
+        Texture2D playerRun = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerJump = _content.Load<Texture2D>("Player");
+
+        player = new Player(playerIdle, playerRun, playerJump)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
