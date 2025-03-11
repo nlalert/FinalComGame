@@ -15,7 +15,6 @@ namespace FinalComGame
         }
         public override void Reset()
         {
-            
             Console.WriteLine("Reset Skeleton");
             maxHealth = 80f;
             attackDamage = 5f;
@@ -24,24 +23,19 @@ namespace FinalComGame
         }
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-            // Console.WriteLine(this.Health); //debug ai 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            ApplyGravity(deltaTime);
-            
             switch (CurrentState)
             {
+                //donot update Position at all cost 
                 case EnemyState.Idle :
                     //move left right in idle state
-                    IdlePatrol();
+                    IdlePatrol(deltaTime,gameObjects,tileMap);
                     break;
-                // Other state logic similar to previous implementation
             }
-            UpdateHorizontalMovement(deltaTime,gameObjects,tileMap);
-            UpdateVerticalMovement(deltaTime,gameObjects,tileMap);
+            
+
             //update position
-            float newX = Position.X + Velocity.X * deltaTime;
-            float newY = Position.Y + Velocity.Y * deltaTime;
-            Position = new Vector2(newX, newY);
+
             base.Update(gameTime, gameObjects, tileMap);
         }
 
@@ -78,28 +72,12 @@ namespace FinalComGame
         private void ApplyGravity(float deltaTime)
         {
             Velocity.Y += Singleton.GRAVITY * deltaTime; 
-
-        }
-        private void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            Position.X += Velocity.X * deltaTime;
-            foreach (Tile tile in tileMap.tiles)
-            {
-                ResolveHorizontalCollision(tile);
-            }
         }
 
-        private void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        private void IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-            Position.Y += Velocity.Y * deltaTime;
-            foreach (Tile tile in tileMap.tiles)
-            {
-                ResolveVerticalCollision(tile);
-            }
-        }
-        private void IdlePatrol()
-        {
-
+            ApplyGravity(deltaTime);
+            //moing left
             if (Math.Abs(Position.X - _PatrolCenterPoint.X) >= _LimitIdlePatrol)
             {
                 _patrolDirection *= -1; // Switch direction
@@ -107,5 +85,6 @@ namespace FinalComGame
 
             Velocity.X = 50f * _patrolDirection; // Adjust speed as needed
         }
+
     }
 }

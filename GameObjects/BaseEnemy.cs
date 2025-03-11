@@ -156,6 +156,7 @@ namespace FinalComGame {
                         collisionDetected = true;
                         Velocity = new Vector2(Velocity.X, 0); // Stop vertical movement
                         newY = t.Rectangle.Bottom; // Position right below the tile
+                        break;
                     }
                     
                     // Check left wall collision
@@ -164,6 +165,7 @@ namespace FinalComGame {
                         collisionDetected = true;
                         Velocity = new Vector2(0, Velocity.Y); // Stop horizontal movement
                         newX = t.Rectangle.Left - this.Rectangle.Width; // Position to the left of the tile
+                        break;
                     }
                     
                     // Check right wall collision
@@ -172,6 +174,7 @@ namespace FinalComGame {
                         collisionDetected = true;
                         Velocity = new Vector2(0, Velocity.Y); // Stop horizontal movement
                         newX = t.Rectangle.Right; // Position to the right of the tile
+                        break;
                     }
                 }
             }
