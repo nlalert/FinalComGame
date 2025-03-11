@@ -187,6 +187,7 @@ namespace FinalComGame
 
         private bool IsOnGround()
         {
+            //TODO apex of jump is grounded?
             return Velocity.Y == 0;
         }
     }
