@@ -57,7 +57,8 @@ public class PlayScene
     {
         //Update
         _numObject = _gameObjects.Count;
-        
+        if(Singleton.Instance.IsKeyPressed(Keys.R))
+            this.Reset();
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
@@ -168,15 +169,15 @@ public class PlayScene
 
         _gameObjects.Add(player);
         
-        baseSkeleton = new SkeletonEnemy(_enemyTexture){
+        baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
-            // Position = new Vector2(162, 640),
+            CanCollideTile = true,
         };
         _gameObjects.Add(baseSkeleton);
-        baseSkeleton.Spawn(162, 600, _gameObjects);
-        baseSkeleton.Spawn(262, 600, _gameObjects);
-        baseSkeleton.Spawn(362, 600, _gameObjects);
+        baseSkeleton.Spawn(132, 400, _gameObjects);
+        baseSkeleton.Spawn(262, 200, _gameObjects);
+        baseSkeleton.Spawn(462, 100, _gameObjects);
 
         foreach (GameObject s in _gameObjects)
         {
