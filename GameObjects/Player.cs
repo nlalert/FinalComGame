@@ -145,6 +145,17 @@ namespace FinalComGame
             if (Singleton.Instance.IsKeyJustPressed(Attack))
                 StartAttack();
 
+            if (isAttacking)
+            {
+                attackTimer -= deltaTime;
+                if (attackTimer <= 0)
+                    isAttacking = false;
+            }
+            else
+            {
+                attackCooldownTimer -= deltaTime;
+            }
+            
             if (Singleton.Instance.IsKeyJustPressed(Fire))
                 Shoot(gameObjects);
 
