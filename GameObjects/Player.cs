@@ -102,11 +102,11 @@ namespace FinalComGame
             if (!isDashing) 
                 ApplyGravity(deltaTime);
             UpdateDash(deltaTime);
-            CheckAttackHit(gameObjects);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+            UpdateAttackHitbox();
+            CheckAttackHit(gameObjects);
             UpdateAnimation(deltaTime);
-
             if (!isDashing) Velocity.X = 0;
 
             base.Update(gameTime, gameObjects, tileMap);
@@ -199,6 +199,17 @@ namespace FinalComGame
             }
         }
 
+        private void UpdateAttackHitbox()
+        {
+            if (isAttacking)
+            {
+                int attackWidth = 20; // Adjust as needed
+                int attackHeight = 32;
+                int offsetX = direction == 1 ? Rectangle.Width : -attackWidth;
+
+                attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
+            }
+        }
         private void CheckAttackHit(List<GameObject> gameObjects)
         {
             if (!isAttacking) return;
