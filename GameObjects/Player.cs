@@ -93,6 +93,7 @@ namespace FinalComGame
             if (!isDashing) 
                 ApplyGravity(deltaTime);
             UpdateDash(deltaTime);
+            CheckAttackHit(gameObjects);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             UpdateAnimation(deltaTime);
@@ -155,7 +156,7 @@ namespace FinalComGame
             {
                 attackCooldownTimer -= deltaTime;
             }
-            
+
             if (Singleton.Instance.IsKeyJustPressed(Fire))
                 Shoot(gameObjects);
 
@@ -185,6 +186,18 @@ namespace FinalComGame
 
                 // TODO: Detect enemies within this hitbox
             }
+        }
+
+        private void CheckAttackHit(List<GameObject> gameObjects)
+        {
+            if (!isAttacking) return;
+
+            foreach (var enemy in gameObjects.OfType<BaseEnemy>())
+            {
+                enemy.OnHit(10); // Call a damage function
+            }
+
+            isAttacking = false;
         }
 
         private void StartDash()

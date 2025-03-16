@@ -97,6 +97,18 @@ namespace FinalComGame {
                 OnDead();
             }
         }
+        
+        public virtual void OnHit(float damageAmount)
+        {
+            // Generic hit handling
+            Health -= damageAmount;
+
+            if (Health <= 0)
+            {
+                CurrentState = EnemyState.Dying;
+                OnDead();
+            }
+        }
 
         public virtual void OnHitPlayer()
         {
