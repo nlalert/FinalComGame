@@ -14,6 +14,14 @@ namespace FinalComGame
 
         public int Speed;
         private int direction = 1; // 1 = Right, -1 = Left
+        
+        //Attack
+        private bool isAttacking = false;
+        private float attackDuration = 0.2f; // How long the attack lasts
+        private float attackCooldown = 0.5f; // Cooldown before attacking again
+        private float attackTimer = 0f;
+        private float attackCooldownTimer = 0f;
+        private Rectangle attackHitbox;
 
         //Jump
         private bool isJumping = false;
@@ -134,6 +142,9 @@ namespace FinalComGame
                 }
             }
 
+            if (Singleton.Instance.IsKeyJustPressed(Attack))
+                StartAttack();
+
             if (Singleton.Instance.IsKeyJustPressed(Fire))
                 Shoot(gameObjects);
 
@@ -144,6 +155,25 @@ namespace FinalComGame
 
             if (Singleton.Instance.IsKeyJustPressed(Dash))
                 StartDash();
+        }
+
+        private void StartAttack()
+        {
+            if (attackCooldownTimer <= 0 && !isAttacking)
+            {
+                isAttacking = true;
+                attackTimer = attackDuration;
+                attackCooldownTimer = attackCooldown;
+
+                // Set attack hitbox in front of the player
+                int attackWidth = 20; // Adjust the size of the attack area
+                int attackHeight = 32;
+                int offsetX = direction == 1 ? Rectangle.Width : -attackWidth;
+
+                attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
+
+                // TODO: Detect enemies within this hitbox
+            }
         }
 
         private void StartDash()
