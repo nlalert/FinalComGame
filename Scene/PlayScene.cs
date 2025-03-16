@@ -145,11 +145,12 @@ public class PlayScene
         // Load sprite sheets
         Texture2D playerIdle = _content.Load<Texture2D>("Char_Animation_Test");
         Texture2D playerRun = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerMelee = _content.Load<Texture2D>("Player");
         Texture2D playerJump = _content.Load<Texture2D>("Player");
         Texture2D playerDash = _content.Load<Texture2D>("Char_Animation_Test");
         Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
 
-        player = new Player(playerIdle, playerRun, playerJump, playerDash, playerGlide)
+        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerDash, playerGlide)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),

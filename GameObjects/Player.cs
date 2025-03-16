@@ -42,14 +42,16 @@ namespace FinalComGame
         //Animation
         private Animation _idleAnimation;
         private Animation _runAnimation;
+        private Animation _meleeAttackAnimation;
         private Animation _jumpAnimation;
         private Animation _dashAnimation;
         private Animation _glideAnimation;
 
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D jumpTexture, Texture2D dashTexture, Texture2D glideTexture) : base(idleTexture)
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D dashTexture, Texture2D glideTexture) : base(idleTexture)
         {
             _idleAnimation = new Animation(idleTexture, 16, 32, 16, 24); // 24 fps
             _runAnimation = new Animation(runTexture, 16, 32, 16, 24); //  24 fps
+            _meleeAttackAnimation = new Animation(meleeAttackTexture, 16, 32, 16, 24); // 24 fps
             _jumpAnimation = new Animation(jumpTexture, 16, 32, 16, 24); //  24 fps
             _dashAnimation = new Animation(dashTexture, 16, 32, 16, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
@@ -112,7 +114,9 @@ namespace FinalComGame
 
         private void UpdateAnimation(float deltaTime)
         {
-            if (isDashing)
+            if(isAttacking)
+                Animation = _meleeAttackAnimation;
+            else if (isDashing)
                 Animation = _dashAnimation;
             else if (isJumping || Velocity.Y != 0)
                 Animation = _jumpAnimation;
