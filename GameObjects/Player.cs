@@ -59,6 +59,13 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // hitbox debug drawing
+            Texture2D debugTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            debugTexture.SetData(new Color[] { Color.Red });
+
+            if (attackTimer > 0)
+                spriteBatch.Draw(debugTexture, attackHitbox, Color.Red);
+
             SpriteEffects spriteEffect = direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             spriteBatch.Draw(
@@ -194,10 +201,10 @@ namespace FinalComGame
 
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
-                enemy.OnHit(10); // Call a damage function
+                enemy.CheckHit(attackHitbox, 10);
             }
 
-            isAttacking = false;
+            //constant hitting no i-frame :(
         }
 
         private void StartDash()

@@ -97,7 +97,7 @@ namespace FinalComGame {
                 OnDead();
             }
         }
-        
+
         public virtual void OnHit(float damageAmount)
         {
             // Generic hit handling
@@ -196,6 +196,14 @@ namespace FinalComGame {
     
         // Now actually move to the valid position
         Position = new Vector2(newX, newY);
+        }
+
+        public virtual void CheckHit(Rectangle attackHitbox, float damageAmount)
+        {
+            if(IsTouching(attackHitbox))
+            {
+                OnHit(damageAmount);
+            }
         }
     }
 }
