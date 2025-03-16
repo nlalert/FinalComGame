@@ -160,6 +160,7 @@ public class PlayScene
             Fire = Keys.E,
             Jump = Keys.Space,
             Dash = Keys.LeftShift,
+            Attack = Keys.Q,
             Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",

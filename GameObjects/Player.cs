@@ -10,7 +10,7 @@ namespace FinalComGame
     class Player : GameObject
     {
         public Bullet Bullet;
-        public Keys Left, Right, Fire, Jump, Dash;
+        public Keys Left, Right, Fire, Jump, Attack, Dash;
 
         public int Speed;
         private int direction = 1; // 1 = Right, -1 = Left
