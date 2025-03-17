@@ -113,7 +113,7 @@ namespace FinalComGame {
             if(CanCollideTile){
                 ResolveTileCollision(deltaTime,gameObjects,tileMap);
             }
-
+            UpdateAnimation(deltaTime);
             base.Update(gameTime,gameObjects, tileMap);
         }
 
@@ -131,6 +131,13 @@ namespace FinalComGame {
             base.Reset();
         }
 
+        protected override void UpdateAnimation(float deltaTime)
+        {
+            //TODO : add more animation
+            Animation = _idleAnimation;
+            base.UpdateAnimation(deltaTime);
+        }
+        
         private void ResolveTileCollision(float deltaTime, List<GameObject> gameObjects, TileMap tileMap){
             float newX = Position.X + Velocity.X * deltaTime;
             float newY = Position.Y + Velocity.Y * deltaTime;

@@ -76,6 +76,7 @@ namespace FinalComGame {
 
         protected virtual void UpdateAnimation(float deltaTime)
         {
+            Animation?.Update(deltaTime);
         }
 
         public virtual void OnHit(GameObject projectile, float damageAmount)

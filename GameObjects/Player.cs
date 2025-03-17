@@ -88,7 +88,7 @@ namespace FinalComGame
             else
                 Animation = _idleAnimation;
 
-            Animation?.Update(deltaTime);
+            base.UpdateAnimation(deltaTime);
         }
 
         private void HandleInput(float deltaTime, List<GameObject> gameObjects)
@@ -166,6 +166,7 @@ namespace FinalComGame
                 attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
             }
         }
+        
         private void CheckAttackHit(List<GameObject> gameObjects)
         {
             if (!isAttacking) return;

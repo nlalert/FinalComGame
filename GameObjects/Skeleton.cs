@@ -32,9 +32,6 @@ namespace FinalComGame
                     break;
             }
             
-
-            //update position
-
             base.Update(gameTime, gameObjects, tileMap);
         }
 
