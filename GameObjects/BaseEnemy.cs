@@ -7,6 +7,10 @@ using System.Collections.Generic;
 namespace FinalComGame {
     abstract class BaseEnemy : GameObject
     {
+        // i-frame
+        protected float invincibilityDuration = 0.5f; // 0.5 seconds of i-frames
+        protected float invincibilityTimer = 0f;
+
         // Enemy States
         public enum EnemyState
         {
@@ -88,9 +92,11 @@ namespace FinalComGame {
 
         public virtual void OnHit(GameObject projectile,float damageAmount)
         {
+            if (invincibilityTimer > 0) 
+                return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;
-
+            invincibilityTimer = invincibilityDuration; // Activate i-frames
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;
@@ -100,9 +106,11 @@ namespace FinalComGame {
 
         public virtual void OnHit(float damageAmount)
         {
+            if (invincibilityTimer > 0) 
+                return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;
-
+            invincibilityTimer = invincibilityDuration; // Activate i-frames
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;
@@ -121,6 +129,10 @@ namespace FinalComGame {
             if(CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying){
                 this.IsActive = false;
             }
+            // Decrease invincibility timer
+            if (invincibilityTimer > 0)
+                invincibilityTimer -= deltaTime;
+
             if(CanCollideTile){
                 ResolveTileCollision(deltaTime,gameObjects,tileMap);
             }
