@@ -14,6 +14,14 @@ namespace FinalComGame
 
         public int Speed;
         private int direction = 1; // 1 = Right, -1 = Left
+        
+        //Attack
+        private bool isAttacking = false;
+        private float attackDuration = 0.2f; // How long the attack lasts
+        private float attackCooldown = 0.5f; // Cooldown before attacking again
+        private float attackTimer = 0f;
+        private float attackCooldownTimer = 0f;
+        private Rectangle attackHitbox;
 
         //Jump
         private bool isJumping = false;
@@ -34,14 +42,16 @@ namespace FinalComGame
         //Animation
         private Animation _idleAnimation;
         private Animation _runAnimation;
+        private Animation _meleeAttackAnimation;
         private Animation _jumpAnimation;
         private Animation _dashAnimation;
         private Animation _glideAnimation;
 
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D jumpTexture, Texture2D dashTexture, Texture2D glideTexture) : base(idleTexture)
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D dashTexture, Texture2D glideTexture) : base(idleTexture)
         {
             _idleAnimation = new Animation(idleTexture, 16, 32, 16, 24); // 24 fps
             _runAnimation = new Animation(runTexture, 16, 32, 16, 24); //  24 fps
+            _meleeAttackAnimation = new Animation(meleeAttackTexture, 16, 32, 16, 24); // 24 fps
             _jumpAnimation = new Animation(jumpTexture, 16, 32, 16, 24); //  24 fps
             _dashAnimation = new Animation(dashTexture, 16, 32, 16, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
@@ -51,6 +61,13 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // hitbox debug drawing
+            Texture2D debugTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            debugTexture.SetData(new Color[] { Color.Red });
+
+            if (attackTimer > 0)
+                spriteBatch.Draw(debugTexture, attackHitbox, Color.Red);
+
             SpriteEffects spriteEffect = direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             spriteBatch.Draw(
@@ -87,8 +104,9 @@ namespace FinalComGame
             UpdateDash(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+            UpdateAttackHitbox();
+            CheckAttackHit(gameObjects);
             UpdateAnimation(deltaTime);
-
             if (!isDashing) Velocity.X = 0;
 
             base.Update(gameTime, gameObjects, tileMap);
@@ -96,7 +114,9 @@ namespace FinalComGame
 
         private void UpdateAnimation(float deltaTime)
         {
-            if (isDashing)
+            if(isAttacking)
+                Animation = _meleeAttackAnimation;
+            else if (isDashing)
                 Animation = _dashAnimation;
             else if (isJumping || Velocity.Y != 0)
                 Animation = _jumpAnimation;
@@ -134,6 +154,20 @@ namespace FinalComGame
                 }
             }
 
+            if (Singleton.Instance.IsKeyJustPressed(Attack))
+                StartAttack();
+
+            if (isAttacking)
+            {
+                attackTimer -= deltaTime;
+                if (attackTimer <= 0)
+                    isAttacking = false;
+            }
+            else
+            {
+                attackCooldownTimer -= deltaTime;
+            }
+
             if (Singleton.Instance.IsKeyJustPressed(Fire))
                 Shoot(gameObjects);
 
@@ -144,6 +178,48 @@ namespace FinalComGame
 
             if (Singleton.Instance.IsKeyJustPressed(Dash))
                 StartDash();
+        }
+
+        private void StartAttack()
+        {
+            if (attackCooldownTimer <= 0 && !isAttacking)
+            {
+                isAttacking = true;
+                attackTimer = attackDuration;
+                attackCooldownTimer = attackCooldown;
+
+                // Set attack hitbox in front of the player
+                int attackWidth = 20; // Adjust the size of the attack area
+                int attackHeight = 32;
+                int offsetX = direction == 1 ? Rectangle.Width : -attackWidth;
+
+                attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
+
+                // TODO: Detect enemies within this hitbox
+            }
+        }
+
+        private void UpdateAttackHitbox()
+        {
+            if (isAttacking)
+            {
+                int attackWidth = 20; // Adjust as needed
+                int attackHeight = 32;
+                int offsetX = direction == 1 ? Rectangle.Width : -attackWidth;
+
+                attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
+            }
+        }
+        private void CheckAttackHit(List<GameObject> gameObjects)
+        {
+            if (!isAttacking) return;
+
+            foreach (var enemy in gameObjects.OfType<BaseEnemy>())
+            {
+                enemy.CheckHit(attackHitbox, 10);
+            }
+
+            //constant hitting no i-frame :(
         }
 
         private void StartDash()

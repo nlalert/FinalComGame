@@ -69,6 +69,12 @@ namespace FinalComGame
             Console.WriteLine("Damage " + damageAmount + "CurHP" +this.Health);
         }
 
+        public override void OnHit(float damageAmount)
+        {
+            base.OnHit(damageAmount);
+            Console.WriteLine("Damage " + damageAmount + "CurHP" +this.Health);
+        }
+
         private void ApplyGravity(float deltaTime)
         {
             Velocity.Y += Singleton.GRAVITY * deltaTime; 

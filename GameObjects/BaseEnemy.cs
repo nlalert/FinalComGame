@@ -98,6 +98,18 @@ namespace FinalComGame {
             }
         }
 
+        public virtual void OnHit(float damageAmount)
+        {
+            // Generic hit handling
+            Health -= damageAmount;
+
+            if (Health <= 0)
+            {
+                CurrentState = EnemyState.Dying;
+                OnDead();
+            }
+        }
+
         public virtual void OnHitPlayer()
         {
         }
@@ -184,6 +196,14 @@ namespace FinalComGame {
     
         // Now actually move to the valid position
         Position = new Vector2(newX, newY);
+        }
+
+        public virtual void CheckHit(Rectangle attackHitbox, float damageAmount)
+        {
+            if(IsTouching(attackHitbox))
+            {
+                OnHit(damageAmount);
+            }
         }
     }
 }
