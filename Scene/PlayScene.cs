@@ -9,18 +9,22 @@ namespace FinalComGame;
 
 public class PlayScene 
 {
+    //System
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private ContentManager _content;
 
+    //UI
     SpriteFont _font;
+    private UI _ui;
 
     List<GameObject> _gameObjects;
+    int _numObject;
+
     private GraphicsDevice _graphicsDevice;
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
 
-    int _numObject;
     private Camera _camera;
     private TileMap _tileMap;
 
@@ -50,6 +54,8 @@ public class PlayScene
         Texture2D textureAtlas = _content.Load<Texture2D>("atlas");
         _tileMap = new TileMap(textureAtlas, "../../../Data/level1.csv", 2);
 
+        _ui = new UI();
+
         Reset();
     }
 
@@ -67,6 +73,9 @@ public class PlayScene
                 RemoveInactiveObjects();
 
                 _camera.Follow(player); // Make camera follow the player
+
+                // Update UI
+                _ui.Update(gameTime);
                 break;
         }
     }
@@ -86,6 +95,8 @@ public class PlayScene
 
                 //  Draw the UI (No Camera Transformation)
                 _spriteBatch.Begin(); 
+                // Draw UI
+                _ui.Draw(_spriteBatch);
                 _spriteBatch.DrawString(_font, "Test UI always move with player, must not move out of screen", new Vector2(10, 10), Color.White);
                 _spriteBatch.End();
                 break;
@@ -181,9 +192,34 @@ public class PlayScene
         baseSkeleton.Spawn(262, 200, _gameObjects);
         baseSkeleton.Spawn(462, 100, _gameObjects);
 
+        SetupUI();
+
         foreach (GameObject s in _gameObjects)
         {
             s.Reset();
         }
+    }
+
+    private void SetupUI()
+    {
+        Texture2D testTexture = _content.Load<Texture2D>("EnemyRed");
+
+        //Testing UI
+        Button testButton = new Button(
+            new Rectangle((Singleton.SCREEN_WIDTH - 200)/2, 50, 200, 50),
+            testTexture,
+            testTexture,
+            _font,
+            "Test Click Button",
+            Color.White
+        );
+
+        // Add click handler
+        testButton.OnClick += (sender, e) => {
+            // Handle button click
+            System.Console.WriteLine("Button clicked!");
+        };
+        // Add button to UI
+        _ui.AddElement(testButton);
     }
 }
