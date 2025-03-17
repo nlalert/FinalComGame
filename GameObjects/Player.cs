@@ -7,30 +7,16 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FinalComGame
 {
-    class Player : GameObject
+    class Player : Character
     {
         public Bullet Bullet;
         public Keys Left, Right, Fire, Jump, Attack, Dash;
-
-        public int Speed;
-        private int direction = 1; // 1 = Right, -1 = Left
         
-        //Attack
-        private bool isAttacking = false;
-        private float attackDuration = 0.2f; // How long the attack lasts
-        private float attackCooldown = 0.5f; // Cooldown before attacking again
-        private float attackTimer = 0f;
-        private float attackCooldownTimer = 0f;
-        private Rectangle attackHitbox;
-
         //Jump
-        private bool isJumping = false;
-        private float jumpStrength = 1000f;
-        private float coyoteTime = 0.1f; // 100ms of coyote time
-        private float coyoteTimeCounter = 0f;
-        private float jumpBufferTime = 0.15f; // 150ms jump buffer
-        private float jumpBufferCounter = 0f;
-
+        protected float coyoteTime = 0.1f; // 100ms of coyote time
+        protected float coyoteTimeCounter = 0f;
+        protected float jumpBufferTime = 0.15f; // 150ms jump buffer
+        protected float jumpBufferCounter = 0f;
         // Dash 
         private bool isDashing = false;
         private float dashSpeed = 800f;
@@ -40,14 +26,12 @@ namespace FinalComGame
         private float dashCooldownTimer = 0f;
 
         //Animation
-        private Animation _idleAnimation;
-        private Animation _runAnimation;
         private Animation _meleeAttackAnimation;
         private Animation _jumpAnimation;
         private Animation _dashAnimation;
         private Animation _glideAnimation;
 
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D dashTexture, Texture2D glideTexture) : base(idleTexture)
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D dashTexture, Texture2D glideTexture)
         {
             _idleAnimation = new Animation(idleTexture, 16, 32, 16, 24); // 24 fps
             _runAnimation = new Animation(runTexture, 16, 32, 16, 24); //  24 fps
@@ -57,32 +41,6 @@ namespace FinalComGame
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
 
             Animation = _idleAnimation;
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            // hitbox debug drawing
-            Texture2D debugTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            debugTexture.SetData(new Color[] { Color.Red });
-
-            if (attackTimer > 0)
-                spriteBatch.Draw(debugTexture, attackHitbox, Color.Red);
-
-            SpriteEffects spriteEffect = direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-
-            spriteBatch.Draw(
-                Animation.GetTexture(),
-                Position,
-                Animation.GetCurrentFrame(),
-                Color.White,
-                0f, 
-                Vector2.Zero,
-                1f,
-                spriteEffect, 
-                0f
-            );
-
-            base.Draw(spriteBatch);
         }
 
         public override void Reset()
@@ -112,7 +70,12 @@ namespace FinalComGame
             base.Update(gameTime, gameObjects, tileMap);
         }
 
-        private void UpdateAnimation(float deltaTime)
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+        }
+
+        protected override void UpdateAnimation(float deltaTime)
         {
             if(isAttacking)
                 Animation = _meleeAttackAnimation;
@@ -128,13 +91,6 @@ namespace FinalComGame
             Animation?.Update(deltaTime);
         }
 
-        private void ApplyGravity(float deltaTime)
-        {
-            Velocity.Y += Singleton.GRAVITY * deltaTime; // gravity
-
-            //TODO: Check and cap terminal velocity of player if want later
-        }
-
         private void HandleInput(float deltaTime, List<GameObject> gameObjects)
         {
             if (Singleton.Instance.IsKeyPressed(Left))
@@ -142,7 +98,7 @@ namespace FinalComGame
                 if (!isDashing) 
                 {
                     direction = -1;
-                    Velocity.X = -Speed;
+                    Velocity.X = -WalkSpeed;
                 }
             }
             if (Singleton.Instance.IsKeyPressed(Right))
@@ -150,7 +106,7 @@ namespace FinalComGame
                 if (!isDashing) 
                 {
                     direction = 1;
-                    Velocity.X = Speed;
+                    Velocity.X = WalkSpeed;
                 }
             }
 
@@ -216,10 +172,8 @@ namespace FinalComGame
 
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
-                enemy.CheckHit(attackHitbox, 10);
+                enemy.CheckHit(attackHitbox, attackDamage);
             }
-
-            //constant hitting no i-frame :(
         }
 
         private void StartDash()
@@ -308,12 +262,6 @@ namespace FinalComGame
             newBullet.Velocity = new Vector2(800 * direction, 0);
             newBullet.Reset();
             gameObjects.Add(newBullet);
-        }
-
-        private bool IsOnGround()
-        {
-            //TODO apex of jump is grounded?
-            return Velocity.Y == 0;
         }
     }
 }

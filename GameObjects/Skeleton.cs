@@ -9,7 +9,6 @@ namespace FinalComGame
     {
         private int _LimitIdlePatrol = 100;
         private Vector2 _PatrolCenterPoint;
-        private int _patrolDirection = 1; // 1 = right, -1 = left
         public SkeletonEnemy (Texture2D texture,SpriteFont font) : base(texture,font){
 
         }
@@ -39,7 +38,6 @@ namespace FinalComGame
             base.Update(gameTime, gameObjects, tileMap);
         }
 
-
         public override void OnSpawn()
         {
             // can be add spawn effect.. even out of screen
@@ -51,6 +49,7 @@ namespace FinalComGame
         {
             Console.WriteLine("Skeleton slowly crumbles to dust...");
         }
+        
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
@@ -59,25 +58,9 @@ namespace FinalComGame
         }
         private void DrawDebug(SpriteBatch spriteBatch){
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20); // 20 pixels above the enemy
-            string direction = _patrolDirection != 1 ? "Left" : "right";
-            string displayText = "Dir " + direction+  "\n PatrolDis" + (Position.X - _PatrolCenterPoint.X); 
+            string directionText = direction != 1 ? "Left" : "right";
+            string displayText = "Dir " + directionText +  "\n PatrolDis" + (Position.X - _PatrolCenterPoint.X); 
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
-        }
-        public override void OnHit(GameObject projectile, float damageAmount)
-        {
-            base.OnHit(projectile, damageAmount);
-            Console.WriteLine("Damage " + damageAmount + "CurHP" +this.Health);
-        }
-
-        public override void OnHit(float damageAmount)
-        {
-            base.OnHit(damageAmount);
-            Console.WriteLine("Damage " + damageAmount + "CurHP" +this.Health);
-        }
-
-        private void ApplyGravity(float deltaTime)
-        {
-            Velocity.Y += Singleton.GRAVITY * deltaTime; 
         }
 
         private void IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -86,10 +69,10 @@ namespace FinalComGame
             //moing left
             if (Math.Abs(Position.X - _PatrolCenterPoint.X) >= _LimitIdlePatrol)
             {
-                _patrolDirection *= -1; // Switch direction
+                direction *= -1; // Switch direction
             }
 
-            Velocity.X = 50f * _patrolDirection; // Adjust speed as needed
+            Velocity.X = 50f * direction; // Adjust speed as needed
         }
 
     }
