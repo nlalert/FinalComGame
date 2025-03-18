@@ -98,6 +98,12 @@ namespace FinalComGame {
         {
         }
 
+        public override void OnDead()
+        {
+            DropItem();
+            base.OnDead();
+        }
+
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             if(HasSpawned == false)
@@ -105,7 +111,7 @@ namespace FinalComGame {
             if(CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying){
                 this.IsActive = false;
             }
-            
+
             UpdateInvincibilityTimer(deltaTime);
 
             if(CanCollideTile){
@@ -201,6 +207,10 @@ namespace FinalComGame {
             {
                 OnHit(damageAmount);
             }
+        }
+
+        public virtual void DropItem()
+        {
         }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FinalComGame
 {
-    class Player : Character
+    public class Player : Character
     {
         public Bullet Bullet;
         public Keys Left, Right, Fire, Jump, Attack, Dash;

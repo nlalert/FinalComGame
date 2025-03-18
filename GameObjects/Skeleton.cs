@@ -45,8 +45,14 @@ namespace FinalComGame
         public override void OnDead()
         {
             Console.WriteLine("Skeleton slowly crumbles to dust...");
+            base.OnDead();
         }
-        
+
+        public override void DropItem()
+        {
+            base.DropItem();
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);

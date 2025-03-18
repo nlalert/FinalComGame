@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FinalComGame
 {
-    class Bullet : GameObject
+    public class Bullet : GameObject
     {   
         public float DistantMoved;
         public Bullet(Texture2D texture) : base(texture)
