@@ -192,6 +192,9 @@ public class PlayScene
         baseSkeleton.Spawn(262, 200, _gameObjects);
         baseSkeleton.Spawn(462, 100, _gameObjects);
 
+        Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
+
+        _gameObjects.Add(new Item(testItem, "Pickaxe", "test", false, new Vector2(30,30)));
         SetupUI();
 
         foreach (GameObject s in _gameObjects)
