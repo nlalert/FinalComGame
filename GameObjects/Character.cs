@@ -67,6 +67,24 @@ namespace FinalComGame {
             //TODO: Check and cap terminal velocity of player if want later
         }
 
+        protected virtual void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Position.X += Velocity.X * deltaTime;
+            foreach (Tile tile in tileMap.tiles)
+            {
+                ResolveHorizontalCollision(tile);
+            }
+        }
+
+        protected virtual void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Position.Y += Velocity.Y * deltaTime;
+            foreach (Tile tile in tileMap.tiles)
+            {
+                ResolveVerticalCollision(tile);
+            }
+        }
+
         protected bool IsOnGround()
         {
             //TODO apex of jump is grounded?

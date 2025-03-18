@@ -23,6 +23,17 @@ namespace FinalComGame
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if(HasSpawned == false)
+                    return;
+            if(CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying){
+                this.IsActive = false;
+            }
+
+            UpdateInvincibilityTimer(deltaTime);
+
+            if(CanCollideTile){
+
+            }
             switch (CurrentState)
             {
                 //donot update Position at all cost 
@@ -32,6 +43,8 @@ namespace FinalComGame
                     break;
             }
             
+            UpdateAnimation(deltaTime);
+
             base.Update(gameTime, gameObjects, tileMap);
         }
 
@@ -69,6 +82,9 @@ namespace FinalComGame
         private void IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             ApplyGravity(deltaTime);
+            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+
             //moing left
             if (Math.Abs(Position.X - _PatrolCenterPoint.X) >= _LimitIdlePatrol)
             {

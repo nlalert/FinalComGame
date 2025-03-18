@@ -238,24 +238,6 @@ namespace FinalComGame
             }
         }
 
-        private void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            Position.X += Velocity.X * deltaTime;
-            foreach (Tile tile in tileMap.tiles)
-            {
-                ResolveHorizontalCollision(tile);
-            }
-        }
-
-        private void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            Position.Y += Velocity.Y * deltaTime;
-            foreach (Tile tile in tileMap.tiles)
-            {
-                ResolveVerticalCollision(tile);
-            }
-        }
-
         private void Shoot(List<GameObject> gameObjects)
         {
             var newBullet = Bullet.Clone() as Bullet;
