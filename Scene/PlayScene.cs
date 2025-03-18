@@ -84,6 +84,8 @@ public class PlayScene
                 _ui.Update(gameTime);
                 break;
         }
+
+        Console.WriteLine(player.Position.X + ", "+ player.Position.Y);
     }
 
     public void Draw(GameTime gameTime)
@@ -185,6 +187,7 @@ public class PlayScene
             Dash = Keys.LeftShift,
             Attack = Keys.Q,
             Crouch = Keys.Down,
+            Interact = Keys.F,
             Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",
@@ -206,7 +209,7 @@ public class PlayScene
 
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
 
-        _gameObjects.Add(new Item(testItem, "Pickaxe", "test", false, new Vector2(30,30)));
+        _gameObjects.Add(new Item(testItem, "Pickaxe", "test", false, new Vector2(557,1408)));
         SetupUI();
 
         foreach (GameObject s in _gameObjects)

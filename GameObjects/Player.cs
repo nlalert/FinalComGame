@@ -10,7 +10,7 @@ namespace FinalComGame
     public class Player : Character
     {
         public Bullet Bullet;
-        public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch;
+        public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Interact;
         
         public int crouchSpeed;
 
@@ -153,6 +153,17 @@ namespace FinalComGame
 
             if (Singleton.Instance.IsKeyJustPressed(Dash))
                 StartDash();
+            
+            if (Singleton.Instance.IsKeyJustPressed(Interact))
+                CheckInteraction(gameObjects);
+        }
+
+        private void CheckInteraction(List<GameObject> gameObjects)
+        {
+            foreach (var enemy in gameObjects.OfType<BaseEnemy>())
+            {
+                enemy.CheckHit(attackHitbox, attackDamage);
+            }
         }
 
         private void StartAttack()
