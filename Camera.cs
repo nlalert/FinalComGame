@@ -24,7 +24,9 @@ public class Camera
 
     public void Follow(GameObject target)
     {
-        _position = new Vector2((float)Math.Round(target.Position.X + target.Viewport.X / (2 * _zoom) - _viewport.Width / (2 * _zoom)), 
-            (float)Math.Round(target.Position.Y + target.Viewport.Y / (2 * _zoom) - _viewport.Width / (2 * _zoom)));
+        // _position = new Vector2((float)Math.Round(target.Position.X + target.Viewport.X / (2 * _zoom) - _viewport.Width / (2 * _zoom)), 
+        //     (float)Math.Round(target.Position.Y + target.Viewport.Y / (2 * _zoom) - _viewport.Width / (2 * _zoom)));
+        _position = new Vector2(target.Position.X + target.Viewport.X / (2 * _zoom) - _viewport.Width / (2 * _zoom), 
+            target.Position.Y + target.Viewport.Y / (2 * _zoom) - _viewport.Width / (2 * _zoom));
     }
 }
