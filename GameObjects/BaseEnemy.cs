@@ -136,8 +136,9 @@ namespace FinalComGame {
             {
                 foreach (Tile tile in tileMap.tiles)
                 {
-                    if(ResolveHorizontalCollision(tile)) 
-                        direction *= -1;
+                    if(ResolveHorizontalCollision(tile)){
+                        OnCollisionHorizon();
+                    }
                 }
             }
         }
@@ -151,6 +152,8 @@ namespace FinalComGame {
         }
         public virtual void DropItem()
         {
+        }
+        public virtual void OnCollisionHorizon(){
         }
     }
 }

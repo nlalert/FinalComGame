@@ -93,6 +93,12 @@ namespace FinalComGame
 
             Velocity.X = 50f * direction; // Adjust speed as needed
         }
-
-    }
+        public override void OnCollisionHorizon()
+        {
+            if(CurrentState == EnemyState.Idle){
+                direction *= -1;
+            }
+            base.OnCollisionHorizon();
+        }
+    }      
 }
