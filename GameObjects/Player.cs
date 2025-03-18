@@ -55,6 +55,11 @@ namespace FinalComGame
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         
             HandleInput(deltaTime, gameObjects);
+
+            // Decrease invincibility timer
+            if (invincibilityTimer > 0)
+                invincibilityTimer -= deltaTime;
+
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
             if (!isDashing) 
@@ -263,6 +268,26 @@ namespace FinalComGame
             newBullet.Velocity = new Vector2(800 * direction, 0);
             newBullet.Reset();
             gameObjects.Add(newBullet);
+        }
+
+        public override void OnHit(GameObject projectile,float damageAmount)
+        {
+            //TODO: deal with projectile later
+            OnHit(damageAmount);
+        }
+
+        public override void OnHit(float damageAmount)
+        {
+            if (invincibilityTimer > 0) 
+                return; // If i-frames are active, ignore damage
+            // Generic hit handling
+            Health -= damageAmount;
+            StartInvincibility();
+            Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
+            if (Health <= 0)
+            {
+                OnDead();
+            }
         }
     }
 }

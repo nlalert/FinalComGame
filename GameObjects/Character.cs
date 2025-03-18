@@ -24,7 +24,6 @@ namespace FinalComGame {
         protected float attackTimer = 0f;
         protected float attackCooldownTimer = 0f;
         protected Rectangle attackHitbox;
-
         
         //Jump
         protected bool isJumping = false;
@@ -93,6 +92,11 @@ namespace FinalComGame {
 
         public virtual void OnDead()
         {
+        }
+
+        public void StartInvincibility()
+        {
+            invincibilityTimer = invincibilityDuration; // Activate i-frames
         }
     }
 }

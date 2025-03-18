@@ -31,7 +31,6 @@ namespace FinalComGame {
         // Combat Properties
         protected float detectionRange = 200f;
         protected float attackRange = 50f;
-        protected float currentCooldown = 0f;
 
         // Reference to player for tracking
         protected Player player;
@@ -86,7 +85,7 @@ namespace FinalComGame {
                 return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;
-            invincibilityTimer = invincibilityDuration; // Activate i-frames
+            StartInvincibility();
             Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
             if (Health <= 0)
             {
