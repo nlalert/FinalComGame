@@ -37,6 +37,12 @@ namespace FinalComGame
                         {
                             int tileX = tileID % numTilesPerRow;
                             int tileY = tileID / numTilesPerRow;
+                            bool collision = false;
+
+                            if (tileID == 17 || tileID == 37)
+                            {
+                                collision = true;
+                            }
 
                             Tile tile = new Tile(textureAtlas)
                             {
@@ -47,8 +53,8 @@ namespace FinalComGame
                                     tileY * Singleton.BLOCK_SIZE, 
                                     Singleton.BLOCK_SIZE, 
                                     Singleton.BLOCK_SIZE
-                                ),
-                                IsSolid = true
+                                ),                            
+                                IsSolid = collision
 
                             };
 

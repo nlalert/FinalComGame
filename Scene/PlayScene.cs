@@ -26,7 +26,11 @@ public class PlayScene
     private Texture2D _enemyTexture;
 
     private Camera _camera;
-    private TileMap _tileMap;
+    private TileMap _collisionTileMap;
+    private TileMap _foreGroundTileMap;
+    private TileMap _rockTileMap;
+    private TileMap _vegetationTileMap;
+    private TileMap _backGroundTileMap;
 
     private Player player;
     private BaseEnemy baseSkeleton;
@@ -51,8 +55,10 @@ public class PlayScene
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
 
-        Texture2D textureAtlas = _content.Load<Texture2D>("atlas");
-        _tileMap = new TileMap(textureAtlas, "../../../Data/level1.csv", 2);
+        Texture2D textureAtlas = _content.Load<Texture2D>("Tileset");
+        //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
+        //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
+        _collisionTileMap = new TileMap(textureAtlas, "../../../Data/Level_1/Level_1_Collision.csv", 20);
 
         _ui = new UI();
 
@@ -107,7 +113,7 @@ public class PlayScene
 
     private void UpdateTileMap(GameTime gameTime)
     {
-        _tileMap.Update(gameTime, _gameObjects);
+        _collisionTileMap.Update(gameTime, _gameObjects);
     }
 
     public void UpdateAllObjects(GameTime gameTime)
@@ -115,7 +121,7 @@ public class PlayScene
         for (int i = 0; i < _numObject; i++)
         {
             if(_gameObjects[i].IsActive)
-                _gameObjects[i].Update(gameTime, _gameObjects, _tileMap);
+                _gameObjects[i].Update(gameTime, _gameObjects, _collisionTileMap);
         }
     }
 
@@ -134,7 +140,11 @@ public class PlayScene
 
     private void DrawTileMap()
     {
-        _tileMap.Draw(_spriteBatch);
+        //_backGroundTileMap.Draw(_spriteBatch);
+        //_foreGroundTileMap.Draw(_spriteBatch);
+        
+        //Should be hidden
+        _collisionTileMap.Draw(_spriteBatch);
     }
 
     private void DrawAllObjects()
@@ -154,14 +164,15 @@ public class PlayScene
         _gameObjects.Clear();
 
         // Load sprite sheets
-        Texture2D playerIdle = _content.Load<Texture2D>("Char_Animation_Test");
-        Texture2D playerRun = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerIdle = _content.Load<Texture2D>("Char_Idle");
+        Texture2D playerRun = _content.Load<Texture2D>("Char_Run");
+        Texture2D playerJump = _content.Load<Texture2D>("Char_Jump");
+        Texture2D playerFall = _content.Load<Texture2D>("Char_Fall");
         Texture2D playerMelee = _content.Load<Texture2D>("Player");
-        Texture2D playerJump = _content.Load<Texture2D>("Player");
-        Texture2D playerDash = _content.Load<Texture2D>("Char_Animation_Test");
+        Texture2D playerDash = _content.Load<Texture2D>("Char_Idle");
         Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
 
-        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerDash, playerGlide)
+        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
@@ -173,6 +184,7 @@ public class PlayScene
             Jump = Keys.Space,
             Dash = Keys.LeftShift,
             Attack = Keys.Q,
+            Crouch = Keys.Down,
             Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",

@@ -10,8 +10,10 @@ namespace FinalComGame
     public class Player : Character
     {
         public Bullet Bullet;
-        public Keys Left, Right, Fire, Jump, Attack, Dash;
+        public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch;
         
+        public int crouchSpeed;
+
         //Jump
         protected float coyoteTime = 0.1f; // 100ms of coyote time
         protected float coyoteTimeCounter = 0f;
@@ -30,13 +32,14 @@ namespace FinalComGame
         private Animation _jumpAnimation;
         private Animation _dashAnimation;
         private Animation _glideAnimation;
-
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D dashTexture, Texture2D glideTexture)
+        private Animation _fallAnimation;
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, Texture2D glideTexture)
         {
-            _idleAnimation = new Animation(idleTexture, 16, 32, 16, 24); // 24 fps
-            _runAnimation = new Animation(runTexture, 16, 32, 16, 24); //  24 fps
+            _idleAnimation = new Animation(idleTexture, 48, 64, 16, 24); // 24 fps
+            _runAnimation = new Animation(runTexture, 48, 64, 8, 24); //  24 fps
+            _jumpAnimation = new Animation(jumpTexture, 48, 64, 4, 24); //  24 fps
+            _fallAnimation = new Animation(fallTexture, 48, 64, 4, 24); //  24 fps
             _meleeAttackAnimation = new Animation(meleeAttackTexture, 16, 32, 16, 24); // 24 fps
-            _jumpAnimation = new Animation(jumpTexture, 16, 32, 16, 24); //  24 fps
             _dashAnimation = new Animation(dashTexture, 16, 32, 16, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
 
@@ -45,8 +48,9 @@ namespace FinalComGame
 
         public override void Reset()
         {
-            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2);
+            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/8);
             direction = 1; // Reset direction to right
+            crouchSpeed = WalkSpeed/2;
             base.Reset();
         }
 
@@ -82,6 +86,8 @@ namespace FinalComGame
                 Animation = _meleeAttackAnimation;
             else if (isDashing)
                 Animation = _dashAnimation;
+            else if (Velocity.Y > 0)
+                Animation = _fallAnimation;
             else if (isJumping || Velocity.Y != 0)
                 Animation = _jumpAnimation;
             else if (Velocity.X != 0)
@@ -131,7 +137,19 @@ namespace FinalComGame
             if (Singleton.Instance.IsKeyJustPressed(Jump))
                 jumpBufferCounter = jumpBufferTime;
             else
-                jumpBufferCounter -= deltaTime;
+                jumpBufferCounter -= deltaTime; // Decrease over time
+
+            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping)
+            {
+                Viewport.Height = 16;
+                WalkSpeed = crouchSpeed;
+            }
+            else
+            {
+                Viewport.Height = 32;
+                WalkSpeed = 400;
+            }
+
 
             if (Singleton.Instance.IsKeyJustPressed(Dash))
                 StartDash();
