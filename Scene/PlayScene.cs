@@ -165,9 +165,10 @@ public class PlayScene
             Speed = 250,
             Left = Keys.Left,
             Right = Keys.Right,
+            Crouch = Keys.Down,
+            Climb = Keys.Up,
             Fire = Keys.E,
             Jump = Keys.Space,
-            Crouch = Keys.Down,
             Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",

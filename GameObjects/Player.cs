@@ -10,15 +10,19 @@ namespace FinalComGame
     class Player : GameObject
     {
         public Bullet Bullet;
-        public Keys Left, Right, Fire, Jump, Crouch;
+        public Keys Left, Right, Fire, Jump, Crouch, Climb;
 
         private float jumpStrength = 850f;
         public int Speed;
 
         public int walkSpeed;
         public int crouchSpeed;
+        public int climbSpeed;
 
         private bool isJumping = false;
+        private bool isClimbing = false;
+
+        private string overlappedTile = "";
 
         private int direction = 1; // 1 = Right, -1 = Left
 
@@ -72,6 +76,7 @@ namespace FinalComGame
             direction = 1; // Reset direction to right
             walkSpeed = Speed;
             crouchSpeed = Speed/2;
+            climbSpeed = Speed/2;
             base.Reset();
         }
 
@@ -82,7 +87,9 @@ namespace FinalComGame
             HandleInput(deltaTime, gameObjects);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
-            ApplyGravity(deltaTime);
+
+            if (!isClimbing) ApplyGravity(deltaTime);
+
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             UpdateAnimation(deltaTime);
@@ -134,7 +141,7 @@ namespace FinalComGame
             else
                 jumpBufferCounter -= deltaTime; // Decrease over time
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping)
+            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping && !isClimbing)
             {
                 Viewport.Height = 16;
                 Speed = crouchSpeed;
@@ -143,6 +150,34 @@ namespace FinalComGame
             {
                 Viewport.Height = 32;
                 Speed = walkSpeed;
+            }
+
+            if (Singleton.Instance.IsKeyPressed(Climb) && overlappedTile == "Ladder" && !isClimbing)
+            {
+                isClimbing = true;
+                isJumping = false;
+                Velocity.Y = 0;
+            }
+
+            if (isClimbing)
+            {
+                if (Singleton.Instance.IsKeyPressed(Climb))
+                {
+                    Velocity.Y = -climbSpeed;
+                }
+
+                else if (Singleton.Instance.IsKeyPressed(Crouch))
+                {
+                    Velocity.Y = climbSpeed;
+                }
+
+                else Velocity.Y = 0;
+                
+                if (Singleton.Instance.IsKeyJustPressed(Jump) || overlappedTile == "")
+                {
+                    isClimbing = false;
+                }
+
             }
 
             if (Singleton.Instance.IsKeyJustPressed(Fire))
@@ -185,18 +220,43 @@ namespace FinalComGame
         private void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.X += Velocity.X * deltaTime;
+            overlappedTile = "";
             foreach (Tile tile in tileMap.tiles)
             {
-                ResolveHorizontalCollision(tile);
+
+                if (tile.IsSolid)
+                {
+                    ResolveHorizontalCollision(tile);
+                }
+
+                if (tile.Type == "Ladder")
+                {
+                    if (IsTouchingRight(tile) || IsTouchingLeft(tile)) {
+                        overlappedTile = tile.Type;
+                    }
+                }
+
             }
         }
 
         private void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.Y += Velocity.Y * deltaTime;
+            overlappedTile = "";
             foreach (Tile tile in tileMap.tiles)
             {
-                ResolveVerticalCollision(tile);
+                if (tile.IsSolid)
+                {
+                    ResolveVerticalCollision(tile);
+                }
+
+                if (tile.Type == "Ladder")
+                {
+                    if (IsTouchingTop(tile) || IsTouchingBottom(tile)) {
+                        overlappedTile = tile.Type;
+                    }
+                }
+
             }
         }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,6 +8,7 @@ namespace FinalComGame
     public class Tile : GameObject
     {
         public bool IsSolid;
+        public string Type;
 
         public Tile(Texture2D texture)
         {
@@ -15,6 +17,7 @@ namespace FinalComGame
         
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)
