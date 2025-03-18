@@ -39,7 +39,7 @@ namespace FinalComGame
                             int tileY = tileID / numTilesPerRow;
                             bool collision = false;
 
-                            if (tileID == 19 || tileID == 20)
+                            if (tileID == 17 || tileID == 37)
                             {
                                 collision = true;
                             }

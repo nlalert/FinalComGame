@@ -10,10 +10,14 @@ namespace FinalComGame
     class Player : GameObject
     {
         public Bullet Bullet;
-        public Keys Left, Right, Fire, Jump;
+        public Keys Left, Right, Fire, Jump, Crouch;
 
-        private float jumpStrength = 1000f;
+        private float jumpStrength = 850f;
         public int Speed;
+
+        public int walkSpeed;
+        public int crouchSpeed;
+
         private bool isJumping = false;
 
         private int direction = 1; // 1 = Right, -1 = Left
@@ -66,6 +70,8 @@ namespace FinalComGame
         {
             Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/8);
             direction = 1; // Reset direction to right
+            walkSpeed = Speed;
+            crouchSpeed = Speed/2;
             base.Reset();
         }
 
@@ -122,14 +128,26 @@ namespace FinalComGame
                 direction = 1;
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Fire))
-                Shoot(gameObjects);
-
             // Jump Buffer: Store jump input for a short period
             if (Singleton.Instance.IsKeyJustPressed(Jump))
                 jumpBufferCounter = jumpBufferTime; // Store jump input
             else
                 jumpBufferCounter -= deltaTime; // Decrease over time
+
+            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping)
+            {
+                Viewport.Height = 16;
+                Speed = crouchSpeed;
+            }
+            else
+            {
+                Viewport.Height = 32;
+                Speed = walkSpeed;
+            }
+
+            if (Singleton.Instance.IsKeyJustPressed(Fire))
+                Shoot(gameObjects);
+
         }
 
         private void UpdateCoyoteTime(float deltaTime)

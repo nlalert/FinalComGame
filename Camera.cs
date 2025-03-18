@@ -12,7 +12,7 @@ public class Camera
     public Camera(Viewport viewport)
     {
         _viewport = viewport;
-        _zoom = 3f;
+        _zoom = 2f;
     }
 
     public Matrix GetTransformation()

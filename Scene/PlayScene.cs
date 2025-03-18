@@ -24,7 +24,9 @@ public class PlayScene
     private Camera _camera;
     private TileMap _collisionTileMap;
     private TileMap _foreGroundTileMap;
-    private TileMap _middleGroundTileMap;
+    private TileMap _rockTileMap;
+    private TileMap _vegetationTileMap;
+    private TileMap _backGroundTileMap;
 
     private Player player;
     private BaseEnemy baseSkeleton;
@@ -49,10 +51,10 @@ public class PlayScene
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
 
-        Texture2D textureAtlas = _content.Load<Texture2D>("Tiles_Test");
-        _middleGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_Test/Level_Test_Mg.csv", 8);
-        _foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_Test/Level_Test_Fg.csv", 8);
-        _collisionTileMap = new TileMap(textureAtlas, "../../../Data/Level_Test/Level_Test_Collision.csv", 8);
+        Texture2D textureAtlas = _content.Load<Texture2D>("Tileset");
+        //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
+        //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
+        _collisionTileMap = new TileMap(textureAtlas, "../../../Data/Level_1/Level_1_Collision.csv", 20);
 
         Reset();
     }
@@ -126,8 +128,8 @@ public class PlayScene
 
     private void DrawTileMap()
     {
-        _middleGroundTileMap.Draw(_spriteBatch);
-        _foreGroundTileMap.Draw(_spriteBatch);
+        //_backGroundTileMap.Draw(_spriteBatch);
+        //_foreGroundTileMap.Draw(_spriteBatch);
         
         //Should be hidden
         _collisionTileMap.Draw(_spriteBatch);
@@ -160,11 +162,12 @@ public class PlayScene
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
             Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2),
-            Speed = 300,
+            Speed = 250,
             Left = Keys.Left,
             Right = Keys.Right,
             Fire = Keys.E,
             Jump = Keys.Space,
+            Crouch = Keys.Down,
             Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",

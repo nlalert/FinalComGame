@@ -15,7 +15,6 @@ namespace FinalComGame
         
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-
         }
 
         public override void Draw(SpriteBatch spriteBatch)
