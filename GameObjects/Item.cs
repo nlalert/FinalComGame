@@ -8,7 +8,6 @@ namespace FinalComGame
     public class Item : GameObject
     {
         // Item properties
-        public string ItemName { get; protected set; }
         public string Description { get; protected set; }
         public bool IsPickedUp { get; protected set; }
         public bool IsConsumable { get; protected set; }
@@ -18,29 +17,18 @@ namespace FinalComGame
         protected bool isInRange = false;
         protected Color rangeIndicatorColor = new Color(255, 255, 255, 50);
         
-        // Animation for items
-        protected Animation _idleAnimation;
-
         protected float bobAmount = 4f;
         protected float bobSpeed = 2f;
         protected float bobTimer = 0f;
         protected Vector2 originalPosition;
         
         // Constructor
-        public Item(Texture2D texture, string name, string description, bool isConsumable, Vector2 Position)
+        public Item(Texture2D texture, string description, bool isConsumable, Vector2 Position)
             : base(texture)
         {
-            ItemName = name;
             Description = description;
             IsConsumable = isConsumable;
             IsPickedUp = false;
-            
-            // Initialize default animation
-            if (texture != null)
-            {
-                _idleAnimation = new Animation(texture, texture.Width, texture.Height, 1, 0);
-                Animation = _idleAnimation;
-            }
             
             originalPosition = Position;
         }
@@ -103,13 +91,10 @@ namespace FinalComGame
         
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // Only draw if active
-            if (!IsActive) return;
-            
             spriteBatch.Draw(
-                Animation.GetTexture(),
+                _texture,
                 Position,
-                Animation.GetCurrentFrame(),
+                Viewport,
                 Color.White,
                 0f, 
                 Vector2.Zero,

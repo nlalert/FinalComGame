@@ -209,7 +209,10 @@ public class PlayScene
 
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
 
-        _gameObjects.Add(new Item(testItem, "Pickaxe", "test", false, new Vector2(557,1408)));
+        _gameObjects.Add(new Item(playerGlide, "test", false, new Vector2(557,1408)){
+            Name =  "Pickaxe",
+            Viewport = new Rectangle(0, 0, 10,10)
+        });
         SetupUI();
 
         foreach (GameObject s in _gameObjects)
