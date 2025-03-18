@@ -160,9 +160,9 @@ namespace FinalComGame
 
         private void CheckInteraction(List<GameObject> gameObjects)
         {
-            foreach (var enemy in gameObjects.OfType<BaseEnemy>())
+            foreach (var item in gameObjects.OfType<Item>())
             {
-                enemy.CheckHit(attackHitbox, attackDamage);
+                item.OnPickup(this);
             }
         }
 

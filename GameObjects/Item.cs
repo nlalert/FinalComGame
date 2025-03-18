@@ -48,12 +48,12 @@ namespace FinalComGame
         // // Method to be overridden by specific item types
         // public abstract void Use(Player player);
         
-        // // Called when item is picked up
-        // public virtual void OnPickup(Player player)
-        // {
-        //     IsPickedUp = true;
-        //     IsActive = false;
-        // }
+        // Called when item is picked up
+        public virtual void OnPickup(Player player)
+        {
+            IsPickedUp = true;
+            IsActive = false;
+        }
         
         // // Called when item is dropped
         // public virtual void OnDrop(Vector2 position)
