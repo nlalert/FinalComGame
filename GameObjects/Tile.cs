@@ -17,7 +17,7 @@ namespace FinalComGame
         
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-
+            //TODO : Animation or something later
         }
 
         public override void Draw(SpriteBatch spriteBatch)

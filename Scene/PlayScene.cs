@@ -9,18 +9,22 @@ namespace FinalComGame;
 
 public class PlayScene 
 {
+    //System
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private ContentManager _content;
 
+    //UI
     SpriteFont _font;
+    private UI _ui;
 
     List<GameObject> _gameObjects;
+    int _numObject;
+
     private GraphicsDevice _graphicsDevice;
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
 
-    int _numObject;
     private Camera _camera;
     private TileMap _collisionTileMap;
     private TileMap _foreGroundTileMap;
@@ -56,6 +60,8 @@ public class PlayScene
         //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
         _collisionTileMap = new TileMap(textureAtlas, "../../../Data/Level_1/Level_1_Collision.csv", 20);
 
+        _ui = new UI();
+
         Reset();
     }
 
@@ -63,7 +69,8 @@ public class PlayScene
     {
         //Update
         _numObject = _gameObjects.Count;
-        
+        if(Singleton.Instance.IsKeyPressed(Keys.R))
+            this.Reset();
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
@@ -72,6 +79,9 @@ public class PlayScene
                 RemoveInactiveObjects();
 
                 _camera.Follow(player); // Make camera follow the player
+
+                // Update UI
+                _ui.Update(gameTime);
                 break;
         }
     }
@@ -91,6 +101,8 @@ public class PlayScene
 
                 //  Draw the UI (No Camera Transformation)
                 _spriteBatch.Begin(); 
+                // Draw UI
+                _ui.Draw(_spriteBatch);
                 _spriteBatch.DrawString(_font, "Test UI always move with player, must not move out of screen", new Vector2(10, 10), Color.White);
                 _spriteBatch.End();
                 break;
@@ -156,19 +168,24 @@ public class PlayScene
         Texture2D playerRun = _content.Load<Texture2D>("Char_Run");
         Texture2D playerJump = _content.Load<Texture2D>("Char_Jump");
         Texture2D playerFall = _content.Load<Texture2D>("Char_Fall");
+        Texture2D playerMelee = _content.Load<Texture2D>("Player");
+        Texture2D playerDash = _content.Load<Texture2D>("Char_Idle");
+        Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
 
-        player = new Player(playerIdle, playerRun, playerJump, playerFall)
+        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
             Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2),
-            Speed = 250,
+            WalkSpeed = 400,
             Left = Keys.Left,
             Right = Keys.Right,
             Crouch = Keys.Down,
             Climb = Keys.Up,
             Fire = Keys.E,
             Jump = Keys.Space,
+            Dash = Keys.LeftShift,
+            Attack = Keys.Q,
             Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",
@@ -178,19 +195,44 @@ public class PlayScene
 
         _gameObjects.Add(player);
         
-        baseSkeleton = new SkeletonEnemy(_enemyTexture){
+        baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
-            // Position = new Vector2(162, 640),
+            CanCollideTile = true,
         };
         _gameObjects.Add(baseSkeleton);
-        baseSkeleton.Spawn(162, 600, _gameObjects);
-        baseSkeleton.Spawn(262, 600, _gameObjects);
-        baseSkeleton.Spawn(362, 600, _gameObjects);
+        baseSkeleton.Spawn(132, 400, _gameObjects);
+        baseSkeleton.Spawn(262, 200, _gameObjects);
+        baseSkeleton.Spawn(462, 100, _gameObjects);
+
+        SetupUI();
 
         foreach (GameObject s in _gameObjects)
         {
             s.Reset();
         }
+    }
+
+    private void SetupUI()
+    {
+        Texture2D testTexture = _content.Load<Texture2D>("EnemyRed");
+
+        //Testing UI
+        Button testButton = new Button(
+            new Rectangle((Singleton.SCREEN_WIDTH - 200)/2, 50, 200, 50),
+            testTexture,
+            testTexture,
+            _font,
+            "Test Click Button",
+            Color.White
+        );
+
+        // Add click handler
+        testButton.OnClick += (sender, e) => {
+            // Handle button click
+            System.Console.WriteLine("Button clicked!");
+        };
+        // Add button to UI
+        _ui.AddElement(testButton);
     }
 }

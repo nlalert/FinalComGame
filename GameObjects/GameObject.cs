@@ -76,12 +76,28 @@ public class GameObject : ICloneable
                 IsTouchingBottom(g);
     }
 
+    protected bool IsTouching(Rectangle hitbox)
+    {
+        return  IsTouchingLeft(hitbox)   ||
+                IsTouchingTop(hitbox)    ||
+                IsTouchingRight(hitbox)  ||
+                IsTouchingBottom(hitbox);
+    }
+
     protected bool IsTouchingLeft(GameObject g)
     {
         return  this.Rectangle.Right > g.Rectangle.Left &&
                 this.Rectangle.Left < g.Rectangle.Left  &&
                 this.Rectangle.Bottom > g.Rectangle.Top &&
                 this.Rectangle.Top < g.Rectangle.Bottom;
+    }
+
+    protected bool IsTouchingLeft(Rectangle hitbox)
+    {
+        return  this.Rectangle.Right > hitbox.Left &&
+                this.Rectangle.Left < hitbox.Left  &&
+                this.Rectangle.Bottom > hitbox.Top &&
+                this.Rectangle.Top < hitbox.Bottom;
     }
 
     protected bool IsTouchingRight(GameObject g)
@@ -92,12 +108,28 @@ public class GameObject : ICloneable
                 this.Rectangle.Top < g.Rectangle.Bottom;
     }
 
+    protected bool IsTouchingRight(Rectangle hitbox)
+    {
+        return  this.Rectangle.Right > hitbox.Right  &&
+                this.Rectangle.Left < hitbox.Right   &&
+                this.Rectangle.Bottom > hitbox.Top   &&
+                this.Rectangle.Top < hitbox.Bottom;
+    }
+
     protected bool IsTouchingTop(GameObject g)
     {
         return  this.Rectangle.Right > g.Rectangle.Left &&
                 this.Rectangle.Left < g.Rectangle.Right &&
                 this.Rectangle.Bottom >= g.Rectangle.Top &&
                 this.Rectangle.Top < g.Rectangle.Top;
+    }
+
+    protected bool IsTouchingTop(Rectangle hitbox)
+    {
+        return  this.Rectangle.Right > hitbox.Left &&
+                this.Rectangle.Left < hitbox.Right &&
+                this.Rectangle.Bottom >= hitbox.Top &&
+                this.Rectangle.Top < hitbox.Top;
     }
 
     protected bool IsTouchingBottom(GameObject g)
@@ -108,14 +140,24 @@ public class GameObject : ICloneable
                 this.Rectangle.Top <= g.Rectangle.Bottom;
     }
 
-    protected void ResolveHorizontalCollision(GameObject g)
+    protected bool IsTouchingBottom(Rectangle hitbox)
     {
+        return  this.Rectangle.Right > hitbox.Left     &&
+                this.Rectangle.Left < hitbox.Right     &&
+                this.Rectangle.Bottom > hitbox.Bottom  &&
+                this.Rectangle.Top <= hitbox.Bottom;
+    }
+
+    protected bool ResolveHorizontalCollision(GameObject g)
+    {
+        bool isCollided = false;
         if (IsTouchingLeft(g))
         {
             if (this.Velocity.X > 0) // Moving right
             {
                 this.Position.X = g.Rectangle.Left - this.Rectangle.Width;
                 this.Velocity.X = 0;
+                isCollided = true;
             }
         }
         if(IsTouchingRight(g))
@@ -124,18 +166,22 @@ public class GameObject : ICloneable
             {
                 this.Position.X = g.Rectangle.Right;
                 this.Velocity.X = 0;
+                isCollided = true;
             }
         }
+        return isCollided;
     }
 
-    protected void ResolveVerticalCollision(GameObject g)
+    protected bool ResolveVerticalCollision(GameObject g)
     {
+        bool isCollided = false;
         if (IsTouchingTop(g))
         {
             if (this.Velocity.Y > 0) // Falling down
             {
                 this.Position.Y = g.Rectangle.Top - this.Rectangle.Height;
                 this.Velocity.Y = 0;
+                isCollided = true;
             }
         }
         if(IsTouchingBottom(g))
@@ -144,8 +190,10 @@ public class GameObject : ICloneable
             {
                 this.Position.Y = g.Rectangle.Bottom;
                 this.Velocity.Y = 0;
+                isCollided = true;
             }
         }
+        return isCollided;
     }
 
     protected bool IsTouchingAsCircle(GameObject g)

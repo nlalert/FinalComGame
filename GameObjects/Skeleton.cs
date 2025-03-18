@@ -7,7 +7,9 @@ namespace FinalComGame
 {
     class SkeletonEnemy : BaseEnemy
     {
-        public SkeletonEnemy (Texture2D texture) : base(texture){
+        private int _LimitIdlePatrol = 100;
+        private Vector2 _PatrolCenterPoint;
+        public SkeletonEnemy (Texture2D texture,SpriteFont font) : base(texture,font){
 
         }
         public override void Reset()
@@ -15,32 +17,36 @@ namespace FinalComGame
             Console.WriteLine("Reset Skeleton");
             maxHealth = 80f;
             attackDamage = 5f;
+            _PatrolCenterPoint = Position;
             base.Reset();
         }
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-            // Console.WriteLine(this.Health); //debug ai 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            switch (CurrentState)
-            {
-                case EnemyState.Idle :
-                    // Console.WriteLine(Position);
-                    Velocity.Y += 300*(float)gameTime.ElapsedGameTime.TotalSeconds;
-                    break;
-                // Other state logic similar to previous implementation
+            if(HasSpawned == false)
+                    return;
+            if(CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying){
+                this.IsActive = false;
             }
 
-            //update position
-            float newX = Position.X + Velocity.X * deltaTime;
-            float newY = Position.Y + Velocity.Y * deltaTime;
-            Position = new Vector2(newX, newY);
+            UpdateInvincibilityTimer(deltaTime);
 
-            this.Velocity.Y =0;
-            this.Velocity.X =0;
-            UpdateHitbox();
+            if(CanCollideTile){
+
+            }
+            switch (CurrentState)
+            {
+                //donot update Position at all cost 
+                case EnemyState.Idle :
+                    //move left right in idle state
+                    IdlePatrol(deltaTime,gameObjects,tileMap);
+                    break;
+            }
+            
+            UpdateAnimation(deltaTime);
+
             base.Update(gameTime, gameObjects, tileMap);
         }
-
 
         public override void OnSpawn()
         {
@@ -52,15 +58,41 @@ namespace FinalComGame
         public override void OnDead()
         {
             Console.WriteLine("Skeleton slowly crumbles to dust...");
+            base.OnDead();
         }
+
+        public override void DropItem()
+        {
+            base.DropItem();
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+            // Position text slightly above the enemy
+            DrawDebug(spriteBatch);
         }
-        public override void OnHit(GameObject projectile, float damageAmount)
+        private void DrawDebug(SpriteBatch spriteBatch){
+            Vector2 textPosition = new Vector2(Position.X, Position.Y - 20); // 20 pixels above the enemy
+            string directionText = direction != 1 ? "Left" : "right";
+            string displayText = "Dir " + directionText +  "\n PatrolDis" + (Position.X - _PatrolCenterPoint.X); 
+            spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
+        }
+
+        private void IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-            base.OnHit(projectile, damageAmount);
-            Console.WriteLine("Damage " + damageAmount + "CurHP" +this.Health);
+            ApplyGravity(deltaTime);
+            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+
+            //moing left
+            if (Math.Abs(Position.X - _PatrolCenterPoint.X) >= _LimitIdlePatrol)
+            {
+                direction *= -1; // Switch direction
+            }
+
+            Velocity.X = 50f * direction; // Adjust speed as needed
         }
+
     }
 }
