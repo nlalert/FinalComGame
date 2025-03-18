@@ -105,9 +105,8 @@ namespace FinalComGame {
             if(CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying){
                 this.IsActive = false;
             }
-            // Decrease invincibility timer
-            if (invincibilityTimer > 0)
-                invincibilityTimer -= deltaTime;
+            
+            UpdateInvincibilityTimer(deltaTime);
 
             if(CanCollideTile){
                 ResolveTileCollision(deltaTime,gameObjects,tileMap);

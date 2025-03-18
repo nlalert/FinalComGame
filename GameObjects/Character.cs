@@ -78,6 +78,12 @@ namespace FinalComGame {
             Animation?.Update(deltaTime);
         }
 
+        protected void UpdateInvincibilityTimer(float deltaTime)
+        {
+            if (invincibilityTimer > 0)
+                invincibilityTimer -= deltaTime;
+        }
+
         public virtual void OnHit(GameObject projectile, float damageAmount)
         {
         }

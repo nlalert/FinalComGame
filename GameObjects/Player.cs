@@ -55,11 +55,7 @@ namespace FinalComGame
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         
             HandleInput(deltaTime, gameObjects);
-
-            // Decrease invincibility timer
-            if (invincibilityTimer > 0)
-                invincibilityTimer -= deltaTime;
-
+            UpdateInvincibilityTimer(deltaTime);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
             if (!isDashing) 
