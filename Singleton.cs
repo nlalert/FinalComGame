@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 class Singleton
 {
@@ -29,9 +30,10 @@ class Singleton
     public KeyboardState PreviousKey, CurrentKey;
     public MouseState PreviousMouseState, CurrentMouseState;
     private static Singleton instance;
-
+    public SpriteFont Debug_Font;
     private Singleton() { 
         Random = new Random();
+        
     }
 
     public static Singleton Instance
