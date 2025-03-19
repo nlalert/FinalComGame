@@ -19,8 +19,8 @@ namespace FinalComGame {
         //Attack
         protected bool isAttacking = false;
         protected float attackDamage = 10f;
-        protected float attackDuration = 0.2f; // How long the attack lasts
-        protected float attackCooldown = 0.5f; // Cooldown before attacking again
+        protected float attackDuration = 0.4f; // How long the attack lasts
+        protected float attackCooldown = 0.2f; // Cooldown before attacking again
         protected float attackTimer = 0f;
         protected float attackCooldownTimer = 0f;
         protected Rectangle attackHitbox;
