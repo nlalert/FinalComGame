@@ -100,15 +100,21 @@ public class PlayScene
                 _spriteBatch.End();
 
                 //  Draw the UI (No Camera Transformation)
-                _spriteBatch.Begin(); 
-                // Draw UI
-                _ui.Draw(_spriteBatch);
-                _spriteBatch.DrawString(_font, "Test UI always move with player, must not move out of screen", new Vector2(10, 10), Color.White);
-                _spriteBatch.End();
+                DrawUI();
                 break;
         }
 
         _graphics.BeginDraw();
+    }
+
+    private void DrawUI()
+    {
+        _spriteBatch.Begin(); 
+
+        _ui.Draw(_spriteBatch);
+        _spriteBatch.DrawString(_font, "Health Bar : " + player.Health + " / " + player.maxHealth, new Vector2(10, 10), Color.White);
+
+        _spriteBatch.End();
     }
 
     private void UpdateTileMap(GameTime gameTime)
@@ -215,24 +221,13 @@ public class PlayScene
 
     private void SetupUI()
     {
-        Texture2D testTexture = _content.Load<Texture2D>("EnemyRed");
-
-        //Testing UI
-        Button testButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - 200)/2, 50, 200, 50),
-            testTexture,
-            testTexture,
-            _font,
-            "Test Click Button",
-            Color.White
+        HealthBar playerHealth = new HealthBar(
+            new Rectangle(20, 50, 200, 30),
+            player,
+            Color.Red,
+            Color.Gray
         );
 
-        // Add click handler
-        testButton.OnClick += (sender, e) => {
-            // Handle button click
-            System.Console.WriteLine("Button clicked!");
-        };
-        // Add button to UI
-        _ui.AddElement(testButton);
+        _ui.AddElement(playerHealth);
     }
 }

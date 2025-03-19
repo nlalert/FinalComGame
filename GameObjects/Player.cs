@@ -12,6 +12,9 @@ namespace FinalComGame
         public Bullet Bullet;
         public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb;
         
+        public float maxMP;
+        public float MP;
+
         public int crouchSpeed;
         public int climbSpeed;
 
@@ -54,6 +57,10 @@ namespace FinalComGame
         {
             Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/8);
             direction = 1; // Reset direction to right
+            maxHealth = 100f;
+            Health = maxHealth;
+            maxMP = 100f;
+            MP = 100f;
             crouchSpeed = WalkSpeed/2;
             climbSpeed = WalkSpeed/2;
             base.Reset();
