@@ -182,11 +182,12 @@ public class PlayScene
             WalkSpeed = 400,
             Left = Keys.Left,
             Right = Keys.Right,
+            Crouch = Keys.Down,
+            Climb = Keys.Up,
             Fire = Keys.E,
             Jump = Keys.Space,
             Dash = Keys.LeftShift,
             Attack = Keys.Q,
-            Crouch = Keys.Down,
             Interact = Keys.F,
             Bullet = new Bullet(_playerTexture)
             {

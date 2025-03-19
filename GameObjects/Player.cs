@@ -10,10 +10,14 @@ namespace FinalComGame
     public class Player : Character
     {
         public Bullet Bullet;
-        public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Interact;
+        public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb, Interact;
         
         public int crouchSpeed;
+        public int climbSpeed;
 
+        private bool isClimbing = false;
+
+        private string overlappedTile = "";
         //Jump
         protected float coyoteTime = 0.1f; // 100ms of coyote time
         protected float coyoteTimeCounter = 0f;
@@ -51,6 +55,7 @@ namespace FinalComGame
             Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/8);
             direction = 1; // Reset direction to right
             crouchSpeed = WalkSpeed/2;
+            climbSpeed = WalkSpeed/2;
             base.Reset();
         }
 
@@ -62,8 +67,10 @@ namespace FinalComGame
             UpdateInvincibilityTimer(deltaTime);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
-            if (!isDashing) 
+
+            if (!isClimbing && !isDashing) 
                 ApplyGravity(deltaTime);
+                
             UpdateDash(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
@@ -139,7 +146,7 @@ namespace FinalComGame
             else
                 jumpBufferCounter -= deltaTime; // Decrease over time
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping)
+            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping && !isClimbing)
             {
                 Viewport.Height = 16;
                 WalkSpeed = crouchSpeed;
@@ -150,6 +157,33 @@ namespace FinalComGame
                 WalkSpeed = 400;
             }
 
+            if (Singleton.Instance.IsKeyPressed(Climb) && overlappedTile == "Ladder" && !isClimbing)
+            {
+                isClimbing = true;
+                isJumping = false;
+                Velocity.Y = 0;
+            }
+
+            if (isClimbing)
+            {
+                if (Singleton.Instance.IsKeyPressed(Climb))
+                {
+                    Velocity.Y = -climbSpeed;
+                }
+
+                else if (Singleton.Instance.IsKeyPressed(Crouch))
+                {
+                    Velocity.Y = climbSpeed;
+                }
+
+                else Velocity.Y = 0;
+                
+                if (Singleton.Instance.IsKeyJustPressed(Jump) || overlappedTile == "")
+                {
+                    isClimbing = false;
+                }
+
+            }
 
             if (Singleton.Instance.IsKeyJustPressed(Dash))
                 StartDash();
@@ -268,6 +302,49 @@ namespace FinalComGame
             {
                 Velocity.Y *= 0.5f; // Reduce upwards velocity to shorten jump
                 isJumping = false;
+            }
+        }
+
+        protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Position.X += Velocity.X * deltaTime;
+            overlappedTile = "";
+            foreach (Tile tile in tileMap.tiles)
+            {
+
+                if (tile.IsSolid)
+                {
+                    ResolveHorizontalCollision(tile);
+                }
+
+                if (tile.Type == "Ladder")
+                {
+                    if (IsTouchingRight(tile) || IsTouchingLeft(tile)) {
+                        overlappedTile = tile.Type;
+                    }
+                }
+
+            }
+        }
+
+        protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Position.Y += Velocity.Y * deltaTime;
+            overlappedTile = "";
+            foreach (Tile tile in tileMap.tiles)
+            {
+                if (tile.IsSolid)
+                {
+                    ResolveVerticalCollision(tile);
+                }
+
+                if (tile.Type == "Ladder")
+                {
+                    if (IsTouchingTop(tile) || IsTouchingBottom(tile)) {
+                        overlappedTile = tile.Type;
+                    }
+                }
+
             }
         }
 

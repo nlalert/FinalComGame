@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -38,15 +38,37 @@ namespace FinalComGame
                             int tileX = tileID % numTilesPerRow;
                             int tileY = tileID / numTilesPerRow;
                             bool collision = false;
+                            string type = "";
 
-                            if (tileID == 17 || tileID == 37)
+                            switch (tileID)
                             {
-                                collision = true;
+                                case 17 : 
+                                    type = "Barrier";
+                                    collision = true; 
+                                    break;
+
+                                case 37 : 
+                                    type = "Platform";
+                                    collision = true;
+                                    break;
+                                case 57 : 
+                                case 58 :
+                                case 59 :
+                                    type = "Ladder";
+                                    break;
+                                case 77 : 
+                                case 78 :
+                                case 79 :
+                                    type = "Platform_Ladder";
+                                    break;
+                                default: 
+                                    break;
                             }
 
                             Tile tile = new Tile(textureAtlas)
                             {
                                 Name = "Tile",
+                                Type = type,
                                 Position = new Vector2(x * Singleton.BLOCK_SIZE, y * Singleton.BLOCK_SIZE), // Convert grid position to pixel position
                                 Viewport = new Rectangle(
                                     tileX * Singleton.BLOCK_SIZE, 
