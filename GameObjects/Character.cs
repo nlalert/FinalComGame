@@ -76,7 +76,7 @@ namespace FinalComGame {
         protected virtual void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.X += Velocity.X * deltaTime;
-            foreach (Tile tile in tileMap.tiles)
+            foreach (Tile tile in tileMap.tiles.Values)
             {
                 if(tile.IsSolid) ResolveHorizontalCollision(tile);
             }
@@ -85,7 +85,7 @@ namespace FinalComGame {
         protected virtual void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.Y += Velocity.Y * deltaTime;
-            foreach (Tile tile in tileMap.tiles)
+            foreach (Tile tile in tileMap.tiles.Values)
             {
                 if(tile.IsSolid) ResolveVerticalCollision(tile);
             }

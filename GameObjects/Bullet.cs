@@ -68,7 +68,7 @@ namespace FinalComGame
                 }
             }
 
-            foreach (Tile tile in tileMap.tiles)
+            foreach (Tile tile in tileMap.tiles.Values)
             {
                 if(Name.Equals("BulletPlayer"))
                 {

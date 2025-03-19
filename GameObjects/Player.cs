@@ -320,7 +320,7 @@ namespace FinalComGame
         protected void UpdateTileInteraction (TileMap tileMap){
 
             overlappedTile = TileType.None;
-            foreach (Tile tile in tileMap.tiles)
+            foreach (Tile tile in tileMap.tiles.Values)
             {
                 if (tile.Type == TileType.Ladder || tile.Type == TileType.Ladder)
                 {

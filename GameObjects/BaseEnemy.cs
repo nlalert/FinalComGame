@@ -135,7 +135,7 @@ namespace FinalComGame {
             Position.X += Velocity.X * deltaTime;
             if(CanCollideTile)
             {
-                foreach (Tile tile in tileMap.tiles)
+                foreach (Tile tile in tileMap.tiles.Values)
                 {
                     if(ResolveHorizontalCollision(tile)){
                         OnCollisionHorizon();
