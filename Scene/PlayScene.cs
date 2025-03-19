@@ -113,6 +113,7 @@ public class PlayScene
 
         _ui.Draw(_spriteBatch);
         _spriteBatch.DrawString(_font, "Health Bar : " + player.Health + " / " + player.maxHealth, new Vector2(10, 10), Color.White);
+        _spriteBatch.DrawString(_font, "MP Bar : " + player.MP + " / " + player.maxMP, new Vector2(10, 70), Color.White);
 
         _spriteBatch.End();
     }
@@ -222,12 +223,20 @@ public class PlayScene
     private void SetupUI()
     {
         HealthBar playerHealth = new HealthBar(
-            new Rectangle(20, 50, 200, 30),
+            new Rectangle(20, 40, 200, 30),
             player,
             Color.Red,
             Color.Gray
         );
 
+        MPBar playerMP = new MPBar(
+            new Rectangle(20, 100, 200, 30),
+            player,
+            Color.SkyBlue,
+            Color.Gray
+        );
+
         _ui.AddElement(playerHealth);
+        _ui.AddElement(playerMP);
     }
 }
