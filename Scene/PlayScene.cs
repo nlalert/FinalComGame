@@ -54,7 +54,7 @@ public class PlayScene
         _font = _content.Load<SpriteFont>("GameFont");
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
-        Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
+
         Texture2D textureAtlas = _content.Load<Texture2D>("Tileset");
         //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
         //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
@@ -205,7 +205,7 @@ public class PlayScene
             player = player
         };
         _gameObjects.Add(baseSkeleton);
-        // baseSkeleton.Spawn(132, 400, _gameObjects);
+        baseSkeleton.Spawn(132, 400, _gameObjects);
         baseSkeleton.Spawn(262, 200, _gameObjects);
         baseSkeleton.Spawn(462, 100, _gameObjects);
 
