@@ -12,6 +12,8 @@ namespace FinalComGame
         private float _timer;      // Tracks time elapsed
         private int _currentFrame;
 
+        private Vector2 _frameSize;
+
         public bool IsLooping { get; set; } = true;
         public bool IsFinished { get; private set; } = false;
 
@@ -27,13 +29,15 @@ namespace FinalComGame
             {
                 _frames.Add(new Rectangle(i * frameWidth, 0, frameWidth, frameHeight));
             }
+
+            _frameSize = new Vector2(frameWidth, frameHeight);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(float deltaTime)
         {
             if (IsFinished) return;
 
-            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _timer += deltaTime;
 
             if (_timer >= 1 / _fps)
             {
@@ -69,5 +73,12 @@ namespace FinalComGame
         {
             return _spriteSheet;
         }
+
+        public Vector2 GetFrameSize()
+        {
+            return _frameSize;
+        }
+
+
     }
 }
