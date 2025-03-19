@@ -47,7 +47,7 @@ namespace FinalComGame {
 
             spriteBatch.Draw(
                 Animation.GetTexture(),
-                Position,
+                GetDrawingPosition(),
                 Animation.GetCurrentFrame(),
                 Color.White,
                 0f, 
@@ -58,6 +58,12 @@ namespace FinalComGame {
             );
 
             base.Draw(spriteBatch);
+        }
+
+        protected Vector2 GetDrawingPosition()
+        {
+            return  new Vector2( Position.X - (Animation.GetFrameSize().X - Viewport.Width) / 2 
+                                ,Position.Y - (Animation.GetFrameSize().Y - Viewport.Height) / 2);
         }
 
         protected void ApplyGravity(float deltaTime)

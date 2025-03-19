@@ -29,7 +29,7 @@ namespace FinalComGame
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             DistantMoved += Math.Abs(Velocity.X * gameTime.ElapsedGameTime.Ticks / TimeSpan.TicksPerSecond);
-            Position += Velocity * gameTime.ElapsedGameTime.Ticks / TimeSpan.TicksPerSecond;
+            Position.X += Velocity.X * gameTime.ElapsedGameTime.Ticks / TimeSpan.TicksPerSecond;
 
             if (DistantMoved >= Singleton.SCREEN_WIDTH)
                 IsActive = false;

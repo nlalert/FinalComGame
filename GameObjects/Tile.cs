@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,6 +8,7 @@ namespace FinalComGame
     public class Tile : GameObject
     {
         public bool IsSolid;
+        public string Type;
 
         public Tile(Texture2D texture)
         {
