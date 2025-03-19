@@ -341,9 +341,7 @@ namespace FinalComGame
 
                 }
 
-                if (tile.IsSolid)
-                }
-
+                if (tile.IsSolid){}
             }
         }
 
@@ -371,22 +369,23 @@ namespace FinalComGame
                     if (IsTouchingTop(tile) && !Singleton.Instance.IsKeyPressed(Climb))
                     {
                         isClimbing = false;
-                    // Check collision with solid tiles
-                    if (tile.IsSolid)
-                    {
-                        Velocity.Y = 0; // Stop falling
-                        return; // Stop checking further
-                    }
+                        // Check collision with solid tiles
+                        if (tile.IsSolid)
+                        {
+                            Velocity.Y = 0; // Stop falling
+                            return; // Stop checking further
+                        }
 
-                    // Detect special tiles like "Ladder"
-                    if (tile.Type == "Ladder" && (IsTouchingTop(tile) || IsTouchingBottom(tile)))
-                    {
-                        overlappedTile = tile.Type;
+                        // Detect special tiles like "Ladder"
+                        if (tile.Type == "Ladder" && (IsTouchingTop(tile) || IsTouchingBottom(tile)))
+                        {
+                            overlappedTile = tile.Type;
+                        }
                     }
                 }
             }
-
             Position.Y = nextPosition.Y; // Apply movement if no obstacle
+
         }
 
         private bool IsOverlapped(Tile tile){
