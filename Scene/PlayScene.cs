@@ -199,6 +199,7 @@ public class PlayScene
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
             CanCollideTile = true,
+            player = player
         };
         _gameObjects.Add(baseSkeleton);
         baseSkeleton.Spawn(132, 400, _gameObjects);

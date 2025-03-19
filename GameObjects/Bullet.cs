@@ -45,7 +45,7 @@ namespace FinalComGame
                             // s.IsActive = false;
                             if(s is BaseEnemy enemy){
                                 // enemy.OnHit(this,this.damage)
-                                enemy.OnHit(this,10);
+                                enemy.OnHitByProjectile(this,10);
                             } 
                             // if(s is Enemy)
                             // {

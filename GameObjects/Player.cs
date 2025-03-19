@@ -343,12 +343,11 @@ namespace FinalComGame
             gameObjects.Add(newBullet);
         }
 
-        public override void OnHit(GameObject projectile,float damageAmount)
+
+        public override void OnHitByProjectile(GameObject gameObject,float damageAmount)
         {
-            //TODO: deal with projectile later
             OnHit(damageAmount);
         }
-
         public override void OnHit(float damageAmount)
         {
             if (invincibilityTimer > 0) 
@@ -361,6 +360,18 @@ namespace FinalComGame
             {
                 OnDead();
             }
+        }
+        /// <summary>
+        /// Call this when player get physical contact with npc
+        /// eg. add knockback
+        /// </summary>
+        /// <param name="npc"></param>
+        /// <param name="damageAmount"></param>
+        public override void OnCollideNPC(Character npc, float damageAmount)
+        {
+            OnHit(damageAmount);
+            //player.takeKnockback(npc.knockback);
+            base.OnCollideNPC(npc, damageAmount);
         }
     }
 }
