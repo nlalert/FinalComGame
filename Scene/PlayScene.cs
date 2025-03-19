@@ -171,8 +171,11 @@ public class PlayScene
         Texture2D playerMelee = _content.Load<Texture2D>("Player");
         Texture2D playerDash = _content.Load<Texture2D>("Char_Idle");
         Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
+        
+        playerParticle.SetData([new Color(193, 255, 219)]);
 
-        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide)
+        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerParticle)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),

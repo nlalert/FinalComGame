@@ -12,6 +12,8 @@ namespace FinalComGame
         public Bullet Bullet;
         public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb;
 
+        public Particle _particle;
+
         public int crouchSpeed;
         public int climbSpeed;
 
@@ -39,7 +41,7 @@ namespace FinalComGame
         private Animation _dashAnimation;
         private Animation _glideAnimation;
         private Animation _fallAnimation;
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, Texture2D glideTexture)
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, Texture2D glideTexture, Texture2D paticleTexture)
         {
             _idleAnimation = new Animation(idleTexture, 48, 64, 16, 24); // 24 fps
             _runAnimation = new Animation(runTexture, 48, 64, 8, 24); //  24 fps
@@ -48,6 +50,8 @@ namespace FinalComGame
             _meleeAttackAnimation = new Animation(meleeAttackTexture, 16, 32, 16, 24); // 24 fps
             _dashAnimation = new Animation(dashTexture, 16, 32, 16, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
+
+            _particle = new Particle(10, Position, paticleTexture);
 
             Animation = _idleAnimation;
         }
@@ -84,10 +88,14 @@ namespace FinalComGame
             if (!isDashing) Velocity.X = 0;
 
             base.Update(gameTime, gameObjects, tileMap);
+            _particle.Update(Position);    
+
+            //Console.WriteLine(Position);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            _particle.Draw(spriteBatch);
             base.Draw(spriteBatch);
         }
 
