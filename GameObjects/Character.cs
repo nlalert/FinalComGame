@@ -27,7 +27,7 @@ namespace FinalComGame {
         
         //Jump
         protected bool isJumping = false;
-        protected float jumpStrength = 1000f;
+        protected float jumpStrength = 800f;
 
         //Animation
         protected Animation _idleAnimation;
@@ -78,7 +78,7 @@ namespace FinalComGame {
             Position.X += Velocity.X * deltaTime;
             foreach (Tile tile in tileMap.tiles)
             {
-                ResolveHorizontalCollision(tile);
+                if(tile.IsSolid) ResolveHorizontalCollision(tile);
             }
         }
 
@@ -87,7 +87,7 @@ namespace FinalComGame {
             Position.Y += Velocity.Y * deltaTime;
             foreach (Tile tile in tileMap.tiles)
             {
-                ResolveVerticalCollision(tile);
+                if(tile.IsSolid) ResolveVerticalCollision(tile);
             }
         }
 

@@ -11,11 +11,13 @@ namespace FinalComGame
     {
         public Bullet Bullet;
         public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb;
-        
+
         public int crouchSpeed;
         public int climbSpeed;
 
         private bool isClimbing = false;
+        private bool isCrouching = false;
+        private bool isDropping = false;
 
         private string overlappedTile = "";
         //Jump
@@ -25,7 +27,7 @@ namespace FinalComGame
         protected float jumpBufferCounter = 0f;
         // Dash 
         private bool isDashing = false;
-        private float dashSpeed = 800f;
+        private float dashSpeed = 600f;
         private float dashDuration = 0.2f; // Dash lasts for 0.2 seconds
         private float dashCooldown = 0.5f; // Cooldown before dashing again
         private float dashTimer = 0f;
@@ -74,9 +76,11 @@ namespace FinalComGame
             UpdateDash(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+            UpdateTileInteraction(tileMap);
             UpdateAttackHitbox();
             CheckAttackHit(gameObjects);
             UpdateAnimation(deltaTime);
+
             if (!isDashing) Velocity.X = 0;
 
             base.Update(gameTime, gameObjects, tileMap);
@@ -141,23 +145,35 @@ namespace FinalComGame
             if (Singleton.Instance.IsKeyJustPressed(Fire))
                 Shoot(gameObjects);
 
-            if (Singleton.Instance.IsKeyJustPressed(Jump))
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing)
                 jumpBufferCounter = jumpBufferTime;
             else
                 jumpBufferCounter -= deltaTime; // Decrease over time
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping && !isClimbing)
+            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping && !isClimbing && Velocity.Y == 0)
             {
+                if (!isCrouching) Position.Y += 16;
                 Viewport.Height = 16;
                 WalkSpeed = crouchSpeed;
+                isCrouching = true;
             }
             else
             {
+                if (isCrouching) Position.Y -= 16;
                 Viewport.Height = 32;
-                WalkSpeed = 400;
+                WalkSpeed = 200;
+                isCrouching = false;
             }
 
-            if (Singleton.Instance.IsKeyPressed(Climb) && overlappedTile == "Ladder" && !isClimbing)
+            if (Singleton.Instance.IsKeyPressed(Crouch) && Singleton.Instance.IsKeyJustPressed(Jump)){
+                isDropping = true;
+            }
+            else
+            {
+                isDropping = false;
+            }
+
+            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && overlappedTile == "Ladder" && !isClimbing && !isCrouching)
             {
                 isClimbing = true;
                 isJumping = false;
@@ -237,6 +253,7 @@ namespace FinalComGame
                 isDashing = true;
                 dashTimer = dashDuration;
                 dashCooldownTimer = dashCooldown;
+                Velocity.Y = 0;
                 Velocity.X = dashSpeed * direction;
             }
         }
@@ -290,48 +307,44 @@ namespace FinalComGame
             }
         }
 
-        protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            Position.X += Velocity.X * deltaTime;
+        protected void UpdateTileInteraction (TileMap tileMap){
+
             overlappedTile = "";
             foreach (Tile tile in tileMap.tiles)
             {
-
-                if (tile.IsSolid)
+                if (tile.Type == "Ladder" || tile.Type == "Platform_Ladder")
                 {
-                    ResolveHorizontalCollision(tile);
-                }
-
-                if (tile.Type == "Ladder")
-                {
-                    if (IsTouchingRight(tile) || IsTouchingLeft(tile)) {
-                        overlappedTile = tile.Type;
+                    if (IsOverlapped(tile)){
+                        overlappedTile = "Ladder";
                     }
                 }
 
-            }
-        }
+                if (tile.Type == "Platform" || tile.Type == "Platform_Ladder")
+                {
+                    if (tile.Position.Y < Position.Y + Viewport.Height || isDropping){
+                        tile.IsSolid = false;
+                    }
 
-        protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            Position.Y += Velocity.Y * deltaTime;
-            overlappedTile = "";
-            foreach (Tile tile in tileMap.tiles)
-            {
+                    else{
+                        tile.IsSolid = true;
+                    }
+
+                }
+
                 if (tile.IsSolid)
                 {
-                    ResolveVerticalCollision(tile);
-                }
-
-                if (tile.Type == "Ladder")
-                {
-                    if (IsTouchingTop(tile) || IsTouchingBottom(tile)) {
-                        overlappedTile = tile.Type;
+                    if (IsTouchingTop(tile) && !Singleton.Instance.IsKeyPressed(Climb))
+                    {
+                        isClimbing = false;
                     }
                 }
-
             }
         }
+
+        private bool IsOverlapped(Tile tile){
+            return IsTouchingRight(tile) || IsTouchingLeft(tile) || IsTouchingTop(tile) || IsTouchingBottom(tile);
+        }
+
 
         private void Shoot(List<GameObject> gameObjects)
         {

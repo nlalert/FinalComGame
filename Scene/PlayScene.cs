@@ -177,7 +177,7 @@ public class PlayScene
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
             Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2),
-            WalkSpeed = 400,
+            WalkSpeed = 200,
             Left = Keys.Left,
             Right = Keys.Right,
             Crouch = Keys.Down,
