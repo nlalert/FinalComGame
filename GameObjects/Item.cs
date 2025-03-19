@@ -62,29 +62,16 @@ namespace FinalComGame
             bobTimer += deltaTime * bobSpeed;
             Position = originalPosition + new Vector2(0, (float)Math.Sin(bobTimer) * bobAmount);
             
-            // // Check if player is in range
-            // Player player = null;
-            // foreach (var obj in gameObjects)
-            // {
-            //     if (obj is Player)
-            //     {
-            //         player = obj as Player;
-            //         break;
-            //     }
-            // }
+            // // Check if player is in pickup range
+            // float distance = Vector2.Distance(Position, player.Position);
+            // isInRange = distance < pickupRadius;
             
-            // if (player != null)
+            // // Auto pickup if in range and player presses pickup key
+            // if (isInRange && player.IsPickupKeyPressed)
             // {
-            //     // Check if player is in pickup range
-            //     float distance = Vector2.Distance(Position, player.Position);
-            //     isInRange = distance < pickupRadius;
-                
-            //     // Auto pickup if in range and player presses pickup key
-            //     if (isInRange && player.IsPickupKeyPressed)
-            //     {
-            //         player.PickupItem(this);
-            //     }
+            //     player.PickupItem(this);
             // }
+        
             
             base.Update(gameTime, gameObjects, tileMap);
         }
@@ -129,6 +116,12 @@ namespace FinalComGame
             //         true
             //     );
             // }
+        }
+
+        public bool InPickupRadius(Player player)
+        {
+            float distance = Vector2.Distance(Position, player.Position);
+            return distance < pickupRadius;
         }
     }
 }

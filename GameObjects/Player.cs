@@ -162,7 +162,11 @@ namespace FinalComGame
         {
             foreach (var item in gameObjects.OfType<Item>())
             {
-                item.OnPickup(this);
+                if(item.InPickupRadius(this))
+                {
+                    item.OnPickup(this);
+                };
+            
             }
         }
 
