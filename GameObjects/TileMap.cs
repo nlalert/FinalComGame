@@ -105,5 +105,35 @@ namespace FinalComGame
                 tile.Draw(spriteBatch);
             }
         }
+        /// <summary>
+        /// check if position have tiles or not
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool IsObstacle(Vector2 position)
+        {
+            foreach (Tile tile in tiles)
+            {
+                if (tile.IsSolid && tile.Rectangle.Contains(position))
+                {
+                    return true; // There's an obstacle at this position
+                }
+            }
+            return false;
+        }
+        public Tile GetTileAt(int tileX, int tileY)
+        {
+            foreach (Tile tile in tiles)
+            {
+                int tileGridX = (int)(tile.Position.X / Singleton.BLOCK_SIZE);
+                int tileGridY = (int)(tile.Position.Y / Singleton.BLOCK_SIZE);
+
+                if (tileGridX == tileX && tileGridY == tileY)
+                {
+                    return tile; // Found the tile
+                }
+            }
+            return null; // No tile found
+        }
     }
 }
