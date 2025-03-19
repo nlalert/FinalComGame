@@ -77,5 +77,16 @@ namespace FinalComGame
                 tile.Draw(spriteBatch);
             }
         }
+        public bool IsObstacle(Vector2 position)
+        {
+            foreach (Tile tile in tiles)
+            {
+                if (tile.IsSolid && tile.Rectangle.Contains(position))
+                {
+                    return true; // There's an obstacle at this position
+                }
+            }
+            return false;
+        }
     }
 }

@@ -163,6 +163,32 @@ namespace FinalComGame {
         {
         }
         public virtual void OnCollisionHorizon(){
+
+        }
+        /// <summary>
+        /// Enemy look for player with line of sight
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public bool HaveLineOfSight(Player player,TileMap tileMap){
+            if (player == null) return false;
+            
+            Vector2 enemyPosition = Position;
+            Vector2 playerPosition = player.Position;
+            
+            float step = 16f; // Tile size or step size for checking
+            Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);
+            Vector2 checkPosition = enemyPosition;
+
+            while (Vector2.Distance(checkPosition, playerPosition) > step)
+            {
+                checkPosition += direction * step;
+                if (tileMap.IsObstacle(checkPosition))
+                {
+                    return false; // Blocked by an obstacle
+                }
+            }
+            return true;
         }
     }
 }

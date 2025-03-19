@@ -86,6 +86,11 @@ namespace FinalComGame
             }
 
             Velocity.X = 50f * direction;
+            if(this.HaveLineOfSight(player,tileMap))
+            {
+                Console.WriteLine("Skeleton sees the player! Switching to chase mode.");
+                CurrentState = EnemyState.Chase;
+            }
         }
 
         public override void OnCollisionHorizon()
