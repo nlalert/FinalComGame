@@ -86,7 +86,7 @@ namespace FinalComGame
             }
 
             Velocity.X = 50f * direction;
-            if(this.HaveLineOfSight(player,tileMap))
+            if(this.HaveLineOfSight(player,tileMap) && Vector2.Distance(player.Position,this.Position) <=100)
             {
                 Console.WriteLine("Skeleton sees the player! Switching to chase mode.");
                 CurrentState = EnemyState.Chase;
