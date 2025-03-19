@@ -97,6 +97,7 @@ namespace FinalComGame
         {
             _particle.Draw(spriteBatch);
             base.Draw(spriteBatch);
+            DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
@@ -340,14 +341,51 @@ namespace FinalComGame
 
                 }
 
-                if (tile.IsSolid)
+                if (tile.IsSolid){}
+            }
+        }
+
+        protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Vector2 nextPosition = Position + new Vector2(0, Velocity.Y * deltaTime);
+            float distance = Vector2.Distance(Position, nextPosition);
+            
+            if (distance == 0) return; // No movement, skip checking
+
+            float stepSize = distance / 8; // Divide movement into 8 steps
+            int tileX = (int)(Position.X / Singleton.BLOCK_SIZE); // Get current column
+
+            overlappedTile = ""; // Reset tile detection
+
+            for (int i = 1; i <= 8; i++) // Start from 1 to avoid checking current position
+            {
+                float checkY = Position.Y + Math.Sign(Velocity.Y) * (stepSize * i);
+                int tileY = (int)(checkY / Singleton.BLOCK_SIZE) + this.Rectangle.Height/Singleton.BLOCK_SIZE; // Convert to tile grid position
+
+                // Get the tile at (tileX, tileY)
+                Tile tile = tileMap.GetTileAt(tileX, tileY);
+                if (tile != null)
                 {
                     if (IsTouchingTop(tile) && !Singleton.Instance.IsKeyPressed(Climb))
                     {
                         isClimbing = false;
+                        // Check collision with solid tiles
+                        if (tile.IsSolid)
+                        {
+                            Velocity.Y = 0; // Stop falling
+                            return; // Stop checking further
+                        }
+
+                        // Detect special tiles like "Ladder"
+                        if (tile.Type == "Ladder" && (IsTouchingTop(tile) || IsTouchingBottom(tile)))
+                        {
+                            overlappedTile = tile.Type;
+                        }
                     }
                 }
             }
+            Position.Y = nextPosition.Y; // Apply movement if no obstacle
+
         }
 
         private bool IsOverlapped(Tile tile){
@@ -365,12 +403,11 @@ namespace FinalComGame
             gameObjects.Add(newBullet);
         }
 
-        public override void OnHit(GameObject projectile,float damageAmount)
+
+        public override void OnHitByProjectile(GameObject gameObject,float damageAmount)
         {
-            //TODO: deal with projectile later
             OnHit(damageAmount);
         }
-
         public override void OnHit(float damageAmount)
         {
             if (invincibilityTimer > 0) 
@@ -383,6 +420,25 @@ namespace FinalComGame
             {
                 OnDead();
             }
+        }
+        /// <summary>
+        /// Call this when player get physical contact with npc
+        /// eg. add knockback
+        /// </summary>
+        /// <param name="npc"></param>
+        /// <param name="damageAmount"></param>
+        public override void OnCollideNPC(Character npc, float damageAmount)
+        {
+            OnHit(damageAmount);
+            //player.takeKnockback(npc.knockback);
+            base.OnCollideNPC(npc, damageAmount);
+        }
+        private void DrawDebug(SpriteBatch spriteBatch)
+        {
+            Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
+            string directionText = direction != 1 ? "Left" : "Right";
+            string displayText = $"Dir {directionText} \nCHp {Health}";
+            spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
         }
     }
 }
