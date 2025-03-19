@@ -28,6 +28,5 @@ public class Camera
         //     (float)Math.Round(target.Position.Y + target.Viewport.Y / (2 * _zoom) - _viewport.Width / (2 * _zoom)));
         _position = new Vector2(target.Position.X + target.Viewport.X / (2 * _zoom) - _viewport.Width / (2 * _zoom), 
             target.Position.Y + target.Viewport.Y / (2 * _zoom) - _viewport.Width / (2 * _zoom));
-
     }
 }
