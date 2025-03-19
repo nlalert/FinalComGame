@@ -75,7 +75,7 @@ namespace FinalComGame
         private void DrawDebug(SpriteBatch spriteBatch){
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20); // 20 pixels above the enemy
             string directionText = direction != 1 ? "Left" : "right";
-            string displayText = "Dir " + directionText +  "\n PatrolDis" + (Position.X - _PatrolCenterPoint.X); 
+            string displayText = "Dir " + directionText +  "\n PatrolDis" + (Position.X - _PatrolCenterPoint.X) + "\n CHp" + this.Health; 
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
         }
 
@@ -100,5 +100,18 @@ namespace FinalComGame
             }
             base.OnCollisionHorizon();
         }
+        public override void OnHit(float damageAmount)
+        {
+            //ADD damge taken sound
+            base.OnHit(damageAmount);
+        }
+        public override void OnCollidePlayer(Player player)
+        {
+            Console.WriteLine("Skeleton hit player");
+            //skeleton have weak bone get hurt it self by confusion
+            this.OnHit(Health/10);
+            base.OnCollidePlayer(player);
+        }
+
     }      
 }
