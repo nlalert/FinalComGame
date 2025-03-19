@@ -19,15 +19,15 @@ namespace FinalComGame {
         //Attack
         protected bool isAttacking = false;
         protected float attackDamage = 10f;
-        protected float attackDuration = 0.2f; // How long the attack lasts
-        protected float attackCooldown = 0.5f; // Cooldown before attacking again
+        protected float attackDuration = 0.4f; // How long the attack lasts
+        protected float attackCooldown = 0.2f; // Cooldown before attacking again
         protected float attackTimer = 0f;
         protected float attackCooldownTimer = 0f;
         protected Rectangle attackHitbox;
         
         //Jump
         protected bool isJumping = false;
-        protected float jumpStrength = 1000f;
+        protected float jumpStrength = 800f;
 
         //Animation
         protected Animation _idleAnimation;
@@ -78,7 +78,7 @@ namespace FinalComGame {
             Position.X += Velocity.X * deltaTime;
             foreach (Tile tile in tileMap.tiles)
             {
-                ResolveHorizontalCollision(tile);
+                if(tile.IsSolid) ResolveHorizontalCollision(tile);
             }
         }
 
@@ -87,7 +87,7 @@ namespace FinalComGame {
             Position.Y += Velocity.Y * deltaTime;
             foreach (Tile tile in tileMap.tiles)
             {
-                ResolveVerticalCollision(tile);
+                if(tile.IsSolid) ResolveVerticalCollision(tile);
             }
         }
 
