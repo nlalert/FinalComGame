@@ -38,28 +38,28 @@ namespace FinalComGame
                             int tileX = tileID % numTilesPerRow;
                             int tileY = tileID / numTilesPerRow;
                             bool collision = false;
-                            string type = "";
+                            TileType type = TileType.None;
 
                             switch (tileID)
                             {
                                 case 17 : 
-                                    type = "Barrier";
+                                    type = TileType.Barrier;
                                     collision = true; 
                                     break;
 
                                 case 37 : 
-                                    type = "Platform";
+                                    type = TileType.Platform;
                                     collision = true;
                                     break;
                                 case 57 : 
                                 case 58 :
                                 case 59 :
-                                    type = "Ladder";
+                                    type = TileType.Ladder;
                                     break;
                                 case 77 : 
                                 case 78 :
                                 case 79 :
-                                    type = "Platform_Ladder";
+                                    type = TileType.Platform_Ladder;
                                     break;
                                 default: 
                                     break;

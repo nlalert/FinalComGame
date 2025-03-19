@@ -8,7 +8,7 @@ namespace FinalComGame
     public class Tile : GameObject
     {
         public bool IsSolid;
-        public string Type;
+        public TileType Type;
 
         public Tile(Texture2D texture)
         {

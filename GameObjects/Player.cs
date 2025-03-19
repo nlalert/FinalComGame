@@ -21,7 +21,7 @@ namespace FinalComGame
         private bool isCrouching = false;
         private bool isDropping = false;
 
-        private string overlappedTile = "";
+        private TileType overlappedTile = TileType.None;
         //Jump
         protected float coyoteTime = 0.1f; // 100ms of coyote time
         protected float coyoteTimeCounter = 0f;
@@ -182,7 +182,7 @@ namespace FinalComGame
                 isDropping = false;
             }
 
-            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && overlappedTile == "Ladder" && !isClimbing && !isCrouching)
+            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && overlappedTile == TileType.Ladder && !isClimbing && !isCrouching)
             {
                 isClimbing = true;
                 isJumping = false;
@@ -203,7 +203,7 @@ namespace FinalComGame
 
                 else Velocity.Y = 0;
                 
-                if (Singleton.Instance.IsKeyJustPressed(Jump) || overlappedTile == "")
+                if (Singleton.Instance.IsKeyJustPressed(Jump) || overlappedTile == TileType.None)
                 {
                     isClimbing = false;
                 }
@@ -319,17 +319,17 @@ namespace FinalComGame
 
         protected void UpdateTileInteraction (TileMap tileMap){
 
-            overlappedTile = "";
+            overlappedTile = TileType.None;
             foreach (Tile tile in tileMap.tiles)
             {
-                if (tile.Type == "Ladder" || tile.Type == "Platform_Ladder")
+                if (tile.Type == TileType.Ladder || tile.Type == TileType.Ladder)
                 {
-                    if (IsOverlapped(tile)){
-                        overlappedTile = "Ladder";
+                    if (IsTouching(tile)){
+                        overlappedTile = TileType.Ladder;
                     }
                 }
 
-                if (tile.Type == "Platform" || tile.Type == "Platform_Ladder")
+                if (tile.Type == TileType.Platform|| tile.Type == TileType.Platform_Ladder)
                 {
                     if (tile.Position.Y < Position.Y + Viewport.Height || isDropping){
                         tile.IsSolid = false;
@@ -355,7 +355,7 @@ namespace FinalComGame
             float stepSize = distance / 8; // Divide movement into 8 steps
             int tileX = (int)(Position.X / Singleton.BLOCK_SIZE); // Get current column
 
-            overlappedTile = ""; // Reset tile detection
+            overlappedTile = TileType.None; // Reset tile detection
 
             for (int i = 1; i <= 8; i++) // Start from 1 to avoid checking current position
             {
@@ -377,7 +377,7 @@ namespace FinalComGame
                         }
 
                         // Detect special tiles like "Ladder"
-                        if (tile.Type == "Ladder" && (IsTouchingTop(tile) || IsTouchingBottom(tile)))
+                        if (tile.Type == TileType.Ladder && (IsTouchingTop(tile) || IsTouchingBottom(tile)))
                         {
                             overlappedTile = tile.Type;
                         }
@@ -385,13 +385,7 @@ namespace FinalComGame
                 }
             }
             Position.Y = nextPosition.Y; // Apply movement if no obstacle
-
         }
-
-        private bool IsOverlapped(Tile tile){
-            return IsTouchingRight(tile) || IsTouchingLeft(tile) || IsTouchingTop(tile) || IsTouchingBottom(tile);
-        }
-
 
         private void Shoot(List<GameObject> gameObjects)
         {
