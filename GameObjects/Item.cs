@@ -15,7 +15,6 @@ namespace FinalComGame
         // Visual indicator for pickup range
         protected float pickupRadius = 40f;
         protected bool isInRange = false;
-        protected Color rangeIndicatorColor = new Color(255, 255, 255, 50);
         
         protected float bobAmount = 4f;
         protected float bobSpeed = 2f;
@@ -34,7 +33,9 @@ namespace FinalComGame
         }
         
         // // Method to be overridden by specific item types
-        // public abstract void Use(Player player);
+        public virtual void Use(Player player)
+        {
+        }
         
         // Called when item is picked up
         public virtual void OnPickup(Player player)
@@ -72,7 +73,6 @@ namespace FinalComGame
             //     player.PickupItem(this);
             // }
         
-            
             base.Update(gameTime, gameObjects, tileMap);
         }
         
