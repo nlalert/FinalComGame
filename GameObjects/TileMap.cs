@@ -57,7 +57,7 @@ namespace FinalComGame
                             {
                                 Name = GetTileName(tileID),
                                 Type = GetTileType(tileID),
-                                Position = GetTileWorldPosition(x, y), // Convert grid position to pixel position
+                                Position = GetTileWorldPositionAt(x, y), // Convert grid position to pixel position
                                 Viewport = GetTileViewport(tileID),
                                 IsSolid = GetTileCollisionType(tileID)
                             };
@@ -71,9 +71,9 @@ namespace FinalComGame
             return result;
         }
 
-        private static Vector2 GetTileWorldPosition(int x, int y)
+        public static Vector2 GetTileWorldPositionAt(int tileGridX, int tileGridY)
         {
-            return new Vector2(x * Singleton.BLOCK_SIZE, y * Singleton.BLOCK_SIZE);
+            return new Vector2(tileGridX * Singleton.BLOCK_SIZE, tileGridY * Singleton.BLOCK_SIZE);
         }
 
         private static string GetTileName(int tileID)
@@ -104,7 +104,7 @@ namespace FinalComGame
                 _ => false
             };
         }
-        
+
         private Rectangle GetTileViewport(int tileID)
         {
             int tileX = tileID % numTilesPerRow;

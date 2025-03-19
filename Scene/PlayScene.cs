@@ -179,7 +179,7 @@ public class PlayScene
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
-            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2),
+            Position = TileMap.GetTileWorldPositionAt(16, 98),// block column 16, row 98
             WalkSpeed = 200,
             Left = Keys.Left,
             Right = Keys.Right,
