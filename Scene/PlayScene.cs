@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Media;
 
 namespace FinalComGame;
 
@@ -13,6 +14,8 @@ public class PlayScene
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private ContentManager _content;
+
+    Song _gameMusic;
 
     //UI
     SpriteFont _font;
@@ -60,6 +63,8 @@ public class PlayScene
         //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
         _collisionTileMap = new TileMap(textureAtlas, "../../../Data/Level_1/Level_1_Collision.csv", 20);
 
+        _gameMusic = _content.Load<Song>("A Night Alone - TrackTribe");
+
         _ui = new UI();
 
         Reset();
@@ -74,6 +79,10 @@ public class PlayScene
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
+                if (MediaPlayer.State != MediaState.Playing)
+                {
+                    MediaPlayer.Play(_gameMusic);
+                }
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
                 RemoveInactiveObjects();
