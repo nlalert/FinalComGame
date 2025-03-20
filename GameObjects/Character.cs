@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace FinalComGame {
     public class Character : GameObject
     {
-        public float Health { get; protected set; }
+        public float Health;
         public float maxHealth = 100f;
         public int WalkSpeed;
         protected int direction = 1; // 1 = Right, -1 = Left
