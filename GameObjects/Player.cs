@@ -15,6 +15,8 @@ namespace FinalComGame
         public float maxMP;
         public float MP;
 
+        public Item[] holdItem;
+
         public Particle _particle;
 
         public int crouchSpeed;
@@ -61,6 +63,7 @@ namespace FinalComGame
 
         public override void Reset()
         {
+            holdItem = new Item[2];
             direction = 1; // Reset direction to right
             maxHealth = 100f;
             Health = maxHealth;
