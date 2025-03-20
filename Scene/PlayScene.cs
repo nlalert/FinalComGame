@@ -197,6 +197,8 @@ public class PlayScene
             Dash = Keys.LeftShift,
             Attack = Keys.Q,
             Interact = Keys.F,
+            Item1 = Keys.D1,
+            Item2 = Keys.D2,
             Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",
@@ -226,7 +228,7 @@ public class PlayScene
 
         _gameObjects.Add(new Item(playerGlide, "test", false, TileMap.GetTileWorldPositionAt(28, 98)){
             Name =  "RedThing",
-            Viewport = new Rectangle(0, 0, 32,16)
+            Viewport = new Rectangle(0, 0, 32,32)
         });
         SetupUI();
 

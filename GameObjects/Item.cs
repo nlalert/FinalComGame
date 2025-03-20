@@ -35,6 +35,7 @@ namespace FinalComGame
         // // Method to be overridden by specific item types
         public virtual void Use(Player player)
         {
+            Console.WriteLine("Using Item");
         }
         
         // Called when item is picked up
