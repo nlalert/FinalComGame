@@ -10,7 +10,7 @@ namespace FinalComGame {
         public float Health;
         public float maxHealth = 100f;
         public int WalkSpeed;
-        protected int direction = 1; // 1 = Right, -1 = Left
+        public int Direction = 1; // 1 = Right, -1 = Left
 
         // i-frame
         protected float invincibilityDuration = 0.5f; // 0.5 seconds of i-frames
@@ -43,7 +43,7 @@ namespace FinalComGame {
                 spriteBatch.Draw(debugTexture, attackHitbox, Color.Red);
             // end hitbox debug drawing
 
-            SpriteEffects spriteEffect = direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             spriteBatch.Draw(
                 Animation.GetTexture(),

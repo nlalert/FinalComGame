@@ -69,7 +69,7 @@ namespace FinalComGame
         private void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
-            string directionText = direction != 1 ? "Left" : "Right";
+            string directionText = Direction != 1 ? "Left" : "Right";
             string displayText = $"Dir {directionText}\nPatrolDis {(Position.X - _patrolCenterPoint.X)}\nCHp {Health}";
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
         }
@@ -82,10 +82,10 @@ namespace FinalComGame
 
             if (Math.Abs(Position.X - _patrolCenterPoint.X) >= _limitIdlePatrol)
             {
-                direction *= -1;
+                Direction *= -1;
             }
 
-            Velocity.X = 50f * direction;
+            Velocity.X = 50f * Direction;
             if(this.HaveLineOfSight(player,tileMap) && Vector2.Distance(player.Position,this.Position) <=100)
             {
                 Console.WriteLine("Skeleton sees the player! Switching to chase mode.");
@@ -97,7 +97,7 @@ namespace FinalComGame
         {
             if (CurrentState == EnemyState.Idle)
             {
-                direction *= -1;
+                Direction *= -1;
             }
             base.OnCollisionHorizon();
         }

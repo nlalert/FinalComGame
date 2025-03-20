@@ -64,7 +64,7 @@ namespace FinalComGame
         public override void Reset()
         {
             holdItem = new Item[2];
-            direction = 1; // Reset direction to right
+            Direction = 1; // Reset direction to right
             maxHealth = 100f;
             Health = maxHealth - 50; //REMOVE LATER FOR DEBUG
             maxMP = 100f;
@@ -135,7 +135,7 @@ namespace FinalComGame
             {
                 if (!isDashing) 
                 {
-                    direction = -1;
+                    Direction = -1;
                     Velocity.X = -WalkSpeed;
                 }
             }
@@ -143,7 +143,7 @@ namespace FinalComGame
             {
                 if (!isDashing) 
                 {
-                    direction = 1;
+                    Direction = 1;
                     Velocity.X = WalkSpeed;
                 }
             }
@@ -305,7 +305,7 @@ namespace FinalComGame
                 // Set attack hitbox in front of the player
                 int attackWidth = 20; // Adjust the size of the attack area
                 int attackHeight = 32;
-                int offsetX = direction == 1 ? Rectangle.Width : -attackWidth;
+                int offsetX = Direction == 1 ? Rectangle.Width : -attackWidth;
 
                 attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
 
@@ -319,7 +319,7 @@ namespace FinalComGame
             {
                 int attackWidth = 20; // Adjust as needed
                 int attackHeight = 32;
-                int offsetX = direction == 1 ? Rectangle.Width : -attackWidth;
+                int offsetX = Direction == 1 ? Rectangle.Width : -attackWidth;
 
                 attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
             }
@@ -343,7 +343,7 @@ namespace FinalComGame
                 dashTimer = dashDuration;
                 dashCooldownTimer = dashCooldown;
                 Velocity.Y = 0;
-                Velocity.X = dashSpeed * direction;
+                Velocity.X = dashSpeed * Direction;
             }
         }
 
@@ -469,7 +469,7 @@ namespace FinalComGame
             var newBullet = Bullet.Clone() as Bullet;
             newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
                                             Position.Y);
-            newBullet.Velocity = new Vector2(800 * direction, 0);
+            newBullet.Velocity = new Vector2(800 * Direction, 0);
             newBullet.Reset();
             gameObjects.Add(newBullet);
         }
@@ -503,7 +503,7 @@ namespace FinalComGame
         private void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
-            string directionText = direction != 1 ? "Left" : "Right";
+            string directionText = Direction != 1 ? "Left" : "Right";
             string displayText = $"Dir {directionText} \nCHp {Health}";
             spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
         }
