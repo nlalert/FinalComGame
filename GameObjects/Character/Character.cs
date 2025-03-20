@@ -66,7 +66,7 @@ namespace FinalComGame {
                                 ,Position.Y - (Animation.GetFrameSize().Y - Viewport.Height) / 2);
         }
 
-        protected void ApplyGravity(float deltaTime)
+        protected virtual void ApplyGravity(float deltaTime)
         {
             Velocity.Y += Singleton.GRAVITY * deltaTime; // gravity
 

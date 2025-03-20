@@ -25,6 +25,7 @@ namespace FinalComGame
         private bool isClimbing = false;
         private bool isCrouching = false;
         private bool isDropping = false;
+        private bool isGliding = false;
 
         private TileType overlappedTile = TileType.None;
         //Jump
@@ -39,6 +40,11 @@ namespace FinalComGame
         private float dashCooldown = 0.5f; // Cooldown before dashing again
         private float dashTimer = 0f;
         private float dashCooldownTimer = 0f;
+        private float dashMP = 20f;
+        // Glide
+        private float glideGravityScale = 0.3f; // How much gravity affects gliding (lower = slower fall)
+        private float glideMaxFallSpeed = 80f; // Maximum fall speed while gliding
+        private float glideMP = 10f; // MP cost per second while gliding
 
         //Animation
         private Animation _meleeAttackAnimation;
@@ -68,7 +74,7 @@ namespace FinalComGame
             maxHealth = 100f;
             Health = maxHealth - 50; //REMOVE LATER FOR DEBUG
             maxMP = 100f;
-            MP = 100f;
+            MP = maxMP;
             crouchSpeed = WalkSpeed/2;
             climbSpeed = WalkSpeed/2;
             base.Reset();
@@ -79,6 +85,7 @@ namespace FinalComGame
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         
             HandleInput(deltaTime, gameObjects);
+            RegenerateMP(deltaTime);
             ActiveItemPassiveAbility();
             UpdateInvincibilityTimer(deltaTime);
             UpdateCoyoteTime(deltaTime);
@@ -88,17 +95,25 @@ namespace FinalComGame
                 ApplyGravity(deltaTime);
                 
             UpdateDash(deltaTime);
+            UpdateGlide();
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             UpdateTileInteraction(tileMap);
             UpdateAttackHitbox();
             CheckAttackHit(gameObjects);
             UpdateAnimation(deltaTime);
-            Console.WriteLine(Velocity.X);
             if (!isDashing) Velocity.X = 0;
             
             base.Update(gameTime, gameObjects, tileMap);
             _particle.Update(Position);    
+        }
+
+        private void RegenerateMP(float deltaTime)
+        {
+            if(!isDashing && !isGliding)
+                MP += 5 * deltaTime;
+            if(MP >= maxMP) 
+                MP = maxMP;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -114,6 +129,8 @@ namespace FinalComGame
                 Animation = _meleeAttackAnimation;
             else if (isDashing)
                 Animation = _dashAnimation;
+            else if (isGliding)
+                Animation = _glideAnimation;
             else if (Velocity.Y > 0)
                 Animation = _fallAnimation;
             else if (isJumping || Velocity.Y != 0)
@@ -169,6 +186,17 @@ namespace FinalComGame
                 jumpBufferCounter = jumpBufferTime;
             else
                 jumpBufferCounter -= deltaTime; // Decrease over time
+
+            // Gliding - activate when holding Jump while in air and not climbing or dashing
+            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !isJumping && !isClimbing && !isDashing && MP > 0)
+            {
+                isGliding = true;
+                _glideAnimation.Reset(); // Reset glide animation when starting to glide
+            }
+            else
+            {
+                isGliding = false;
+            }
 
             if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping && !isClimbing && Velocity.Y == 0)
             {
@@ -344,6 +372,7 @@ namespace FinalComGame
                 dashCooldownTimer = dashCooldown;
                 Velocity.Y = 0;
                 Velocity.X = dashSpeed * Direction;
+                UseMP(dashMP);
             }
         }
 
@@ -362,6 +391,24 @@ namespace FinalComGame
             {
                 dashCooldownTimer -= deltaTime;
             }
+        }
+
+        // New method to update glide state
+        private void UpdateGlide()
+        {
+            // Stop gliding if we hit the ground
+            if (IsOnGround())
+            {
+                isGliding = false;
+                return;
+            }
+            
+            // // Generate particles if gliding
+            // if (isGliding)
+            // {
+            //     // You could add special particles here for gliding effect
+            //     _particle.Update(Position);
+            // }
         }
 
         private void UpdateCoyoteTime(float deltaTime)
@@ -506,6 +553,49 @@ namespace FinalComGame
             string directionText = Direction != 1 ? "Left" : "Right";
             string displayText = $"Dir {directionText} \nCHp {Health}";
             spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
+        }
+
+                // New method to apply gravity depending on glide state
+        protected override void ApplyGravity(float deltaTime)
+        {
+            if (isGliding)
+            {
+                // Apply reduced gravity while gliding
+                Velocity.Y += Singleton.GRAVITY * glideGravityScale * deltaTime;
+                
+                // Cap fall speed while gliding
+                if (Velocity.Y > glideMaxFallSpeed)
+                    Velocity.Y = glideMaxFallSpeed;
+                
+                DrainMP(glideMP, deltaTime);
+            }
+            else
+            {
+                // Normal gravity
+                base.ApplyGravity(deltaTime);
+            }
+        }
+
+        private void UseMP(float MPAmount)
+        {
+            MP -= MPAmount;
+            ClampMP();
+        }
+
+        private void DrainMP(float MPAmount, float deltaTime)
+        {
+            // Consume MP while gliding
+            MP -= MPAmount * deltaTime;
+            ClampMP();
+        }
+
+        private void ClampMP()
+        {
+            if (MP <= 0)
+            {
+                MP = 0;
+                isGliding = false; // Stop gliding when MP is depleted
+            }
         }
     }
 }
