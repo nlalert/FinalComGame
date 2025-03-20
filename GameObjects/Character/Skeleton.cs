@@ -9,7 +9,9 @@ namespace FinalComGame
     {
         private int _limitIdlePatrol = 100;
         private Vector2 _patrolCenterPoint;
-
+        private float ignorePlayerDuration = 3f; // 3 seconds duration
+        private float ignorePlayerTimer = 0f;
+        private bool isIgnoringPlayer = false;
         public SkeletonEnemy(Texture2D texture, SpriteFont font) : base(texture, font) { }
 
         public override void Reset()
@@ -32,11 +34,16 @@ namespace FinalComGame
             }
 
             UpdateInvincibilityTimer(deltaTime);
-
             switch (CurrentState)
             {
                 case EnemyState.Idle:
-                    IdlePatrol(deltaTime, gameObjects, tileMap);
+                    AI_IdlePatrol(deltaTime, gameObjects, tileMap);
+                    break;
+                case EnemyState.Chase:
+                    AI_ChasingPlayer(deltaTime, gameObjects, tileMap);
+                    break;
+                case EnemyState.Cooldown:
+                    AI_CoolDown(deltaTime, gameObjects, tileMap);
                     break;
             }
             
@@ -70,16 +77,15 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"Dir {directionText}\nPatrolDis {(Position.X - _patrolCenterPoint.X)}\nCHp {Health}";
+            string displayText = $"State {CurrentState}\nPatrolDis {(Position.X - _patrolCenterPoint.X)}\nCHp {Health} \nignore{ignorePlayerTimer}";
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
         }
 
-        private void IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        private void AI_IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-
             if (Math.Abs(Position.X - _patrolCenterPoint.X) >= _limitIdlePatrol)
             {
                 Direction *= -1;
@@ -92,13 +98,64 @@ namespace FinalComGame
                 CurrentState = EnemyState.Chase;
             }
         }
-
-        public override void OnCollisionHorizon()
+        private void AI_ChasingPlayer(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-            if (CurrentState == EnemyState.Idle)
+            ApplyGravity(deltaTime);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+
+            if (player == null) return; // Ensure player exists
+
+            float distanceToPlayer = Vector2.Distance(player.Position, this.Position);
+
+            // Check if the enemy still sees the player
+            if (!this.HaveLineOfSight(player, tileMap) || distanceToPlayer > 400) // Max chase range
+            {
+                Console.WriteLine("Skeleton lost sight of the player. Returning to idle patrol.");
+                CurrentState = EnemyState.Idle;
+                _patrolCenterPoint = this.Position;
+                return;
+            }
+
+            // Determine direction towards player
+            int moveDirection = (player.Position.X > this.Position.X) ? 1 : -1;
+            Direction = moveDirection;
+
+            // Move towards the player
+            Velocity.X = 80f * Direction; //faster when chasing
+            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
+        }
+        private void AI_CoolDown(float deltaTime, List<GameObject> gameObjects, TileMap tileMap){
+            ApplyGravity(deltaTime);
+            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+            if (Math.Abs(Position.X - _patrolCenterPoint.X) >= _limitIdlePatrol)
             {
                 Direction *= -1;
             }
+
+            Velocity.X = 50f * Direction;
+            ignorePlayerTimer -= deltaTime;
+            if(ignorePlayerTimer <=0 && isIgnoringPlayer ==true){
+                CurrentState = EnemyState.Idle;
+                isIgnoringPlayer = false;
+            }
+        }
+
+
+        public override void OnCollisionHorizon()
+        {
+            if (CurrentState == EnemyState.Idle || CurrentState == EnemyState.Cooldown)
+            {
+                Console.WriteLine("Collided");
+                Direction *= -1;
+            }
+            else if (CurrentState == EnemyState.Chase)
+            {
+                Console.WriteLine("test jump");
+                if(Velocity.Y == 0)
+                    Velocity.Y = -1000f;
+            }
+            
             base.OnCollisionHorizon();
         }
 
@@ -110,7 +167,12 @@ namespace FinalComGame
         public override void OnCollidePlayer(Player player)
         {
             Console.WriteLine("Skeleton hit player");
+            //skeleton hurt it self as his bone is fragiles
             this.OnHit(Health / 10);
+            this.CurrentState = EnemyState.Cooldown;
+            _patrolCenterPoint = this.Position;
+            ignorePlayerTimer = ignorePlayerDuration;
+            isIgnoringPlayer = true;
             base.OnCollidePlayer(player);
         }
     }

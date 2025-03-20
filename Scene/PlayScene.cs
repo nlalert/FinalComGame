@@ -227,8 +227,8 @@ public class PlayScene
         };
         _gameObjects.Add(baseSkeleton);
         // baseSkeleton.Spawn(132, 400, _gameObjects);
-        baseSkeleton.Spawn(262, 200, _gameObjects);
-        baseSkeleton.Spawn(462, 100, _gameObjects);
+        
+        baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(20, 90),_gameObjects);
 
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
