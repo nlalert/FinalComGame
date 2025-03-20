@@ -228,11 +228,28 @@ namespace FinalComGame
         {
             foreach (var item in gameObjects.OfType<Item>())
             {
-                if(item.InPickupRadius(this))
+                if (item.InPickupRadius(this) && !item.IsPickedUp)
                 {
-                    item.OnPickup(this);
-                };
-            
+                    // Check if player has empty slot
+                    if (holdItem[0] == null)
+                    {
+                        item.OnPickup(this);
+                        holdItem[0] = item;
+                        // You could add a pickup sound or effect here
+                    }
+                    else if (holdItem[1] == null)
+                    {
+                        item.OnPickup(this);
+                        holdItem[1] = item;
+                        // You could add a pickup sound or effect here
+                    }
+                    else
+                    {
+                        // Both slots are full
+                        Console.WriteLine("Inventory full, cannot pick up " + item.Name);
+                        // Maybe show a UI message to the player
+                    }
+                }
             }
         }
 

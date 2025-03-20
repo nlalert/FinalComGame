@@ -219,9 +219,14 @@ public class PlayScene
 
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
 
-        _gameObjects.Add(new Item(testItem, "test", false, new Vector2(557,1408)){
-            Name =  "Pickaxe",
+        _gameObjects.Add(new Item(testItem, "test", false, TileMap.GetTileWorldPositionAt(18, 98)){
+            Name =  "Pickaxe1",
             Viewport = new Rectangle(0, 0, 32,32)
+        });
+
+        _gameObjects.Add(new Item(playerGlide, "test", false, TileMap.GetTileWorldPositionAt(28, 98)){
+            Name =  "RedThing",
+            Viewport = new Rectangle(0, 0, 32,16)
         });
         SetupUI();
 
@@ -249,7 +254,16 @@ public class PlayScene
 
         Texture2D slot = _content.Load<Texture2D>("ItemSlot");
         ItemSlot Slot1 = new ItemSlot(
+            0, // first slot
             new Rectangle(250, 30, 50, 50),
+            player,
+            slot,
+            slot,
+            _font
+        );
+        ItemSlot Slot2 = new ItemSlot(
+            1, //second slot
+            new Rectangle(350, 30, 50, 50),
             player,
             slot,
             slot,
@@ -259,5 +273,6 @@ public class PlayScene
         _ui.AddElement(playerHealth);
         _ui.AddElement(playerMP);
         _ui.AddElement(Slot1);
+        _ui.AddElement(Slot2);
     }
 }

@@ -41,7 +41,6 @@ namespace FinalComGame
         public virtual void OnPickup(Player player)
         {
             IsPickedUp = true;
-            player.holdItem[0] = this;
         }
         
         // Called when item is dropped
