@@ -103,7 +103,6 @@ public class PlayScene
                 DrawUI();
                 break;
         }
-        Console.WriteLine(_gameObjects.Count);
         _graphics.BeginDraw();
     }
 
