@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace FinalComGame;
 
@@ -189,7 +190,8 @@ public class PlayScene
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
         
         playerParticle.SetData([new Color(193, 255, 219)]);
-
+        SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
+        
         player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerParticle)
         {
             Name = "Player",
@@ -207,6 +209,7 @@ public class PlayScene
             Interact = Keys.F,
             Item1 = Keys.D1,
             Item2 = Keys.D2,
+            JumpSound = playerJumpSound,
             Bullet = new Bullet(_playerTexture)
             {
                 Name = "BulletPlayer",

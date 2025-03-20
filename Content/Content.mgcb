@@ -122,6 +122,12 @@
 /processorParam:TextureFormat=Compressed
 /build:GameFont.spritefont
 
+#begin GoofyAhhJump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:GoofyAhhJump.wav
+
 #begin GrenadeTemp.jpg
 /importer:TextureImporter
 /processor:TextureProcessor

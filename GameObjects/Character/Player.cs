@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -45,6 +46,9 @@ namespace FinalComGame
         private float glideGravityScale = 0.3f; // How much gravity affects gliding (lower = slower fall)
         private float glideMaxFallSpeed = 80f; // Maximum fall speed while gliding
         private float glideMP = 10f; // MP cost per second while gliding
+
+        //SFX
+        public SoundEffect JumpSound;
 
         //Animation
         private Animation _meleeAttackAnimation;
@@ -433,6 +437,7 @@ namespace FinalComGame
                 jumpBufferCounter = 0; // Prevent multiple jumps
                 coyoteTimeCounter = 0; // Consume coyote time
                 isJumping = true;
+                JumpSound.Play();
             }
 
             // Jump Modulation 
