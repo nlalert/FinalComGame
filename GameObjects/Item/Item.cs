@@ -37,6 +37,10 @@ namespace FinalComGame
             Console.WriteLine("Using Item");      
         }
         
+        public virtual void ActiveAbility(Player player)
+        {    
+        }
+        
         // Called when item is picked up
         public virtual void OnPickup(Player player)
         {

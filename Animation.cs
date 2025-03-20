@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace FinalComGame
@@ -79,6 +80,9 @@ namespace FinalComGame
             return _frameSize;
         }
 
-
+        public void SetFPS(float fps)
+        {
+            _fps = fps;
+        }
     }
 }

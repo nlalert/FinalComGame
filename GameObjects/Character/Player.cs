@@ -33,9 +33,9 @@ namespace FinalComGame
         protected float jumpBufferTime = 0.15f; // 150ms jump buffer
         protected float jumpBufferCounter = 0f;
         // Dash 
-        private bool isDashing = false;
-        private float dashSpeed = 600f;
-        private float dashDuration = 0.2f; // Dash lasts for 0.2 seconds
+        protected bool isDashing = false;
+        private float dashSpeed = 400f;
+        private float dashDuration = 0.4f; // Dash lasts for 0.5 seconds
         private float dashCooldown = 0.5f; // Cooldown before dashing again
         private float dashTimer = 0f;
         private float dashCooldownTimer = 0f;
@@ -79,6 +79,7 @@ namespace FinalComGame
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         
             HandleInput(deltaTime, gameObjects);
+            ActiveItemPassiveAbility();
             UpdateInvincibilityTimer(deltaTime);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
@@ -93,9 +94,9 @@ namespace FinalComGame
             UpdateAttackHitbox();
             CheckAttackHit(gameObjects);
             UpdateAnimation(deltaTime);
-
+            Console.WriteLine(Velocity.X);
             if (!isDashing) Velocity.X = 0;
-
+            
             base.Update(gameTime, gameObjects, tileMap);
             _particle.Update(Position);    
         }
@@ -118,7 +119,10 @@ namespace FinalComGame
             else if (isJumping || Velocity.Y != 0)
                 Animation = _jumpAnimation;
             else if (Velocity.X != 0)
+            {
                 Animation = _runAnimation;
+                // Animation.SetFPS(Math.Abs(Velocity.X / WalkSpeed * 24));
+            }
             else
                 Animation = _idleAnimation;
 
@@ -227,6 +231,26 @@ namespace FinalComGame
                 UseItem(0);
             if (Singleton.Instance.IsKeyJustPressed(Item2))
                 UseItem(1);
+        }
+
+        private void ActiveItemPassiveAbility()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                if (holdItem[i] == null) continue;
+
+                if(!holdItem[i].IsConsumable)
+                {
+                    holdItem[i].ActiveAbility(this);
+                }
+            }
+        }
+
+        public void BoostSpeed(float speedModifier)
+        {
+            if(isDashing) 
+                return;
+            Velocity.X *= (1 + speedModifier);
         }
 
         private void UseItem(int itemSlotIndex)

@@ -220,17 +220,18 @@ public class PlayScene
 
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
+        Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
 
         _gameObjects.Add(new Item(testItem, "test", TileMap.GetTileWorldPositionAt(18, 98)){
             Name =  "Pickaxe1",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Item(playerGlide, "test", TileMap.GetTileWorldPositionAt(28, 98)){
-            Name =  "RedThing",
+        _gameObjects.Add(new SpeedBoots(Hermes_Boots, "Hermes_Boots", TileMap.GetTileWorldPositionAt(28, 98)){
+            Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
-
+        
         _gameObjects.Add(new Potion(HealthPotionTemp, "Testing Potion", TileMap.GetTileWorldPositionAt(30, 98)){
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
