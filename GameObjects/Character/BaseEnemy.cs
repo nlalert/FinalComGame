@@ -64,6 +64,18 @@ namespace FinalComGame {
             gameObjects.Add(newEnemy);
             newEnemy.OnSpawn();
         }
+        public virtual void Spawn(Vector2 position, List<GameObject> gameObjects)
+        {
+            BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
+            newEnemy.Position = position;
+            newEnemy.patrolBoundaryLeft = position.X - 100f;
+            newEnemy.patrolBoundaryRight = position.X + 100f;
+            newEnemy.Health = maxHealth;
+            newEnemy.HasSpawned = true;
+            newEnemy.IsActive =true;
+            gameObjects.Add(newEnemy);
+            newEnemy.OnSpawn();
+        }
 
         public virtual bool CanBeHitByPlayer()
         {

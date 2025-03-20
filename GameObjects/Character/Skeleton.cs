@@ -36,7 +36,10 @@ namespace FinalComGame
             switch (CurrentState)
             {
                 case EnemyState.Idle:
-                    IdlePatrol(deltaTime, gameObjects, tileMap);
+                    AI_IdlePatrol(deltaTime, gameObjects, tileMap);
+                    break;
+                case EnemyState.Chase:
+                    AI_ChasingPlayer(deltaTime, gameObjects, tileMap);
                     break;
             }
             
@@ -74,12 +77,11 @@ namespace FinalComGame
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
         }
 
-        private void IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        private void AI_IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-
             if (Math.Abs(Position.X - _patrolCenterPoint.X) >= _limitIdlePatrol)
             {
                 Direction *= -1;
@@ -92,12 +94,45 @@ namespace FinalComGame
                 CurrentState = EnemyState.Chase;
             }
         }
+        private void AI_ChasingPlayer(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            ApplyGravity(deltaTime);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+
+            if (player == null) return; // Ensure player exists
+
+            float distanceToPlayer = Vector2.Distance(player.Position, this.Position);
+
+            // Check if the enemy still sees the player
+            if (!this.HaveLineOfSight(player, tileMap) || distanceToPlayer > 400) // Max chase range
+            {
+                Console.WriteLine("Skeleton lost sight of the player. Returning to idle patrol.");
+                CurrentState = EnemyState.Idle;
+                _patrolCenterPoint = this.Position;
+                return;
+            }
+
+            // Determine direction towards player
+            int moveDirection = (player.Position.X > this.Position.X) ? 1 : -1;
+            Direction = moveDirection;
+
+            // Move towards the player
+            Velocity.X = 80f * Direction; //faster when chasing
+            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
+        }
+
 
         public override void OnCollisionHorizon()
         {
             if (CurrentState == EnemyState.Idle)
             {
                 Direction *= -1;
+            }
+            else if (CurrentState == EnemyState.Chase)
+            {
+                Console.WriteLine("test jump");
+                if(Velocity.Y == 0)
+                    Velocity.Y = -1000f;
             }
             base.OnCollisionHorizon();
         }
