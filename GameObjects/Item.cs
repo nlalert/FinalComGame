@@ -22,11 +22,10 @@ namespace FinalComGame
         protected Vector2 originalPosition;
         
         // Constructor
-        public Item(Texture2D texture, string description, bool isConsumable, Vector2 Position)
+        public Item(Texture2D texture, string description, Vector2 Position)
             : base(texture)
         {
             Description = description;
-            IsConsumable = isConsumable;
             IsPickedUp = false;
             
             originalPosition = Position;
@@ -35,7 +34,7 @@ namespace FinalComGame
         // // Method to be overridden by specific item types
         public virtual void Use(Player player)
         {
-            Console.WriteLine("Using Item");
+            Console.WriteLine("Using Item");      
         }
         
         // Called when item is picked up
@@ -48,7 +47,6 @@ namespace FinalComGame
         public virtual void OnDrop(Vector2 position)
         {
             IsPickedUp = false;
-            IsActive = true;
             Position = position;
             originalPosition = position;
         }

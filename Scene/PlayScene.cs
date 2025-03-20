@@ -103,7 +103,7 @@ public class PlayScene
                 DrawUI();
                 break;
         }
-
+        Console.WriteLine(_gameObjects.Count);
         _graphics.BeginDraw();
     }
 
@@ -220,16 +220,23 @@ public class PlayScene
         baseSkeleton.Spawn(462, 100, _gameObjects);
 
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
+        Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
 
-        _gameObjects.Add(new Item(testItem, "test", false, TileMap.GetTileWorldPositionAt(18, 98)){
+        _gameObjects.Add(new Item(testItem, "test", TileMap.GetTileWorldPositionAt(18, 98)){
             Name =  "Pickaxe1",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Item(playerGlide, "test", false, TileMap.GetTileWorldPositionAt(28, 98)){
+        _gameObjects.Add(new Item(playerGlide, "test", TileMap.GetTileWorldPositionAt(28, 98)){
             Name =  "RedThing",
             Viewport = new Rectangle(0, 0, 32,32)
         });
+
+        _gameObjects.Add(new Potion(HealthPotionTemp, "Testing Potion", TileMap.GetTileWorldPositionAt(30, 98)){
+            Name =  "HealthPotion",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
+        
         SetupUI();
 
         foreach (GameObject s in _gameObjects)

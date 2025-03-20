@@ -66,7 +66,7 @@ namespace FinalComGame
             holdItem = new Item[2];
             direction = 1; // Reset direction to right
             maxHealth = 100f;
-            Health = maxHealth;
+            Health = maxHealth - 50; //REMOVE LATER FOR DEBUG
             maxMP = 100f;
             MP = 100f;
             crouchSpeed = WalkSpeed/2;
@@ -231,8 +231,11 @@ namespace FinalComGame
 
         private void UseItem(int itemSlotIndex)
         {
-            if(holdItem[itemSlotIndex] != null)
-                holdItem[itemSlotIndex].Use(this);
+            if(holdItem[itemSlotIndex] == null) return;
+
+            holdItem[itemSlotIndex].Use(this);
+
+            if(holdItem[itemSlotIndex].IsConsumable) holdItem[itemSlotIndex] = null;
         }
 
         private void CheckInteraction(List<GameObject> gameObjects)
@@ -246,12 +249,14 @@ namespace FinalComGame
                     {
                         item.OnPickup(this);
                         holdItem[0] = item;
+                        break;
                         // You could add a pickup sound or effect here
                     }
                     else if (holdItem[1] == null)
                     {
                         item.OnPickup(this);
                         holdItem[1] = item;
+                        break;
                         // You could add a pickup sound or effect here
                     }
                     else
