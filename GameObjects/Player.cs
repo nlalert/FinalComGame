@@ -15,12 +15,16 @@ namespace FinalComGame
         public float maxMP;
         public float MP;
 
+        public Particle _particle;
+
         public int crouchSpeed;
         public int climbSpeed;
 
         private bool isClimbing = false;
+        private bool isCrouching = false;
+        private bool isDropping = false;
 
-        private string overlappedTile = "";
+        private TileType overlappedTile = TileType.None;
         //Jump
         protected float coyoteTime = 0.1f; // 100ms of coyote time
         protected float coyoteTimeCounter = 0f;
@@ -28,7 +32,7 @@ namespace FinalComGame
         protected float jumpBufferCounter = 0f;
         // Dash 
         private bool isDashing = false;
-        private float dashSpeed = 800f;
+        private float dashSpeed = 600f;
         private float dashDuration = 0.2f; // Dash lasts for 0.2 seconds
         private float dashCooldown = 0.5f; // Cooldown before dashing again
         private float dashTimer = 0f;
@@ -40,22 +44,23 @@ namespace FinalComGame
         private Animation _dashAnimation;
         private Animation _glideAnimation;
         private Animation _fallAnimation;
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, Texture2D glideTexture)
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, Texture2D glideTexture, Texture2D paticleTexture)
         {
             _idleAnimation = new Animation(idleTexture, 48, 64, 16, 24); // 24 fps
             _runAnimation = new Animation(runTexture, 48, 64, 8, 24); //  24 fps
             _jumpAnimation = new Animation(jumpTexture, 48, 64, 4, 24); //  24 fps
             _fallAnimation = new Animation(fallTexture, 48, 64, 4, 24); //  24 fps
-            _meleeAttackAnimation = new Animation(meleeAttackTexture, 16, 32, 16, 24); // 24 fps
+            _meleeAttackAnimation = new Animation(meleeAttackTexture, 48, 64, 8, 24); // 24 fps
             _dashAnimation = new Animation(dashTexture, 16, 32, 16, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
+
+            _particle = new Particle(10, Position, paticleTexture);
 
             Animation = _idleAnimation;
         }
 
         public override void Reset()
         {
-            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/8);
             direction = 1; // Reset direction to right
             maxHealth = 100f;
             Health = maxHealth;
@@ -81,17 +86,24 @@ namespace FinalComGame
             UpdateDash(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+            UpdateTileInteraction(tileMap);
             UpdateAttackHitbox();
             CheckAttackHit(gameObjects);
             UpdateAnimation(deltaTime);
+
             if (!isDashing) Velocity.X = 0;
 
             base.Update(gameTime, gameObjects, tileMap);
+            _particle.Update(Position);    
+
+            Console.WriteLine("Player Overlap : "+overlappedTile);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            _particle.Draw(spriteBatch);
             base.Draw(spriteBatch);
+            DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
@@ -148,23 +160,35 @@ namespace FinalComGame
             if (Singleton.Instance.IsKeyJustPressed(Fire))
                 Shoot(gameObjects);
 
-            if (Singleton.Instance.IsKeyJustPressed(Jump))
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing)
                 jumpBufferCounter = jumpBufferTime;
             else
                 jumpBufferCounter -= deltaTime; // Decrease over time
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping && !isClimbing)
+            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping && !isClimbing && Velocity.Y == 0)
             {
+                if (!isCrouching) Position.Y += 16;
                 Viewport.Height = 16;
                 WalkSpeed = crouchSpeed;
+                isCrouching = true;
             }
             else
             {
+                if (isCrouching) Position.Y -= 16;
                 Viewport.Height = 32;
-                WalkSpeed = 400;
+                WalkSpeed = 200;
+                isCrouching = false;
             }
 
-            if (Singleton.Instance.IsKeyPressed(Climb) && overlappedTile == "Ladder" && !isClimbing)
+            if (Singleton.Instance.IsKeyPressed(Crouch) && Singleton.Instance.IsKeyJustPressed(Jump)){
+                isDropping = true;
+            }
+            else
+            {
+                isDropping = false;
+            }
+
+            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && overlappedTile == TileType.Ladder && !isClimbing && !isCrouching)
             {
                 isClimbing = true;
                 isJumping = false;
@@ -185,7 +209,7 @@ namespace FinalComGame
 
                 else Velocity.Y = 0;
                 
-                if (Singleton.Instance.IsKeyJustPressed(Jump) || overlappedTile == "")
+                if (Singleton.Instance.IsKeyJustPressed(Jump) || overlappedTile == TileType.None)
                 {
                     isClimbing = false;
                 }
@@ -200,6 +224,7 @@ namespace FinalComGame
         {
             if (attackCooldownTimer <= 0 && !isAttacking)
             {
+                _meleeAttackAnimation.Reset();
                 isAttacking = true;
                 attackTimer = attackDuration;
                 attackCooldownTimer = attackCooldown;
@@ -244,6 +269,7 @@ namespace FinalComGame
                 isDashing = true;
                 dashTimer = dashDuration;
                 dashCooldownTimer = dashCooldown;
+                Velocity.Y = 0;
                 Velocity.X = dashSpeed * direction;
             }
         }
@@ -297,46 +323,71 @@ namespace FinalComGame
             }
         }
 
-        protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            Position.X += Velocity.X * deltaTime;
-            overlappedTile = "";
-            foreach (Tile tile in tileMap.tiles)
+        // protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        // {
+        //     Vector2 nextPosition = Position + new Vector2(0, Velocity.Y * deltaTime);
+        //     float distance = Vector2.Distance(Position, nextPosition);
+            
+        //     if (distance == 0) return; // No movement, skip checking
+
+        //     float stepSize = distance / 8; // Divide movement into 8 steps
+        //     int tileX = (int)(Position.X / Singleton.BLOCK_SIZE); // Get current column
+
+        //     overlappedTile = TileType.None; // Reset tile detection
+
+        //     for (int i = 1; i <= 8; i++) // Start from 1 to avoid checking current position
+        //     {
+        //         float checkY = Position.Y + Math.Sign(Velocity.Y) * (stepSize * i);
+        //         int tileY = (int)(checkY / Singleton.BLOCK_SIZE) + this.Rectangle.Height/Singleton.BLOCK_SIZE; // Convert to tile grid position
+
+        //         // Get the tile at (tileX, tileY)
+        //         Tile tile = tileMap.GetTileAt(tileX, tileY);
+        //         if (tile != null)
+        //         {
+        //             if (IsTouchingTop(tile) && !Singleton.Instance.IsKeyPressed(Climb))
+        //             {
+        //                 isClimbing = false;
+        //                 // Check collision with solid tiles
+        //                 if (tile.IsSolid)
+        //                 {
+        //                     Velocity.Y = 0; // Stop falling
+        //                     return; // Stop checking further
+        //                 }
+
+        //                 // Detect special tiles like "Ladder"
+        //                 if (tile.Type == TileType.Ladder && (IsTouchingTop(tile) || IsTouchingBottom(tile)))
+        //                 {
+        //                     overlappedTile = tile.Type;
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     Position.Y = nextPosition.Y; // Apply movement if no obstacle
+        // }
+
+        protected void UpdateTileInteraction (TileMap tileMap){
+
+            overlappedTile = TileType.None;
+            foreach (Tile tile in tileMap.tiles.Values)
             {
-
-                if (tile.IsSolid)
+                if (tile.Type == TileType.Ladder || tile.Type == TileType.Platform_Ladder)
                 {
-                    ResolveHorizontalCollision(tile);
-                }
-
-                if (tile.Type == "Ladder")
-                {
-                    if (IsTouchingRight(tile) || IsTouchingLeft(tile)) {
-                        overlappedTile = tile.Type;
+                    if (IsTouching(tile)){
+                        overlappedTile = TileType.Ladder;
                     }
                 }
 
-            }
-        }
-
-        protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            Position.Y += Velocity.Y * deltaTime;
-            overlappedTile = "";
-            foreach (Tile tile in tileMap.tiles)
-            {
-                if (tile.IsSolid)
+                if (tile.Type == TileType.Platform|| tile.Type == TileType.Platform_Ladder)
                 {
-                    ResolveVerticalCollision(tile);
-                }
-
-                if (tile.Type == "Ladder")
-                {
-                    if (IsTouchingTop(tile) || IsTouchingBottom(tile)) {
-                        overlappedTile = tile.Type;
+                    if (tile.Position.Y < Position.Y + Viewport.Height || isDropping){
+                        tile.IsSolid = false;
                     }
-                }
 
+                    else{
+                        tile.IsSolid = true;
+                    }
+
+                }
             }
         }
 
@@ -350,12 +401,11 @@ namespace FinalComGame
             gameObjects.Add(newBullet);
         }
 
-        public override void OnHit(GameObject projectile,float damageAmount)
+
+        public override void OnHitByProjectile(GameObject gameObject,float damageAmount)
         {
-            //TODO: deal with projectile later
             OnHit(damageAmount);
         }
-
         public override void OnHit(float damageAmount)
         {
             if (invincibilityTimer > 0) 
@@ -368,6 +418,21 @@ namespace FinalComGame
             {
                 OnDead();
             }
+        }
+
+        public override void OnCollideNPC(Character npc, float damageAmount)
+        {
+            OnHit(damageAmount);
+            //player.takeKnockback(npc.knockback);
+            base.OnCollideNPC(npc, damageAmount);
+        }
+
+        private void DrawDebug(SpriteBatch spriteBatch)
+        {
+            Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
+            string directionText = direction != 1 ? "Left" : "Right";
+            string displayText = $"Dir {directionText} \nCHp {Health}";
+            spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
         }
     }
 }

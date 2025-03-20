@@ -137,7 +137,7 @@ public class GameObject : ICloneable
         return  this.Rectangle.Right > g.Rectangle.Left     &&
                 this.Rectangle.Left < g.Rectangle.Right     &&
                 this.Rectangle.Bottom > g.Rectangle.Bottom  &&
-                this.Rectangle.Top <= g.Rectangle.Bottom;
+                this.Rectangle.Top < g.Rectangle.Bottom;
     }
 
     protected bool IsTouchingBottom(Rectangle hitbox)
@@ -145,7 +145,7 @@ public class GameObject : ICloneable
         return  this.Rectangle.Right > hitbox.Left     &&
                 this.Rectangle.Left < hitbox.Right     &&
                 this.Rectangle.Bottom > hitbox.Bottom  &&
-                this.Rectangle.Top <= hitbox.Bottom;
+                this.Rectangle.Top < hitbox.Bottom;
     }
 
     protected bool ResolveHorizontalCollision(GameObject g)

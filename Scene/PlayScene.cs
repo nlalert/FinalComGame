@@ -54,7 +54,7 @@ public class PlayScene
         _font = _content.Load<SpriteFont>("GameFont");
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
-
+        Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
         Texture2D textureAtlas = _content.Load<Texture2D>("Tileset");
         //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
         //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
@@ -175,16 +175,19 @@ public class PlayScene
         Texture2D playerRun = _content.Load<Texture2D>("Char_Run");
         Texture2D playerJump = _content.Load<Texture2D>("Char_Jump");
         Texture2D playerFall = _content.Load<Texture2D>("Char_Fall");
-        Texture2D playerMelee = _content.Load<Texture2D>("Player");
+        Texture2D playerMelee = _content.Load<Texture2D>("Char_Melee");
         Texture2D playerDash = _content.Load<Texture2D>("Char_Idle");
         Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
+        
+        playerParticle.SetData([new Color(193, 255, 219)]);
 
-        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide)
+        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerParticle)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
-            Position = new Vector2(Singleton.SCREEN_WIDTH/2, Singleton.SCREEN_HEIGHT/2),
-            WalkSpeed = 400,
+            Position = TileMap.GetTileWorldPositionAt(16, 98),// block column 16, row 98
+            WalkSpeed = 200,
             Left = Keys.Left,
             Right = Keys.Right,
             Crouch = Keys.Down,
@@ -206,9 +209,10 @@ public class PlayScene
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
             CanCollideTile = true,
+            player = player
         };
         _gameObjects.Add(baseSkeleton);
-        baseSkeleton.Spawn(132, 400, _gameObjects);
+        // baseSkeleton.Spawn(132, 400, _gameObjects);
         baseSkeleton.Spawn(262, 200, _gameObjects);
         baseSkeleton.Spawn(462, 100, _gameObjects);
 

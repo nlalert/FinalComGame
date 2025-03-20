@@ -19,15 +19,15 @@ namespace FinalComGame {
         //Attack
         protected bool isAttacking = false;
         protected float attackDamage = 10f;
-        protected float attackDuration = 0.2f; // How long the attack lasts
-        protected float attackCooldown = 0.5f; // Cooldown before attacking again
+        protected float attackDuration = 0.4f; // How long the attack lasts
+        protected float attackCooldown = 0.2f; // Cooldown before attacking again
         protected float attackTimer = 0f;
         protected float attackCooldownTimer = 0f;
         protected Rectangle attackHitbox;
         
         //Jump
         protected bool isJumping = false;
-        protected float jumpStrength = 1000f;
+        protected float jumpStrength = 800f;
 
         //Animation
         protected Animation _idleAnimation;
@@ -76,18 +76,18 @@ namespace FinalComGame {
         protected virtual void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.X += Velocity.X * deltaTime;
-            foreach (Tile tile in tileMap.tiles)
+            foreach (Tile tile in tileMap.tiles.Values)
             {
-                ResolveHorizontalCollision(tile);
+                if(tile.IsSolid) ResolveHorizontalCollision(tile);
             }
         }
 
         protected virtual void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.Y += Velocity.Y * deltaTime;
-            foreach (Tile tile in tileMap.tiles)
+            foreach (Tile tile in tileMap.tiles.Values)
             {
-                ResolveVerticalCollision(tile);
+                if(tile.IsSolid) ResolveVerticalCollision(tile);
             }
         }
 
@@ -107,19 +107,34 @@ namespace FinalComGame {
             if (invincibilityTimer > 0)
                 invincibilityTimer -= deltaTime;
         }
-
-        public virtual void OnHit(GameObject projectile, float damageAmount)
-        {
+        /// <summary>
+        /// Npc collide with any NPC 
+        /// </summary>
+        /// <param name="npc"></param>
+        /// <param name="damageAmount"></param>
+        public virtual void OnCollideNPC(Character npc,float damageAmount){
+        }
+        /// <summary>
+        /// Calls this when enemy get hit by any projectiles
+        /// </summary>
+        public virtual void OnHitByProjectile(GameObject projectile, float damageAmount){
         }
 
+        /// <summary>
+        /// This call when Character recive damage
+        /// </summary>
         public virtual void OnHit(float damageAmount)
         {
         }
-
+        /// <summary>
+        /// Do anything special when spawn
+        /// </summary>
         public virtual void OnSpawn()
         {
         }
-
+        /// <summary>
+        /// Do anything specail when dead
+        /// </summary>
         public virtual void OnDead()
         {
         }

@@ -33,9 +33,9 @@ namespace FinalComGame {
         protected float attackRange = 50f;
 
         // Reference to player for tracking
-        protected Player player;
 
         // Spawn and Death Tracking
+        public Player player {get; set;}
         public bool CanCollideTile {get;set;} =false;
         public bool HasSpawned { get; protected set; } = false;
         public bool IsDead() => CurrentState == EnemyState.Dead;
@@ -72,13 +72,11 @@ namespace FinalComGame {
             return CurrentState != EnemyState.Dead && 
                 CurrentState != EnemyState.Dying;
         }
-
-        public override void OnHit(GameObject projectile,float damageAmount)
+        public override void OnHitByProjectile(GameObject projectile,float damageAmount)
         {
-            //TODO: deal with projectile later
+            //we have 0 projectiles
             OnHit(damageAmount);
         }
-
         public override void OnHit(float damageAmount)
         {
             if (invincibilityTimer > 0) 
@@ -93,11 +91,18 @@ namespace FinalComGame {
                 OnDead();
             }
         }
-
-        public virtual void OnHitPlayer()
+        /// <summary>
+        /// This npc physically contact with Player
+        /// </summary>
+        /// <param name="player">Player Character</param>
+        public virtual void OnCollidePlayer(Player player)
         {
+            player.OnCollideNPC(this,this.attackDamage);
         }
-
+        public override void OnCollideNPC(Character npc, float damageAmount)
+        {   
+            base.OnCollideNPC(npc, damageAmount);
+        }
         public override void OnDead()
         {
             DropItem();
@@ -105,6 +110,8 @@ namespace FinalComGame {
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
+            //if touchting player do contact dmg
+            CheckContactPlayer();
             base.Update(gameTime,gameObjects, tileMap);
         }
 
@@ -114,12 +121,6 @@ namespace FinalComGame {
                 return;
             spriteBatch.Draw(_texture, Position, Viewport, Color.White);
             base.Draw(spriteBatch);
-        }
-
-        // Protected helper methods
-        public override void Reset()
-        {
-            base.Reset();
         }
 
         protected override void UpdateAnimation(float deltaTime)
@@ -134,7 +135,7 @@ namespace FinalComGame {
             Position.X += Velocity.X * deltaTime;
             if(CanCollideTile)
             {
-                foreach (Tile tile in tileMap.tiles)
+                foreach (Tile tile in tileMap.tiles.Values)
                 {
                     if(ResolveHorizontalCollision(tile)){
                         OnCollisionHorizon();
@@ -142,7 +143,15 @@ namespace FinalComGame {
                 }
             }
         }
-
+        public virtual bool CheckContactPlayer(){
+            if(this.IsTouching(player)){
+                OnCollidePlayer(player);
+                Console.WriteLine("contact Player");
+                return true;
+            }
+            else
+                return false;
+        }
         public virtual void CheckHit(Rectangle attackHitbox, float damageAmount)
         {
             if(IsTouching(attackHitbox))
@@ -154,6 +163,32 @@ namespace FinalComGame {
         {
         }
         public virtual void OnCollisionHorizon(){
+
+        }
+        /// <summary>
+        /// Enemy look for player with line of sight
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public bool HaveLineOfSight(Player player,TileMap tileMap){
+            if (player == null) return false;
+            
+            Vector2 enemyPosition = Position;
+            Vector2 playerPosition = player.Position;
+            
+            float step = 16f; // Tile size or step size for checking
+            Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);
+            Vector2 checkPosition = enemyPosition;
+
+            while (Vector2.Distance(checkPosition, playerPosition) > step)
+            {
+                checkPosition += direction * step;
+                if (tileMap.IsObstacle(checkPosition))
+                {
+                    return false; // Blocked by an obstacle
+                }
+            }
+            return true;
         }
     }
 }
