@@ -84,8 +84,6 @@ public class PlayScene
                 _ui.Update(gameTime);
                 break;
         }
-
-        Console.WriteLine(player.Position.X + ", "+ player.Position.Y);
     }
 
     public void Draw(GameTime gameTime)
@@ -221,9 +219,9 @@ public class PlayScene
 
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
 
-        _gameObjects.Add(new Item(playerGlide, "test", false, new Vector2(557,1408)){
+        _gameObjects.Add(new Item(testItem, "test", false, new Vector2(557,1408)){
             Name =  "Pickaxe",
-            Viewport = new Rectangle(0, 0, 10,10)
+            Viewport = new Rectangle(0, 0, 32,32)
         });
         SetupUI();
 
@@ -249,7 +247,17 @@ public class PlayScene
             Color.Gray
         );
 
+        Texture2D slot = _content.Load<Texture2D>("ItemSlot");
+        ItemSlot Slot1 = new ItemSlot(
+            new Rectangle(250, 30, 50, 50),
+            player,
+            slot,
+            slot,
+            _font
+        );
+
         _ui.AddElement(playerHealth);
         _ui.AddElement(playerMP);
+        _ui.AddElement(Slot1);
     }
 }

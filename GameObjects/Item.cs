@@ -41,21 +41,21 @@ namespace FinalComGame
         public virtual void OnPickup(Player player)
         {
             IsPickedUp = true;
-            IsActive = false;
+            player.holdItem[0] = this;
         }
         
-        // // Called when item is dropped
-        // public virtual void OnDrop(Vector2 position)
-        // {
-        //     IsPickedUp = false;
-        //     IsActive = true;
-        //     Position = position;
-        //     originalPosition = position;
-        // }
+        // Called when item is dropped
+        public virtual void OnDrop(Vector2 position)
+        {
+            IsPickedUp = false;
+            IsActive = true;
+            Position = position;
+            originalPosition = position;
+        }
         
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-            if (!IsActive) return;
+            if (IsPickedUp) return;
             
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             
@@ -63,21 +63,13 @@ namespace FinalComGame
             bobTimer += deltaTime * bobSpeed;
             Position = originalPosition + new Vector2(0, (float)Math.Sin(bobTimer) * bobAmount);
             
-            // // Check if player is in pickup range
-            // float distance = Vector2.Distance(Position, player.Position);
-            // isInRange = distance < pickupRadius;
-            
-            // // Auto pickup if in range and player presses pickup key
-            // if (isInRange && player.IsPickupKeyPressed)
-            // {
-            //     player.PickupItem(this);
-            // }
-        
             base.Update(gameTime, gameObjects, tileMap);
         }
         
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if(IsPickedUp) return;
+
             spriteBatch.Draw(
                 _texture,
                 Position,
@@ -116,6 +108,28 @@ namespace FinalComGame
             //         true
             //     );
             // }
+        }
+
+        // Add this method to the Item class
+        public void DrawInSlot(SpriteBatch spriteBatch, Rectangle slotBounds, float scale = 1.0f)
+        {
+            Rectangle destinationRect = new Rectangle(
+                slotBounds.X + (int)(slotBounds.Width * (1 - scale) / 2),
+                slotBounds.Y + (int)(slotBounds.Height * (1 - scale) / 2),
+                (int)(slotBounds.Width * scale),
+                (int)(slotBounds.Height * scale)
+            );
+
+            spriteBatch.Draw(
+                _texture,
+                destinationRect,
+                Viewport,
+                Color.White,
+                0f, 
+                Vector2.Zero,
+                SpriteEffects.None, 
+                0f
+            );
         }
 
         public bool InPickupRadius(Player player)

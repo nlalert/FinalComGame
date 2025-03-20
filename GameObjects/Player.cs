@@ -98,8 +98,6 @@ namespace FinalComGame
 
             base.Update(gameTime, gameObjects, tileMap);
             _particle.Update(Position);    
-
-            Console.WriteLine("Player Overlap : "+overlappedTile);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
