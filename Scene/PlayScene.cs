@@ -24,6 +24,8 @@ public class PlayScene
     List<GameObject> _gameObjects;
     int _numObject;
 
+    private UI _ui;
+
     private GraphicsDevice _graphicsDevice;
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
@@ -49,6 +51,7 @@ public class PlayScene
 
         _gameObjects = new List<GameObject>();
         _camera = new Camera(_graphicsDevice.Viewport); // Initialize camera
+        _ui = new UI();
     }
 
     public void LoadContent(SpriteBatch spriteBatch)
@@ -92,6 +95,10 @@ public class PlayScene
                 {
                     MediaPlayer.Play(_gameMusic);
                 }
+                if(Singleton.Instance.IsKeyJustPressed(Keys.Escape))
+                {
+                    Singleton.Instance.CurrentGameState = Singleton.GameState.Pause;
+                }
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
                 RemoveInactiveObjects();
@@ -103,9 +110,10 @@ public class PlayScene
                 {
                     MediaPlayer.Stop();
                 }
-                Singleton.Instance.UI.RemoveAllElements();
                 break;
         }
+
+        _ui.Update(gameTime);
     }
 
     public void Draw(GameTime gameTime)
@@ -121,13 +129,15 @@ public class PlayScene
                 DrawAllObjects();
                 _spriteBatch.End();
 
-                //Remove Later
                 _spriteBatch.Begin(); 
                 _spriteBatch.DrawString(_font, "Health Bar : " + player.Health + " / " + player.maxHealth, new Vector2(10, 10), Color.White);
                 _spriteBatch.DrawString(_font, "MP Bar : " + player.MP + " / " + player.maxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
         }
+
+        DrawUI();
+
         _graphics.BeginDraw();
     }
 
@@ -206,7 +216,6 @@ public class PlayScene
         AddPlayer();
         AddEnemies();
         AddItems();
-        SetupUI();
 
         foreach (GameObject s in _gameObjects)
         {
@@ -295,7 +304,6 @@ public class PlayScene
 
     private void SetupUI()
     {
-        Singleton.Instance.UI.RemoveAllElements();
         HealthBar playerHealth = new HealthBar(
             new Rectangle(20, 40, 200, 30),
             player,
@@ -328,9 +336,18 @@ public class PlayScene
             _font
         );
 
-        Singleton.Instance.UI.AddElement(playerHealth);
-        Singleton.Instance.UI.AddElement(playerMP);
-        Singleton.Instance.UI.AddElement(Slot1);
-        Singleton.Instance.UI.AddElement(Slot2);
+        _ui.AddElement(playerHealth);
+        _ui.AddElement(playerMP);
+        _ui.AddElement(Slot1);
+        _ui.AddElement(Slot2);
+    }
+
+    private void DrawUI()
+    {
+        _spriteBatch.Begin(); 
+
+        _ui.Draw(_spriteBatch);
+
+        _spriteBatch.End();
     }
 }

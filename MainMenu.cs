@@ -16,16 +16,20 @@ public class MainMenu
     private SpriteBatch _spriteBatch;
     private ContentManager _content;
 
+    private UI _ui;
+
     private SpriteFont _font;
     private Button _BackButton;
     private Button _StartButton;
     private Button _ScoreBoardButton;
     private Button _ExitButton;
 
-     public void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
+    public void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         Console.WriteLine("MainMenu Init");
         _content = content;
+
+        _ui = new UI();
     }
 
     public void LoadContent(SpriteBatch spriteBatch)
@@ -64,8 +68,8 @@ public class MainMenu
         );
         _ExitButton.OnClick += ExitGameButton_OnClick;
 
-        Singleton.Instance.UI.AddElement(_StartButton);
-        Singleton.Instance.UI.AddElement(_ExitButton);
+        _ui.AddElement(_StartButton);
+        _ui.AddElement(_ExitButton);
 
         // _BackButton = new Button(_SpriteTexture)
         // {
@@ -85,10 +89,12 @@ public class MainMenu
 
     public void Update(GameTime gameTime)
     {
+        _ui.Update(gameTime);
     }   
 
     public void Draw(GameTime gameTime)
     {
+        DrawUI();
     }   
 
     private void ExitGameButton_OnClick(object sender, EventArgs e)
@@ -104,5 +110,14 @@ public class MainMenu
     protected void Reset()
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;
+    }
+
+    private void DrawUI()
+    {
+        _spriteBatch.Begin(); 
+
+        _ui.Draw(_spriteBatch);
+
+        _spriteBatch.End();
     }
 }
