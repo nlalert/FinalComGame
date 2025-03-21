@@ -46,6 +46,13 @@ namespace FinalComGame
         private float glideGravityScale = 0.3f; // How much gravity affects gliding (lower = slower fall)
         private float glideMaxFallSpeed = 80f; // Maximum fall speed while gliding
         private float glideMP = 10f; // MP cost per second while gliding
+        // Charge Shot properties
+        private bool isCharging = false;
+        private float chargeTime = 0f;
+        private float maxChargeTime = 2.0f; // Maximum charge time in seconds
+        private float minChargePower = 1.0f; // Minimum damage/speed multiplier
+        private float maxChargePower = 3.0f; // Maximum damage/speed multiplier
+        private float chargeMPCost = 15f; // MP cost for fully charged shot
 
         //SFX
         public SoundEffect JumpSound;
@@ -56,7 +63,9 @@ namespace FinalComGame
         private Animation _dashAnimation;
         private Animation _glideAnimation;
         private Animation _fallAnimation;
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, Texture2D glideTexture, Texture2D paticleTexture)
+        private Animation _chargeAnimation;
+
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, Texture2D glideTexture, Texture2D chargeTexture, Texture2D paticleTexture)
         {
             _idleAnimation = new Animation(idleTexture, 48, 64, 16, 24); // 24 fps
             _runAnimation = new Animation(runTexture, 48, 64, 8, 24); //  24 fps
@@ -65,6 +74,7 @@ namespace FinalComGame
             _meleeAttackAnimation = new Animation(meleeAttackTexture, 48, 64, 8, 24); // 24 fps
             _dashAnimation = new Animation(dashTexture, 16, 32, 16, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
+            _chargeAnimation = new Animation(chargeTexture, 16, 32, 16, 24); //  24 fps
 
             _particle = new Particle(10, Position, paticleTexture);
 
@@ -142,7 +152,9 @@ namespace FinalComGame
 
         protected override void UpdateAnimation(float deltaTime)
         {
-            if(isAttacking)
+            if (isCharging)
+                Animation = _chargeAnimation;
+            else if(isAttacking)
                 Animation = _meleeAttackAnimation;
             else if (isDashing)
                 Animation = _dashAnimation;
@@ -196,8 +208,22 @@ namespace FinalComGame
                 attackCooldownTimer -= deltaTime;
             }
 
+            // Handle Fire button (charge shot)
             if (Singleton.Instance.IsKeyJustPressed(Fire))
-                Shoot(gameObjects);
+            {
+                // Start charging
+                StartCharging();
+            }
+            else if (Singleton.Instance.IsKeyPressed(Fire))
+            {
+                // Continue charging
+                ContinueCharging(deltaTime);
+            }
+            else if (Singleton.Instance.IsKeyJustReleased(Fire))
+            {
+                // Release shot
+                ReleaseChargedShot(gameObjects);
+            }
 
             if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing)
                 jumpBufferCounter = jumpBufferTime;
@@ -486,6 +512,84 @@ namespace FinalComGame
                 }
             }
         }
+       // Charge shot methods
+        private void StartCharging()
+        {
+            if (MP > 0)
+            {
+                isCharging = true;
+                chargeTime = 0f;
+                // chargeColor = Color.White;
+                
+                // // Play charge start sound if available
+                // if (ChargeSound != null)
+                //     ChargeSound.Play();
+                
+                _chargeAnimation.Reset();
+            }
+        }
+        
+        private void ContinueCharging(float deltaTime)
+        {
+            if (!isCharging || MP <= 0)
+                return;
+                
+            // Increment charge time
+            chargeTime += deltaTime;
+            
+            // Clamp to max charge time
+            if (chargeTime > maxChargeTime)
+                chargeTime = maxChargeTime;
+                
+            // Update charge color (from white to red as charge increases)
+            // float chargeRatio = chargeTime / maxChargeTime;
+            // chargeColor = new Color(
+            //     1.0f, // Red always max
+            //     1.0f - (chargeRatio * (1.0f - chargeMinColorG)), // Green decreases
+            //     1.0f - (chargeRatio * (1.0f - chargeMinColorG)), // Blue decreases
+            //     1.0f); // Alpha always max
+                
+            // Drain MP while charging (more MP for longer charge)
+            DrainMP(chargeMPCost / maxChargeTime, deltaTime);
+        }
+        
+        private void ReleaseChargedShot(List<GameObject> gameObjects)
+        {
+            if (!isCharging)
+                return;
+                
+            // Calculate charge power (linear scaling from min to max)
+            float chargeRatio = Math.Min(chargeTime / maxChargeTime, 1.0f);
+            float chargePower = minChargePower + chargeRatio * (maxChargePower - minChargePower);
+            
+            // Create and configure the bullet
+            var newBullet = Bullet.Clone() as Bullet;
+            newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
+                                            Position.Y);
+            
+            // Scale bullet properties based on charge level
+            newBullet.Velocity = new Vector2(800 * Direction * chargePower, 0);
+            newBullet.DamageAmount *= chargePower; // Increase damage
+            
+            // // Scale bullet size with charge (optional)
+            // float sizeMultiplier = 1.0f + chargeRatio;
+            // newBullet.Rectangle.Width = (int)(newBullet.Rectangle.Width * sizeMultiplier);
+            // newBullet.Rectangle.Height = (int)(newBullet.Rectangle.Height * sizeMultiplier);
+            
+            // Change color based on charge (optional)
+            // newBullet.Color = chargeColor;
+            
+            newBullet.Reset();
+            gameObjects.Add(newBullet);
+            
+            // // Play charged shot sound if available
+            // if (ChargeShotSound != null && chargeRatio > 0.5f)
+            //     ChargeShotSound.Play();
+            
+            // Reset charging state
+            isCharging = false;
+            chargeTime = 0f;
+        }
 
         private void Shoot(List<GameObject> gameObjects)
         {
@@ -527,7 +631,14 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"Dir {directionText} \nCHp {Health}";
+            string displayText = $"Dir {directionText} \nCHp {Health} \nMP {MP:F1}";
+            
+            // Add charge info if charging
+            if (isCharging)
+            {
+                float chargePercent = (chargeTime / maxChargeTime) * 100;
+                displayText += $"\nCharge {chargePercent:F0}%";
+            }
             spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
         }
 

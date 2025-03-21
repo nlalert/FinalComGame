@@ -59,7 +59,6 @@ public class PlayScene : Scene
 
     public override void Update(GameTime gameTime)
     {
-        Console.WriteLine(Singleton.Instance.CurrentGameState);
         //Update
         _numObject = _gameObjects.Count;
         if(Singleton.Instance.IsKeyPressed(Keys.R))
@@ -224,12 +223,13 @@ public class PlayScene : Scene
         Texture2D playerMelee = _content.Load<Texture2D>("Char_Melee");
         Texture2D playerDash = _content.Load<Texture2D>("Char_Idle");
         Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerCharge = _content.Load<Texture2D>("EnemyRed");
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
         
         playerParticle.SetData([new Color(193, 255, 219)]);
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         
-        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerParticle)
+        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerCharge, playerParticle)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
@@ -247,7 +247,7 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             JumpSound = playerJumpSound,
-            Bullet = new Bullet(_playerTexture)
+            Bullet = new Bullet(_playerTexture, 10)
             {
                 Name = "BulletPlayer",
                 Viewport = new Rectangle(0, 0, 15, 10)

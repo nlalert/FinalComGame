@@ -96,7 +96,7 @@ namespace FinalComGame {
             // Generic hit handling
             Health -= damageAmount;
             StartInvincibility();
-            Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
+            Console.WriteLine("Damage " + damageAmount + " CurHP" + Health);
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;
