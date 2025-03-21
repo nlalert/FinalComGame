@@ -93,6 +93,12 @@ public class PlayScene
                 // Update UI
                 _ui.Update(gameTime);
                 break;
+            case Singleton.GameState.GameOver:
+                if (MediaPlayer.State == MediaState.Playing)
+                {
+                    MediaPlayer.Stop();
+                }
+                break;
         }
     }
 

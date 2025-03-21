@@ -87,6 +87,8 @@ namespace FinalComGame
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if(IsGameOver()) return;
         
             HandleInput(deltaTime, gameObjects);
             RegenerateMP(deltaTime);
@@ -110,6 +112,17 @@ namespace FinalComGame
             
             base.Update(gameTime, gameObjects, tileMap);
             _particle.Update(Position);    
+        }
+
+        private bool IsGameOver()
+        {
+            if(Health <= 0)
+            {
+                Singleton.Instance.CurrentGameState = Singleton.GameState.GameOver;
+                return true;
+            }
+
+            return false;
         }
 
         private void RegenerateMP(float deltaTime)

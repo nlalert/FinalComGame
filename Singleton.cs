@@ -20,7 +20,6 @@ class Singleton
         MainMenu,
         SetLevel,
         Playing,
-        CheckChipAndCeiling,
         Pause,
         GameOver,
     }

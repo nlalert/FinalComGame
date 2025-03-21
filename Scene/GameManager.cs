@@ -65,6 +65,7 @@ public class GameManager : Game
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
+            case Singleton.GameState.GameOver:
                 _playScene.Update(gameTime);
                 break;
         //     case Singleton.GameState.MainMenu:
@@ -98,6 +99,7 @@ public class GameManager : Game
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
+            case Singleton.GameState.GameOver:
                 GraphicsDevice.Clear(Color.DarkGray);
                 _playScene.Draw(gameTime);
                 break;
