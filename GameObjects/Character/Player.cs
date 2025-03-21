@@ -461,48 +461,6 @@ namespace FinalComGame
             }
         }
 
-        // protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        // {
-        //     Vector2 nextPosition = Position + new Vector2(0, Velocity.Y * deltaTime);
-        //     float distance = Vector2.Distance(Position, nextPosition);
-            
-        //     if (distance == 0) return; // No movement, skip checking
-
-        //     float stepSize = distance / 8; // Divide movement into 8 steps
-        //     int tileX = (int)(Position.X / Singleton.BLOCK_SIZE); // Get current column
-
-        //     overlappedTile = TileType.None; // Reset tile detection
-
-        //     for (int i = 1; i <= 8; i++) // Start from 1 to avoid checking current position
-        //     {
-        //         float checkY = Position.Y + Math.Sign(Velocity.Y) * (stepSize * i);
-        //         int tileY = (int)(checkY / Singleton.BLOCK_SIZE) + this.Rectangle.Height/Singleton.BLOCK_SIZE; // Convert to tile grid position
-
-        //         // Get the tile at (tileX, tileY)
-        //         Tile tile = tileMap.GetTileAt(tileX, tileY);
-        //         if (tile != null)
-        //         {
-        //             if (IsTouchingTop(tile) && !Singleton.Instance.IsKeyPressed(Climb))
-        //             {
-        //                 isClimbing = false;
-        //                 // Check collision with solid tiles
-        //                 if (tile.IsSolid)
-        //                 {
-        //                     Velocity.Y = 0; // Stop falling
-        //                     return; // Stop checking further
-        //                 }
-
-        //                 // Detect special tiles like "Ladder"
-        //                 if (tile.Type == TileType.Ladder && (IsTouchingTop(tile) || IsTouchingBottom(tile)))
-        //                 {
-        //                     overlappedTile = tile.Type;
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     Position.Y = nextPosition.Y; // Apply movement if no obstacle
-        // }
-
         protected void UpdateTileInteraction (TileMap tileMap){
 
             overlappedTile = TileType.None;
