@@ -19,6 +19,11 @@ namespace FinalComGame
             elements.Add(element);
         }
         
+        public void RemoveAllElements()
+        {
+            elements.Clear();
+        }
+        
         public void Update(GameTime gameTime)
         {
             foreach (var element in elements)

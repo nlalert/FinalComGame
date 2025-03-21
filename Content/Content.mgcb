@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin A Night Alone - TrackTribe.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:A Night Alone - TrackTribe.mp3
+
 #begin atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -128,6 +134,24 @@
 /processorParam:TextureFormat=Compressed
 /build:GameFont.spritefont
 
+#begin GoofyAhhJump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:GoofyAhhJump.wav
+
+#begin GrenadeTemp.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GrenadeTemp.jpg
+
 #begin HealthPotionTemp.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -139,6 +163,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:HealthPotionTemp.png
+
+#begin Hermes_Boots.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Hermes_Boots.png
 
 #begin ItemSlot.png
 /importer:TextureImporter
