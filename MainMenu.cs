@@ -9,35 +9,24 @@ using Microsoft.Xna.Framework.Media;
 using System.Linq;
 namespace FinalComGame;
 
-public class MainMenu
+public class MainMenu : Scene
 {
-    private Texture2D _SpriteTexture;
-
-    private SpriteBatch _spriteBatch;
-    private ContentManager _content;
-
-    private UI _ui;
-
     private SpriteFont _font;
     private Button _BackButton;
     private Button _StartButton;
     private Button _ScoreBoardButton;
     private Button _ExitButton;
 
-    public void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
+    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
-        Console.WriteLine("MainMenu Init");
-        _content = content;
-
-        _ui = new UI();
+        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
     }
 
-    public void LoadContent(SpriteBatch spriteBatch)
+    public override void LoadContent(SpriteBatch spriteBatch)
     {
         Console.WriteLine("Loading Content");
         _spriteBatch = spriteBatch;
         _font = _content.Load<SpriteFont>("GameFont");
-        // _SpriteTexture = _content.Load<Texture2D>("Sprite_Sheet");
 
         SetupUI();
 
@@ -45,7 +34,7 @@ public class MainMenu
         Console.WriteLine("Content Loaded");
     }
 
-    private void SetupUI()
+    protected override void SetupUI()
     {
         Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
         _StartButton = new Button(
@@ -70,32 +59,7 @@ public class MainMenu
 
         _ui.AddElement(_StartButton);
         _ui.AddElement(_ExitButton);
-
-        // _BackButton = new Button(_SpriteTexture)
-        // {
-        //     Name = "BackButton",
-        //     Viewport = ViewportManager.Get("Small_Button"),
-        //     HighlightedViewPort = ViewportManager.Get("Small_Button_Highlighted"),
-        //     Position = new Vector2(Singleton.SCREEN_WIDTH /2 - ViewportManager.Get("Small_Button").Width/2,
-        //             Singleton.SCREEN_HEIGHT - ViewportManager.Get("Small_Button").Height / 2 - 50),
-        //     LabelViewPort = ViewportManager.Get("Back_Label"),
-        //     HighlightedLabelViewPort = ViewportManager.Get("Back_Label_Highlighted"),
-        //     LabelPosition = new Vector2((Singleton.SCREEN_WIDTH - ViewportManager.Get("Back_Label").Width) / 2,
-        //             Singleton.SCREEN_HEIGHT - ViewportManager.Get("Back_Label").Height / 2 - 50),
-        //     IsActive = true
-            
-        // };
     }
-
-    public void Update(GameTime gameTime)
-    {
-        _ui.Update(gameTime);
-    }   
-
-    public void Draw(GameTime gameTime)
-    {
-        DrawUI();
-    }   
 
     private void ExitGameButton_OnClick(object sender, EventArgs e)
     {
@@ -105,19 +69,5 @@ public class MainMenu
     private void StartGameButton_OnClick(object sender, EventArgs e)
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
-    }
-
-    protected void Reset()
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;
-    }
-
-    private void DrawUI()
-    {
-        _spriteBatch.Begin(); 
-
-        _ui.Draw(_spriteBatch);
-
-        _spriteBatch.End();
     }
 }

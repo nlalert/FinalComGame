@@ -7,14 +7,8 @@ using System.Collections.Generic;
 
 namespace FinalComGame;
 
-public class PauseMenu
+public class PauseMenu : Scene
 {
-    private SpriteBatch _spriteBatch;
-    private ContentManager _content;
-    private GraphicsDevice _graphicsDevice;
-
-    private UI _ui;
-
     private Texture2D _texture;
     private Texture2D _rectTexture;
 
@@ -48,13 +42,9 @@ public class PauseMenu
     private int buttonGap;
     private bool _settings;
 
-    public void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
+    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
-        Console.WriteLine("Paused");
-        _graphicsDevice = graphicsDevice;
-        _content = content;
-
-        _ui = new UI();
+        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
 
         _settings = false;
 
@@ -101,9 +91,9 @@ public class PauseMenu
         // _backButtonHeight = (Singleton.SCREEN_HEIGHT / 2) - (ViewportManager.Get("Small_Button").Height / 2) + (ViewportManager.Get("Big_Box0").Height*2/5);
     }
 
-    public void LoadContent(SpriteBatch spriteBatch)
+    public override void LoadContent(SpriteBatch spriteBatch)
     {
-        _spriteBatch = spriteBatch;
+        base.LoadContent(spriteBatch);
 
         // _texture = _content.Load<Texture2D>("Sprite_Sheet");
 
@@ -115,7 +105,7 @@ public class PauseMenu
         SetupUI();
     }
 
-    private void SetupUI()
+    protected override void SetupUI()
     {
         Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
 
@@ -220,9 +210,8 @@ public class PauseMenu
         Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
     }
 
-    public void Update(GameTime gameTime)
-    {
-        _ui.Update(gameTime);
+    // public void Update(GameTime gameTime)
+    // {
         // if (!_settings)
         // {
 
@@ -333,11 +322,10 @@ public class PauseMenu
         //     }
 
         // }
-    }
+    // }
 
-    public void Draw(GameTime gameTime)
-    {
-        DrawUI();
+    // public void Draw(GameTime gameTime)
+    // {
         // // Tranparent background
         // _spriteBatch.Draw(_rectTexture, Vector2.Zero, new Rectangle(0, 0, Singleton.SCREEN_WIDTH, Singleton.SCREEN_HEIGHT), new Color(0, 0, 0, 150));
 
@@ -382,14 +370,5 @@ public class PauseMenu
         //     _musicSlideChip.Draw(_spriteBatch);
         //     _sfxSlideChip.Draw(_spriteBatch);
         // }
-    }
-
-    private void DrawUI()
-    {
-        _spriteBatch.Begin(); 
-
-        _ui.Draw(_spriteBatch);
-
-        _spriteBatch.End();
-    }
+    // }
 }

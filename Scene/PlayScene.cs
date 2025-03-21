@@ -9,13 +9,8 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace FinalComGame;
 
-public class PlayScene 
+public class PlayScene : Scene
 {
-    //System
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private ContentManager _content;
-
     Song _gameMusic;
 
     //UI
@@ -24,9 +19,6 @@ public class PlayScene
     List<GameObject> _gameObjects;
     int _numObject;
 
-    private UI _ui;
-
-    private GraphicsDevice _graphicsDevice;
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
     private Texture2D _textureAtlas;
@@ -39,24 +31,22 @@ public class PlayScene
 
     private Player player;
     private BaseEnemy baseSkeleton;
-    public void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
+    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
-        _graphics = graphicsDeviceManager;
-        _graphicsDevice = graphicsDevice;
+        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
+
         _graphics.PreferredBackBufferWidth = Singleton.SCREEN_WIDTH;
         _graphics.PreferredBackBufferHeight = Singleton.SCREEN_HEIGHT;
         _graphics.ApplyChanges();
 
-        _content = content;
-
         _gameObjects = new List<GameObject>();
         _camera = new Camera(_graphicsDevice.Viewport); // Initialize camera
-        _ui = new UI();
     }
 
-    public void LoadContent(SpriteBatch spriteBatch)
+    public override void LoadContent(SpriteBatch spriteBatch)
     {
-        _spriteBatch = spriteBatch;
+        base.LoadContent(spriteBatch);
+        
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
         _textureAtlas = _content.Load<Texture2D>("Tileset");
@@ -67,7 +57,7 @@ public class PlayScene
         _gameMusic = _content.Load<Song>("A Night Alone - TrackTribe");
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         Console.WriteLine(Singleton.Instance.CurrentGameState);
         //Update
@@ -113,10 +103,10 @@ public class PlayScene
                 break;
         }
 
-        _ui.Update(gameTime);
+        base.Update(gameTime);
     }
 
-    public void Draw(GameTime gameTime)
+    public override void Draw(GameTime gameTime)
     {
         _numObject = _gameObjects.Count;
 
@@ -302,7 +292,7 @@ public class PlayScene
         });
     }
 
-    private void SetupUI()
+    protected override void SetupUI()
     {
         HealthBar playerHealth = new HealthBar(
             new Rectangle(20, 40, 200, 30),
@@ -340,14 +330,5 @@ public class PlayScene
         _ui.AddElement(playerMP);
         _ui.AddElement(Slot1);
         _ui.AddElement(Slot2);
-    }
-
-    private void DrawUI()
-    {
-        _spriteBatch.Begin(); 
-
-        _ui.Draw(_spriteBatch);
-
-        _spriteBatch.End();
     }
 }
