@@ -27,6 +27,7 @@ class Singleton
         Playing,
         Pause,
         GameOver,
+        Exit,
     }
 
     public GameState CurrentGameState;

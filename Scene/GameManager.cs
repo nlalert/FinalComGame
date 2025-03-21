@@ -17,8 +17,7 @@ public class GameManager : Game
 
     // Game Scene (MainScene)
     private PlayScene _playScene;
-    // private MainScene _mainScene;
-    // private MainMenu _mainMenu;
+    private MainMenu _mainMenu;
     // private PauseMenu _pauseMenu;
 
     public GameManager()
@@ -38,14 +37,15 @@ public class GameManager : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
      
+        Singleton.Instance.UI = new UI();
+
         _playScene = new PlayScene();
         _playScene.Initialize(GraphicsDevice, _graphics, Content);
         _playScene.LoadContent(_spriteBatch);
                 
-        Singleton.Instance.UI = new UI();
-        // _mainMenu = new MainMenu();
-        // _mainMenu.Initialize();
-        // _mainMenu.LoadContent(Content, GraphicsDevice, _spriteBatch);
+        _mainMenu = new MainMenu();
+        _mainMenu.Initialize(GraphicsDevice, _graphics, Content);
+        _mainMenu.LoadContent(_spriteBatch);
         
         // // Initialize the main game scene
         // _mainScene = new MainScene();
@@ -66,9 +66,12 @@ public class GameManager : Game
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.MainMenu:
-                Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame; // skip main menu for now
                 // _mainScene.Update(gameTime);
-                // _mainMenu.Update(gameTime);
+                _mainMenu.Update(gameTime);
+                // Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame; // skip main menu for now
+                break;
+            case Singleton.GameState.Exit:
+                Exit();
                 break;
             default:
                 _playScene.Update(gameTime);
@@ -106,6 +109,9 @@ public class GameManager : Game
        
         switch (Singleton.Instance.CurrentGameState)
         {
+            case Singleton.GameState.MainMenu:
+                _mainMenu.Draw(gameTime);
+                break;
             default:
                 GraphicsDevice.Clear(Color.DarkGray);
                 _playScene.Draw(gameTime);
