@@ -206,7 +206,8 @@ public class PlayScene : Scene
         AddPlayer();
         AddEnemies();
         AddItems();
-
+        SetupUI();
+        
         foreach (GameObject s in _gameObjects)
         {
             s.Reset();
