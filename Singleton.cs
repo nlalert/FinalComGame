@@ -14,11 +14,13 @@ class Singleton
     public const int BLOCK_SIZE = 16;
     public const int GRAVITY = 3500;
     public Random Random;
+    public int Stage;
 
     public enum GameState
     {
         MainMenu,
-        SetLevel,
+        StartingGame,
+        InitializingStage,
         Playing,
         Pause,
         GameOver,
@@ -28,11 +30,11 @@ class Singleton
 
     public KeyboardState PreviousKey, CurrentKey;
     public MouseState PreviousMouseState, CurrentMouseState;
-    private static Singleton instance;
     public SpriteFont Debug_Font;
+    private static Singleton instance;
+    
     private Singleton() { 
-        Random = new Random();
-        
+        Random = new Random(); 
     }
 
     public static Singleton Instance
