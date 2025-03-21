@@ -20,7 +20,6 @@ public class PlayScene
 
     //UI
     SpriteFont _font;
-    private UI _ui;
 
     List<GameObject> _gameObjects;
     int _numObject;
@@ -63,8 +62,6 @@ public class PlayScene
         Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
 
         _gameMusic = _content.Load<Song>("A Night Alone - TrackTribe");
-
-        _ui = new UI();
     }
 
     public void Update(GameTime gameTime)
@@ -100,15 +97,13 @@ public class PlayScene
                 RemoveInactiveObjects();
 
                 _camera.Follow(player); // Make camera follow the player
-
-                // Update UI
-                _ui.Update(gameTime);
                 break;
             case Singleton.GameState.GameOver:
                 if (MediaPlayer.State == MediaState.Playing)
                 {
                     MediaPlayer.Stop();
                 }
+                Singleton.Instance.UI.RemoveAllElements();
                 break;
         }
     }
@@ -126,22 +121,14 @@ public class PlayScene
                 DrawAllObjects();
                 _spriteBatch.End();
 
-                //  Draw the UI (No Camera Transformation)
-                DrawUI();
+                //Remove Later
+                _spriteBatch.Begin(); 
+                _spriteBatch.DrawString(_font, "Health Bar : " + player.Health + " / " + player.maxHealth, new Vector2(10, 10), Color.White);
+                _spriteBatch.DrawString(_font, "MP Bar : " + player.MP + " / " + player.maxMP, new Vector2(10, 70), Color.White);
+                _spriteBatch.End();
                 break;
         }
         _graphics.BeginDraw();
-    }
-
-    private void DrawUI()
-    {
-        _spriteBatch.Begin(); 
-
-        _ui.Draw(_spriteBatch);
-        _spriteBatch.DrawString(_font, "Health Bar : " + player.Health + " / " + player.maxHealth, new Vector2(10, 10), Color.White);
-        _spriteBatch.DrawString(_font, "MP Bar : " + player.MP + " / " + player.maxMP, new Vector2(10, 70), Color.White);
-
-        _spriteBatch.End();
     }
 
     private void UpdateTileMap(GameTime gameTime)
@@ -308,6 +295,7 @@ public class PlayScene
 
     private void SetupUI()
     {
+        Singleton.Instance.UI.RemoveAllElements();
         HealthBar playerHealth = new HealthBar(
             new Rectangle(20, 40, 200, 30),
             player,
@@ -340,9 +328,9 @@ public class PlayScene
             _font
         );
 
-        _ui.AddElement(playerHealth);
-        _ui.AddElement(playerMP);
-        _ui.AddElement(Slot1);
-        _ui.AddElement(Slot2);
+        Singleton.Instance.UI.AddElement(playerHealth);
+        Singleton.Instance.UI.AddElement(playerMP);
+        Singleton.Instance.UI.AddElement(Slot1);
+        Singleton.Instance.UI.AddElement(Slot2);
     }
 }

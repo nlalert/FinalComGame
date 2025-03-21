@@ -41,7 +41,8 @@ public class GameManager : Game
         _playScene = new PlayScene();
         _playScene.Initialize(GraphicsDevice, _graphics, Content);
         _playScene.LoadContent(_spriteBatch);
-        
+                
+        Singleton.Instance.UI = new UI();
         // _mainMenu = new MainMenu();
         // _mainMenu.Initialize();
         // _mainMenu.LoadContent(Content, GraphicsDevice, _spriteBatch);
@@ -88,6 +89,9 @@ public class GameManager : Game
         //         break;
         }
 
+        // Update UI
+        Singleton.Instance.UI.Update(gameTime);
+
         Singleton.Instance.UpdatePreviousInput();
 
         base.Update(gameTime);
@@ -118,8 +122,19 @@ public class GameManager : Game
         //         break;
         }
 
+        //  Draw the UI (No Camera Transformation)
+        DrawUI();
         // _spriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    private void DrawUI()
+    {
+        _spriteBatch.Begin(); 
+
+        Singleton.Instance.UI.Draw(_spriteBatch);
+
+        _spriteBatch.End();
     }
 }

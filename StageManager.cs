@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+namespace FinalComGame;
+
 public class StageManager
 {
     private static readonly Dictionary<int, string[]> StageLayouts = new Dictionary<int, string[]>

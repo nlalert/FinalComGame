@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 
+namespace FinalComGame;
+
 class Singleton
 {
     public const int SCREEN_HEIGHT = 640;
@@ -15,6 +17,7 @@ class Singleton
     public const int GRAVITY = 3500;
     public Random Random;
     public int Stage;
+    public UI UI;
 
     public enum GameState
     {
@@ -32,7 +35,7 @@ class Singleton
     public MouseState PreviousMouseState, CurrentMouseState;
     public SpriteFont Debug_Font;
     private static Singleton instance;
-    
+
     private Singleton() { 
         Random = new Random(); 
     }
