@@ -64,8 +64,12 @@ public class GameManager : Game
         //assume game state as playing
         switch (Singleton.Instance.CurrentGameState)
         {
-            case Singleton.GameState.Playing:
-            case Singleton.GameState.GameOver:
+            case Singleton.GameState.MainMenu:
+                Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame; // skip main menu for now
+                // _mainScene.Update(gameTime);
+                // _mainMenu.Update(gameTime);
+                break;
+            default:
                 _playScene.Update(gameTime);
                 break;
         //     case Singleton.GameState.MainMenu:
@@ -98,8 +102,7 @@ public class GameManager : Game
        
         switch (Singleton.Instance.CurrentGameState)
         {
-            case Singleton.GameState.Playing:
-            case Singleton.GameState.GameOver:
+            default:
                 GraphicsDevice.Clear(Color.DarkGray);
                 _playScene.Draw(gameTime);
                 break;
