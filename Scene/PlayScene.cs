@@ -9,28 +9,22 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace FinalComGame;
 
-public class PlayScene 
+public class PlayScene : Scene
 {
-    //System
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private ContentManager _content;
-
     Song _gameMusic;
 
     //UI
     SpriteFont _font;
-    private UI _ui;
 
     List<GameObject> _gameObjects;
     int _numObject;
 
-    private GraphicsDevice _graphicsDevice;
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
-
+    private Texture2D _textureAtlas;
     private Camera _camera;
     private TileMap _collisionTileMap;
+    private TileMap _enemyMap;
     private TileMap _foreGroundTileMap;
     private TileMap _rockTileMap;
     private TileMap _vegetationTileMap;
@@ -38,65 +32,81 @@ public class PlayScene
 
     private Player player;
     private BaseEnemy baseSkeleton;
-    public void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
+    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
-        _graphics = graphicsDeviceManager;
-        _graphicsDevice = graphicsDevice;
+        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
+
         _graphics.PreferredBackBufferWidth = Singleton.SCREEN_WIDTH;
         _graphics.PreferredBackBufferHeight = Singleton.SCREEN_HEIGHT;
         _graphics.ApplyChanges();
-
-        _content = content;
 
         _gameObjects = new List<GameObject>();
         _camera = new Camera(_graphicsDevice.Viewport); // Initialize camera
     }
 
-    public void LoadContent(SpriteBatch spriteBatch)
+    public override void LoadContent(SpriteBatch spriteBatch)
     {
-        _spriteBatch = spriteBatch;
-        _font = _content.Load<SpriteFont>("GameFont");
+        base.LoadContent(spriteBatch);
+        
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
+        _textureAtlas = _content.Load<Texture2D>("Tileset");
+
+        _font = _content.Load<SpriteFont>("GameFont");
         Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
-        Texture2D textureAtlas = _content.Load<Texture2D>("Tileset");
-        //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
-        //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
-        _collisionTileMap = new TileMap(textureAtlas, "../../../Data/Level_1/Level_1_Collision.csv", 20);
 
         _gameMusic = _content.Load<Song>("A Night Alone - TrackTribe");
-
-        _ui = new UI();
-
-        Reset();
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         //Update
         _numObject = _gameObjects.Count;
         if(Singleton.Instance.IsKeyPressed(Keys.R))
-            this.Reset();
+            this.ResetGame();
         switch (Singleton.Instance.CurrentGameState)
         {
+            case Singleton.GameState.StartingGame:
+                if (MediaPlayer.State == MediaState.Playing)
+                {
+                    MediaPlayer.Stop();
+                }
+                ResetGame();
+                Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
+                break;
+            case Singleton.GameState.InitializingStage:
+                ResetStage();
+                // SetUpInitalChipsPattern();
+
+                Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
+                break;
             case Singleton.GameState.Playing:
                 if (MediaPlayer.State != MediaState.Playing)
                 {
                     MediaPlayer.Play(_gameMusic);
+                }
+                if(Singleton.Instance.IsKeyJustPressed(Keys.Escape))
+                {
+                    Singleton.Instance.CurrentGameState = Singleton.GameState.Pause;
                 }
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
                 RemoveInactiveObjects();
 
                 _camera.Follow(player); // Make camera follow the player
-
-                // Update UI
-                _ui.Update(gameTime);
+                break;
+            case Singleton.GameState.GameOver:
+                if (MediaPlayer.State == MediaState.Playing)
+                {
+                    MediaPlayer.Stop();
+                }
                 break;
         }
+
+        base.Update(gameTime);
     }
 
-    public void Draw(GameTime gameTime)
+    public override void Draw(GameTime gameTime)
     {
         _numObject = _gameObjects.Count;
 
@@ -109,22 +119,16 @@ public class PlayScene
                 DrawAllObjects();
                 _spriteBatch.End();
 
-                //  Draw the UI (No Camera Transformation)
-                DrawUI();
+                _spriteBatch.Begin(); 
+                _spriteBatch.DrawString(_font, "Health Bar : " + player.Health + " / " + player.maxHealth, new Vector2(10, 10), Color.White);
+                _spriteBatch.DrawString(_font, "MP Bar : " + player.MP + " / " + player.maxMP, new Vector2(10, 70), Color.White);
+                _spriteBatch.End();
                 break;
         }
+
+        DrawUI();
+
         _graphics.BeginDraw();
-    }
-
-    private void DrawUI()
-    {
-        _spriteBatch.Begin(); 
-
-        _ui.Draw(_spriteBatch);
-        _spriteBatch.DrawString(_font, "Health Bar : " + player.Health + " / " + player.maxHealth, new Vector2(10, 10), Color.White);
-        _spriteBatch.DrawString(_font, "MP Bar : " + player.MP + " / " + player.maxMP, new Vector2(10, 70), Color.White);
-
-        _spriteBatch.End();
     }
 
     private void UpdateTileMap(GameTime gameTime)
@@ -139,6 +143,7 @@ public class PlayScene
             if(_gameObjects[i].IsActive)
                 _gameObjects[i].Update(gameTime, _gameObjects, _collisionTileMap);
         }
+        Console.WriteLine(_gameObjects.Count);
     }
 
     public void RemoveInactiveObjects()
@@ -171,14 +176,49 @@ public class PlayScene
         }   
     }
 
-    public void Reset()
+    public void ResetGame()
     {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
-
-        Singleton.Instance.Random = new Random();
-
         _gameObjects.Clear();
 
+        Singleton.Instance.Stage = 1;
+        Singleton.Instance.Random = new Random();
+        Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
+
+        AddPlayer();
+        AddEnemies();
+        AddItems();
+        SetupUI();
+
+        foreach (GameObject s in _gameObjects)
+        {
+            s.Reset();
+        }
+    }
+
+    protected void ResetStage()
+    {
+        _gameObjects.Clear();
+
+        Singleton.Instance.Random = new Random();
+        //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
+        //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
+        _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStagePath(), 20);
+        _enemyMap = new TileMap(StageManager.GetCurrentStagePath());
+
+        AddPlayer();
+        AddEnemies();
+        SpawnEnemies();
+        AddItems();
+        SetupUI();
+        
+        foreach (GameObject s in _gameObjects)
+        {
+            s.Reset();
+        }
+    }
+
+    private void AddPlayer()
+    {
         // Load sprite sheets
         Texture2D playerIdle = _content.Load<Texture2D>("Char_Idle");
         Texture2D playerRun = _content.Load<Texture2D>("Char_Run");
@@ -187,12 +227,13 @@ public class PlayScene
         Texture2D playerMelee = _content.Load<Texture2D>("Char_Melee");
         Texture2D playerDash = _content.Load<Texture2D>("Char_Idle");
         Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerCharge = _content.Load<Texture2D>("EnemyRed");
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
         
         playerParticle.SetData([new Color(193, 255, 219)]);
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         
-        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerParticle)
+        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerCharge, playerParticle)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
@@ -210,7 +251,7 @@ public class PlayScene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             JumpSound = playerJumpSound,
-            Bullet = new Bullet(_playerTexture)
+            Bullet = new Bullet(_playerTexture, 10)
             {
                 Name = "BulletPlayer",
                 Viewport = new Rectangle(0, 0, 15, 10)
@@ -218,18 +259,36 @@ public class PlayScene
         };
 
         _gameObjects.Add(player);
-        
+    }
+
+    private void AddEnemies()
+    {
         baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
             CanCollideTile = true,
             player = player
         };
-        _gameObjects.Add(baseSkeleton);
-        // baseSkeleton.Spawn(132, 400, _gameObjects);
-        
-        baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(20, 90),_gameObjects);
+    }
 
+    private void SpawnEnemies()
+    {
+        foreach (var enemy in _enemyMap.GetEnemySpawnPoints())
+        {
+            switch (enemy.Value)
+            {
+                case 97:
+                    baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    break;
+                default:
+                    break;
+            }
+            
+        }  
+    }
+
+    private void AddItems()
+    {
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
@@ -248,16 +307,9 @@ public class PlayScene
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
-        
-        SetupUI();
-
-        foreach (GameObject s in _gameObjects)
-        {
-            s.Reset();
-        }
     }
 
-    private void SetupUI()
+    protected override void SetupUI()
     {
         HealthBar playerHealth = new HealthBar(
             new Rectangle(20, 40, 200, 30),

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 
 namespace FinalComGame {
-    abstract class BaseEnemy : Character
+    public abstract class BaseEnemy : Character
     {
         // Enemy States
         public enum EnemyState
@@ -96,7 +96,7 @@ namespace FinalComGame {
             // Generic hit handling
             Health -= damageAmount;
             StartInvincibility();
-            Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
+            Console.WriteLine("Damage " + damageAmount + " CurHP" + Health);
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;

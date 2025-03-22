@@ -4,5 +4,5 @@ public enum TileType
     Barrier,
     Platform,
     Ladder,
-    Platform_Ladder,
+    Platform_Ladder
 }

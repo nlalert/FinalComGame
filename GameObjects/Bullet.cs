@@ -9,9 +9,10 @@ namespace FinalComGame
     public class Bullet : GameObject
     {   
         public float DistantMoved;
-        public Bullet(Texture2D texture) : base(texture)
+        public float DamageAmount;
+        public Bullet(Texture2D texture, float DamageAmount) : base(texture)
         {
-
+            this.DamageAmount = DamageAmount;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -45,7 +46,7 @@ namespace FinalComGame
                             // s.IsActive = false;
                             if(s is BaseEnemy enemy){
                                 // enemy.OnHit(this,this.damage)
-                                enemy.OnHitByProjectile(this,10);
+                                enemy.OnHitByProjectile(this, DamageAmount);
                             } 
                             // if(s is Enemy)
                             // {

@@ -17,9 +17,8 @@ public class GameManager : Game
 
     // Game Scene (MainScene)
     private PlayScene _playScene;
-    // private MainScene _mainScene;
-    // private MainMenu _mainMenu;
-    // private PauseMenu _pauseMenu;
+    private MainMenu _mainMenu;
+    private PauseMenu _pauseMenu;
 
     public GameManager()
     {
@@ -37,24 +36,18 @@ public class GameManager : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-     
+
         _playScene = new PlayScene();
         _playScene.Initialize(GraphicsDevice, _graphics, Content);
         _playScene.LoadContent(_spriteBatch);
-        
-        // _mainMenu = new MainMenu();
-        // _mainMenu.Initialize();
-        // _mainMenu.LoadContent(Content, GraphicsDevice, _spriteBatch);
-        
-        // // Initialize the main game scene
-        // _mainScene = new MainScene();
-        // _mainScene.Initialize(); // Ensure MainScene has a proper Initialize method
-        // _mainScene.LoadContent(Content, GraphicsDevice, _spriteBatch);
-        // Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;
+                
+        _mainMenu = new MainMenu();
+        _mainMenu.Initialize(GraphicsDevice, _graphics, Content);
+        _mainMenu.LoadContent(_spriteBatch);
 
-        // _pauseMenu = new PauseMenu();
-        // _pauseMenu.Initialize(); // Ensure MainScene has a proper Initialize method
-        // _pauseMenu.LoadContent(Content, GraphicsDevice, _spriteBatch);
+        _pauseMenu = new PauseMenu();
+        _pauseMenu.Initialize(GraphicsDevice, _graphics, Content);
+        _pauseMenu.LoadContent(_spriteBatch);
     }
 
     protected override void Update(GameTime gameTime)
@@ -64,7 +57,18 @@ public class GameManager : Game
         //assume game state as playing
         switch (Singleton.Instance.CurrentGameState)
         {
-            case Singleton.GameState.Playing:
+            case Singleton.GameState.MainMenu:
+                // _mainScene.Update(gameTime);
+                _mainMenu.Update(gameTime);
+                break;
+            case Singleton.GameState.Pause:
+                // _playScene.Update(gameTime);
+                _pauseMenu.Update(gameTime);
+                break;
+            case Singleton.GameState.Exit:
+                Exit();
+                break;
+            default:
                 _playScene.Update(gameTime);
                 break;
         //     case Singleton.GameState.MainMenu:
@@ -97,7 +101,15 @@ public class GameManager : Game
        
         switch (Singleton.Instance.CurrentGameState)
         {
-            case Singleton.GameState.Playing:
+            case Singleton.GameState.MainMenu:
+                // _mainScene.Draw(gameTime);
+                _mainMenu.Draw(gameTime);
+                break;
+            case Singleton.GameState.Pause:
+                _playScene.Draw(gameTime);
+                _pauseMenu.Draw(gameTime);
+                break;
+            default:
                 GraphicsDevice.Clear(Color.DarkGray);
                 _playScene.Draw(gameTime);
                 break;
