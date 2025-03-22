@@ -21,6 +21,7 @@ public class PlayScene : Scene
 
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
+    private Texture2D _DogTexture;
     private Texture2D _textureAtlas;
     private Camera _camera;
     private TileMap _collisionTileMap;
@@ -32,6 +33,7 @@ public class PlayScene : Scene
 
     private Player player;
     private BaseEnemy baseSkeleton;
+    private BaseEnemy enemyDog;
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         base.Initialize(graphicsDevice, graphicsDeviceManager, content);
@@ -50,6 +52,7 @@ public class PlayScene : Scene
         
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
+        _DogTexture = _content.Load<Texture2D>("EnemyDog");
         _textureAtlas = _content.Load<Texture2D>("Tileset");
 
         _font = _content.Load<SpriteFont>("GameFont");
@@ -269,6 +272,12 @@ public class PlayScene : Scene
             CanCollideTile = true,
             player = player
         };
+        enemyDog = new HellhoundEnemy(_DogTexture,_font){
+            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            Viewport = new Rectangle(0, 0, 64, 32),
+            CanCollideTile = true,
+            player = player
+        };
     }
 
     private void SpawnEnemies()
@@ -278,7 +287,9 @@ public class PlayScene : Scene
             switch (enemy.Value)
             {
                 case 97:
-                    baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    // HellhoundEnemy.
+                    enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     break;
                 default:
                     break;

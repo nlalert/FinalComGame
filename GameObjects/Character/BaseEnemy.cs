@@ -16,6 +16,8 @@ namespace FinalComGame {
             Attack,
             Cooldown,
             Dying,
+            Charging,
+            Dash,
             Dead
         }
 

@@ -640,6 +640,7 @@ namespace FinalComGame
                 displayText += $"\nCharge {chargePercent:F0}%";
             }
             spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
+            spriteBatch.DrawString(Singleton.Instance.Debug_Font, ".", this.GetPlayerCenter(), Color.Red);
         }
 
                 // New method to apply gravity depending on glide state
@@ -683,6 +684,12 @@ namespace FinalComGame
                 MP = 0;
                 isGliding = false; // Stop gliding when MP is depleted
             }
+        }
+        public Vector2 GetPlayerCenter(){
+            Vector2 Center = this.Position;
+            Center.X += this.Viewport.Width/2;
+            Center.Y += this.Viewport.Height/4; //idk why it need /4 instead of /2
+            return Center;
         }
     }
 }
