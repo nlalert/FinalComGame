@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 
 namespace FinalComGame {
-    abstract class BaseEnemy : Character
+    public abstract class BaseEnemy : Character
     {
         // Enemy States
         public enum EnemyState

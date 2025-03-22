@@ -24,6 +24,7 @@ public class PlayScene : Scene
     private Texture2D _textureAtlas;
     private Camera _camera;
     private TileMap _collisionTileMap;
+    private TileMap _enemyMap;
     private TileMap _foreGroundTileMap;
     private TileMap _rockTileMap;
     private TileMap _vegetationTileMap;
@@ -142,6 +143,7 @@ public class PlayScene : Scene
             if(_gameObjects[i].IsActive)
                 _gameObjects[i].Update(gameTime, _gameObjects, _collisionTileMap);
         }
+        Console.WriteLine(_gameObjects.Count);
     }
 
     public void RemoveInactiveObjects()
@@ -201,9 +203,11 @@ public class PlayScene : Scene
         //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
         //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStagePath(), 20);
+        _enemyMap = new TileMap(StageManager.GetCurrentStagePath());
 
         AddPlayer();
         AddEnemies();
+        SpawnEnemies();
         AddItems();
         SetupUI();
         
@@ -265,10 +269,22 @@ public class PlayScene : Scene
             CanCollideTile = true,
             player = player
         };
-        _gameObjects.Add(baseSkeleton);
-        // baseSkeleton.Spawn(132, 400, _gameObjects);
-        
-        baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(20, 90),_gameObjects);
+    }
+
+    private void SpawnEnemies()
+    {
+        foreach (var enemy in _enemyMap.GetEnemySpawnPoints())
+        {
+            switch (enemy.Value)
+            {
+                case 97:
+                    baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    break;
+                default:
+                    break;
+            }
+            
+        }  
     }
 
     private void AddItems()

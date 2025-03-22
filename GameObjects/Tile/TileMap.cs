@@ -10,6 +10,7 @@ namespace FinalComGame
     public class TileMap
     {
         public Dictionary<Vector2, Tile> tiles; //Grid Position, tile
+        public Dictionary<Vector2, int> enemySpawnPoints; // Grid position, enemy type ID
         private Texture2D textureAtlas;
         private int numTilesPerRow;
 
@@ -18,6 +19,11 @@ namespace FinalComGame
             this.textureAtlas = textureAtlas;
             this.numTilesPerRow = numTilesPerRow;
             tiles = LoadMap(mapPath);
+        }
+
+        public TileMap(string mapPath)
+        {
+            enemySpawnPoints = LoadEnemies(mapPath);
         }
 
         public void Update(GameTime gameTime, List<GameObject> gameObjects)
@@ -71,13 +77,45 @@ namespace FinalComGame
             return result;
         }
 
+        private Dictionary<Vector2, int> LoadEnemies(string filepath)
+        {
+            Dictionary<Vector2, int> spawnPoints = new Dictionary<Vector2, int>();
+            
+            using (StreamReader reader = new StreamReader(filepath))
+            {
+                int y = 0;
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] items = line.Split(',');
+                    
+                    for (int x = 0; x < items.Length; x++)
+                    {
+                        if (int.TryParse(items[x], out int enemyID) && enemyID > 0)
+                        {
+                            // Store enemy spawn point with its type
+                            spawnPoints.Add(new Vector2(x, y), enemyID);
+                        }
+                    }
+                    y++;
+                }
+            }
+            
+            return spawnPoints;
+        }
+
         public static Vector2 GetTileWorldPositionAt(int tileGridX, int tileGridY)
         {
             return new Vector2(tileGridX * Singleton.BLOCK_SIZE, tileGridY * Singleton.BLOCK_SIZE);
         }
+        public static Vector2 GetTileWorldPositionAt(Vector2 tileGridPosition)
+        {
+            return new Vector2(tileGridPosition.X * Singleton.BLOCK_SIZE, tileGridPosition.Y * Singleton.BLOCK_SIZE);
+        }
 
         private static string GetTileName(int tileID)
         {
+            //TODO Add more detail
             return tileID switch
             {
                 _ => "Tile",
@@ -137,6 +175,12 @@ namespace FinalComGame
                 return value;
                 
             return null;
+        }
+
+        // Fixed version of your GetEnemyLocation method
+        public Dictionary<Vector2, int> GetEnemySpawnPoints()
+        {
+            return enemySpawnPoints;
         }
     }
 }
