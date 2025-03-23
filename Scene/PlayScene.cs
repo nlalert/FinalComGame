@@ -208,8 +208,8 @@ public class PlayScene : Scene
         Singleton.Instance.Random = new Random();
         //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
         //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
-        _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStagePath(), 20);
-        _enemyMap = new TileMap(StageManager.GetCurrentStagePath());
+        _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
+        _enemyMap = new TileMap(StageManager.GetCurrentStageEnemyMapPath());
 
         AddPlayer();
         AddEnemies();
@@ -243,7 +243,7 @@ public class PlayScene : Scene
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
-            Position = TileMap.GetTileWorldPositionAt(16, 98),// block column 16, row 98
+            Position = StageManager.GetPlayerWorldSpawnPosition(),// get player location of each stage
             WalkSpeed = 200,
             Left = Keys.Left,
             Right = Keys.Right,

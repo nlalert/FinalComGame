@@ -1,85 +1,46 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace FinalComGame;
 
 public class StageManager
 {
-    private static readonly Dictionary<int, string[]> StageLayouts = new Dictionary<int, string[]>
+    private static readonly Dictionary<int, Vector2> PlayerGridSpawnPoint = new Dictionary<int, Vector2>
     {
-        {
-            1, new[]
-            {
-                "../../../Data/Level_1/Level_1_Collision.csv",
-            }
-        },
-        {
-            2, new[]
-            {
-                "../../../Data/Level_1/Level_1_Collision.csv",
-            }
-        },
-        {
-            3, new[]
-            {
-                "../../../Data/Level_1/Level_1_Collision.csv",
-            }
-        },
+        { 1, new Vector2(16, 98) },
+        { 2, new Vector2(16, 10) },
+        { 3, new Vector2(16, 15) },
+
         //Debug Stage
-        {
-            999, new[]
-            {
-                "../../../Data/Level_1/Level_1_Collision.csv",
-            }
-        },
-        //Debug Stage
-        {
-            1000, new[]
-            {
-                "../../../Data/Level_1/Level_1_Collision.csv",
-            }
-        }
+        { 999, new Vector2(0, 0) },
+        { 1000, new Vector2(0, 0) }
     };
 
-    public static string GetCurrentStagePath()
+    public static Vector2 GetPlayerWorldSpawnPosition()
     {
-        if (!StageLayouts.ContainsKey(Singleton.Instance.Stage))
+        return TileMap.GetTileWorldPositionAt(PlayerGridSpawnPoint[Singleton.Instance.Stage]);
+    }
+
+    public static string GetCurrentStageCollisionPath()
+    {
+        if (!PlayerGridSpawnPoint.ContainsKey(Singleton.Instance.Stage))
         {
             Console.WriteLine("No more stage : Replaying");
             Singleton.Instance.Stage = 1;
         }
 
-        Console.WriteLine(Singleton.Instance.Stage);
-        return StageLayouts[Singleton.Instance.Stage][0];
-
-        // string[] layout = StageLayouts[Singleton.Instance.Stage];
-        // int rows = layout.Length;
-        // int cols = layout[0].Length;
-
-        // for (int row = 0; row < rows; row++)
-        // {
-        //     for (int col = 0; col < cols; col++)
-        //     {
-        //         char chipChar = layout[row][col];
-        //         Singleton.Instance.GameBoard[row, col] = ChipTypeFromChar(chipChar);
-        //     }
-        // }
+        return "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_Collision.csv";
     }
+    
+    public static string GetCurrentStageEnemyMapPath()
+    {
+        if (!PlayerGridSpawnPoint.ContainsKey(Singleton.Instance.Stage))
+        {
+            Console.WriteLine("No more stage : Replaying");
+            Singleton.Instance.Stage = 1;
+        }
 
-    // private static ChipType ChipTypeFromChar(char chipChar)
-    // {
-    //     return chipChar switch
-    //     {
-    //         'R' => ChipType.Red,
-    //         'Y' => ChipType.Yellow,
-    //         'B' => ChipType.Blue,
-    //         'G' => ChipType.Green,
-    //         'P' => ChipType.Purple,
-    //         'W' => ChipType.White,
-    //         'K' => ChipType.Black,
-    //         'O' => ChipType.Orange,
-    //         '-' => ChipType.None,
-    //          _  => ChipType.None
-    //     };
-    // }
+        return "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_Collision.csv";
+    }
 }
