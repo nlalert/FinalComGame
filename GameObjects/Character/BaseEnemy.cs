@@ -18,6 +18,7 @@ namespace FinalComGame {
             Dying,
             Charging,
             Dash,
+            Jump,
             Dead
         }
 
@@ -157,6 +158,18 @@ namespace FinalComGame {
                 }
             }
         }
+        protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Position.Y += Velocity.Y * deltaTime;
+            foreach (Tile tile in tileMap.tiles.Values)
+            {
+                if(tile.IsSolid){
+                    if(ResolveVerticalCollision(tile)){
+                        OnLandVerticle();
+                    }
+                } 
+            }
+        }
         public virtual bool CheckContactPlayer(){
             if(this.IsTouching(player)){
                 OnCollidePlayer(player);
@@ -177,6 +190,9 @@ namespace FinalComGame {
         {
         }
         public virtual void OnCollisionHorizon(){
+
+        }
+        public virtual void OnLandVerticle(){
 
         }
         /// <summary>

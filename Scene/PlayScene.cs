@@ -22,6 +22,7 @@ public class PlayScene : Scene
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
     private Texture2D _DogTexture;
+    private Texture2D _SlimeTexture;
     private Texture2D _textureAtlas;
     private Camera _camera;
     private TileMap _collisionTileMap;
@@ -34,6 +35,7 @@ public class PlayScene : Scene
     private Player player;
     private BaseEnemy baseSkeleton;
     private BaseEnemy enemyDog;
+    private BaseEnemy enemySlime;
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         base.Initialize(graphicsDevice, graphicsDeviceManager, content);
@@ -53,6 +55,7 @@ public class PlayScene : Scene
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
         _DogTexture = _content.Load<Texture2D>("EnemyDog");
+        _SlimeTexture = _content.Load<Texture2D>("EnemySlime");
         _textureAtlas = _content.Load<Texture2D>("Tileset");
 
         _font = _content.Load<SpriteFont>("GameFont");
@@ -278,6 +281,12 @@ public class PlayScene : Scene
             CanCollideTile = true,
             player = player
         };
+        enemySlime = new SlimeEnemy(_SlimeTexture,_font){
+            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            Viewport = new Rectangle(0, 0, 32, 32),
+            CanCollideTile = true,
+            player = player
+        };
     }
 
     private void SpawnEnemies()
@@ -288,7 +297,8 @@ public class PlayScene : Scene
             {
                 case 97:
                     // HellhoundEnemy.
-                    enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     break;
                 default:
