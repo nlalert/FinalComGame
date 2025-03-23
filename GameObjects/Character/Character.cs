@@ -66,13 +66,6 @@ namespace FinalComGame {
                                 ,Position.Y - (Animation.GetFrameSize().Y - Viewport.Height) / 2);
         }
 
-        protected virtual void ApplyGravity(float deltaTime)
-        {
-            Velocity.Y += Singleton.GRAVITY * deltaTime; // gravity
-
-            //TODO: Check and cap terminal velocity of player if want later
-        }
-
         protected virtual void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.X += Velocity.X * deltaTime;
