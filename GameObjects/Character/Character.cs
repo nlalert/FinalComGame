@@ -66,24 +66,6 @@ namespace FinalComGame {
                                 ,Position.Y - (Animation.GetFrameSize().Y - Viewport.Height) / 2);
         }
 
-        protected virtual void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            Position.X += Velocity.X * deltaTime;
-            foreach (Tile tile in tileMap.tiles.Values)
-            {
-                if(tile.IsSolid) ResolveHorizontalCollision(tile);
-            }
-        }
-
-        protected virtual void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            Position.Y += Velocity.Y * deltaTime;
-            foreach (Tile tile in tileMap.tiles.Values)
-            {
-                if(tile.IsSolid) ResolveVerticalCollision(tile);
-            }
-        }
-
         protected bool IsOnGround()
         {
             //TODO apex of jump is grounded?
