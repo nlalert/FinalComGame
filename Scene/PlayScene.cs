@@ -314,7 +314,7 @@ public class PlayScene : Scene
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
 
-        _gameObjects.Add(new Item(testItem, "test", TileMap.GetTileWorldPositionAt(18, 98)){
+        _gameObjects.Add(new Item(testItem, "test", TileMap.GetTileWorldPositionAt(18, 90)){
             Name =  "Pickaxe1",
             Viewport = new Rectangle(0, 0, 32,32)
         });

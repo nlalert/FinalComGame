@@ -15,10 +15,7 @@ namespace FinalComGame
         // Visual indicator for pickup range
         protected float pickupRadius = 40f;
         protected bool isInRange = false;
-        
-        protected float bobAmount = 4f;
-        protected float bobSpeed = 2f;
-        protected float bobTimer = 0f;
+
         protected Vector2 originalPosition;
         
         // Constructor
@@ -27,7 +24,8 @@ namespace FinalComGame
         {
             Description = description;
             IsPickedUp = false;
-            
+
+            this.Position = Position;
             originalPosition = Position;
         }
         
@@ -60,10 +58,9 @@ namespace FinalComGame
             if (IsPickedUp) return;
             
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            
-            // Animate item bobbing
-            bobTimer += deltaTime * bobSpeed;
-            Position = originalPosition + new Vector2(0, (float)Math.Sin(bobTimer) * bobAmount);
+
+            ApplyGravity(deltaTime);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             
             base.Update(gameTime, gameObjects, tileMap);
         }
