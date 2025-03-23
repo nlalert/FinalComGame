@@ -72,7 +72,7 @@ namespace FinalComGame
             _jumpAnimation = new Animation(jumpTexture, 48, 64, 4, 24); //  24 fps
             _fallAnimation = new Animation(fallTexture, 48, 64, 4, 24); //  24 fps
             _meleeAttackAnimation = new Animation(meleeAttackTexture, 48, 64, 8, 24); // 24 fps
-            _dashAnimation = new Animation(dashTexture, 16, 32, 16, 24); //  24 fps
+            _dashAnimation = new Animation(dashTexture, 48, 64, 4, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
             _chargeAnimation = new Animation(chargeTexture, 16, 32, 16, 24); //  24 fps
 

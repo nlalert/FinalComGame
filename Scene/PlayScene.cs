@@ -231,7 +231,7 @@ public class PlayScene : Scene
         Texture2D playerJump = _content.Load<Texture2D>("Char_Jump");
         Texture2D playerFall = _content.Load<Texture2D>("Char_Fall");
         Texture2D playerMelee = _content.Load<Texture2D>("Char_Melee");
-        Texture2D playerDash = _content.Load<Texture2D>("Char_Idle");
+        Texture2D playerDash = _content.Load<Texture2D>("Char_Dash");
         Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
         Texture2D playerCharge = _content.Load<Texture2D>("EnemyRed");
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);

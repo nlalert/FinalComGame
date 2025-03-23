@@ -100,7 +100,7 @@ namespace FinalComGame
                     _tiltDirection[i] = Singleton.Instance.Random.Next(2) * 2 - 1 ;
 
                     _tiltSpeed[i] = (float)Singleton.Instance.Random.NextDouble() * 0.05f + 0.01f;
-                    _floatSpeed[i] = (float)Singleton.Instance.Random.NextDouble() * 0.1f + 0.5f;
+                    _floatSpeed[i] = (float)Singleton.Instance.Random.NextDouble() * 0.1f + 0.4f;
                     _sideSpeed[i] = (float)Singleton.Instance.Random.NextDouble() * 0.2f - 0.1f;
                 }
             }
