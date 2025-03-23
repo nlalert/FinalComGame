@@ -25,7 +25,9 @@ class Singleton
         InitializingStage,
         Playing,
         Pause,
+        StageCompleted,
         GameOver,
+        GameWon,
         Exit,
     }
 
