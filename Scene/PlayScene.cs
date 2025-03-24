@@ -25,8 +25,7 @@ public class PlayScene : Scene
     private Camera _camera;
     private TileMap _collisionTileMap;
     private TileMap _foreGroundTileMap;
-    private TileMap _rockTileMap;
-    private TileMap _vegetationTileMap;
+    private TileMap _midGroundTileMap;
     private TileMap _backGroundTileMap;
 
     private Player player;
@@ -160,11 +159,12 @@ public class PlayScene : Scene
 
     private void DrawTileMap()
     {
-        //_backGroundTileMap.Draw(_spriteBatch);
-        //_foreGroundTileMap.Draw(_spriteBatch);
+        _backGroundTileMap.Draw(_spriteBatch);
+        _midGroundTileMap.Draw(_spriteBatch);
+        _foreGroundTileMap.Draw(_spriteBatch);
         
         //Should be hidden
-        _collisionTileMap.Draw(_spriteBatch);
+        //_collisionTileMap.Draw(_spriteBatch);
     }
 
     private void DrawAllObjects()
@@ -199,8 +199,9 @@ public class PlayScene : Scene
         _gameObjects.Clear();
 
         Singleton.Instance.Random = new Random();
-        //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
-        //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
+        _backGroundTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
+        _midGroundTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
+        _foreGroundTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStagePath(), 20);
 
         AddPlayer();
