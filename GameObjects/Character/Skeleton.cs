@@ -7,26 +7,27 @@ namespace FinalComGame
 {
     class SkeletonEnemy : BaseEnemy
     {
-        private int _limitIdlePatrol = 100;
+        public int LimitIdlePatrol;
         private Vector2 _patrolCenterPoint;
-        private float ignorePlayerDuration = 3f; // 3 seconds duration
-        private float ignorePlayerTimer = 0f;
-        private bool isIgnoringPlayer = false;
+        public float IgnorePlayerDuration;
+        private float _ignorePlayerTimer;
+        private bool _isIgnoringPlayer;
         public SkeletonEnemy(Texture2D texture, SpriteFont font) : base(texture, font) { }
 
         public override void Reset()
         {
             Console.WriteLine("Reset Skeleton");
-            maxHealth = 80f;
-            attackDamage = 5f;
+
+            _ignorePlayerTimer = 0f;
+            _isIgnoringPlayer = false;
             _patrolCenterPoint = Position;
+
             base.Reset();
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (!HasSpawned) return;
 
             if (CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying)
             {
@@ -77,7 +78,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"State {CurrentState}\nPatrolDis {(Position.X - _patrolCenterPoint.X)}\nCHp {Health} \nignore{ignorePlayerTimer}";
+            string displayText = $"State {CurrentState}\nPatrolDis {(Position.X - _patrolCenterPoint.X)}\nCHp {Health} \nignore{_ignorePlayerTimer}";
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
         }
 
@@ -86,7 +87,7 @@ namespace FinalComGame
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-            if (Math.Abs(Position.X - _patrolCenterPoint.X) >= _limitIdlePatrol)
+            if (Math.Abs(Position.X - _patrolCenterPoint.X) >= LimitIdlePatrol)
             {
                 Direction *= -1;
             }
@@ -128,16 +129,16 @@ namespace FinalComGame
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-            if (Math.Abs(Position.X - _patrolCenterPoint.X) >= _limitIdlePatrol)
+            if (Math.Abs(Position.X - _patrolCenterPoint.X) >= LimitIdlePatrol)
             {
                 Direction *= -1;
             }
 
             Velocity.X = 50f * Direction;
-            ignorePlayerTimer -= deltaTime;
-            if(ignorePlayerTimer <=0 && isIgnoringPlayer ==true){
+            _ignorePlayerTimer -= deltaTime;
+            if(_ignorePlayerTimer <=0 && _isIgnoringPlayer ==true){
                 CurrentState = EnemyState.Idle;
-                isIgnoringPlayer = false;
+                _isIgnoringPlayer = false;
             }
         }
 
@@ -171,8 +172,8 @@ namespace FinalComGame
             this.OnHit(Health / 10);
             this.CurrentState = EnemyState.Cooldown;
             _patrolCenterPoint = this.Position;
-            ignorePlayerTimer = ignorePlayerDuration;
-            isIgnoringPlayer = true;
+            _ignorePlayerTimer = IgnorePlayerDuration;
+            _isIgnoringPlayer = true;
             base.OnCollidePlayer();
         }
     }

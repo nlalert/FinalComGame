@@ -13,7 +13,7 @@ namespace FinalComGame
 
         public override float GetPercentage()
         {
-            return Singleton.Instance.Player.Health / Singleton.Instance.Player.maxHealth;
+            return Singleton.Instance.Player.Health / Singleton.Instance.Player.MaxHealth;
         }
     }
 }

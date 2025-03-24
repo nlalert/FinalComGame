@@ -32,10 +32,10 @@ public class PlayScene : Scene
     private TileMap _vegetationTileMap;
     private TileMap _backGroundTileMap;
 
-    private BaseEnemy baseSkeleton;
-    private BaseEnemy enemyDog;
-    private BaseEnemy enemySlime;
-    private BaseEnemy enemyDemon;
+    private BaseEnemy _baseSkeleton;
+    private BaseEnemy _enemyDog;
+    private BaseEnemy _enemySlime;
+    private BaseEnemy _enemyDemon;
 
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
@@ -131,7 +131,7 @@ public class PlayScene : Scene
                 _spriteBatch.End();
 
                 _spriteBatch.Begin(); 
-                _spriteBatch.DrawString(_font, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.maxHealth, new Vector2(10, 10), Color.White);
+                _spriteBatch.DrawString(_font, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
                 _spriteBatch.DrawString(_font, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
@@ -253,8 +253,15 @@ public class PlayScene : Scene
             WalkSpeed = 200,
             CrouchSpeed = 100,
             ClimbSpeed = 100,
-            maxHealth = 100,
+            MaxHealth = 100,
             MaxMP = 100,
+
+            AttackDamage = 10f,
+            AttackDuration = 0.4f, // How long the attack lasts
+            AttackCooldown = 0.2f,
+
+            JumpStrength = 800f,
+
             CoyoteTime = 0.1f, // 100ms of coyote time
             JumpBufferTime = 0.15f, // 150ms jump buffer
             DashSpeed = 400f,
@@ -292,22 +299,42 @@ public class PlayScene : Scene
 
     private void CreateEnemies()
     {
-        baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
+        _baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
             CanCollideTile = true,
+            MaxHealth = 80f,
+            AttackDamage = 5f,
+
+            LimitIdlePatrol = 100,
+
+            IgnorePlayerDuration = 3f,
         };
-        enemyDog = new HellhoundEnemy(_DogTexture,_font){
+        _enemyDog = new HellhoundEnemy(_DogTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 64, 32),
             CanCollideTile = true,
+            MaxHealth = 100f,
+            AttackDamage = 8f,
+
+            LimitIdlePatrol = 100,
+            
+            ChargeTime = 2.0f,
+            ChaseDuration = 5f,
+            DashDuration = 1.0f,
         };
-        enemySlime = new SlimeEnemy(_SlimeTexture,_font){
+        _enemySlime = new SlimeEnemy(_SlimeTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 32),
             CanCollideTile = true,
+            MaxHealth = 50f,
+            AttackDamage = 3f,
+
+            JumpCooldown = 1.5f,
+            JumpStrength = 750,
+            Friction = 0.96f
         };
-        enemyDemon = new DemonEnemy(_DemonTexture,_font){
+        _enemyDemon = new DemonEnemy(_DemonTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
             CanCollideTile = true,
@@ -323,10 +350,10 @@ public class PlayScene : Scene
             {
                 case 97:
                     // HellhoundEnemy.
-                    enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key)+ new Vector2(0,-256), _gameObjects);
+                    _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key)+ new Vector2(0,-256), _gameObjects);
 
                     break;
                 default:
