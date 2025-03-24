@@ -20,7 +20,7 @@ namespace FinalComGame
         public override void Use()
         {
             Singleton.Instance.Player.Health += healAmount;
-            Singleton.Instance.Player.Health = Math.Min(Singleton.Instance.Player.Health, Singleton.Instance.Player.maxHealth);
+            Singleton.Instance.Player.Health = Math.Min(Singleton.Instance.Player.Health, Singleton.Instance.Player.MaxHealth);
             
             base.Use();
         }

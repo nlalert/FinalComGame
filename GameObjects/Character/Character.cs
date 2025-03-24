@@ -8,26 +8,26 @@ namespace FinalComGame {
     public class Character : GameObject
     {
         public float Health;
-        public float maxHealth = 100f;
+        public float MaxHealth;
         public int WalkSpeed;
         public int Direction = 1; // 1 = Right, -1 = Left
 
         // i-frame
-        protected float invincibilityDuration = 0.5f; // 0.5 seconds of i-frames
-        protected float invincibilityTimer = 0f;
+        protected float _invincibilityDuration = 0.5f; // 0.5 seconds of i-frames
+        protected float _invincibilityTimer;
 
         //Attack
-        protected bool isAttacking = false;
-        protected float attackDamage = 10f;
-        protected float attackDuration = 0.4f; // How long the attack lasts
-        protected float attackCooldown = 0.2f; // Cooldown before attacking again
-        protected float attackTimer = 0f;
-        protected float attackCooldownTimer = 0f;
+        protected bool _isAttacking;
+        public float AttackDamage;
+        public float AttackDuration; // How long the attack lasts
+        public float AttackCooldown; // Cooldown before attacking again
+        protected float _attackTimer;
+        protected float _attackCooldownTimer;
         protected Rectangle attackHitbox;
         
         //Jump
-        protected bool isJumping = false;
-        protected float jumpStrength = 800f;
+        protected bool _isJumping;
+        public float JumpStrength;
 
         //Animation
         protected Animation _idleAnimation;
@@ -39,7 +39,7 @@ namespace FinalComGame {
             Texture2D debugTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
             debugTexture.SetData(new Color[] { Color.Red });
 
-            if (attackTimer > 0)
+            if (_attackTimer > 0)
                 spriteBatch.Draw(debugTexture, attackHitbox, Color.Red);
             // end hitbox debug drawing
 
@@ -79,8 +79,8 @@ namespace FinalComGame {
 
         protected void UpdateInvincibilityTimer(float deltaTime)
         {
-            if (invincibilityTimer > 0)
-                invincibilityTimer -= deltaTime;
+            if (_invincibilityTimer > 0)
+                _invincibilityTimer -= deltaTime;
         }
         /// <summary>
         /// Npc collide with any NPC 
@@ -116,7 +116,7 @@ namespace FinalComGame {
 
         public void StartInvincibility()
         {
-            invincibilityTimer = invincibilityDuration; // Activate i-frames
+            _invincibilityTimer = _invincibilityDuration; // Activate i-frames
         }
     }
 }

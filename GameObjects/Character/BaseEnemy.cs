@@ -58,7 +58,7 @@ namespace FinalComGame {
             newEnemy.Position = new Vector2(x, y);
             newEnemy.patrolBoundaryLeft = x - 100f;
             newEnemy.patrolBoundaryRight = x + 100f;
-            newEnemy.Health = maxHealth;
+            newEnemy.Health = MaxHealth;
             newEnemy.HasSpawned = true;
             newEnemy.IsActive =true;
             gameObjects.Add(newEnemy);
@@ -70,7 +70,7 @@ namespace FinalComGame {
             newEnemy.Position = position;
             newEnemy.patrolBoundaryLeft = position.X - 100f;
             newEnemy.patrolBoundaryRight = position.X + 100f;
-            newEnemy.Health = maxHealth;
+            newEnemy.Health = MaxHealth;
             newEnemy.HasSpawned = true;
             newEnemy.IsActive =true;
             gameObjects.Add(newEnemy);
@@ -91,7 +91,7 @@ namespace FinalComGame {
         }
         public override void OnHit(float damageAmount)
         {
-            if (invincibilityTimer > 0) 
+            if (_invincibilityTimer > 0) 
                 return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;
@@ -109,7 +109,7 @@ namespace FinalComGame {
         /// <param name="player">Player Character</param>
         public virtual void OnCollidePlayer()
         {
-            Singleton.Instance.Player.OnCollideNPC(this,this.attackDamage);
+            Singleton.Instance.Player.OnCollideNPC(this,this.AttackDamage);
         }
         public override void OnCollideNPC(Character npc, float damageAmount)
         {   

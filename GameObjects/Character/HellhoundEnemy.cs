@@ -23,8 +23,8 @@ namespace FinalComGame
         public override void Reset()
         {
             Console.WriteLine("Reset Hellhound");
-            maxHealth = 100f;
-            attackDamage = 8f;
+            MaxHealth = 100f;
+            AttackDamage = 8f;
             _patrolCenterPoint = Position;
             base.Reset();
         }
@@ -204,7 +204,7 @@ namespace FinalComGame
         public override void OnCollidePlayer()
         {
             Console.WriteLine("Hellhound bites the player!");
-            Singleton.Instance.Player.OnCollideNPC(this,attackDamage);
+            Singleton.Instance.Player.OnCollideNPC(this,AttackDamage);
             if(CurrentState == EnemyState.Chase){
                 CurrentState = EnemyState.Idle;
             }

@@ -17,8 +17,8 @@ namespace FinalComGame
         public override void Reset()
         {
             Console.WriteLine("Reset Skeleton");
-            maxHealth = 80f;
-            attackDamage = 5f;
+            MaxHealth = 80f;
+            AttackDamage = 5f;
             _patrolCenterPoint = Position;
             base.Reset();
         }

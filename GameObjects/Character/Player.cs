@@ -80,15 +80,15 @@ namespace FinalComGame
             Particle = new Particle(10, Position, paticleTexture);
 
             Animation = _idleAnimation;
-
-            HoldItem = new Item[2];
         }
 
         public override void Reset()
         {
+            HoldItem = new Item[2];
+
             Direction = 1; // Reset direction to right
 
-            Health = maxHealth - 50; //REMOVE LATER FOR DEBUG
+            Health = MaxHealth - 50; //REMOVE LATER FOR DEBUG
             MP = MaxMP;
 
             _overlappedTile = TileType.None;
@@ -97,17 +97,20 @@ namespace FinalComGame
             _isCrouching = false;
             _isDropping = false;
             _isGliding = false;
-            isAttacking = false;
+            _isAttacking = false;
             _isCharging = false;
             _isDashing = false;
-            isJumping = false;
+            _isJumping = false;
 
             _coyoteTimeCounter = 0f;
             _jumpBufferCounter = 0f;
             _dashTimer = 0f;
             _dashCooldownTimer = 0f;
             _chargeTime = 0f;
-
+            _invincibilityTimer = 0f;
+            _attackTimer = 0f;
+            _attackCooldownTimer = 0f;
+            
             base.Reset();
         }
 
@@ -163,7 +166,7 @@ namespace FinalComGame
         {
             if (_isCharging)
                 Animation = _chargeAnimation;
-            else if(isAttacking)
+            else if(_isAttacking)
                 Animation = _meleeAttackAnimation;
             else if (_isDashing)
                 Animation = _dashAnimation;
@@ -171,7 +174,7 @@ namespace FinalComGame
                 Animation = _glideAnimation;
             else if (Velocity.Y > 0)
                 Animation = _fallAnimation;
-            else if (isJumping || Velocity.Y != 0)
+            else if (_isJumping || Velocity.Y != 0)
                 Animation = _jumpAnimation;
             else if (Velocity.X != 0)
             {
@@ -206,15 +209,15 @@ namespace FinalComGame
             if (Singleton.Instance.IsKeyJustPressed(Attack))
                 StartAttack();
 
-            if (isAttacking)
+            if (_isAttacking)
             {
-                attackTimer -= deltaTime;
-                if (attackTimer <= 0)
-                    isAttacking = false;
+                _attackTimer -= deltaTime;
+                if (_attackTimer <= 0)
+                    _isAttacking = false;
             }
             else
             {
-                attackCooldownTimer -= deltaTime;
+                _attackCooldownTimer -= deltaTime;
             }
 
             // Handle Fire button (charge shot)
@@ -240,7 +243,7 @@ namespace FinalComGame
                 _jumpBufferCounter -= deltaTime; // Decrease over time
 
             // Gliding - activate when holding Jump while in air and not climbing or dashing
-            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !isJumping && !_isClimbing && !_isDashing && MP > 0)
+            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !_isJumping && !_isClimbing && !_isDashing && MP > 0)
             {
                 _isGliding = true;
                 _glideAnimation.Reset(); // Reset glide animation when starting to glide
@@ -250,7 +253,7 @@ namespace FinalComGame
                 _isGliding = false;
             }
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping && !_isClimbing && Velocity.Y == 0)
+            if (Singleton.Instance.IsKeyPressed(Crouch) && !_isJumping && !_isClimbing && Velocity.Y == 0)
             {
                 if (!_isCrouching) Position.Y += 16;
                 Viewport.Height = 16;
@@ -276,7 +279,7 @@ namespace FinalComGame
             if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && _overlappedTile == TileType.Ladder && !_isClimbing && !_isCrouching && !_isDashing)
             {
                 _isClimbing = true;
-                isJumping = false;
+                _isJumping = false;
                 Velocity.Y = 0;
             }
 
@@ -375,12 +378,12 @@ namespace FinalComGame
 
         private void StartAttack()
         {
-            if (attackCooldownTimer <= 0 && !isAttacking)
+            if (_attackCooldownTimer <= 0 && !_isAttacking)
             {
                 _meleeAttackAnimation.Reset();
-                isAttacking = true;
-                attackTimer = attackDuration;
-                attackCooldownTimer = attackCooldown;
+                _isAttacking = true;
+                _attackTimer = AttackDuration;
+                _attackCooldownTimer = AttackCooldown;
 
                 // Set attack hitbox in front of the player
                 int attackWidth = 20; // Adjust the size of the attack area
@@ -395,7 +398,7 @@ namespace FinalComGame
 
         private void UpdateAttackHitbox()
         {
-            if (isAttacking)
+            if (_isAttacking)
             {
                 int attackWidth = 20; // Adjust as needed
                 int attackHeight = 32;
@@ -407,11 +410,11 @@ namespace FinalComGame
         
         private void CheckAttackHit(List<GameObject> gameObjects)
         {
-            if (!isAttacking) return;
+            if (!_isAttacking) return;
 
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
-                enemy.CheckHit(attackHitbox, attackDamage);
+                enemy.CheckHit(attackHitbox, AttackDamage);
             }
         }
 
@@ -482,18 +485,18 @@ namespace FinalComGame
             // Jumping logic with Coyote Time and Jump Buffer
             if (_jumpBufferCounter > 0 && _coyoteTimeCounter > 0)
             {
-                Velocity.Y = -jumpStrength;
+                Velocity.Y = -JumpStrength;
                 _jumpBufferCounter = 0; // Prevent multiple jumps
                 _coyoteTimeCounter = 0; // Consume coyote time
-                isJumping = true;
+                _isJumping = true;
                 JumpSound.Play();
             }
 
             // Jump Modulation 
-            if (Singleton.Instance.IsKeyJustReleased(Jump) && isJumping)
+            if (Singleton.Instance.IsKeyJustReleased(Jump) && _isJumping)
             {
                 Velocity.Y *= 0.5f; // Reduce upwards velocity to shorten jump
-                isJumping = false;
+                _isJumping = false;
             }
         }
 
@@ -618,7 +621,7 @@ namespace FinalComGame
         }
         public override void OnHit(float damageAmount)
         {
-            if (invincibilityTimer > 0) 
+            if (_invincibilityTimer > 0) 
                 return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;

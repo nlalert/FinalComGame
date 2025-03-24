@@ -125,7 +125,7 @@ public class PlayScene : Scene
                 _spriteBatch.End();
 
                 _spriteBatch.Begin(); 
-                _spriteBatch.DrawString(_font, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.maxHealth, new Vector2(10, 10), Color.White);
+                _spriteBatch.DrawString(_font, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
                 _spriteBatch.DrawString(_font, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
@@ -247,8 +247,15 @@ public class PlayScene : Scene
             WalkSpeed = 200,
             CrouchSpeed = 100,
             ClimbSpeed = 100,
-            maxHealth = 100,
+            MaxHealth = 100,
             MaxMP = 100,
+
+            AttackDamage = 10f,
+            AttackDuration = 0.4f, // How long the attack lasts
+            AttackCooldown = 0.2f,
+
+            JumpStrength = 800f,
+
             CoyoteTime = 0.1f, // 100ms of coyote time
             JumpBufferTime = 0.15f, // 150ms jump buffer
             DashSpeed = 400f,

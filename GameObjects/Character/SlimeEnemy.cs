@@ -17,8 +17,8 @@ namespace FinalComGame
         public override void Reset()
         {
             Console.WriteLine("Slime respawned!");
-            maxHealth = 50f;
-            attackDamage = 3f;
+            MaxHealth = 50f;
+            AttackDamage = 3f;
             base.Reset();
         }
 
@@ -68,9 +68,9 @@ namespace FinalComGame
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             Velocity.X *= Friction;
-            if (!isJumping)
+            if (!_isJumping)
             {
-                isJumping = true;
+                _isJumping = true;
                 int horizontalDir = (Singleton.Instance.Player != null && HaveLineOfSight(tileMap)) ? Math.Sign(Singleton.Instance.Player.GetPlayerCenter().X - Position.X) : (Singleton.Instance.Random.Next(0, 2) == 0) ? 1 : -1;
                 // float horizontalDir = Math.Sign(player.GetPlayerCenter().X - Position.X);
                 float horizontalSpeed = jumpForce * 0.5f * (0.8f + 0.4f * (float)Singleton.Instance.Random.NextDouble());
@@ -80,7 +80,7 @@ namespace FinalComGame
 
         public override void OnLandVerticle()
         {
-            isJumping = false;
+            _isJumping = false;
             CurrentState = EnemyState.Idle;
         }
 
