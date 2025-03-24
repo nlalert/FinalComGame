@@ -306,7 +306,7 @@ namespace FinalComGame
 
                 if(!holdItem[i].IsConsumable)
                 {
-                    holdItem[i].ActiveAbility(this);
+                    holdItem[i].ActiveAbility();
                 }
             }
         }
@@ -322,7 +322,7 @@ namespace FinalComGame
         {
             if(holdItem[itemSlotIndex] == null) return;
 
-            holdItem[itemSlotIndex].Use(this);
+            holdItem[itemSlotIndex].Use();
 
             if(holdItem[itemSlotIndex].IsConsumable) holdItem[itemSlotIndex] = null;
         }
@@ -331,19 +331,19 @@ namespace FinalComGame
         {
             foreach (var item in gameObjects.OfType<Item>())
             {
-                if (item.InPickupRadius(this) && !item.IsPickedUp)
+                if (item.InPickupRadius() && !item.IsPickedUp)
                 {
                     // Check if player has empty slot
                     if (holdItem[0] == null)
                     {
-                        item.OnPickup(this);
+                        item.OnPickup();
                         holdItem[0] = item;
                         break;
                         // You could add a pickup sound or effect here
                     }
                     else if (holdItem[1] == null)
                     {
-                        item.OnPickup(this);
+                        item.OnPickup();
                         holdItem[1] = item;
                         break;
                         // You could add a pickup sound or effect here

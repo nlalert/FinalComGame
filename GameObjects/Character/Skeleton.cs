@@ -164,7 +164,7 @@ namespace FinalComGame
             base.OnHit(damageAmount);
         }
 
-        public override void OnCollidePlayer(Player player)
+        public override void OnCollidePlayer()
         {
             Console.WriteLine("Skeleton hit player");
             //skeleton hurt it self as his bone is fragiles
@@ -173,7 +173,7 @@ namespace FinalComGame
             _patrolCenterPoint = this.Position;
             ignorePlayerTimer = ignorePlayerDuration;
             isIgnoringPlayer = true;
-            base.OnCollidePlayer(player);
+            base.OnCollidePlayer();
         }
     }
 }

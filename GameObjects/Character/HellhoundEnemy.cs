@@ -201,14 +201,14 @@ namespace FinalComGame
             base.OnCollisionHorizon();
         }
 
-        public override void OnCollidePlayer(Player player)
+        public override void OnCollidePlayer()
         {
             Console.WriteLine("Hellhound bites the player!");
-            player.OnCollideNPC(this,attackDamage);
+            Singleton.Instance.Player.OnCollideNPC(this,attackDamage);
             if(CurrentState == EnemyState.Chase){
                 CurrentState = EnemyState.Idle;
             }
-            base.OnCollidePlayer(player);
+            base.OnCollidePlayer();
         }
     }
 }

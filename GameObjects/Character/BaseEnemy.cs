@@ -107,9 +107,9 @@ namespace FinalComGame {
         /// This npc physically contact with Player
         /// </summary>
         /// <param name="player">Player Character</param>
-        public virtual void OnCollidePlayer(Player player)
+        public virtual void OnCollidePlayer()
         {
-            player.OnCollideNPC(this,this.attackDamage);
+            Singleton.Instance.Player.OnCollideNPC(this,this.attackDamage);
         }
         public override void OnCollideNPC(Character npc, float damageAmount)
         {   
@@ -169,7 +169,7 @@ namespace FinalComGame {
         }
         public virtual bool CheckContactPlayer(){
             if(this.IsTouching(Singleton.Instance.Player)){
-                OnCollidePlayer(Singleton.Instance.Player);
+                OnCollidePlayer();
                 Console.WriteLine("contact Player");
                 return true;
             }
