@@ -9,14 +9,13 @@ namespace FinalComGame
     {
         public float DamageAmount { get; set; }
         public float Speed { get; set; }
-        public float MaxDistance { get; set; }
+        public bool CanCollideTile {get;set;}
         protected Vector2 StartPosition;
 
-        public Projectile(Texture2D texture, float damage, float speed, float maxDistance) : base(texture)
+        public Projectile(Texture2D texture, float damage, float speed) : base(texture)
         {
             DamageAmount = damage;
             Speed = speed;
-            MaxDistance = maxDistance;
         }
 
         public virtual void Shoot(Vector2 position, Vector2 direction)
@@ -61,12 +60,14 @@ namespace FinalComGame
             }
 
             // Check collision with tiles
-            foreach (Tile tile in tileMap.tiles.Values)
-            {
-                if (IsTouching(tile))
+            if(CanCollideTile){
+                foreach (Tile tile in tileMap.tiles.Values)
                 {
-                    IsActive = false;
-                    break;
+                    if (IsTouching(tile))
+                    {
+                        IsActive = false;
+                        break;
+                    }
                 }
             }
 
