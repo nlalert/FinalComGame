@@ -30,17 +30,17 @@ namespace FinalComGame
         }
         
         // // Method to be overridden by specific item types
-        public virtual void Use(Player player)
+        public virtual void Use()
         {
             Console.WriteLine("Using Item");      
         }
         
-        public virtual void ActiveAbility(Player player)
+        public virtual void ActiveAbility()
         {    
         }
         
         // Called when item is picked up
-        public virtual void OnPickup(Player player)
+        public virtual void OnPickup()
         {
             IsPickedUp = true;
         }
@@ -131,9 +131,9 @@ namespace FinalComGame
             );
         }
 
-        public bool InPickupRadius(Player player)
+        public bool InPickupRadius()
         {
-            float distance = Vector2.Distance(Position, player.Position);
+            float distance = Vector2.Distance(Position, Singleton.Instance.Player.Position);
             return distance < pickupRadius;
         }
     }

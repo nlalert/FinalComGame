@@ -35,10 +35,7 @@ namespace FinalComGame {
         protected float detectionRange = 200f;
         protected float attackRange = 50f;
 
-        // Reference to player for tracking
-
         // Spawn and Death Tracking
-        public Player player {get; set;}
         public bool CanCollideTile {get;set;} =false;
         public bool HasSpawned { get; protected set; } = false;
         public bool IsDead() => CurrentState == EnemyState.Dead;
@@ -110,9 +107,9 @@ namespace FinalComGame {
         /// This npc physically contact with Player
         /// </summary>
         /// <param name="player">Player Character</param>
-        public virtual void OnCollidePlayer(Player player)
+        public virtual void OnCollidePlayer()
         {
-            player.OnCollideNPC(this,this.attackDamage);
+            Singleton.Instance.Player.OnCollideNPC(this,this.attackDamage);
         }
         public override void OnCollideNPC(Character npc, float damageAmount)
         {   
@@ -171,8 +168,8 @@ namespace FinalComGame {
             }
         }
         public virtual bool CheckContactPlayer(){
-            if(this.IsTouching(player)){
-                OnCollidePlayer(player);
+            if(this.IsTouching(Singleton.Instance.Player)){
+                OnCollidePlayer();
                 Console.WriteLine("contact Player");
                 return true;
             }
@@ -200,11 +197,11 @@ namespace FinalComGame {
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public bool HaveLineOfSight(Player player,TileMap tileMap){
-            if (player == null) return false;
+        public bool HaveLineOfSight(TileMap tileMap){
+            if (Singleton.Instance.Player == null) return false;
             
             Vector2 enemyPosition = Position;
-            Vector2 playerPosition = player.Position;
+            Vector2 playerPosition = Singleton.Instance.Player.Position;
             
             float step = 16f; // Tile size or step size for checking
             Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);

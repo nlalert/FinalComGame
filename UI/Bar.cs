@@ -6,17 +6,15 @@ namespace FinalComGame
 {
     public class Bar : UIElement
     {
-        protected Player player;
         protected Color backgroundColor;
         protected Color foregroundColor;
         protected Color borderColor;
         protected bool showBorder;
         protected int borderThickness;
 
-        public Bar(Rectangle bounds, Player player, Color foregroundColor, Color backgroundColor, bool showBorder = true, Color? borderColor = null, int borderThickness = 2) 
+        public Bar(Rectangle bounds, Color foregroundColor, Color backgroundColor, bool showBorder = true, Color? borderColor = null, int borderThickness = 2) 
             : base(bounds)
         {
-            this.player = player;
             this.foregroundColor = foregroundColor;
             this.backgroundColor = backgroundColor;
             this.showBorder = showBorder;

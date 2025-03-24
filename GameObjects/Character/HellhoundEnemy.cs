@@ -95,12 +95,12 @@ namespace FinalComGame
 
             Velocity.X = 60f * Direction;
 
-            if (player != null && this.HaveLineOfSight(player, tileMap) && Vector2.Distance(player.Position, this.Position) <= 100)
+            if (Singleton.Instance.Player != null && this.HaveLineOfSight(tileMap) && Vector2.Distance(Singleton.Instance.Player.Position, this.Position) <= 100)
             {
                 Console.WriteLine("Hellhound spots the player! Preparing to charge.");
                 CurrentState = EnemyState.Charging;
                 chargeTimer = chargeTime;
-                _dashTarget = player.GetPlayerCenter(); // Lock on to player's position
+                _dashTarget = Singleton.Instance.Player.GetPlayerCenter(); // Lock on to player's position
             }
         }
 
@@ -124,8 +124,8 @@ namespace FinalComGame
             }
             else{
                 Velocity.X *= 0.95f;
-                if(this.HaveLineOfSight(player,tileMap)){ //while have line of sight will aim add player all time 
-                    _dashTarget = player.GetPlayerCenter();
+                if(this.HaveLineOfSight(tileMap)){ //while have line of sight will aim add player all time 
+                    _dashTarget = Singleton.Instance.Player.GetPlayerCenter();
                 }
             }
         }
@@ -155,7 +155,7 @@ namespace FinalComGame
 
             chaseTimer -= deltaTime;
 
-            if (!this.HaveLineOfSight(player, tileMap) || chaseTimer <= 0)
+            if (!this.HaveLineOfSight(tileMap) || chaseTimer <= 0)
             {
                 Console.WriteLine("Hellhound lost sight of the player, returning to idle.");
                 CurrentState = EnemyState.Idle;
@@ -164,18 +164,18 @@ namespace FinalComGame
             }
 
             // Move toward the player
-            int moveDirection = (player.Position.X > this.Position.X) ? 1 : -1;
+            int moveDirection = (Singleton.Instance.Player.Position.X > this.Position.X) ? 1 : -1;
             Direction = moveDirection;
             Velocity.X = 100f * Direction; // Faster speed when chasing
 
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
 
-            if (chaseTimer <= 0 && this.HaveLineOfSight(player, tileMap))
+            if (chaseTimer <= 0 && this.HaveLineOfSight(tileMap))
             {
                 Console.WriteLine("Hellhound still sees the player, preparing to charge again.");
                 CurrentState = EnemyState.Charging;
                 chargeTimer = chargeTime;
-                _dashTarget = player.Position;
+                _dashTarget = Singleton.Instance.Player.Position;
             }
         }
 
@@ -201,14 +201,14 @@ namespace FinalComGame
             base.OnCollisionHorizon();
         }
 
-        public override void OnCollidePlayer(Player player)
+        public override void OnCollidePlayer()
         {
             Console.WriteLine("Hellhound bites the player!");
-            player.OnCollideNPC(this,attackDamage);
+            Singleton.Instance.Player.OnCollideNPC(this,attackDamage);
             if(CurrentState == EnemyState.Chase){
                 CurrentState = EnemyState.Idle;
             }
-            base.OnCollidePlayer(player);
+            base.OnCollidePlayer();
         }
     }
 }

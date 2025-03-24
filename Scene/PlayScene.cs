@@ -30,7 +30,6 @@ public class PlayScene : Scene
     private TileMap _vegetationTileMap;
     private TileMap _backGroundTileMap;
 
-    private Player player;
     private BaseEnemy baseSkeleton;
     private BaseEnemy enemyDog;
     private BaseEnemy enemySlime;
@@ -93,7 +92,7 @@ public class PlayScene : Scene
                 UpdateAllObjects(gameTime);
                 RemoveInactiveObjects();
 
-                _camera.Follow(player); // Make camera follow the player
+                _camera.Follow(Singleton.Instance.Player); // Make camera follow the player
                 break;
             case Singleton.GameState.StageCompleted:
                 if (Singleton.Instance.Stage == 4){
@@ -126,8 +125,8 @@ public class PlayScene : Scene
                 _spriteBatch.End();
 
                 _spriteBatch.Begin(); 
-                _spriteBatch.DrawString(_font, "Health Bar : " + player.Health + " / " + player.maxHealth, new Vector2(10, 10), Color.White);
-                _spriteBatch.DrawString(_font, "MP Bar : " + player.MP + " / " + player.maxMP, new Vector2(10, 70), Color.White);
+                _spriteBatch.DrawString(_font, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.maxHealth, new Vector2(10, 10), Color.White);
+                _spriteBatch.DrawString(_font, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.maxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
         }
@@ -190,8 +189,9 @@ public class PlayScene : Scene
         Singleton.Instance.Random = new Random();
         Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
 
-        AddPlayer();
-        AddEnemies();
+        CreatePlayer();
+        _gameObjects.Add(Singleton.Instance.Player);
+        CreateEnemies();
         AddItems();
         SetupUI();
 
@@ -211,8 +211,8 @@ public class PlayScene : Scene
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
         _enemyMap = new TileMap(StageManager.GetCurrentStageEnemyMapPath());
 
-        AddPlayer();
-        AddEnemies();
+        Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
+        _gameObjects.Add(Singleton.Instance.Player);
         SpawnEnemies();
         AddItems();
         SetupUI();
@@ -223,7 +223,7 @@ public class PlayScene : Scene
         }
     }
 
-    private void AddPlayer()
+    private void CreatePlayer()
     {
         // Load sprite sheets
         Texture2D playerIdle = _content.Load<Texture2D>("Char_Idle");
@@ -239,7 +239,7 @@ public class PlayScene : Scene
         playerParticle.SetData([new Color(193, 255, 219)]);
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         
-        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerCharge, playerParticle)
+        Singleton.Instance.Player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerCharge, playerParticle)
         {
             Name = "Player",
             Viewport = new Rectangle(0, 0, 16, 32),
@@ -263,29 +263,24 @@ public class PlayScene : Scene
                 Viewport = new Rectangle(0, 0, 15, 10)
             }
         };
-
-        _gameObjects.Add(player);
     }
 
-    private void AddEnemies()
+    private void CreateEnemies()
     {
         baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
             CanCollideTile = true,
-            player = player
         };
         enemyDog = new HellhoundEnemy(_DogTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 64, 32),
             CanCollideTile = true,
-            player = player
         };
         enemySlime = new SlimeEnemy(_SlimeTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 32),
             CanCollideTile = true,
-            player = player
         };
     }
 
@@ -334,14 +329,12 @@ public class PlayScene : Scene
     {
         HealthBar playerHealth = new HealthBar(
             new Rectangle(20, 40, 200, 30),
-            player,
             Color.Red,
             Color.Gray
         );
 
         MPBar playerMP = new MPBar(
             new Rectangle(20, 100, 200, 30),
-            player,
             Color.SkyBlue,
             Color.Gray
         );
@@ -350,7 +343,6 @@ public class PlayScene : Scene
         ItemSlot Slot1 = new ItemSlot(
             0, // first slot
             new Rectangle(250, 30, 50, 50),
-            player,
             slot,
             slot,
             _font
@@ -358,7 +350,6 @@ public class PlayScene : Scene
         ItemSlot Slot2 = new ItemSlot(
             1, //second slot
             new Rectangle(350, 30, 50, 50),
-            player,
             slot,
             slot,
             _font

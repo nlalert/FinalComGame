@@ -92,7 +92,7 @@ namespace FinalComGame
             }
 
             Velocity.X = 50f * Direction;
-            if(this.HaveLineOfSight(player,tileMap) && Vector2.Distance(player.Position,this.Position) <=100)
+            if(this.HaveLineOfSight(tileMap) && Vector2.Distance(Singleton.Instance.Player.Position,this.Position) <=100)
             {
                 Console.WriteLine("Skeleton sees the player! Switching to chase mode.");
                 CurrentState = EnemyState.Chase;
@@ -103,12 +103,12 @@ namespace FinalComGame
             ApplyGravity(deltaTime);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
 
-            if (player == null) return; // Ensure player exists
+            if (Singleton.Instance.Player == null) return; // Ensure player exists
 
-            float distanceToPlayer = Vector2.Distance(player.Position, this.Position);
+            float distanceToPlayer = Vector2.Distance(Singleton.Instance.Player.Position, this.Position);
 
             // Check if the enemy still sees the player
-            if (!this.HaveLineOfSight(player, tileMap) || distanceToPlayer > 400) // Max chase range
+            if (!this.HaveLineOfSight(tileMap) || distanceToPlayer > 400) // Max chase range
             {
                 Console.WriteLine("Skeleton lost sight of the player. Returning to idle patrol.");
                 CurrentState = EnemyState.Idle;
@@ -117,7 +117,7 @@ namespace FinalComGame
             }
 
             // Determine direction towards player
-            int moveDirection = (player.Position.X > this.Position.X) ? 1 : -1;
+            int moveDirection = (Singleton.Instance.Player.Position.X > this.Position.X) ? 1 : -1;
             Direction = moveDirection;
 
             // Move towards the player
@@ -164,7 +164,7 @@ namespace FinalComGame
             base.OnHit(damageAmount);
         }
 
-        public override void OnCollidePlayer(Player player)
+        public override void OnCollidePlayer()
         {
             Console.WriteLine("Skeleton hit player");
             //skeleton hurt it self as his bone is fragiles
@@ -173,7 +173,7 @@ namespace FinalComGame
             _patrolCenterPoint = this.Position;
             ignorePlayerTimer = ignorePlayerDuration;
             isIgnoringPlayer = true;
-            base.OnCollidePlayer(player);
+            base.OnCollidePlayer();
         }
     }
 }
