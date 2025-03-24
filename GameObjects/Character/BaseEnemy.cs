@@ -54,8 +54,6 @@ namespace FinalComGame {
             newEnemy.Position = new Vector2(x, y);
             newEnemy._patrolBoundaryLeft = x - 100f;
             newEnemy._patrolBoundaryRight = x + 100f;
-            newEnemy.Health = MaxHealth;
-            newEnemy.IsActive = true;
             gameObjects.Add(newEnemy);
             newEnemy.OnSpawn();
         }
@@ -65,8 +63,6 @@ namespace FinalComGame {
             newEnemy.Position = position;
             newEnemy._patrolBoundaryLeft = position.X - 100f;
             newEnemy._patrolBoundaryRight = position.X + 100f;
-            newEnemy.Health = MaxHealth;
-            newEnemy.IsActive =true;
             gameObjects.Add(newEnemy);
             newEnemy.OnSpawn();
         }

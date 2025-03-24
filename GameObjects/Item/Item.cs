@@ -8,13 +8,12 @@ namespace FinalComGame
     public class Item : GameObject
     {
         // Item properties
-        public string Description { get; protected set; }
-        public bool IsPickedUp { get; protected set; }
-        public bool IsConsumable { get; protected set; }
+        public string Description;
+        public bool IsPickedUp;
+        public bool IsConsumable;
         
         // Visual indicator for pickup range
-        protected float pickupRadius = 40f;
-        protected bool isInRange = false;
+        public float pickupRadius = 40f;
 
         protected Vector2 originalPosition;
         
