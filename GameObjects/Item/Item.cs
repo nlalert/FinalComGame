@@ -29,8 +29,10 @@ namespace FinalComGame
         }
         
         // // Method to be overridden by specific item types
-        public virtual void Use()
+        public virtual void Use(int slot)
         {
+            if(IsConsumable) 
+                Singleton.Instance.Player.HoldItem[slot] = null;
             Console.WriteLine("Using Item");      
         }
         
@@ -39,8 +41,9 @@ namespace FinalComGame
         }
         
         // Called when item is picked up
-        public virtual void OnPickup()
+        public virtual void OnPickup(int slot)
         {
+            Singleton.Instance.Player.HoldItem[slot] = this;
             IsPickedUp = true;
         }
         

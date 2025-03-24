@@ -96,7 +96,7 @@ namespace FinalComGame
                 float horizontalVelocity = MathHelper.Clamp((targetX - Position.X) * 2f, -hoverSpeed, hoverSpeed);
                 Velocity.X = horizontalVelocity;
 
-                if (distanceToPlayer <=AttackRange && shootTimer >= shootCooldown && HaveLineOfSight(tileMap))
+                if (distanceToPlayer <= AttackRange && shootTimer >= shootCooldown && HaveLineOfSight(tileMap))
                 {
                     ShootBullet(gameObjects);
                     shootTimer = 0;
