@@ -33,6 +33,10 @@ namespace FinalComGame {
         protected Animation _idleAnimation;
         protected Animation _runAnimation;
 
+        public Character(Texture2D texture) : base(texture){
+
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             // hitbox debug drawing
