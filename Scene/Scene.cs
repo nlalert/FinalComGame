@@ -19,6 +19,8 @@ public class Scene
 
     protected UI _ui;
 
+    protected Song _song;
+
     public virtual void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         _graphics = graphicsDeviceManager;
@@ -59,6 +61,22 @@ public class Scene
     protected virtual void Reset()
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;
+    }
+
+    protected void StopSong()
+    {
+        if (MediaPlayer.State == MediaState.Playing)
+        {
+            MediaPlayer.Stop();
+        }
+    }
+
+    protected void PlaySong()
+    {
+        if (MediaPlayer.State != MediaState.Playing)
+        {
+            MediaPlayer.Play(_song);
+        }
     }
 
 }

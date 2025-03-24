@@ -11,8 +11,6 @@ namespace FinalComGame;
 
 public class PlayScene : Scene
 {
-    Song _gameMusic;
-
     //UI
     SpriteFont _font;
 
@@ -36,6 +34,7 @@ public class PlayScene : Scene
     private BaseEnemy baseSkeleton;
     private BaseEnemy enemyDog;
     private BaseEnemy enemySlime;
+
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         base.Initialize(graphicsDevice, graphicsDeviceManager, content);
@@ -61,7 +60,7 @@ public class PlayScene : Scene
         _font = _content.Load<SpriteFont>("GameFont");
         Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
 
-        _gameMusic = _content.Load<Song>("A Night Alone - TrackTribe");
+        _song = _content.Load<Song>("A Night Alone - TrackTribe");
     }
 
     public override void Update(GameTime gameTime)
@@ -73,28 +72,19 @@ public class PlayScene : Scene
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.StartingGame:
-                if (MediaPlayer.State == MediaState.Playing)
-                {
-                    MediaPlayer.Stop();
-                }
+                StopSong();
                 ResetGame();
                 Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
                 break;
             case Singleton.GameState.InitializingStage:
-                if (MediaPlayer.State == MediaState.Playing)
-                {
-                    MediaPlayer.Stop();
-                }
+                StopSong();
                 ResetStage();
                 // SetUpInitalChipsPattern();
 
                 Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
                 break;
             case Singleton.GameState.Playing:
-                if (MediaPlayer.State != MediaState.Playing)
-                {
-                    MediaPlayer.Play(_gameMusic);
-                }
+                PlaySong();
                 if(Singleton.Instance.IsKeyJustPressed(Keys.Escape))
                 {
                     Singleton.Instance.CurrentGameState = Singleton.GameState.Pause;
