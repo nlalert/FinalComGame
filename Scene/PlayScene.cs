@@ -368,6 +368,7 @@ public class PlayScene : Scene
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
+        Texture2D LifeUP = _content.Load<Texture2D>("1Up");
 
         _gameObjects.Add(new Item(testItem, "test", TileMap.GetTileWorldPositionAt(18, 90)){
             Name =  "Pickaxe1",
@@ -381,6 +382,11 @@ public class PlayScene : Scene
         
         _gameObjects.Add(new Potion(HealthPotionTemp, "Testing Potion", TileMap.GetTileWorldPositionAt(30, 98)){
             Name =  "HealthPotion",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
+
+        _gameObjects.Add(new LifeUp(LifeUP, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 98)){
+            Name =  "1Up",
             Viewport = new Rectangle(0, 0, 32,32)
         });
     }
