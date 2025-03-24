@@ -8,7 +8,6 @@ namespace FinalComGame
     public class ItemSlot : UIElement
     {
         private int slotNumber;
-        protected Player player;
         private Item item;
         private Texture2D slotTexture;
         private Texture2D highlightTexture;
@@ -17,12 +16,11 @@ namespace FinalComGame
         private float scale;
         private Vector2 itemOffset;
 
-        public ItemSlot(int slotNumber, Rectangle bounds, Player player, Texture2D slotTexture, Texture2D highlightTexture, SpriteFont font, float scale = 0.8f) 
+        public ItemSlot(int slotNumber, Rectangle bounds, Texture2D slotTexture, Texture2D highlightTexture, SpriteFont font, float scale = 0.8f) 
             : base(bounds)
         {
             this.slotNumber = slotNumber;
             this.slotTexture = slotTexture;
-            this.player = player;
             this.highlightTexture = highlightTexture;
             this.font = font;
             this.scale = scale;
@@ -52,7 +50,7 @@ namespace FinalComGame
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            item = player.holdItem[slotNumber];
+            item = Singleton.Instance.Player.holdItem[slotNumber];
             // // Handle clicks
             // MouseState mouseState = Singleton.Instance.CurrentMouseState;
             // MouseState prevMouseState = Singleton.Instance.PreviousMouseState;

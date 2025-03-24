@@ -15,6 +15,7 @@ namespace FinalComGame
         
         public float maxMP;
         public float MP;
+        public int Life;
 
         public Item[] holdItem;
 
@@ -72,7 +73,7 @@ namespace FinalComGame
             _jumpAnimation = new Animation(jumpTexture, 48, 64, 4, 24); //  24 fps
             _fallAnimation = new Animation(fallTexture, 48, 64, 4, 24); //  24 fps
             _meleeAttackAnimation = new Animation(meleeAttackTexture, 48, 64, 8, 24); // 24 fps
-            _dashAnimation = new Animation(dashTexture, 16, 32, 16, 24); //  24 fps
+            _dashAnimation = new Animation(dashTexture, 48, 64, 4, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
             _chargeAnimation = new Animation(chargeTexture, 16, 32, 16, 24); //  24 fps
 
@@ -83,6 +84,7 @@ namespace FinalComGame
 
         public override void Reset()
         {
+            Life = 2;
             holdItem = new Item[2];
             Direction = 1; // Reset direction to right
             maxHealth = 100f;
@@ -98,8 +100,6 @@ namespace FinalComGame
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if(IsGameOver()) return;
-        
             HandleInput(deltaTime, gameObjects);
             RegenerateMP(deltaTime);
             ActiveItemPassiveAbility();
@@ -126,13 +126,7 @@ namespace FinalComGame
 
         private bool IsGameOver()
         {
-            if(Health <= 0)
-            {
-                Singleton.Instance.CurrentGameState = Singleton.GameState.GameOver;
-                return true;
-            }
-
-            return false;
+            return Life <= 0;
         }
 
         private void RegenerateMP(float deltaTime)
@@ -225,7 +219,7 @@ namespace FinalComGame
                 ReleaseChargedShot(gameObjects);
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing)
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing && coyoteTimeCounter > 0)
                 jumpBufferCounter = jumpBufferTime;
             else
                 jumpBufferCounter -= deltaTime; // Decrease over time
@@ -264,7 +258,7 @@ namespace FinalComGame
                 isDropping = false;
             }
 
-            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && overlappedTile == TileType.Ladder && !isClimbing && !isCrouching)
+            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && overlappedTile == TileType.Ladder && !isClimbing && !isCrouching && !isDashing)
             {
                 isClimbing = true;
                 isJumping = false;
@@ -312,7 +306,7 @@ namespace FinalComGame
 
                 if(!holdItem[i].IsConsumable)
                 {
-                    holdItem[i].ActiveAbility(this);
+                    holdItem[i].ActiveAbility();
                 }
             }
         }
@@ -328,7 +322,7 @@ namespace FinalComGame
         {
             if(holdItem[itemSlotIndex] == null) return;
 
-            holdItem[itemSlotIndex].Use(this);
+            holdItem[itemSlotIndex].Use();
 
             if(holdItem[itemSlotIndex].IsConsumable) holdItem[itemSlotIndex] = null;
         }
@@ -337,19 +331,19 @@ namespace FinalComGame
         {
             foreach (var item in gameObjects.OfType<Item>())
             {
-                if (item.InPickupRadius(this) && !item.IsPickedUp)
+                if (item.InPickupRadius() && !item.IsPickedUp)
                 {
                     // Check if player has empty slot
                     if (holdItem[0] == null)
                     {
-                        item.OnPickup(this);
+                        item.OnPickup();
                         holdItem[0] = item;
                         break;
                         // You could add a pickup sound or effect here
                     }
                     else if (holdItem[1] == null)
                     {
-                        item.OnPickup(this);
+                        item.OnPickup();
                         holdItem[1] = item;
                         break;
                         // You could add a pickup sound or effect here
@@ -408,9 +402,10 @@ namespace FinalComGame
 
         private void StartDash()
         {
-            if (dashCooldownTimer <= 0 && !isDashing)
+            if (dashCooldownTimer <= 0 && !isDashing && MP >= dashMP)
             {
                 isDashing = true;
+                isGliding = false;
                 dashTimer = dashDuration;
                 dashCooldownTimer = dashCooldown;
                 Velocity.Y = 0;
@@ -625,6 +620,16 @@ namespace FinalComGame
             OnHit(damageAmount);
             //player.takeKnockback(npc.knockback);
             base.OnCollideNPC(npc, damageAmount);
+        }
+
+        public override void OnDead()
+        {
+            Life--;
+            
+            if(IsGameOver()) 
+                Singleton.Instance.CurrentGameState = Singleton.GameState.GameOver;
+            else  
+                Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;  
         }
 
         private void DrawDebug(SpriteBatch spriteBatch)
