@@ -99,7 +99,6 @@ namespace FinalComGame
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if(IsGameOver()) return;
-        
             HandleInput(deltaTime, gameObjects);
             RegenerateMP(deltaTime);
             ActiveItemPassiveAbility();
@@ -225,7 +224,7 @@ namespace FinalComGame
                 ReleaseChargedShot(gameObjects);
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing)
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing && IsOnGround())
                 jumpBufferCounter = jumpBufferTime;
             else
                 jumpBufferCounter -= deltaTime; // Decrease over time
@@ -408,9 +407,10 @@ namespace FinalComGame
 
         private void StartDash()
         {
-            if (dashCooldownTimer <= 0 && !isDashing)
+            if (dashCooldownTimer <= 0 && !isDashing && MP >= dashMP)
             {
                 isDashing = true;
+                isGliding = false;
                 dashTimer = dashDuration;
                 dashCooldownTimer = dashCooldown;
                 Velocity.Y = 0;

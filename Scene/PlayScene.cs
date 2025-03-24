@@ -155,7 +155,7 @@ public class PlayScene : Scene
             if(_gameObjects[i].IsActive)
                 _gameObjects[i].Update(gameTime, _gameObjects, _collisionTileMap);
         }
-        Console.WriteLine(_gameObjects.Count);
+        // Console.WriteLine(_gameObjects.Count);
     }
 
     public void RemoveInactiveObjects()
