@@ -30,9 +30,9 @@ public class PlayScene : Scene
     private TileMap _vegetationTileMap;
     private TileMap _backGroundTileMap;
 
-    private BaseEnemy baseSkeleton;
-    private BaseEnemy enemyDog;
-    private BaseEnemy enemySlime;
+    private BaseEnemy _baseSkeleton;
+    private BaseEnemy _enemyDog;
+    private BaseEnemy _enemySlime;
 
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
@@ -293,20 +293,40 @@ public class PlayScene : Scene
 
     private void CreateEnemies()
     {
-        baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
+        _baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
             CanCollideTile = true,
+            MaxHealth = 80f,
+            AttackDamage = 5f,
+
+            LimitIdlePatrol = 100,
+
+            IgnorePlayerDuration = 3f,
         };
-        enemyDog = new HellhoundEnemy(_DogTexture,_font){
+        _enemyDog = new HellhoundEnemy(_DogTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 64, 32),
             CanCollideTile = true,
+            MaxHealth = 100f,
+            AttackDamage = 8f,
+
+            LimitIdlePatrol = 100,
+            
+            ChargeTime = 2.0f,
+            ChaseDuration = 5f,
+            DashDuration = 1.0f,
         };
-        enemySlime = new SlimeEnemy(_SlimeTexture,_font){
+        _enemySlime = new SlimeEnemy(_SlimeTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 32),
             CanCollideTile = true,
+            MaxHealth = 50f,
+            AttackDamage = 3f,
+
+            JumpCooldown = 1.5f,
+            JumpStrength = 750,
+            Friction = 0.96f
         };
     }
 
@@ -318,7 +338,7 @@ public class PlayScene : Scene
             {
                 case 97:
                     // HellhoundEnemy.
-                    enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     break;

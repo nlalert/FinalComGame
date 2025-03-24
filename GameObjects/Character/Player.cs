@@ -66,7 +66,8 @@ namespace FinalComGame
         private Animation _fallAnimation;
         private Animation _chargeAnimation;
 
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, Texture2D glideTexture, Texture2D chargeTexture, Texture2D paticleTexture)
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, 
+                      Texture2D glideTexture, Texture2D chargeTexture, Texture2D paticleTexture) : base(idleTexture)
         {
             _idleAnimation = new Animation(idleTexture, 48, 64, 16, 24); // 24 fps
             _runAnimation = new Animation(runTexture, 48, 64, 8, 24); //  24 fps

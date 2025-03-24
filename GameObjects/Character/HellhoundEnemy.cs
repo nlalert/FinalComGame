@@ -7,32 +7,36 @@ namespace FinalComGame
 {
     public class HellhoundEnemy : BaseEnemy
     {
-        private int _limitIdlePatrol = 100;
+        public int LimitIdlePatrol;
         private Vector2 _patrolCenterPoint;
         private Vector2 _dashTarget;
-        private float chaseDuration = 5f; // 5 seconds of chasing
-        private float chaseTimer = 0f;
-        private float chargeTime = 2.0f; 
-        private float chargeTimer = 0f;
-        private bool isDashing = false;
-        private float dashTimer = 0.0f;
-        private float dashTime = 1.0f;
+        public float ChaseDuration;
+        private float _chaseTimer;
+        public float ChargeTime; 
+        private float _chargeTimer;
+        private bool _isDashing;
+        private float _dashTimer;
+        public float DashDuration;
 
 
         public HellhoundEnemy(Texture2D texture, SpriteFont font) : base(texture, font) { }
         public override void Reset()
         {
             Console.WriteLine("Reset Hellhound");
-            MaxHealth = 100f;
-            AttackDamage = 8f;
+
+            _isDashing = false;
+            _dashTimer = 0f;
+            _chargeTimer = 0f;
+            _chaseTimer = 0f;
+
             _patrolCenterPoint = Position;
+
             base.Reset();
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (!HasSpawned) return;
 
             if (CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying)
             {
@@ -79,7 +83,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"State {CurrentState}\n Charge timer {chargeTimer} ";
+            string displayText = $"State {CurrentState}\n Charge timer {_chargeTimer} ";
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
         }
         private void AI_IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -88,7 +92,7 @@ namespace FinalComGame
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
 
-            if (Math.Abs(Position.X - _patrolCenterPoint.X) >= _limitIdlePatrol)
+            if (Math.Abs(Position.X - _patrolCenterPoint.X) >= LimitIdlePatrol)
             {
                 Direction *= -1;
             }
@@ -99,7 +103,7 @@ namespace FinalComGame
             {
                 Console.WriteLine("Hellhound spots the player! Preparing to charge.");
                 CurrentState = EnemyState.Charging;
-                chargeTimer = chargeTime;
+                _chargeTimer = ChargeTime;
                 _dashTarget = Singleton.Instance.Player.GetPlayerCenter(); // Lock on to player's position
             }
         }
@@ -110,13 +114,13 @@ namespace FinalComGame
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
 
-            chargeTimer -= deltaTime;
-            if (chargeTimer <= 0)
+            _chargeTimer -= deltaTime;
+            if (_chargeTimer <= 0)
             {
                 Console.WriteLine("Hellhound dashes!");
                 CurrentState = EnemyState.Dash;
-                isDashing = true;
-                dashTimer = dashTime;
+                _isDashing = true;
+                _dashTimer = DashDuration;
                 Velocity = (_dashTarget - Position);
                 Velocity.Normalize();
                 Velocity *= 1000f;//Dash speed
@@ -135,15 +139,15 @@ namespace FinalComGame
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-            if (isDashing)
+            if (_isDashing)
             {
-                dashTimer -= deltaTime;
-                if (dashTimer <=0 )
+                _dashTimer -= deltaTime;
+                if (_dashTimer <=0 )
                 {
                     Console.WriteLine("Hellhound finished dashing, switching to chase mode.");
-                    isDashing = false;
+                    _isDashing = false;
                     CurrentState = EnemyState.Chase;
-                    chaseTimer = chaseDuration;
+                    _chaseTimer = ChaseDuration;
                 }
             }
         }
@@ -153,9 +157,9 @@ namespace FinalComGame
             ApplyGravity(deltaTime);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
 
-            chaseTimer -= deltaTime;
+            _chaseTimer -= deltaTime;
 
-            if (!this.HaveLineOfSight(tileMap) || chaseTimer <= 0)
+            if (!this.HaveLineOfSight(tileMap) || _chaseTimer <= 0)
             {
                 Console.WriteLine("Hellhound lost sight of the player, returning to idle.");
                 CurrentState = EnemyState.Idle;
@@ -170,11 +174,11 @@ namespace FinalComGame
 
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
 
-            if (chaseTimer <= 0 && this.HaveLineOfSight(tileMap))
+            if (_chaseTimer <= 0 && this.HaveLineOfSight(tileMap))
             {
                 Console.WriteLine("Hellhound still sees the player, preparing to charge again.");
                 CurrentState = EnemyState.Charging;
-                chargeTimer = chargeTime;
+                _chargeTimer = ChargeTime;
                 _dashTarget = Singleton.Instance.Player.Position;
             }
         }
@@ -193,9 +197,9 @@ namespace FinalComGame
                     Velocity.Y = -900f; // Jump over obstacles
             }else if(CurrentState == EnemyState.Dash){
                 Console.WriteLine("Hellhound dash Hit wall, changing to chase state");
-                isDashing = false;
+                _isDashing = false;
                 CurrentState = EnemyState.Chase;
-                chaseTimer = chaseDuration;
+                _chaseTimer = ChaseDuration;
             }
 
             base.OnCollisionHorizon();

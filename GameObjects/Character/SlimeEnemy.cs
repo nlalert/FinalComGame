@@ -7,25 +7,23 @@ namespace FinalComGame
 {
     class SlimeEnemy : BaseEnemy
     {
-        private float jumpCooldown = 1.5f;
-        private float jumpTimer = 0f;
-        private float jumpForce = 750f; // Jump power
-        private float Friction =0.96f;
+        public float JumpCooldown;
+        private float _jumpTimer;
+        public float Friction;
 
         public SlimeEnemy(Texture2D texture, SpriteFont font) : base(texture, font) { }
 
         public override void Reset()
         {
             Console.WriteLine("Slime respawned!");
-            MaxHealth = 50f;
-            AttackDamage = 3f;
+            _jumpTimer = 0f;
             base.Reset();
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (!HasSpawned) return;
+
             if (CurrentState == EnemyState.Dead || CurrentState == EnemyState.Dying)
             {
                 IsActive = false;
@@ -53,12 +51,12 @@ namespace FinalComGame
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-            jumpTimer -= deltaTime;
+            _jumpTimer -= deltaTime;
             Velocity.X *= Friction;
-            if (jumpTimer <= 0)
+            if (_jumpTimer <= 0)
             {
                 CurrentState = EnemyState.Jump;
-                jumpTimer = jumpCooldown;
+                _jumpTimer = JumpCooldown;
             }
         }
 
@@ -73,8 +71,8 @@ namespace FinalComGame
                 _isJumping = true;
                 int horizontalDir = (Singleton.Instance.Player != null && HaveLineOfSight(tileMap)) ? Math.Sign(Singleton.Instance.Player.GetPlayerCenter().X - Position.X) : (Singleton.Instance.Random.Next(0, 2) == 0) ? 1 : -1;
                 // float horizontalDir = Math.Sign(player.GetPlayerCenter().X - Position.X);
-                float horizontalSpeed = jumpForce * 0.5f * (0.8f + 0.4f * (float)Singleton.Instance.Random.NextDouble());
-                Velocity = new Vector2(horizontalDir * horizontalSpeed, -jumpForce * 0.8f);
+                float horizontalSpeed = JumpStrength * 0.5f * (0.8f + 0.4f * (float)Singleton.Instance.Random.NextDouble());
+                Velocity = new Vector2(horizontalDir * horizontalSpeed, -JumpStrength * 0.8f);
             }
         }
 
@@ -102,7 +100,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"State {CurrentState}\n Charge timer {jumpTimer}";
+            string displayText = $"State {CurrentState}\n Charge timer {_jumpTimer}";
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
         }
         protected override void ApplyGravity(float deltaTime)

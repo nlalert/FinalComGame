@@ -27,28 +27,24 @@ namespace FinalComGame {
         public EnemyState CurrentState { get; protected set; }
         
         // Movement Properties
-        protected float chaseSpeed = 3f;
-        protected float patrolBoundaryLeft;
-        protected float patrolBoundaryRight;
+        protected float ChaseSpeed;
+        protected float _patrolBoundaryLeft;
+        protected float _patrolBoundaryRight;
 
         // Combat Properties
-        protected float detectionRange = 200f;
-        protected float attackRange = 50f;
+        public float DetectionRange;
+        public float AttackRange;
 
         // Spawn and Death Tracking
-        public bool CanCollideTile {get;set;} =false;
-        public bool HasSpawned { get; protected set; } = false;
+        public bool CanCollideTile;
         public bool IsDead() => CurrentState == EnemyState.Dead;
         
         protected SpriteFont _DebugFont;
-        public BaseEnemy(Texture2D texture,SpriteFont font){
+        public BaseEnemy(Texture2D texture,SpriteFont font) : base(texture){
             _DebugFont = font;
 
             _idleAnimation = new Animation(texture, 16, 32, 1, 24); // 24 fps\
             Animation = _idleAnimation;
-
-            //remove later
-            _texture = texture;
         }
         
         // Spawn method with optional spawn effects
@@ -56,11 +52,10 @@ namespace FinalComGame {
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = new Vector2(x, y);
-            newEnemy.patrolBoundaryLeft = x - 100f;
-            newEnemy.patrolBoundaryRight = x + 100f;
+            newEnemy._patrolBoundaryLeft = x - 100f;
+            newEnemy._patrolBoundaryRight = x + 100f;
             newEnemy.Health = MaxHealth;
-            newEnemy.HasSpawned = true;
-            newEnemy.IsActive =true;
+            newEnemy.IsActive = true;
             gameObjects.Add(newEnemy);
             newEnemy.OnSpawn();
         }
@@ -68,10 +63,9 @@ namespace FinalComGame {
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = position;
-            newEnemy.patrolBoundaryLeft = position.X - 100f;
-            newEnemy.patrolBoundaryRight = position.X + 100f;
+            newEnemy._patrolBoundaryLeft = position.X - 100f;
+            newEnemy._patrolBoundaryRight = position.X + 100f;
             newEnemy.Health = MaxHealth;
-            newEnemy.HasSpawned = true;
             newEnemy.IsActive =true;
             gameObjects.Add(newEnemy);
             newEnemy.OnSpawn();
@@ -129,8 +123,6 @@ namespace FinalComGame {
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if(HasSpawned == false)
-                return;
             spriteBatch.Draw(_texture, Position, Viewport, Color.White);
             base.Draw(spriteBatch);
         }
@@ -216,6 +208,22 @@ namespace FinalComGame {
                 }
             }
             return true;
+        }
+
+        public override void Reset()
+        {
+            Direction = -1; // Reset direction to left
+
+            Health = MaxHealth;
+
+            _isAttacking = false;
+            _isJumping = false;
+
+            _invincibilityTimer = 0f;
+            _attackTimer = 0f;
+            _attackCooldownTimer = 0f;
+            
+            base.Reset();
         }
     }
 }
