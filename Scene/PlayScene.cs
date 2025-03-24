@@ -257,7 +257,7 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             JumpSound = playerJumpSound,
-            Bullet = new Bullet(_playerTexture, 10)
+            PlayerBullet = new PlayerBullet(_playerTexture)
             {
                 Name = "BulletPlayer",
                 Viewport = new Rectangle(0, 0, 15, 10)
