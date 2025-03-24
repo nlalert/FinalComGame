@@ -264,7 +264,7 @@ namespace FinalComGame
                 isDropping = false;
             }
 
-            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && overlappedTile == TileType.Ladder && !isClimbing && !isCrouching)
+            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && overlappedTile == TileType.Ladder && !isClimbing && !isCrouching && !isDashing)
             {
                 isClimbing = true;
                 isJumping = false;
