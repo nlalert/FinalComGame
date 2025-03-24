@@ -11,7 +11,6 @@ namespace FinalComGame
         public float Speed { get; set; }
         public bool CanCollideTile {get;set;}
         protected Vector2 StartPosition;
-
         public Projectile(Texture2D texture, float damage = 15f, float speed = 300f ) : base(texture)
         {
             DamageAmount = damage;
@@ -24,6 +23,7 @@ namespace FinalComGame
             Velocity = direction * Speed;
             StartPosition = position;
             IsActive = true;
+            Reset();
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -54,7 +54,7 @@ namespace FinalComGame
                     {
                         OnProjectileHit(player);
                         player.OnHitByProjectile(this,DamageAmount);
-                        s.Reset();//TODO ???? why does it need reset idk
+                        // s.Reset();//TODO ???? why does it need reset idk
                         IsActive = false;
                         // Singleton.Instance.Life--;
                         // Singleton.Instance.CurrentGameState = Singleton.GameState.StartNewLife;
