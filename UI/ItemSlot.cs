@@ -50,7 +50,7 @@ namespace FinalComGame
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            item = Singleton.Instance.Player.holdItem[slotNumber];
+            item = Singleton.Instance.Player.HoldItem[slotNumber];
             // // Handle clicks
             // MouseState mouseState = Singleton.Instance.CurrentMouseState;
             // MouseState prevMouseState = Singleton.Instance.PreviousMouseState;

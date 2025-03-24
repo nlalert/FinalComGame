@@ -126,7 +126,7 @@ public class PlayScene : Scene
 
                 _spriteBatch.Begin(); 
                 _spriteBatch.DrawString(_font, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.maxHealth, new Vector2(10, 10), Color.White);
-                _spriteBatch.DrawString(_font, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.maxMP, new Vector2(10, 70), Color.White);
+                _spriteBatch.DrawString(_font, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
         }
@@ -245,23 +245,23 @@ public class PlayScene : Scene
             Position = StageManager.GetPlayerWorldSpawnPosition(),// get player location of each stage
             Life = 2,
             WalkSpeed = 200,
-            crouchSpeed = 100,
-            climbSpeed = 100,
+            CrouchSpeed = 100,
+            ClimbSpeed = 100,
             maxHealth = 100,
-            maxMP = 100,
-            coyoteTime = 0.1f, // 100ms of coyote time
-            jumpBufferTime = 0.15f, // 150ms jump buffer
-            dashSpeed = 400f,
-            dashDuration = 0.4f, // Dash lasts for 0.4 seconds
-            dashCooldown = 0.5f,
-            dashMP = 20f,
-            glideGravityScale = 0.3f, // How much gravity affects gliding (lower = slower fall)
-            glideMaxFallSpeed = 80f, // Maximum fall speed while gliding
-            glideMP = 10f, // MP cost per second while gliding
-            maxChargeTime = 2.0f, // Maximum charge time in seconds
-            minChargePower = 1.0f, // Minimum damage/speed multiplier
-            maxChargePower = 3.0f, // Maximum damage/speed multiplier
-            chargeMPCost = 15f, // MP cost for fully charged shot
+            MaxMP = 100,
+            CoyoteTime = 0.1f, // 100ms of coyote time
+            JumpBufferTime = 0.15f, // 150ms jump buffer
+            DashSpeed = 400f,
+            DashDuration = 0.4f, // Dash lasts for 0.4 seconds
+            DashCooldown = 0.5f,
+            DashMP = 20f,
+            GlideGravityScale = 0.3f, // How much gravity affects gliding (lower = slower fall)
+            GlideMaxFallSpeed = 80f, // Maximum fall speed while gliding
+            GlideMP = 10f, // MP cost per second while gliding
+            MaxChargeTime = 2.0f, // Maximum charge time in seconds
+            MinChargePower = 1.0f, // Minimum damage/speed multiplier
+            MaxChargePower = 3.0f, // Maximum damage/speed multiplier
+            ChargeMPCost = 15f, // MP cost for fully charged shot
 
             Viewport = new Rectangle(0, 0, 16, 32),
             Left = Keys.Left,
