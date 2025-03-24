@@ -12,7 +12,7 @@ namespace FinalComGame
         public bool CanCollideTile {get;set;}
         protected Vector2 StartPosition;
 
-        public Projectile(Texture2D texture, float damage, float speed) : base(texture)
+        public Projectile(Texture2D texture, float damage = 15f, float speed = 300f ) : base(texture)
         {
             DamageAmount = damage;
             Speed = speed;
