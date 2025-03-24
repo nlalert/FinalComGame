@@ -17,6 +17,7 @@ class Singleton
     public const int GRAVITY = 3500;
     public Random Random;
     public int Stage;
+    public Player Player;
 
     public enum GameState
     {
