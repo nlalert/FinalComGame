@@ -41,6 +41,7 @@ namespace FinalComGame
                             // s.IsActive = false;
                             if(s is BaseEnemy enemy){
                                 // enemy.OnHit(this,this.damage)
+                                OnProjectileHit(enemy);
                                 enemy.OnHitByProjectile(this, DamageAmount);
                             } 
                             IsActive = false;
@@ -49,9 +50,11 @@ namespace FinalComGame
                 }
                 else if(Name.Equals("BulletEnemy"))
                 {
-                    if(IsTouching(s) && s.Name.Equals("Player"))
+                    if(s is Player player &&IsTouching(s) && s.Name.Equals("Player"))
                     {
-                        s.Reset();
+                        OnProjectileHit(player);
+                        player.OnHitByProjectile(this,DamageAmount);
+                        s.Reset();//TODO ???? why does it need reset idk
                         IsActive = false;
                         // Singleton.Instance.Life--;
                         // Singleton.Instance.CurrentGameState = Singleton.GameState.StartNewLife;
@@ -85,6 +88,14 @@ namespace FinalComGame
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string displayText = $"Damage {DamageAmount}\n Speed {Speed} ";
             spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
+        }
+        /// <summary>
+        /// Modify Projectiles data onhit enemy 
+        /// Can modify projectiles damage here
+        /// Exmaple : adjust dmg base on enemy hp
+        /// </summary>
+        public virtual void OnProjectileHit(Character character){
+
         }
     }
 }
