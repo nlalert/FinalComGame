@@ -15,6 +15,7 @@ namespace FinalComGame
         
         public float maxMP;
         public float MP;
+        public int Life;
 
         public Item[] holdItem;
 
@@ -83,6 +84,7 @@ namespace FinalComGame
 
         public override void Reset()
         {
+            Life = 2;
             holdItem = new Item[2];
             Direction = 1; // Reset direction to right
             maxHealth = 100f;
@@ -98,7 +100,6 @@ namespace FinalComGame
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if(IsGameOver()) return;
             HandleInput(deltaTime, gameObjects);
             RegenerateMP(deltaTime);
             ActiveItemPassiveAbility();
@@ -125,13 +126,7 @@ namespace FinalComGame
 
         private bool IsGameOver()
         {
-            if(Health <= 0)
-            {
-                Singleton.Instance.CurrentGameState = Singleton.GameState.GameOver;
-                return true;
-            }
-
-            return false;
+            return Life <= 0;
         }
 
         private void RegenerateMP(float deltaTime)
@@ -224,7 +219,7 @@ namespace FinalComGame
                 ReleaseChargedShot(gameObjects);
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing && IsOnGround())
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing && coyoteTimeCounter > 0)
                 jumpBufferCounter = jumpBufferTime;
             else
                 jumpBufferCounter -= deltaTime; // Decrease over time
@@ -625,6 +620,16 @@ namespace FinalComGame
             OnHit(damageAmount);
             //player.takeKnockback(npc.knockback);
             base.OnCollideNPC(npc, damageAmount);
+        }
+
+        public override void OnDead()
+        {
+            Life--;
+            
+            if(IsGameOver()) 
+                Singleton.Instance.CurrentGameState = Singleton.GameState.GameOver;
+            else  
+                Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;  
         }
 
         private void DrawDebug(SpriteBatch spriteBatch)
