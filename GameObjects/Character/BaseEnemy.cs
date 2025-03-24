@@ -32,8 +32,8 @@ namespace FinalComGame {
         protected float _patrolBoundaryRight;
 
         // Combat Properties
-        public float DetectionRange;
-        public float AttackRange;
+        public float DetectionRange = 200f;
+        public float AttackRange = 50f;
 
         // Spawn and Death Tracking
         public bool CanCollideTile;
@@ -189,7 +189,7 @@ namespace FinalComGame {
             if (Singleton.Instance.Player == null) return false;
             
             Vector2 enemyPosition = Position;
-            Vector2 playerPosition = Singleton.Instance.Player.Position;
+            Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
             
             float step = 16f; // Tile size or step size for checking
             Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);

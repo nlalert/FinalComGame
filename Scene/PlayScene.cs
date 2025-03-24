@@ -22,6 +22,8 @@ public class PlayScene : Scene
     private Texture2D _DogTexture;
     private Texture2D _SlimeTexture;
     private Texture2D _textureAtlas;
+    private Texture2D _DemonTexture;
+    private Texture2D _DemonBulletTexture;
     private Camera _camera;
     private TileMap _collisionTileMap;
     private TileMap _enemyMap;
@@ -33,6 +35,7 @@ public class PlayScene : Scene
     private BaseEnemy _baseSkeleton;
     private BaseEnemy _enemyDog;
     private BaseEnemy _enemySlime;
+    private BaseEnemy _enemyDemon;
 
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
@@ -54,6 +57,9 @@ public class PlayScene : Scene
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
         _DogTexture = _content.Load<Texture2D>("EnemyDog");
         _SlimeTexture = _content.Load<Texture2D>("EnemySlime");
+        _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
+        _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
+
         _textureAtlas = _content.Load<Texture2D>("Tileset");
 
         _font = _content.Load<SpriteFont>("GameFont");
@@ -328,6 +334,12 @@ public class PlayScene : Scene
             JumpStrength = 750,
             Friction = 0.96f
         };
+        _enemyDemon = new DemonEnemy(_DemonTexture,_font){
+            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            Viewport = new Rectangle(0, 0, 32, 64),
+            CanCollideTile = true,
+            DemonBullet = new DemonBullet(_DemonBulletTexture)
+        };
     }
 
     private void SpawnEnemies()
@@ -341,6 +353,8 @@ public class PlayScene : Scene
                     _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key)+ new Vector2(0,-256), _gameObjects);
+
                     break;
                 default:
                     break;
