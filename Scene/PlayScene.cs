@@ -242,9 +242,28 @@ public class PlayScene : Scene
         Singleton.Instance.Player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerCharge, playerParticle)
         {
             Name = "Player",
-            Viewport = new Rectangle(0, 0, 16, 32),
             Position = StageManager.GetPlayerWorldSpawnPosition(),// get player location of each stage
+            Life = 2,
             WalkSpeed = 200,
+            crouchSpeed = 100,
+            climbSpeed = 100,
+            maxHealth = 100,
+            maxMP = 100,
+            coyoteTime = 0.1f, // 100ms of coyote time
+            jumpBufferTime = 0.15f, // 150ms jump buffer
+            dashSpeed = 400f,
+            dashDuration = 0.4f, // Dash lasts for 0.4 seconds
+            dashCooldown = 0.5f,
+            dashMP = 20f,
+            glideGravityScale = 0.3f, // How much gravity affects gliding (lower = slower fall)
+            glideMaxFallSpeed = 80f, // Maximum fall speed while gliding
+            glideMP = 10f, // MP cost per second while gliding
+            maxChargeTime = 2.0f, // Maximum charge time in seconds
+            minChargePower = 1.0f, // Minimum damage/speed multiplier
+            maxChargePower = 3.0f, // Maximum damage/speed multiplier
+            chargeMPCost = 15f, // MP cost for fully charged shot
+
+            Viewport = new Rectangle(0, 0, 16, 32),
             Left = Keys.Left,
             Right = Keys.Right,
             Crouch = Keys.Down,

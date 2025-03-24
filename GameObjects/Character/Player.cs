@@ -24,36 +24,36 @@ namespace FinalComGame
         public int crouchSpeed;
         public int climbSpeed;
 
-        private bool isClimbing = false;
-        private bool isCrouching = false;
-        private bool isDropping = false;
-        private bool isGliding = false;
+        private bool isClimbing;
+        private bool isCrouching;
+        private bool isDropping;
+        private bool isGliding;
 
-        private TileType overlappedTile = TileType.None;
+        private TileType overlappedTile;
         //Jump
-        protected float coyoteTime = 0.1f; // 100ms of coyote time
-        protected float coyoteTimeCounter = 0f;
-        protected float jumpBufferTime = 0.15f; // 150ms jump buffer
-        protected float jumpBufferCounter = 0f;
+        public float coyoteTime;
+        protected float coyoteTimeCounter;
+        public float jumpBufferTime;
+        protected float jumpBufferCounter;
         // Dash 
-        protected bool isDashing = false;
-        private float dashSpeed = 400f;
-        private float dashDuration = 0.4f; // Dash lasts for 0.5 seconds
-        private float dashCooldown = 0.5f; // Cooldown before dashing again
-        private float dashTimer = 0f;
-        private float dashCooldownTimer = 0f;
-        private float dashMP = 20f;
+        protected bool isDashing;
+        public float dashSpeed;
+        public float dashDuration;
+        public float dashCooldown;
+        private float dashTimer;
+        private float dashCooldownTimer;
+        public float dashMP;
         // Glide
-        private float glideGravityScale = 0.3f; // How much gravity affects gliding (lower = slower fall)
-        private float glideMaxFallSpeed = 80f; // Maximum fall speed while gliding
-        private float glideMP = 10f; // MP cost per second while gliding
+        public float glideGravityScale;
+        public float glideMaxFallSpeed;        
+        public float glideMP;
         // Charge Shot properties
-        private bool isCharging = false;
-        private float chargeTime = 0f;
-        private float maxChargeTime = 2.0f; // Maximum charge time in seconds
-        private float minChargePower = 1.0f; // Minimum damage/speed multiplier
-        private float maxChargePower = 3.0f; // Maximum damage/speed multiplier
-        private float chargeMPCost = 15f; // MP cost for fully charged shot
+        private bool isCharging;
+        private float chargeTime;
+        public float maxChargeTime;
+        public float minChargePower;
+        public float maxChargePower;
+        public float chargeMPCost;
 
         //SFX
         public SoundEffect JumpSound;
@@ -80,19 +80,34 @@ namespace FinalComGame
             _particle = new Particle(10, Position, paticleTexture);
 
             Animation = _idleAnimation;
+
+            holdItem = new Item[2];
         }
 
         public override void Reset()
         {
-            Life = 2;
-            holdItem = new Item[2];
             Direction = 1; // Reset direction to right
-            maxHealth = 100f;
+
             Health = maxHealth - 50; //REMOVE LATER FOR DEBUG
-            maxMP = 100f;
             MP = maxMP;
-            crouchSpeed = WalkSpeed/2;
-            climbSpeed = WalkSpeed/2;
+
+            overlappedTile = TileType.None;
+
+            isClimbing = false;
+            isCrouching = false;
+            isDropping = false;
+            isGliding = false;
+            isAttacking = false;
+            isCharging = false;
+            isDashing = false;
+            isJumping = false;
+
+            coyoteTimeCounter = 0f;
+            jumpBufferCounter = 0f;
+            dashTimer = 0f;
+            dashCooldownTimer = 0f;
+            chargeTime = 0f;
+
             base.Reset();
         }
 
@@ -636,7 +651,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"Dir {directionText} \nCHp {Health} \nMP {MP:F1}";
+            string displayText = $"Dir {directionText} \nCHp {Health} \nMP {MP:F1} \nLife {Life}";
             
             // Add charge info if charging
             if (isCharging)
