@@ -384,7 +384,7 @@ public class PlayScene : Scene
                     // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
                     // _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key)+ new Vector2(0,-256), _gameObjects);
-                    _enemyTower.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-196), _gameObjects);
+                    // _enemyTower.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-196), _gameObjects);
 
                     break;
                 default:
