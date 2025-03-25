@@ -32,15 +32,4 @@ public class StageManager
 
         return "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_Collision.csv";
     }
-    
-    public static string GetCurrentStageEnemyMapPath()
-    {
-        if (!PlayerGridSpawnPoint.ContainsKey(Singleton.Instance.Stage))
-        {
-            Console.WriteLine("No more stage : Replaying");
-            Singleton.Instance.Stage = 1;
-        }
-
-        return "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_Collision.csv";
-    }
 }

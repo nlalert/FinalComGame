@@ -18,12 +18,9 @@ namespace FinalComGame
         {
             this.textureAtlas = textureAtlas;
             this.numTilesPerRow = numTilesPerRow;
-            tiles = LoadMap(mapPath);
-        }
-
-        public TileMap(string mapPath)
-        {
-            enemySpawnPoints = LoadEnemies(mapPath);
+            tiles = new Dictionary<Vector2, Tile>();
+            enemySpawnPoints = new Dictionary<Vector2, int>();
+            LoadMap(mapPath);
         }
 
         public void Update(GameTime gameTime, List<GameObject> gameObjects)
@@ -43,10 +40,8 @@ namespace FinalComGame
             }
         }
 
-        private Dictionary<Vector2, Tile> LoadMap(string filepath)
+        private void LoadMap(string filepath)
         {
-            Dictionary<Vector2, Tile> result = new Dictionary<Vector2, Tile>();
-
             using (StreamReader reader = new StreamReader(filepath))
             {
                 int y = 0;
@@ -59,49 +54,29 @@ namespace FinalComGame
                     {
                         if (int.TryParse(items[x], out int tileID) && tileID >= 0)
                         {
-                            Tile tile = new Tile(textureAtlas)
+                            if(IsEnemyTile(tileID))
                             {
-                                Name = GetTileName(tileID),
-                                Type = GetTileType(tileID),
-                                Position = GetTileWorldPositionAt(x, y), // Convert grid position to pixel position
-                                Viewport = GetTileViewport(tileID),
-                                IsSolid = GetTileCollisionType(tileID)
-                            };
-                            result.Add(new Vector2(x, y), tile);
+                                // Store enemy spawn point with its type
+                                enemySpawnPoints.Add(new Vector2(x, y), tileID);
+                            }
+                            else
+                            {
+                                Tile tile = new Tile(textureAtlas)
+                                {
+                                    Name = GetTileName(tileID),
+                                    Type = GetTileType(tileID),
+                                    Position = GetTileWorldPositionAt(x, y), // Convert grid position to pixel position
+                                    Viewport = GetTileViewport(tileID),
+                                    IsSolid = GetTileCollisionType(tileID)
+                                };
+                                tiles.Add(new Vector2(x, y), tile);
+                            }
                         }
                     }
                     y++;
                 }
             }
 
-            return result;
-        }
-
-        private Dictionary<Vector2, int> LoadEnemies(string filepath)
-        {
-            Dictionary<Vector2, int> spawnPoints = new Dictionary<Vector2, int>();
-            
-            using (StreamReader reader = new StreamReader(filepath))
-            {
-                int y = 0;
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    string[] items = line.Split(',');
-                    
-                    for (int x = 0; x < items.Length; x++)
-                    {
-                        if (int.TryParse(items[x], out int enemyID) && enemyID > 0)
-                        {
-                            // Store enemy spawn point with its type
-                            spawnPoints.Add(new Vector2(x, y), enemyID);
-                        }
-                    }
-                    y++;
-                }
-            }
-            
-            return spawnPoints;
         }
 
         public static Vector2 GetTileWorldPositionAt(int tileGridX, int tileGridY)
@@ -111,6 +86,19 @@ namespace FinalComGame
         public static Vector2 GetTileWorldPositionAt(Vector2 tileGridPosition)
         {
             return new Vector2(tileGridPosition.X * Singleton.BLOCK_SIZE, tileGridPosition.Y * Singleton.BLOCK_SIZE);
+        }
+        public static Vector2 GetTileGridPositionAt(int x, int y)
+        {
+            return new Vector2(x / Singleton.BLOCK_SIZE, y / Singleton.BLOCK_SIZE); // Grid Position ust be int
+        }
+        public static Vector2 GetTileGridPositionAt(Vector2 tileWorldPosition)
+        {
+            return new Vector2((int) tileWorldPosition.X / Singleton.BLOCK_SIZE, (int) tileWorldPosition.Y / Singleton.BLOCK_SIZE); // Grid Position ust be int
+        }
+
+        private static bool IsEnemyTile(int tileID)
+        {
+            return tileID == 97; //Add more later
         }
 
         private static string GetTileName(int tileID)
@@ -168,13 +156,28 @@ namespace FinalComGame
             return false;
         }
 
-        public Tile GetTileAt(int tileX, int tileY)
+        public Tile GetTileAtGetTileAtGridPosition(int tileX, int tileY)
         {
             Vector2 tileGridPosition = new Vector2(tileX, tileY);
+            return GetTileAtGridPosition(tileGridPosition);
+        }
+
+        public Tile GetTileAtGridPosition(Vector2 tileGridPosition)
+        {
             if(tiles.TryGetValue(tileGridPosition, out Tile value))
                 return value;
                 
             return null;
+        }
+        public Tile GetTileAtWorldPostion(Vector2 worldPostion)
+        {
+            return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
+        }
+
+        public Tile GetTileAtWorldPostion(int x, int y)
+        {
+            Vector2 worldPostion = new Vector2(x, y);
+            return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
         }
 
         // Fixed version of your GetEnemyLocation method

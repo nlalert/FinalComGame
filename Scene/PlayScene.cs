@@ -220,7 +220,6 @@ public class PlayScene : Scene
         _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
         _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
-        _enemyMap = new TileMap(StageManager.GetCurrentStageEnemyMapPath());
 
         Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
@@ -349,16 +348,16 @@ public class PlayScene : Scene
 
     private void SpawnEnemies()
     {
-        foreach (var enemy in _enemyMap.GetEnemySpawnPoints())
+        foreach (var enemySpawnPoint in _collisionTileMap.GetEnemySpawnPoints())
         {
-            switch (enemy.Value)
+            switch (enemySpawnPoint.Value)
             {
                 case 97:
                     // HellhoundEnemy.
-                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key)+ new Vector2(0,-256), _gameObjects);
+                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-256), _gameObjects);
 
                     break;
                 default:
