@@ -500,25 +500,34 @@ namespace FinalComGame
         protected void UpdateTileInteraction (TileMap tileMap){
 
             _overlappedTile = TileType.None;
-            foreach (Tile tile in tileMap.tiles.Values)
+            int radius = 5;
+            for (int i = -radius; i <= radius; i++)
             {
-                if (tile.Type == TileType.Ladder || tile.Type == TileType.Platform_Ladder)
+                for (int j = -radius; j <= radius; j++)
                 {
-                    if (IsTouching(tile)){
-                        _overlappedTile = TileType.Ladder;
-                    }
-                }
+                    Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
+                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                    if(tile != null)
+                    {
+                        if (tile.Type == TileType.Ladder || tile.Type == TileType.Platform_Ladder)
+                        {
+                            if (IsTouching(tile)){
+                                _overlappedTile = TileType.Ladder;
+                            }
+                        }
 
-                if (tile.Type == TileType.Platform|| tile.Type == TileType.Platform_Ladder)
-                {
-                    if (tile.Position.Y < Position.Y + Viewport.Height || _isDropping){
-                        tile.IsSolid = false;
-                    }
+                        if (tile.Type == TileType.Platform|| tile.Type == TileType.Platform_Ladder)
+                        {
+                            if (tile.Position.Y < Position.Y + Viewport.Height || _isDropping){
+                                tile.IsSolid = false;
+                            }
 
-                    else{
-                        tile.IsSolid = true;
-                    }
+                            else{
+                                tile.IsSolid = true;
+                            }
 
+                        }
+                    }
                 }
             }
         }

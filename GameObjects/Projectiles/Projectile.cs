@@ -64,12 +64,21 @@ namespace FinalComGame
 
             // Check collision with tiles
             if(CanCollideTile){
-                foreach (Tile tile in tileMap.tiles.Values)
+                int radius = 5;
+                for (int i = -radius; i <= radius; i++)
                 {
-                    if (IsTouching(tile))
+                    for (int j = -radius; j <= radius; j++)
                     {
-                        IsActive = false;
-                        break;
+                        Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
+                        Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                        if(tile != null)
+                        {
+                            if (IsTouching(tile))
+                            {
+                                IsActive = false;
+                                break;
+                            }
+                        }
                     }
                 }
             }
