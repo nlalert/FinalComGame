@@ -28,38 +28,16 @@ namespace FinalComGame
         {
             Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            foreach (GameObject s in gameObjects)
+            if(IsTouching(Singleton.Instance.Player))
             {
-                if(Name.Equals("BulletPlayer"))
-                {
-                    if(IsTouching(s))
-                    {
-                        if(s.Name.Equals("Enemy") || s.Name.Equals("BulletEnemy"))
-                        {
-                            // s.IsActive = false;
-                            if(s is BaseEnemy enemy){
-                                // enemy.OnHit(this,this.damage)
-                                OnProjectileHit(enemy);
-                                enemy.OnHitByProjectile(this, DamageAmount);
-                            } 
-                            IsActive = false;
-                        }
-                    } 
-                }
-                else if(Name.Equals("BulletEnemy"))
-                {
-                    if(s is Player player &&IsTouching(s) && s.Name.Equals("Player"))
-                    {
-                        OnProjectileHit(player);
-                        player.OnHitByProjectile(this,DamageAmount);
-                        // s.Reset();//TODO ???? why does it need reset idk
-                        IsActive = false;
-                        // Singleton.Instance.Life--;
-                        // Singleton.Instance.CurrentGameState = Singleton.GameState.StartNewLife;
-                    }
-                }
+                OnProjectileHit(Singleton.Instance.Player);
+                Singleton.Instance.Player.OnHitByProjectile(this,DamageAmount);
+                // s.Reset();//TODO ???? why does it need reset idk
+                IsActive = false;
+                // Singleton.Instance.Life--;
+                // Singleton.Instance.CurrentGameState = Singleton.GameState.StartNewLife;
             }
-
+            
             // Check collision with tiles
             if(CanCollideTile){
                 int radius = 5;
