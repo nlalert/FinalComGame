@@ -17,7 +17,7 @@ namespace FinalComGame
         private float loopOffset =0;
         private float loopSpeed =2f;
 
-        public Projectile DemonBullet;
+        public DemonBullet DemonBullet;
 
         public DemonEnemy(Texture2D texture, SpriteFont font) 
             : base(texture, font)
@@ -111,7 +111,7 @@ namespace FinalComGame
         private void ShootBullet(List<GameObject> gameObjects)
         {
             Vector2 direction = Vector2.Normalize(Singleton.Instance.Player.Position - Position);
-            Projectile bullet = DemonBullet.Clone() as Projectile;
+            DemonBullet bullet = DemonBullet.Clone() as DemonBullet;
             bullet.Shoot(Position, direction);
             gameObjects.Add(bullet);
         }

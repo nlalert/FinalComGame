@@ -10,7 +10,7 @@ namespace FinalComGame
 {
     public class Player : Character
     {
-        public Projectile PlayerBullet;
+        public PlayerBullet Bullet;
         public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb, Interact, Item1, Item2;
         
         public float MaxMP;
@@ -588,12 +588,11 @@ namespace FinalComGame
             float chargePower = MinChargePower + chargeRatio * (MaxChargePower - MinChargePower);
             
             // Create and configure the bullet
-            Projectile newBullet = PlayerBullet.Clone() as Projectile;
-            newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2, Position.Y);
-            
-            // Scale bullet properties based on charge level
-            newBullet.Velocity = new Vector2(800 * Direction * chargePower, 0);
+            Vector2 direction = new Vector2(Direction, 0);
+            PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
             newBullet.DamageAmount *= chargePower; // Increase damage
+            newBullet.Shoot(Position, direction);
+            gameObjects.Add(newBullet);
             
             // // Scale bullet size with charge (optional)
             // float sizeMultiplier = 1.0f + chargeRatio;
@@ -602,9 +601,7 @@ namespace FinalComGame
             
             // Change color based on charge (optional)
             // newBullet.Color = chargeColor;
-            
-            newBullet.Reset();
-            gameObjects.Add(newBullet);
+;
             
             // // Play charged shot sound if available
             // if (ChargeShotSound != null && chargeRatio > 0.5f)
@@ -614,17 +611,6 @@ namespace FinalComGame
             _isCharging = false;
             _chargeTime = 0f;
         }
-
-        private void Shoot(List<GameObject> gameObjects)
-        {
-            Projectile newBullet = PlayerBullet.Clone() as Projectile;
-            newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
-                                            Position.Y);
-            newBullet.Velocity = new Vector2(800 * Direction, 0);
-            newBullet.Reset();
-            gameObjects.Add(newBullet);
-        }
-
 
         public override void OnHitByProjectile(GameObject gameObject,float damageAmount)
         {

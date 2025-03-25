@@ -10,7 +10,7 @@ namespace FinalComGame
         private float shootCooldown = 2.0f;
         private float shootTimer;
 
-        public Projectile TowerBullet;
+        public TowerBullet TowerBullet;
 
         public TowerEnemy(Texture2D texture, SpriteFont font) 
             : base(texture, font)
@@ -75,7 +75,7 @@ namespace FinalComGame
         private void ShootBullet(List<GameObject> gameObjects)
         {
             Vector2 direction = Vector2.Normalize(Singleton.Instance.Player.Position - Position);
-            Projectile bullet = TowerBullet.Clone() as Projectile;
+            TowerBullet bullet = TowerBullet.Clone() as TowerBullet;
             bullet.Shoot(Position, direction);
             gameObjects.Add(bullet);
         }

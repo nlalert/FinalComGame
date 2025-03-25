@@ -77,7 +77,7 @@ public class PlayScene : Scene
         _font = _content.Load<SpriteFont>("GameFont");
         Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
 
-        _song = _content.Load<Song>("A Night Alone - TrackTribe");
+        _song = _content.Load<Song>("ChillSong");
     }
 
     public override void Update(GameTime gameTime)
@@ -313,7 +313,7 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             JumpSound = playerJumpSound,
-            PlayerBullet = new PlayerBullet(_playerTexture)
+            Bullet = new PlayerBullet(_playerTexture)
             {
                 Name = "BulletPlayer",
                 Viewport = new Rectangle(0, 0, 15, 10)
@@ -380,10 +380,10 @@ public class PlayScene : Scene
             {
                 case 97:
                     // HellhoundEnemy.
-                    // _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    // _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key)+ new Vector2(0,-256), _gameObjects);
+                    // _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
                     // _enemyTower.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-196), _gameObjects);
 
                     break;

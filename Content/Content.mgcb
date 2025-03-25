@@ -25,12 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:1Up.jpg
 
-#begin A Night Alone - TrackTribe.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:A Night Alone - TrackTribe.mp3
-
 #begin atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -126,6 +120,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Char_test.png
+
+#begin ChillSong.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:ChillSong.mp3
 
 #begin DemonBullet.png
 /importer:TextureImporter
