@@ -18,7 +18,7 @@ namespace FinalComGame
 
         public Item[] holdItem;
 
-        public Particle _particle;
+        public SoulParticle _particle;
 
         public int crouchSpeed;
         public int climbSpeed;
@@ -66,7 +66,7 @@ namespace FinalComGame
             _dashAnimation = new Animation(dashTexture, 48, 64, 4, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
 
-            _particle = new Particle(10, Position, paticleTexture);
+            _particle = new SoulParticle(10, Position, paticleTexture);
 
             Animation = _idleAnimation;
         }

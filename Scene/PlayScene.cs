@@ -22,11 +22,12 @@ public class PlayScene : Scene
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
     private Texture2D _textureAtlas;
+    private Texture2D _parallaxBGtexture;
     private Camera _camera;
     private TileMap _collisionTileMap;
-    private TileMap _foreGroundTileMap;
-    private TileMap _midGroundTileMap;
-    private TileMap _backGroundTileMap;
+    private TileMap _FGTileMap;
+    private TileMap _MGTileMap;
+    private TileMap _BGTileMap;
 
     private Player player;
     private BaseEnemy baseSkeleton;
@@ -49,6 +50,7 @@ public class PlayScene : Scene
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
         _textureAtlas = _content.Load<Texture2D>("Tileset");
+        _parallaxBGtexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
 
         _font = _content.Load<SpriteFont>("GameFont");
         Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
@@ -113,7 +115,9 @@ public class PlayScene : Scene
         {
             case Singleton.GameState.Playing:
                 // Draw the Game World (Apply Camera)
+
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransformation()); // Apply camera matrix
+                _spriteBatch.Draw(_parallaxBGtexture, new Vector2 (player.Position.X - _parallaxBGtexture.Width/2, player.Position.Y - _parallaxBGtexture.Height/2), Color.White);
                 DrawTileMap();
                 DrawAllObjects();
                 _spriteBatch.End();
@@ -159,9 +163,9 @@ public class PlayScene : Scene
 
     private void DrawTileMap()
     {
-        _backGroundTileMap.Draw(_spriteBatch);
-        _midGroundTileMap.Draw(_spriteBatch);
-        _foreGroundTileMap.Draw(_spriteBatch);
+        _BGTileMap.Draw(_spriteBatch);
+        _MGTileMap.Draw(_spriteBatch);
+        _FGTileMap.Draw(_spriteBatch);
         
         //Should be hidden
         //_collisionTileMap.Draw(_spriteBatch);
@@ -199,9 +203,9 @@ public class PlayScene : Scene
         _gameObjects.Clear();
 
         Singleton.Instance.Random = new Random();
-        _backGroundTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
-        _midGroundTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
-        _foreGroundTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
+        _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
+        _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
+        _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStagePath(), 20);
 
         AddPlayer();
