@@ -133,14 +133,14 @@ namespace FinalComGame {
         protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.X += Velocity.X * deltaTime;
-            if(CanCollideTile)
+            if(!CanCollideTile) 
+                return;
+            
+            foreach (Tile tile in tileMap.tiles.Values)
             {
-                foreach (Tile tile in tileMap.tiles.Values)
-                {
-                    if(tile.IsSolid){
-                        if(ResolveHorizontalCollision(tile)){
-                            OnCollisionHorizon();
-                        }
+                if(tile.IsSolid){
+                    if(ResolveHorizontalCollision(tile)){
+                        OnCollisionHorizon();
                     }
                 }
             }
