@@ -39,7 +39,7 @@ namespace FinalComGame
 
                 if (IsAmbush1Triggered && !IsAmbush1Done)
                 {
-                    if (tile.Value.Type == TileType.Ambush_1_Entry) tile.Value.IsSolid = true;
+                    if (tile.Value.Type == TileType.Ambush_1_Entry || tile.Value.Type == TileType.Ambush_1_Exit) tile.Value.IsSolid = true;
                     if (tile.Value.Type == TileType.Ambush_1_Trigger) tile.Value.Type = TileType.None;
                 }
                 else if(IsAmbush1Done)

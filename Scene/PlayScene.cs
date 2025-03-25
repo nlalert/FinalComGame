@@ -380,10 +380,10 @@ public class PlayScene : Scene
             {
                 case 97:
                     // HellhoundEnemy.
-                    // _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                     _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
                     // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
                     // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    //_enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
                     // _enemyTower.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-196), _gameObjects);
 
                     break;
