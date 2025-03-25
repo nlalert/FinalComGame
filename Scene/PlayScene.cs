@@ -26,7 +26,6 @@ public class PlayScene : Scene
     private Texture2D _DemonBulletTexture;
     private Camera _camera;
     private TileMap _collisionTileMap;
-    private TileMap _enemyMap;
     private TileMap _foreGroundTileMap;
     private TileMap _rockTileMap;
     private TileMap _vegetationTileMap;
@@ -215,7 +214,6 @@ public class PlayScene : Scene
         //_backGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Background.csv", 20);
         //_foreGroundTileMap = new TileMap(textureAtlas, "../../../Data/Level_0/Level_0_Ground.csv", 20);
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
-        _enemyMap = new TileMap(StageManager.GetCurrentStageEnemyMapPath());
 
         Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
@@ -344,16 +342,16 @@ public class PlayScene : Scene
 
     private void SpawnEnemies()
     {
-        foreach (var enemy in _enemyMap.GetEnemySpawnPoints())
+        foreach (var enemySpawnPoint in _collisionTileMap.GetEnemySpawnPoints())
         {
-            switch (enemy.Value)
+            switch (enemySpawnPoint.Value)
             {
                 case 97:
                     // HellhoundEnemy.
-                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
-                    _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key)+ new Vector2(0,-256), _gameObjects);
+                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-256), _gameObjects);
 
                     break;
                 default:
