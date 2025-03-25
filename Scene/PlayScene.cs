@@ -22,16 +22,22 @@ public class PlayScene : Scene
     private Texture2D _DogTexture;
     private Texture2D _SlimeTexture;
     private Texture2D _textureAtlas;
+    private Texture2D _DemonTexture;
+    private Texture2D _DemonBulletTexture;
+
+    private Texture2D _parallaxFGtexture;
+    private Texture2D _parallaxMGtexture;
     private Texture2D _parallaxBGtexture;
-    private Camera _camera;
+    private ParallaxBackground _parallaxBackground;
+
     private TileMap _collisionTileMap;
+    private TileMap _enemyMap;
     private TileMap _FGTileMap;
     private TileMap _MGTileMap;
     private TileMap _BGTileMap;
-    private Texture2D _DemonTexture;
-    private Texture2D _DemonBulletTexture;
+
     private Camera _camera;
-    private TileMap _enemyMap;
+
     private BaseEnemy _baseSkeleton;
     private BaseEnemy _enemyDog;
     private BaseEnemy _enemySlime;
@@ -61,6 +67,8 @@ public class PlayScene : Scene
         _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
+        _parallaxFGtexture = _content.Load<Texture2D>("Level_1_Parallax_fg");
+        _parallaxMGtexture = _content.Load<Texture2D>("Level_1_Parallax_mg");
         _parallaxBGtexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
 
         _font = _content.Load<SpriteFont>("GameFont");
@@ -95,6 +103,7 @@ public class PlayScene : Scene
                 {
                     Singleton.Instance.CurrentGameState = Singleton.GameState.Pause;
                 }
+                _parallaxBackground.Update();
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
                 RemoveInactiveObjects();
@@ -128,7 +137,7 @@ public class PlayScene : Scene
                 // Draw the Game World (Apply Camera)
 
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransformation()); // Apply camera matrix
-                _spriteBatch.Draw(_parallaxBGtexture, new Vector2 (player.Position.X - _parallaxBGtexture.Width/2, player.Position.Y - _parallaxBGtexture.Height/2), Color.White);
+                _parallaxBackground.Draw(_spriteBatch);
                 DrawTileMap();
                 DrawAllObjects();
                 _spriteBatch.End();
@@ -199,8 +208,12 @@ public class PlayScene : Scene
         Singleton.Instance.Random = new Random();
         Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
 
+        _parallaxBackground = new ParallaxBackground(_parallaxFGtexture, _parallaxMGtexture, _parallaxBGtexture, StageManager.GetPlayerWorldSpawnPosition());
+
         CreatePlayer();
         _gameObjects.Add(Singleton.Instance.Player);
+
+
         CreateEnemies();
         AddItems();
         SetupUI();
@@ -221,8 +234,12 @@ public class PlayScene : Scene
         _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
 
+        _parallaxBackground = new ParallaxBackground(_parallaxFGtexture, _parallaxMGtexture, _parallaxBGtexture, StageManager.GetPlayerWorldSpawnPosition());
+
         Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
+
+
         SpawnEnemies();
         AddItems();
         SetupUI();

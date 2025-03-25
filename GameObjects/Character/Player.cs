@@ -140,7 +140,7 @@ namespace FinalComGame
             if (!_isDashing) Velocity.X = 0;
             
             base.Update(gameTime, gameObjects, tileMap);
-            Particle.Update(Position);    
+            _particle.Update(Position);    
         }
 
         private bool IsGameOver()
@@ -158,7 +158,7 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Particle.Draw(spriteBatch);
+            _particle.Draw(spriteBatch);
             base.Draw(spriteBatch);
             DrawDebug(spriteBatch);
         }
