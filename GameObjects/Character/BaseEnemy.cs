@@ -175,7 +175,7 @@ namespace FinalComGame {
         public virtual bool CheckContactPlayer(){
             if(this.IsTouching(Singleton.Instance.Player)){
                 OnCollidePlayer();
-                Console.WriteLine("contact Player");
+                // Console.WriteLine("contact Player");
                 return true;
             }
             else

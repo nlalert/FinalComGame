@@ -172,7 +172,7 @@ public class GameObject : ICloneable
         return isCollided;
     }
 
-    protected bool ResolveVerticalCollision(GameObject g)
+    public bool ResolveVerticalCollision(GameObject g)
     {
         bool isCollided = false;
         if (IsTouchingTop(g))
