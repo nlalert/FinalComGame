@@ -11,8 +11,6 @@ namespace FinalComGame;
 
 public class PlayScene : Scene
 {
-    Song _gameMusic;
-
     //UI
     SpriteFont _font;
 
@@ -21,6 +19,8 @@ public class PlayScene : Scene
 
     private Texture2D _playerTexture;
     private Texture2D _enemyTexture;
+    private Texture2D _DogTexture;
+    private Texture2D _SlimeTexture;
     private Texture2D _textureAtlas;
     private Texture2D _parallaxBGtexture;
     private Camera _camera;
@@ -28,9 +28,15 @@ public class PlayScene : Scene
     private TileMap _FGTileMap;
     private TileMap _MGTileMap;
     private TileMap _BGTileMap;
+    private Texture2D _DemonTexture;
+    private Texture2D _DemonBulletTexture;
+    private Camera _camera;
+    private TileMap _enemyMap;
+    private BaseEnemy _baseSkeleton;
+    private BaseEnemy _enemyDog;
+    private BaseEnemy _enemySlime;
+    private BaseEnemy _enemyDemon;
 
-    private Player player;
-    private BaseEnemy baseSkeleton;
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         base.Initialize(graphicsDevice, graphicsDeviceManager, content);
@@ -49,18 +55,22 @@ public class PlayScene : Scene
         
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
+        _DogTexture = _content.Load<Texture2D>("EnemyDog");
+        _SlimeTexture = _content.Load<Texture2D>("EnemySlime");
+        _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
+        _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
+
         _textureAtlas = _content.Load<Texture2D>("Tileset");
         _parallaxBGtexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
 
         _font = _content.Load<SpriteFont>("GameFont");
         Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
 
-        _gameMusic = _content.Load<Song>("A Night Alone - TrackTribe");
+        _song = _content.Load<Song>("A Night Alone - TrackTribe");
     }
 
     public override void Update(GameTime gameTime)
     {
-        Console.WriteLine(Singleton.Instance.CurrentGameState);
         //Update
         _numObject = _gameObjects.Count;
         if(Singleton.Instance.IsKeyPressed(Keys.R))
@@ -68,24 +78,19 @@ public class PlayScene : Scene
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.StartingGame:
-                if (MediaPlayer.State == MediaState.Playing)
-                {
-                    MediaPlayer.Stop();
-                }
+                StopSong();
                 ResetGame();
                 Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
                 break;
             case Singleton.GameState.InitializingStage:
+                StopSong();
                 ResetStage();
                 // SetUpInitalChipsPattern();
 
                 Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
                 break;
             case Singleton.GameState.Playing:
-                if (MediaPlayer.State != MediaState.Playing)
-                {
-                    MediaPlayer.Play(_gameMusic);
-                }
+                PlaySong();
                 if(Singleton.Instance.IsKeyJustPressed(Keys.Escape))
                 {
                     Singleton.Instance.CurrentGameState = Singleton.GameState.Pause;
@@ -94,7 +99,13 @@ public class PlayScene : Scene
                 UpdateAllObjects(gameTime);
                 RemoveInactiveObjects();
 
-                _camera.Follow(player); // Make camera follow the player
+                _camera.Follow(Singleton.Instance.Player); // Make camera follow the player
+                break;
+            case Singleton.GameState.StageCompleted:
+                if (Singleton.Instance.Stage == 4){
+                    Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
+                    break;
+                }
                 break;
             case Singleton.GameState.GameOver:
                 if (MediaPlayer.State == MediaState.Playing)
@@ -123,8 +134,8 @@ public class PlayScene : Scene
                 _spriteBatch.End();
 
                 _spriteBatch.Begin(); 
-                _spriteBatch.DrawString(_font, "Health Bar : " + player.Health + " / " + player.maxHealth, new Vector2(10, 10), Color.White);
-                _spriteBatch.DrawString(_font, "MP Bar : " + player.MP + " / " + player.maxMP, new Vector2(10, 70), Color.White);
+                _spriteBatch.DrawString(_font, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
+                _spriteBatch.DrawString(_font, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
         }
@@ -146,6 +157,7 @@ public class PlayScene : Scene
             if(_gameObjects[i].IsActive)
                 _gameObjects[i].Update(gameTime, _gameObjects, _collisionTileMap);
         }
+        // Console.WriteLine(_gameObjects.Count);
     }
 
     public void RemoveInactiveObjects()
@@ -187,8 +199,9 @@ public class PlayScene : Scene
         Singleton.Instance.Random = new Random();
         Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
 
-        AddPlayer();
-        AddEnemies();
+        CreatePlayer();
+        _gameObjects.Add(Singleton.Instance.Player);
+        CreateEnemies();
         AddItems();
         SetupUI();
 
@@ -206,10 +219,12 @@ public class PlayScene : Scene
         _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
         _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
         _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
-        _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStagePath(), 20);
+        _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
+        _enemyMap = new TileMap(StageManager.GetCurrentStageEnemyMapPath());
 
-        AddPlayer();
-        AddEnemies();
+        Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
+        _gameObjects.Add(Singleton.Instance.Player);
+        SpawnEnemies();
         AddItems();
         SetupUI();
         
@@ -219,7 +234,7 @@ public class PlayScene : Scene
         }
     }
 
-    private void AddPlayer()
+    private void CreatePlayer()
     {
         // Load sprite sheets
         Texture2D playerIdle = _content.Load<Texture2D>("Char_Idle");
@@ -229,17 +244,44 @@ public class PlayScene : Scene
         Texture2D playerMelee = _content.Load<Texture2D>("Char_Melee");
         Texture2D playerDash = _content.Load<Texture2D>("Char_Dash");
         Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerCharge = _content.Load<Texture2D>("EnemyRed");
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
         
         playerParticle.SetData([new Color(193, 255, 219)]);
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         
-        player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerParticle)
+        Singleton.Instance.Player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerCharge, playerParticle)
         {
             Name = "Player",
-            Viewport = new Rectangle(0, 0, 16, 32),
-            Position = TileMap.GetTileWorldPositionAt(16, 98),// block column 16, row 98
+            Position = StageManager.GetPlayerWorldSpawnPosition(),// get player location of each stage
+            Life = 2,
             WalkSpeed = 200,
+            CrouchSpeed = 100,
+            ClimbSpeed = 100,
+            MaxHealth = 100,
+            MaxMP = 100,
+
+            AttackDamage = 10f,
+            AttackDuration = 0.4f, // How long the attack lasts
+            AttackCooldown = 0.2f,
+
+            JumpStrength = 800f,
+
+            CoyoteTime = 0.1f, // 100ms of coyote time
+            JumpBufferTime = 0.15f, // 150ms jump buffer
+            DashSpeed = 400f,
+            DashDuration = 0.4f, // Dash lasts for 0.4 seconds
+            DashCooldown = 0.5f,
+            DashMP = 20f,
+            GlideGravityScale = 0.3f, // How much gravity affects gliding (lower = slower fall)
+            GlideMaxFallSpeed = 80f, // Maximum fall speed while gliding
+            GlideMP = 10f, // MP cost per second while gliding
+            MaxChargeTime = 2.0f, // Maximum charge time in seconds
+            MinChargePower = 1.0f, // Minimum damage/speed multiplier
+            MaxChargePower = 3.0f, // Maximum damage/speed multiplier
+            ChargeMPCost = 15f, // MP cost for fully charged shot
+
+            Viewport = new Rectangle(0, 0, 16, 32),
             Left = Keys.Left,
             Right = Keys.Right,
             Crouch = Keys.Down,
@@ -252,28 +294,78 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             JumpSound = playerJumpSound,
-            Bullet = new Bullet(_playerTexture)
+            PlayerBullet = new PlayerBullet(_playerTexture)
             {
                 Name = "BulletPlayer",
                 Viewport = new Rectangle(0, 0, 15, 10)
             }
         };
-
-        _gameObjects.Add(player);
     }
 
-    private void AddEnemies()
+    private void CreateEnemies()
     {
-        baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
+        _baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             Viewport = new Rectangle(0, 0, 32, 64),
             CanCollideTile = true,
-            player = player
+            MaxHealth = 80f,
+            AttackDamage = 5f,
+
+            LimitIdlePatrol = 100,
+
+            IgnorePlayerDuration = 3f,
         };
-        _gameObjects.Add(baseSkeleton);
-        // baseSkeleton.Spawn(132, 400, _gameObjects);
-        
-        baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(20, 90),_gameObjects);
+        _enemyDog = new HellhoundEnemy(_DogTexture,_font){
+            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            Viewport = new Rectangle(0, 0, 64, 32),
+            CanCollideTile = true,
+            MaxHealth = 100f,
+            AttackDamage = 8f,
+
+            LimitIdlePatrol = 100,
+            
+            ChargeTime = 2.0f,
+            ChaseDuration = 5f,
+            DashDuration = 1.0f,
+        };
+        _enemySlime = new SlimeEnemy(_SlimeTexture,_font){
+            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            Viewport = new Rectangle(0, 0, 32, 32),
+            CanCollideTile = true,
+            MaxHealth = 50f,
+            AttackDamage = 3f,
+
+            JumpCooldown = 1.5f,
+            JumpStrength = 750,
+            Friction = 0.96f
+        };
+        _enemyDemon = new DemonEnemy(_DemonTexture,_font){
+            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            Viewport = new Rectangle(0, 0, 32, 64),
+            CanCollideTile = true,
+            DemonBullet = new DemonBullet(_DemonBulletTexture)
+        };
+    }
+
+    private void SpawnEnemies()
+    {
+        foreach (var enemy in _enemyMap.GetEnemySpawnPoints())
+        {
+            switch (enemy.Value)
+            {
+                case 97:
+                    // HellhoundEnemy.
+                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key), _gameObjects);
+                    _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemy.Key)+ new Vector2(0,-256), _gameObjects);
+
+                    break;
+                default:
+                    break;
+            }
+            
+        }  
     }
 
     private void AddItems()
@@ -281,8 +373,9 @@ public class PlayScene : Scene
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
+        Texture2D LifeUP = _content.Load<Texture2D>("1Up");
 
-        _gameObjects.Add(new Item(testItem, "test", TileMap.GetTileWorldPositionAt(18, 98)){
+        _gameObjects.Add(new Item(testItem, "test", TileMap.GetTileWorldPositionAt(18, 90)){
             Name =  "Pickaxe1",
             Viewport = new Rectangle(0, 0, 32,32)
         });
@@ -296,20 +389,23 @@ public class PlayScene : Scene
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
+
+        _gameObjects.Add(new LifeUp(LifeUP, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 98)){
+            Name =  "1Up",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
     }
 
     protected override void SetupUI()
     {
         HealthBar playerHealth = new HealthBar(
             new Rectangle(20, 40, 200, 30),
-            player,
             Color.Red,
             Color.Gray
         );
 
         MPBar playerMP = new MPBar(
             new Rectangle(20, 100, 200, 30),
-            player,
             Color.SkyBlue,
             Color.Gray
         );
@@ -318,7 +414,6 @@ public class PlayScene : Scene
         ItemSlot Slot1 = new ItemSlot(
             0, // first slot
             new Rectangle(250, 30, 50, 50),
-            player,
             slot,
             slot,
             _font
@@ -326,7 +421,6 @@ public class PlayScene : Scene
         ItemSlot Slot2 = new ItemSlot(
             1, //second slot
             new Rectangle(350, 30, 50, 50),
-            player,
             slot,
             slot,
             _font

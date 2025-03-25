@@ -10,42 +10,50 @@ namespace FinalComGame
 {
     public class Player : Character
     {
-        public Bullet Bullet;
+        public Projectile PlayerBullet;
         public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb, Interact, Item1, Item2;
         
-        public float maxMP;
+        public float MaxMP;
         public float MP;
+        public int Life;
 
-        public Item[] holdItem;
+        public Item[] HoldItem;
 
         public SoulParticle _particle;
 
-        public int crouchSpeed;
-        public int climbSpeed;
+        public int CrouchSpeed;
+        public int ClimbSpeed;
 
-        private bool isClimbing = false;
-        private bool isCrouching = false;
-        private bool isDropping = false;
-        private bool isGliding = false;
+        private bool _isClimbing;
+        private bool _isCrouching;
+        private bool _isDropping;
+        private bool _isGliding;
 
-        private TileType overlappedTile = TileType.None;
+        private TileType _overlappedTile;
         //Jump
-        protected float coyoteTime = 0.1f; // 100ms of coyote time
-        protected float coyoteTimeCounter = 0f;
-        protected float jumpBufferTime = 0.15f; // 150ms jump buffer
-        protected float jumpBufferCounter = 0f;
+        public float CoyoteTime;
+        private float _coyoteTimeCounter;
+        public float JumpBufferTime;
+        private float _jumpBufferCounter;
         // Dash 
-        protected bool isDashing = false;
-        private float dashSpeed = 400f;
-        private float dashDuration = 0.4f; // Dash lasts for 0.5 seconds
-        private float dashCooldown = 0.5f; // Cooldown before dashing again
-        private float dashTimer = 0f;
-        private float dashCooldownTimer = 0f;
-        private float dashMP = 20f;
+        private bool _isDashing;
+        public float DashSpeed;
+        public float DashDuration;
+        public float DashCooldown;
+        private float _dashTimer;
+        private float _dashCooldownTimer;
+        public float DashMP;
         // Glide
-        private float glideGravityScale = 0.3f; // How much gravity affects gliding (lower = slower fall)
-        private float glideMaxFallSpeed = 80f; // Maximum fall speed while gliding
-        private float glideMP = 10f; // MP cost per second while gliding
+        public float GlideGravityScale;
+        public float GlideMaxFallSpeed;        
+        public float GlideMP;
+        // Charge Shot properties
+        private bool _isCharging;
+        private float _chargeTime;
+        public float MaxChargeTime;
+        public float MinChargePower;
+        public float MaxChargePower;
+        public float ChargeMPCost;
 
         //SFX
         public SoundEffect JumpSound;
@@ -56,7 +64,10 @@ namespace FinalComGame
         private Animation _dashAnimation;
         private Animation _glideAnimation;
         private Animation _fallAnimation;
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, Texture2D glideTexture, Texture2D paticleTexture)
+        private Animation _chargeAnimation;
+
+        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, 
+                      Texture2D glideTexture, Texture2D chargeTexture, Texture2D paticleTexture) : base(idleTexture)
         {
             _idleAnimation = new Animation(idleTexture, 48, 64, 16, 24); // 24 fps
             _runAnimation = new Animation(runTexture, 48, 64, 8, 24); //  24 fps
@@ -65,6 +76,7 @@ namespace FinalComGame
             _meleeAttackAnimation = new Animation(meleeAttackTexture, 48, 64, 8, 24); // 24 fps
             _dashAnimation = new Animation(dashTexture, 48, 64, 4, 24); //  24 fps
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
+            _chargeAnimation = new Animation(chargeTexture, 16, 32, 16, 24); //  24 fps
 
             _particle = new SoulParticle(10, Position, paticleTexture);
 
@@ -73,14 +85,33 @@ namespace FinalComGame
 
         public override void Reset()
         {
-            holdItem = new Item[2];
+            HoldItem = new Item[2];
+
             Direction = 1; // Reset direction to right
-            maxHealth = 100f;
-            Health = maxHealth - 50; //REMOVE LATER FOR DEBUG
-            maxMP = 100f;
-            MP = maxMP;
-            crouchSpeed = WalkSpeed/2;
-            climbSpeed = WalkSpeed/2;
+
+            Health = MaxHealth - 50; //REMOVE LATER FOR DEBUG
+            MP = MaxMP;
+
+            _overlappedTile = TileType.None;
+
+            _isClimbing = false;
+            _isCrouching = false;
+            _isDropping = false;
+            _isGliding = false;
+            _isAttacking = false;
+            _isCharging = false;
+            _isDashing = false;
+            _isJumping = false;
+
+            _coyoteTimeCounter = 0f;
+            _jumpBufferCounter = 0f;
+            _dashTimer = 0f;
+            _dashCooldownTimer = 0f;
+            _chargeTime = 0f;
+            _invincibilityTimer = 0f;
+            _attackTimer = 0f;
+            _attackCooldownTimer = 0f;
+            
             base.Reset();
         }
 
@@ -88,8 +119,6 @@ namespace FinalComGame
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if(IsGameOver()) return;
-        
             HandleInput(deltaTime, gameObjects);
             RegenerateMP(deltaTime);
             ActiveItemPassiveAbility();
@@ -97,7 +126,7 @@ namespace FinalComGame
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
 
-            if (!isClimbing && !isDashing) 
+            if (!_isClimbing && !_isDashing) 
                 ApplyGravity(deltaTime);
                 
             UpdateDash(deltaTime);
@@ -108,49 +137,45 @@ namespace FinalComGame
             UpdateAttackHitbox();
             CheckAttackHit(gameObjects);
             UpdateAnimation(deltaTime);
-            if (!isDashing) Velocity.X = 0;
+            if (!_isDashing) Velocity.X = 0;
             
             base.Update(gameTime, gameObjects, tileMap);
-            _particle.Update(Position);    
+            Particle.Update(Position);    
         }
 
         private bool IsGameOver()
         {
-            if(Health <= 0)
-            {
-                Singleton.Instance.CurrentGameState = Singleton.GameState.GameOver;
-                return true;
-            }
-
-            return false;
+            return Life <= 0;
         }
 
         private void RegenerateMP(float deltaTime)
         {
-            if(!isDashing && !isGliding)
+            if(!_isDashing && !_isGliding)
                 MP += 5 * deltaTime;
-            if(MP >= maxMP) 
-                MP = maxMP;
+            if(MP >= MaxMP) 
+                MP = MaxMP;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            _particle.Draw(spriteBatch);
+            Particle.Draw(spriteBatch);
             base.Draw(spriteBatch);
             DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
         {
-            if(isAttacking)
+            if (_isCharging)
+                Animation = _chargeAnimation;
+            else if(_isAttacking)
                 Animation = _meleeAttackAnimation;
-            else if (isDashing)
+            else if (_isDashing)
                 Animation = _dashAnimation;
-            else if (isGliding)
+            else if (_isGliding)
                 Animation = _glideAnimation;
             else if (Velocity.Y > 0)
                 Animation = _fallAnimation;
-            else if (isJumping || Velocity.Y != 0)
+            else if (_isJumping || Velocity.Y != 0)
                 Animation = _jumpAnimation;
             else if (Velocity.X != 0)
             {
@@ -167,7 +192,7 @@ namespace FinalComGame
         {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
-                if (!isDashing) 
+                if (!_isDashing) 
                 {
                     Direction = -1;
                     Velocity.X = -WalkSpeed;
@@ -175,7 +200,7 @@ namespace FinalComGame
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
-                if (!isDashing) 
+                if (!_isDashing) 
                 {
                     Direction = 1;
                     Velocity.X = WalkSpeed;
@@ -185,83 +210,97 @@ namespace FinalComGame
             if (Singleton.Instance.IsKeyJustPressed(Attack))
                 StartAttack();
 
-            if (isAttacking)
+            if (_isAttacking)
             {
-                attackTimer -= deltaTime;
-                if (attackTimer <= 0)
-                    isAttacking = false;
+                _attackTimer -= deltaTime;
+                if (_attackTimer <= 0)
+                    _isAttacking = false;
             }
             else
             {
-                attackCooldownTimer -= deltaTime;
+                _attackCooldownTimer -= deltaTime;
             }
 
+            // Handle Fire button (charge shot)
             if (Singleton.Instance.IsKeyJustPressed(Fire))
-                Shoot(gameObjects);
+            {
+                // Start charging
+                StartCharging();
+            }
+            else if (Singleton.Instance.IsKeyPressed(Fire))
+            {
+                // Continue charging
+                ContinueCharging(deltaTime);
+            }
+            else if (Singleton.Instance.IsKeyJustReleased(Fire))
+            {
+                // Release shot
+                ReleaseChargedShot(gameObjects);
+            }
 
-            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !isDashing)
-                jumpBufferCounter = jumpBufferTime;
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !_isDashing && _coyoteTimeCounter > 0)
+                _jumpBufferCounter = JumpBufferTime;
             else
-                jumpBufferCounter -= deltaTime; // Decrease over time
+                _jumpBufferCounter -= deltaTime; // Decrease over time
 
             // Gliding - activate when holding Jump while in air and not climbing or dashing
-            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !isJumping && !isClimbing && !isDashing && MP > 0)
+            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !_isJumping && !_isClimbing && !_isDashing && MP > 0)
             {
-                isGliding = true;
+                _isGliding = true;
                 _glideAnimation.Reset(); // Reset glide animation when starting to glide
             }
             else
             {
-                isGliding = false;
+                _isGliding = false;
             }
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && !isJumping && !isClimbing && Velocity.Y == 0)
+            if (Singleton.Instance.IsKeyPressed(Crouch) && !_isJumping && !_isClimbing && Velocity.Y == 0)
             {
-                if (!isCrouching) Position.Y += 16;
+                if (!_isCrouching) Position.Y += 16;
                 Viewport.Height = 16;
-                WalkSpeed = crouchSpeed;
-                isCrouching = true;
+                WalkSpeed = CrouchSpeed;
+                _isCrouching = true;
             }
             else
             {
-                if (isCrouching) Position.Y -= 16;
+                if (_isCrouching) Position.Y -= 16;
                 Viewport.Height = 32;
                 WalkSpeed = 200;
-                isCrouching = false;
+                _isCrouching = false;
             }
 
             if (Singleton.Instance.IsKeyPressed(Crouch) && Singleton.Instance.IsKeyJustPressed(Jump)){
-                isDropping = true;
+                _isDropping = true;
             }
             else
             {
-                isDropping = false;
+                _isDropping = false;
             }
 
-            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && overlappedTile == TileType.Ladder && !isClimbing && !isCrouching)
+            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && _overlappedTile == TileType.Ladder && !_isClimbing && !_isCrouching && !_isDashing)
             {
-                isClimbing = true;
-                isJumping = false;
+                _isClimbing = true;
+                _isJumping = false;
                 Velocity.Y = 0;
             }
 
-            if (isClimbing)
+            if (_isClimbing)
             {
                 if (Singleton.Instance.IsKeyPressed(Climb))
                 {
-                    Velocity.Y = -climbSpeed;
+                    Velocity.Y = -ClimbSpeed;
                 }
 
                 else if (Singleton.Instance.IsKeyPressed(Crouch))
                 {
-                    Velocity.Y = climbSpeed;
+                    Velocity.Y = ClimbSpeed;
                 }
 
                 else Velocity.Y = 0;
                 
-                if (Singleton.Instance.IsKeyJustPressed(Jump) || overlappedTile == TileType.None)
+                if (Singleton.Instance.IsKeyJustPressed(Jump) || _overlappedTile == TileType.None)
                 {
-                    isClimbing = false;
+                    _isClimbing = false;
                 }
 
             }
@@ -282,49 +321,45 @@ namespace FinalComGame
         {
             for (int i = 0; i < 2; i++)
             {
-                if (holdItem[i] == null) continue;
+                if (HoldItem[i] == null) continue;
 
-                if(!holdItem[i].IsConsumable)
+                if(!HoldItem[i].IsConsumable)
                 {
-                    holdItem[i].ActiveAbility(this);
+                    HoldItem[i].ActiveAbility();
                 }
             }
         }
 
         public void BoostSpeed(float speedModifier)
         {
-            if(isDashing) 
+            if(_isDashing) 
                 return;
             Velocity.X *= (1 + speedModifier);
         }
 
         private void UseItem(int itemSlotIndex)
         {
-            if(holdItem[itemSlotIndex] == null) return;
+            if(HoldItem[itemSlotIndex] == null) return;
 
-            holdItem[itemSlotIndex].Use(this);
-
-            if(holdItem[itemSlotIndex].IsConsumable) holdItem[itemSlotIndex] = null;
+            HoldItem[itemSlotIndex].Use(itemSlotIndex);
         }
 
         private void CheckInteraction(List<GameObject> gameObjects)
         {
             foreach (var item in gameObjects.OfType<Item>())
             {
-                if (item.InPickupRadius(this) && !item.IsPickedUp)
+                if (item.InPickupRadius() && !item.IsPickedUp)
                 {
                     // Check if player has empty slot
-                    if (holdItem[0] == null)
+                    if (HoldItem[0] == null)
                     {
-                        item.OnPickup(this);
-                        holdItem[0] = item;
+                        item.OnPickup(0);
                         break;
                         // You could add a pickup sound or effect here
                     }
-                    else if (holdItem[1] == null)
+                    else if (HoldItem[1] == null)
                     {
-                        item.OnPickup(this);
-                        holdItem[1] = item;
+                        item.OnPickup(1);
                         break;
                         // You could add a pickup sound or effect here
                     }
@@ -340,12 +375,12 @@ namespace FinalComGame
 
         private void StartAttack()
         {
-            if (attackCooldownTimer <= 0 && !isAttacking)
+            if (_attackCooldownTimer <= 0 && !_isAttacking)
             {
                 _meleeAttackAnimation.Reset();
-                isAttacking = true;
-                attackTimer = attackDuration;
-                attackCooldownTimer = attackCooldown;
+                _isAttacking = true;
+                _attackTimer = AttackDuration;
+                _attackCooldownTimer = AttackCooldown;
 
                 // Set attack hitbox in front of the player
                 int attackWidth = 20; // Adjust the size of the attack area
@@ -360,7 +395,7 @@ namespace FinalComGame
 
         private void UpdateAttackHitbox()
         {
-            if (isAttacking)
+            if (_isAttacking)
             {
                 int attackWidth = 20; // Adjust as needed
                 int attackHeight = 32;
@@ -372,41 +407,42 @@ namespace FinalComGame
         
         private void CheckAttackHit(List<GameObject> gameObjects)
         {
-            if (!isAttacking) return;
+            if (!_isAttacking) return;
 
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
-                enemy.CheckHit(attackHitbox, attackDamage);
+                enemy.CheckHit(attackHitbox, AttackDamage);
             }
         }
 
         private void StartDash()
         {
-            if (dashCooldownTimer <= 0 && !isDashing)
+            if (_dashCooldownTimer <= 0 && !_isDashing && MP >= DashMP)
             {
-                isDashing = true;
-                dashTimer = dashDuration;
-                dashCooldownTimer = dashCooldown;
+                _isDashing = true;
+                _isGliding = false;
+                _dashTimer = DashDuration;
+                _dashCooldownTimer = DashCooldown;
                 Velocity.Y = 0;
-                Velocity.X = dashSpeed * Direction;
-                UseMP(dashMP);
+                Velocity.X = DashSpeed * Direction;
+                UseMP(DashMP);
             }
         }
 
         private void UpdateDash(float deltaTime)
         {
-            if (isDashing)
+            if (_isDashing)
             {
-                dashTimer -= deltaTime;
-                if (dashTimer <= 0)
+                _dashTimer -= deltaTime;
+                if (_dashTimer <= 0)
                 {
-                    isDashing = false;
+                    _isDashing = false;
                     Velocity.X = 0;
                 }
             }
             else
             {
-                dashCooldownTimer -= deltaTime;
+                _dashCooldownTimer -= deltaTime;
             }
         }
 
@@ -416,7 +452,7 @@ namespace FinalComGame
             // Stop gliding if we hit the ground
             if (IsOnGround())
             {
-                isGliding = false;
+                _isGliding = false;
                 return;
             }
             
@@ -433,49 +469,49 @@ namespace FinalComGame
             // Apply coyote time: Reset if on ground
             if (IsOnGround())
             {
-                coyoteTimeCounter = coyoteTime; // Reset coyote time when on ground
+                _coyoteTimeCounter = CoyoteTime; // Reset coyote time when on ground
             }
             else
             {
-                coyoteTimeCounter -= deltaTime; // Decrease coyote time when falling
+                _coyoteTimeCounter -= deltaTime; // Decrease coyote time when falling
             }
         }
 
         private void CheckAndJump()
         {
             // Jumping logic with Coyote Time and Jump Buffer
-            if (jumpBufferCounter > 0 && coyoteTimeCounter > 0)
+            if (_jumpBufferCounter > 0 && _coyoteTimeCounter > 0)
             {
-                Velocity.Y = -jumpStrength;
-                jumpBufferCounter = 0; // Prevent multiple jumps
-                coyoteTimeCounter = 0; // Consume coyote time
-                isJumping = true;
+                Velocity.Y = -JumpStrength;
+                _jumpBufferCounter = 0; // Prevent multiple jumps
+                _coyoteTimeCounter = 0; // Consume coyote time
+                _isJumping = true;
                 JumpSound.Play();
             }
 
             // Jump Modulation 
-            if (Singleton.Instance.IsKeyJustReleased(Jump) && isJumping)
+            if (Singleton.Instance.IsKeyJustReleased(Jump) && _isJumping)
             {
                 Velocity.Y *= 0.5f; // Reduce upwards velocity to shorten jump
-                isJumping = false;
+                _isJumping = false;
             }
         }
 
         protected void UpdateTileInteraction (TileMap tileMap){
 
-            overlappedTile = TileType.None;
+            _overlappedTile = TileType.None;
             foreach (Tile tile in tileMap.tiles.Values)
             {
                 if (tile.Type == TileType.Ladder || tile.Type == TileType.Platform_Ladder)
                 {
                     if (IsTouching(tile)){
-                        overlappedTile = TileType.Ladder;
+                        _overlappedTile = TileType.Ladder;
                     }
                 }
 
                 if (tile.Type == TileType.Platform|| tile.Type == TileType.Platform_Ladder)
                 {
-                    if (tile.Position.Y < Position.Y + Viewport.Height || isDropping){
+                    if (tile.Position.Y < Position.Y + Viewport.Height || _isDropping){
                         tile.IsSolid = false;
                     }
 
@@ -486,10 +522,87 @@ namespace FinalComGame
                 }
             }
         }
+       // Charge shot methods
+        private void StartCharging()
+        {
+            if (MP > 0)
+            {
+                _isCharging = true;
+                _chargeTime = 0f;
+                // chargeColor = Color.White;
+                
+                // // Play charge start sound if available
+                // if (ChargeSound != null)
+                //     ChargeSound.Play();
+                
+                _chargeAnimation.Reset();
+            }
+        }
+        
+        private void ContinueCharging(float deltaTime)
+        {
+            if (!_isCharging || MP <= 0)
+                return;
+                
+            // Increment charge time
+            _chargeTime += deltaTime;
+            
+            // Clamp to max charge time
+            if (_chargeTime > MaxChargeTime)
+                _chargeTime = MaxChargeTime;
+                
+            // Update charge color (from white to red as charge increases)
+            // float chargeRatio = chargeTime / maxChargeTime;
+            // chargeColor = new Color(
+            //     1.0f, // Red always max
+            //     1.0f - (chargeRatio * (1.0f - chargeMinColorG)), // Green decreases
+            //     1.0f - (chargeRatio * (1.0f - chargeMinColorG)), // Blue decreases
+            //     1.0f); // Alpha always max
+                
+            // Drain MP while charging (more MP for longer charge)
+            DrainMP(ChargeMPCost / MaxChargeTime, deltaTime);
+        }
+        
+        private void ReleaseChargedShot(List<GameObject> gameObjects)
+        {
+            if (!_isCharging)
+                return;
+                
+            // Calculate charge power (linear scaling from min to max)
+            float chargeRatio = Math.Min(_chargeTime / MaxChargeTime, 1.0f);
+            float chargePower = MinChargePower + chargeRatio * (MaxChargePower - MinChargePower);
+            
+            // Create and configure the bullet
+            Projectile newBullet = PlayerBullet.Clone() as Projectile;
+            newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2, Position.Y);
+            
+            // Scale bullet properties based on charge level
+            newBullet.Velocity = new Vector2(800 * Direction * chargePower, 0);
+            newBullet.DamageAmount *= chargePower; // Increase damage
+            
+            // // Scale bullet size with charge (optional)
+            // float sizeMultiplier = 1.0f + chargeRatio;
+            // newBullet.Rectangle.Width = (int)(newBullet.Rectangle.Width * sizeMultiplier);
+            // newBullet.Rectangle.Height = (int)(newBullet.Rectangle.Height * sizeMultiplier);
+            
+            // Change color based on charge (optional)
+            // newBullet.Color = chargeColor;
+            
+            newBullet.Reset();
+            gameObjects.Add(newBullet);
+            
+            // // Play charged shot sound if available
+            // if (ChargeShotSound != null && chargeRatio > 0.5f)
+            //     ChargeShotSound.Play();
+            
+            // Reset charging state
+            _isCharging = false;
+            _chargeTime = 0f;
+        }
 
         private void Shoot(List<GameObject> gameObjects)
         {
-            var newBullet = Bullet.Clone() as Bullet;
+            Projectile newBullet = PlayerBullet.Clone() as Projectile;
             newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
                                             Position.Y);
             newBullet.Velocity = new Vector2(800 * Direction, 0);
@@ -504,7 +617,7 @@ namespace FinalComGame
         }
         public override void OnHit(float damageAmount)
         {
-            if (invincibilityTimer > 0) 
+            if (_invincibilityTimer > 0) 
                 return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;
@@ -523,27 +636,45 @@ namespace FinalComGame
             base.OnCollideNPC(npc, damageAmount);
         }
 
+        public override void OnDead()
+        {
+            Life--;
+            
+            if(IsGameOver()) 
+                Singleton.Instance.CurrentGameState = Singleton.GameState.GameOver;
+            else  
+                Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;  
+        }
+
         private void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"Dir {directionText} \nCHp {Health}";
+            string displayText = $"Dir {directionText} \nCHp {Health} \nMP {MP:F1} \nLife {Life}";
+            
+            // Add charge info if charging
+            if (_isCharging)
+            {
+                float chargePercent = (_chargeTime / MaxChargeTime) * 100;
+                displayText += $"\nCharge {chargePercent:F0}%";
+            }
             spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
+            spriteBatch.DrawString(Singleton.Instance.Debug_Font, ".", this.GetPlayerCenter(), Color.Red);
         }
 
                 // New method to apply gravity depending on glide state
         protected override void ApplyGravity(float deltaTime)
         {
-            if (isGliding)
+            if (_isGliding)
             {
                 // Apply reduced gravity while gliding
-                Velocity.Y += Singleton.GRAVITY * glideGravityScale * deltaTime;
+                Velocity.Y += Singleton.GRAVITY * GlideGravityScale * deltaTime;
                 
                 // Cap fall speed while gliding
-                if (Velocity.Y > glideMaxFallSpeed)
-                    Velocity.Y = glideMaxFallSpeed;
+                if (Velocity.Y > GlideMaxFallSpeed)
+                    Velocity.Y = GlideMaxFallSpeed;
                 
-                DrainMP(glideMP, deltaTime);
+                DrainMP(GlideMP, deltaTime);
             }
             else
             {
@@ -570,8 +701,14 @@ namespace FinalComGame
             if (MP <= 0)
             {
                 MP = 0;
-                isGliding = false; // Stop gliding when MP is depleted
+                _isGliding = false; // Stop gliding when MP is depleted
             }
+        }
+        public Vector2 GetPlayerCenter(){
+            Vector2 Center = this.Position;
+            Center.X += this.Viewport.Width/2;
+            Center.Y += this.Viewport.Height/4; //idk why it need /4 instead of /2
+            return Center;
         }
     }
 }

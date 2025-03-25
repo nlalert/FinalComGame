@@ -54,8 +54,6 @@ public class GameManager : Game
     {
         Singleton.Instance.UpdateCurrentInput();
 
-        Console.WriteLine(Singleton.Instance.CurrentGameState);
-
         //assume game state as playing
         switch (Singleton.Instance.CurrentGameState)
         {

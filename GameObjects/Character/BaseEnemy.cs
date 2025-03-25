@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 
 namespace FinalComGame {
-    abstract class BaseEnemy : Character
+    public abstract class BaseEnemy : Character
     {
         // Enemy States
         public enum EnemyState
@@ -16,6 +16,9 @@ namespace FinalComGame {
             Attack,
             Cooldown,
             Dying,
+            Charging,
+            Dash,
+            Jump,
             Dead
         }
 
@@ -24,31 +27,24 @@ namespace FinalComGame {
         public EnemyState CurrentState { get; protected set; }
         
         // Movement Properties
-        protected float chaseSpeed = 3f;
-        protected float patrolBoundaryLeft;
-        protected float patrolBoundaryRight;
+        protected float ChaseSpeed;
+        protected float _patrolBoundaryLeft;
+        protected float _patrolBoundaryRight;
 
         // Combat Properties
-        protected float detectionRange = 200f;
-        protected float attackRange = 50f;
-
-        // Reference to player for tracking
+        public float DetectionRange = 200f;
+        public float AttackRange = 50f;
 
         // Spawn and Death Tracking
-        public Player player {get; set;}
-        public bool CanCollideTile {get;set;} =false;
-        public bool HasSpawned { get; protected set; } = false;
+        public bool CanCollideTile;
         public bool IsDead() => CurrentState == EnemyState.Dead;
         
         protected SpriteFont _DebugFont;
-        public BaseEnemy(Texture2D texture,SpriteFont font){
+        public BaseEnemy(Texture2D texture,SpriteFont font) : base(texture){
             _DebugFont = font;
 
             _idleAnimation = new Animation(texture, 16, 32, 1, 24); // 24 fps\
             Animation = _idleAnimation;
-
-            //remove later
-            _texture = texture;
         }
         
         // Spawn method with optional spawn effects
@@ -56,11 +52,8 @@ namespace FinalComGame {
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = new Vector2(x, y);
-            newEnemy.patrolBoundaryLeft = x - 100f;
-            newEnemy.patrolBoundaryRight = x + 100f;
-            newEnemy.Health = maxHealth;
-            newEnemy.HasSpawned = true;
-            newEnemy.IsActive =true;
+            newEnemy._patrolBoundaryLeft = x - 100f;
+            newEnemy._patrolBoundaryRight = x + 100f;
             gameObjects.Add(newEnemy);
             newEnemy.OnSpawn();
         }
@@ -68,11 +61,8 @@ namespace FinalComGame {
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = position;
-            newEnemy.patrolBoundaryLeft = position.X - 100f;
-            newEnemy.patrolBoundaryRight = position.X + 100f;
-            newEnemy.Health = maxHealth;
-            newEnemy.HasSpawned = true;
-            newEnemy.IsActive =true;
+            newEnemy._patrolBoundaryLeft = position.X - 100f;
+            newEnemy._patrolBoundaryRight = position.X + 100f;
             gameObjects.Add(newEnemy);
             newEnemy.OnSpawn();
         }
@@ -91,12 +81,12 @@ namespace FinalComGame {
         }
         public override void OnHit(float damageAmount)
         {
-            if (invincibilityTimer > 0) 
+            if (_invincibilityTimer > 0) 
                 return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;
             StartInvincibility();
-            Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
+            Console.WriteLine("Damage " + damageAmount + " CurHP" + Health);
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;
@@ -107,9 +97,9 @@ namespace FinalComGame {
         /// This npc physically contact with Player
         /// </summary>
         /// <param name="player">Player Character</param>
-        public virtual void OnCollidePlayer(Player player)
+        public virtual void OnCollidePlayer()
         {
-            player.OnCollideNPC(this,this.attackDamage);
+            Singleton.Instance.Player.OnCollideNPC(this,this.AttackDamage);
         }
         public override void OnCollideNPC(Character npc, float damageAmount)
         {   
@@ -129,8 +119,6 @@ namespace FinalComGame {
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if(HasSpawned == false)
-                return;
             spriteBatch.Draw(_texture, Position, Viewport, Color.White);
             base.Draw(spriteBatch);
         }
@@ -145,19 +133,33 @@ namespace FinalComGame {
         protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.X += Velocity.X * deltaTime;
-            if(CanCollideTile)
+            if(!CanCollideTile) 
+                return;
+            
+            foreach (Tile tile in tileMap.tiles.Values)
             {
-                foreach (Tile tile in tileMap.tiles.Values)
-                {
+                if(tile.IsSolid){
                     if(ResolveHorizontalCollision(tile)){
                         OnCollisionHorizon();
                     }
                 }
             }
         }
+        protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Position.Y += Velocity.Y * deltaTime;
+            foreach (Tile tile in tileMap.tiles.Values)
+            {
+                if(tile.IsSolid){
+                    if(ResolveVerticalCollision(tile)){
+                        OnLandVerticle();
+                    }
+                } 
+            }
+        }
         public virtual bool CheckContactPlayer(){
-            if(this.IsTouching(player)){
-                OnCollidePlayer(player);
+            if(this.IsTouching(Singleton.Instance.Player)){
+                OnCollidePlayer();
                 Console.WriteLine("contact Player");
                 return true;
             }
@@ -177,16 +179,19 @@ namespace FinalComGame {
         public virtual void OnCollisionHorizon(){
 
         }
+        public virtual void OnLandVerticle(){
+
+        }
         /// <summary>
         /// Enemy look for player with line of sight
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public bool HaveLineOfSight(Player player,TileMap tileMap){
-            if (player == null) return false;
+        public bool HaveLineOfSight(TileMap tileMap){
+            if (Singleton.Instance.Player == null) return false;
             
             Vector2 enemyPosition = Position;
-            Vector2 playerPosition = player.Position;
+            Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
             
             float step = 16f; // Tile size or step size for checking
             Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);
@@ -201,6 +206,22 @@ namespace FinalComGame {
                 }
             }
             return true;
+        }
+
+        public override void Reset()
+        {
+            Direction = -1; // Reset direction to left
+
+            Health = MaxHealth;
+
+            _isAttacking = false;
+            _isJumping = false;
+
+            _invincibilityTimer = 0f;
+            _attackTimer = 0f;
+            _attackCooldownTimer = 0f;
+            
+            base.Reset();
         }
     }
 }

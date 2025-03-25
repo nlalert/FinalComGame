@@ -8,17 +8,13 @@ namespace FinalComGame
     public class Item : GameObject
     {
         // Item properties
-        public string Description { get; protected set; }
-        public bool IsPickedUp { get; protected set; }
-        public bool IsConsumable { get; protected set; }
+        public string Description;
+        public bool IsPickedUp;
+        public bool IsConsumable;
         
         // Visual indicator for pickup range
-        protected float pickupRadius = 40f;
-        protected bool isInRange = false;
-        
-        protected float bobAmount = 4f;
-        protected float bobSpeed = 2f;
-        protected float bobTimer = 0f;
+        public float pickupRadius = 40f;
+
         protected Vector2 originalPosition;
         
         // Constructor
@@ -27,23 +23,27 @@ namespace FinalComGame
         {
             Description = description;
             IsPickedUp = false;
-            
+
+            this.Position = Position;
             originalPosition = Position;
         }
         
         // // Method to be overridden by specific item types
-        public virtual void Use(Player player)
+        public virtual void Use(int slot)
         {
+            if(IsConsumable) 
+                Singleton.Instance.Player.HoldItem[slot] = null;
             Console.WriteLine("Using Item");      
         }
         
-        public virtual void ActiveAbility(Player player)
+        public virtual void ActiveAbility()
         {    
         }
         
         // Called when item is picked up
-        public virtual void OnPickup(Player player)
+        public virtual void OnPickup(int slot)
         {
+            Singleton.Instance.Player.HoldItem[slot] = this;
             IsPickedUp = true;
         }
         
@@ -60,10 +60,9 @@ namespace FinalComGame
             if (IsPickedUp) return;
             
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            
-            // Animate item bobbing
-            bobTimer += deltaTime * bobSpeed;
-            Position = originalPosition + new Vector2(0, (float)Math.Sin(bobTimer) * bobAmount);
+
+            ApplyGravity(deltaTime);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             
             base.Update(gameTime, gameObjects, tileMap);
         }
@@ -134,9 +133,9 @@ namespace FinalComGame
             );
         }
 
-        public bool InPickupRadius(Player player)
+        public bool InPickupRadius()
         {
-            float distance = Vector2.Distance(Position, player.Position);
+            float distance = Vector2.Distance(Position, Singleton.Instance.Player.Position);
             return distance < pickupRadius;
         }
     }
