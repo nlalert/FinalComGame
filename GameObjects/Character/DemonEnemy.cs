@@ -17,7 +17,7 @@ namespace FinalComGame
         private float loopOffset =0;
         private float loopSpeed =2f;
 
-        public Projectile DemonBullet;
+        public DemonBullet DemonBullet;
 
         public DemonEnemy(Texture2D texture, SpriteFont font) 
             : base(texture, font)

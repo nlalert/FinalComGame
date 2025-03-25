@@ -10,7 +10,7 @@ namespace FinalComGame
         private float shootCooldown = 2.0f;
         private float shootTimer;
 
-        public Projectile TowerBullet;
+        public TowerBullet TowerBullet;
 
         public TowerEnemy(Texture2D texture, SpriteFont font) 
             : base(texture, font)

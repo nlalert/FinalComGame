@@ -10,7 +10,7 @@ namespace FinalComGame
 {
     public class Player : Character
     {
-        public Projectile PlayerBullet;
+        public PlayerBullet Bullet;
         public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb, Interact, Item1, Item2;
         
         public float MaxMP;
@@ -582,7 +582,7 @@ namespace FinalComGame
             float chargePower = MinChargePower + chargeRatio * (MaxChargePower - MinChargePower);
             
             // Create and configure the bullet
-            Projectile newBullet = PlayerBullet.Clone() as Projectile;
+            Projectile newBullet = Bullet.Clone() as Projectile;
             newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2, Position.Y);
             
             // Scale bullet properties based on charge level
@@ -611,7 +611,7 @@ namespace FinalComGame
 
         private void Shoot(List<GameObject> gameObjects)
         {
-            Projectile newBullet = PlayerBullet.Clone() as Projectile;
+            Projectile newBullet = Bullet.Clone() as Projectile;
             newBullet.Position = new Vector2(Rectangle.Width / 2 + Position.X - newBullet.Rectangle.Width / 2,
                                             Position.Y);
             newBullet.Velocity = new Vector2(800 * Direction, 0);
