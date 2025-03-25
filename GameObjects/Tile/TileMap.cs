@@ -87,6 +87,14 @@ namespace FinalComGame
         {
             return new Vector2(tileGridPosition.X * Singleton.BLOCK_SIZE, tileGridPosition.Y * Singleton.BLOCK_SIZE);
         }
+        public static Vector2 GetTileGridPositionAt(int x, int y)
+        {
+            return new Vector2(x / Singleton.BLOCK_SIZE, y / Singleton.BLOCK_SIZE); // Grid Position ust be int
+        }
+        public static Vector2 GetTileGridPositionAt(Vector2 tileWorldPosition)
+        {
+            return new Vector2((int) tileWorldPosition.X / Singleton.BLOCK_SIZE, (int) tileWorldPosition.Y / Singleton.BLOCK_SIZE); // Grid Position ust be int
+        }
 
         private static bool IsEnemyTile(int tileID)
         {
@@ -148,13 +156,28 @@ namespace FinalComGame
             return false;
         }
 
-        public Tile GetTileAt(int tileX, int tileY)
+        public Tile GetTileAtGetTileAtGridPosition(int tileX, int tileY)
         {
             Vector2 tileGridPosition = new Vector2(tileX, tileY);
+            return GetTileAtGridPosition(tileGridPosition);
+        }
+
+        public Tile GetTileAtGridPosition(Vector2 tileGridPosition)
+        {
             if(tiles.TryGetValue(tileGridPosition, out Tile value))
                 return value;
                 
             return null;
+        }
+        public Tile GetTileAtWorldPostion(Vector2 worldPostion)
+        {
+            return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
+        }
+
+        public Tile GetTileAtWorldPostion(int x, int y)
+        {
+            Vector2 worldPostion = new Vector2(x, y);
+            return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
         }
 
         // Fixed version of your GetEnemyLocation method

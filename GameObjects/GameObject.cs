@@ -214,18 +214,36 @@ public class GameObject : ICloneable
     protected virtual void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
     {
         Position.X += Velocity.X * deltaTime;
-        foreach (Tile tile in tileMap.tiles.Values)
+        int radius = 5;
+        for (int i = -radius; i <= radius; i++)
         {
-            if(tile.IsSolid) ResolveHorizontalCollision(tile);
+            for (int j = -radius; j <= radius; j++)
+            {
+                Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
+                Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                if(tile != null && tile.IsSolid)
+                {
+                    ResolveHorizontalCollision(tile);
+                }
+            }
         }
     }
 
     protected virtual void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
     {
         Position.Y += Velocity.Y * deltaTime;
-        foreach (Tile tile in tileMap.tiles.Values)
+        int radius = 5;
+        for (int i = -radius; i <= radius; i++)
         {
-            if(tile.IsSolid) ResolveVerticalCollision(tile);
+            for (int j = -radius; j <= radius; j++)
+            {
+                Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
+                Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                if(tile != null && tile.IsSolid)
+                {
+                    ResolveVerticalCollision(tile);
+                }
+            }
         }
     }
 }

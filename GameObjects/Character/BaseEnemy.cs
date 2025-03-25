@@ -135,12 +135,19 @@ namespace FinalComGame {
             Position.X += Velocity.X * deltaTime;
             if(!CanCollideTile) 
                 return;
-            
-            foreach (Tile tile in tileMap.tiles.Values)
+
+            int radius = 5;
+            for (int i = -radius; i <= radius; i++)
             {
-                if(tile.IsSolid){
-                    if(ResolveHorizontalCollision(tile)){
-                        OnCollisionHorizon();
+                for (int j = -radius; j <= radius; j++)
+                {
+                    Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
+                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                    if(tile != null && tile.IsSolid)
+                    {
+                        if(ResolveHorizontalCollision(tile)){
+                            OnCollisionHorizon();
+                        }
                     }
                 }
             }
@@ -148,13 +155,20 @@ namespace FinalComGame {
         protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.Y += Velocity.Y * deltaTime;
-            foreach (Tile tile in tileMap.tiles.Values)
+            int radius = 5;
+            for (int i = -radius; i <= radius; i++)
             {
-                if(tile.IsSolid){
-                    if(ResolveVerticalCollision(tile)){
-                        OnLandVerticle();
+                for (int j = -radius; j <= radius; j++)
+                {
+                    Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
+                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                    if(tile != null && tile.IsSolid)
+                    {
+                        if(ResolveVerticalCollision(tile)){
+                            OnLandVerticle();
+                        }
                     }
-                } 
+                }
             }
         }
         public virtual bool CheckContactPlayer(){
