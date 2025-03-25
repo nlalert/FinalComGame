@@ -341,9 +341,7 @@ namespace FinalComGame
         {
             if(HoldItem[itemSlotIndex] == null) return;
 
-            HoldItem[itemSlotIndex].Use();
-
-            if(HoldItem[itemSlotIndex].IsConsumable) HoldItem[itemSlotIndex] = null;
+            HoldItem[itemSlotIndex].Use(itemSlotIndex);
         }
 
         private void CheckInteraction(List<GameObject> gameObjects)
@@ -355,15 +353,13 @@ namespace FinalComGame
                     // Check if player has empty slot
                     if (HoldItem[0] == null)
                     {
-                        item.OnPickup();
-                        HoldItem[0] = item;
+                        item.OnPickup(0);
                         break;
                         // You could add a pickup sound or effect here
                     }
                     else if (HoldItem[1] == null)
                     {
-                        item.OnPickup();
-                        HoldItem[1] = item;
+                        item.OnPickup(1);
                         break;
                         // You could add a pickup sound or effect here
                     }

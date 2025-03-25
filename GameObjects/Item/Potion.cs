@@ -17,12 +17,12 @@ namespace FinalComGame
         }
         
         // // Method to be overridden by specific item types
-        public override void Use()
+        public override void Use(int slot)
         {
             Singleton.Instance.Player.Health += _healAmount;
             Singleton.Instance.Player.Health = Math.Min(Singleton.Instance.Player.Health, Singleton.Instance.Player.MaxHealth);
             
-            base.Use();
+            base.Use(slot);
         }
     }
 }

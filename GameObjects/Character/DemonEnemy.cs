@@ -24,6 +24,8 @@ namespace FinalComGame
         {
             DetectionRange =300f;
             AttackRange = 400f;
+            DetectionRange =300f;
+            AttackRange = 400f;
             verticalOffset = Singleton.Instance.Random.Next(0, 100); // Randomize hover start
             CanCollideTile = true;
         }
@@ -96,7 +98,7 @@ namespace FinalComGame
                 float horizontalVelocity = MathHelper.Clamp((targetX - Position.X) * 2f, -hoverSpeed, hoverSpeed);
                 Velocity.X = horizontalVelocity;
 
-                if (distanceToPlayer <=AttackRange && shootTimer >= shootCooldown && HaveLineOfSight(tileMap))
+                if (distanceToPlayer <= AttackRange && shootTimer >= shootCooldown && HaveLineOfSight(tileMap))
                 {
                     ShootBullet(gameObjects);
                     shootTimer = 0;
