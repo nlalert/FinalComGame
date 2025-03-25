@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
 {
-    public class Particle : GameObject
+    public class SoulParticle : GameObject
     {
         private int _count;
         private Vector2 _center;
@@ -20,7 +20,7 @@ namespace FinalComGame
         private float[] _floatSpeed;
         private float[] _sideSpeed;
         
-        public Particle (int count, Vector2 position, Texture2D texture)
+        public SoulParticle (int count, Vector2 position, Texture2D texture)
         {
 
             _count = count;

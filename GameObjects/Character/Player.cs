@@ -19,7 +19,7 @@ namespace FinalComGame
 
         public Item[] HoldItem;
 
-        public Particle Particle;
+        public SoulParticle _particle;
 
         public int CrouchSpeed;
         public int ClimbSpeed;
@@ -78,7 +78,7 @@ namespace FinalComGame
             _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
             _chargeAnimation = new Animation(chargeTexture, 16, 32, 16, 24); //  24 fps
 
-            Particle = new Particle(10, Position, paticleTexture);
+            _particle = new SoulParticle(10, Position, paticleTexture);
 
             Animation = _idleAnimation;
         }
@@ -140,7 +140,7 @@ namespace FinalComGame
             if (!_isDashing) Velocity.X = 0;
             
             base.Update(gameTime, gameObjects, tileMap);
-            Particle.Update(Position);    
+            _particle.Update(Position);    
         }
 
         private bool IsGameOver()
@@ -158,7 +158,7 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Particle.Draw(spriteBatch);
+            _particle.Draw(spriteBatch);
             base.Draw(spriteBatch);
             DrawDebug(spriteBatch);
         }

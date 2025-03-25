@@ -56,7 +56,7 @@ namespace FinalComGame {
                 Color.White,
                 0f, 
                 Vector2.Zero,
-                1f,
+                Scale,
                 spriteEffect, 
                 0f
             );
