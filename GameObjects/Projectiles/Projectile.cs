@@ -22,8 +22,6 @@ namespace FinalComGame
             Position = position;
             Velocity = direction * Speed;
             StartPosition = position;
-            IsActive = true;
-            Reset();
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -71,7 +69,7 @@ namespace FinalComGame
                     {
                         Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
                         Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                        if(tile != null)
+                        if(tile != null && tile.IsSolid)
                         {
                             if (IsTouching(tile))
                             {

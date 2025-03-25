@@ -39,8 +39,6 @@ namespace FinalComGame
             _bgPosition = new Vector2 (_startPosition.X - _bgTexture.Width * Scale.X / 2, _startPosition.Y - _bgTexture.Height * Scale.Y / 2)
             + new Vector2 (Singleton.Instance.Player.Position.X - _startPosition.X,
             Singleton.Instance.Player.Position.Y - _startPosition.Y);
-
-            Console.WriteLine(_fgPosition + " " + _mgPosition + " " + _bgPosition);
         }
 
         public override void Draw(SpriteBatch spriteBatch){
