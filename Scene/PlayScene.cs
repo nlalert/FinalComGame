@@ -77,7 +77,7 @@ public class PlayScene : Scene
         _font = _content.Load<SpriteFont>("GameFont");
         Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
 
-        _song = _content.Load<Song>("A Night Alone - TrackTribe");
+        _song = _content.Load<Song>("ChillSong");
     }
 
     public override void Update(GameTime gameTime)
