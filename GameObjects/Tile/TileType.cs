@@ -9,4 +9,5 @@ public enum TileType
     Ambush_1_Trigger,
     Ambush_1_Area,
     Ambush_1_Exit,
+    EnemySpawn,
 }

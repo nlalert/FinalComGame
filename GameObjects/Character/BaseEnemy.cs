@@ -103,7 +103,8 @@ namespace FinalComGame {
         public void OnDead(TileMap tileMap)
         {
             if (IsAmbusher(tileMap).isAmbusher){
-                tileMap.IsAmbush1Done = true;
+                tileMap.Ambush1EnemiesCount -= 1;
+                Console.WriteLine(tileMap.Ambush1EnemiesCount);
             }
             
             DropItem();
@@ -115,10 +116,6 @@ namespace FinalComGame {
             CheckContactPlayer();
 
             base.Update(gameTime,gameObjects, tileMap);
-
-            if (IsAmbusher(tileMap).isAmbusher){
-                tileMap.IsAmbush1Done = false;
-            }
 
             if (Health <= 0)
             {
@@ -170,7 +167,7 @@ namespace FinalComGame {
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && tile.IsSolid)
+                    if(tile != null && (tile.IsSolid || isAmbushTile(tile)))
                     {
                         if(ResolveHorizontalCollision(tile)){
                             OnCollisionHorizon();
@@ -179,6 +176,7 @@ namespace FinalComGame {
                 }
             }
         }
+
         protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.Y += Velocity.Y * deltaTime;
@@ -189,7 +187,7 @@ namespace FinalComGame {
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && tile.IsSolid)
+                    if(tile != null && (tile.IsSolid || isAmbushTile(tile)))
                     {
                         if(ResolveVerticalCollision(tile)){
                             OnLandVerticle();
@@ -198,6 +196,11 @@ namespace FinalComGame {
                 }
             }
         }
+
+        private bool isAmbushTile(Tile tile){
+            return tile.Type == TileType.Ambush_1_Entry || tile.Type == TileType.Ambush_1_Exit;
+        }
+
         public virtual bool CheckContactPlayer(){
             if(this.IsTouching(Singleton.Instance.Player)){
                 OnCollidePlayer();
