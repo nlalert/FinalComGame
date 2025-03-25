@@ -87,11 +87,6 @@ namespace FinalComGame {
             Health -= damageAmount;
             StartInvincibility();
             Console.WriteLine("Damage " + damageAmount + " CurHP" + Health);
-            if (Health <= 0)
-            {
-                CurrentState = EnemyState.Dying;
-                OnDead();
-            }
         }
         /// <summary>
         /// This npc physically contact with Player
@@ -105,8 +100,12 @@ namespace FinalComGame {
         {   
             base.OnCollideNPC(npc, damageAmount);
         }
-        public override void OnDead()
+        public void OnDead(TileMap tileMap)
         {
+            if (IsAmbusher(tileMap).isAmbusher){
+                tileMap.IsAmbush1Done = true;
+            }
+            
             DropItem();
             base.OnDead();
         }
@@ -114,7 +113,35 @@ namespace FinalComGame {
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
             //if touchting player do contact dmg
             CheckContactPlayer();
+
             base.Update(gameTime,gameObjects, tileMap);
+
+            if (IsAmbusher(tileMap).isAmbusher){
+                tileMap.IsAmbush1Done = false;
+            }
+
+            if (Health <= 0)
+            {
+                CurrentState = EnemyState.Dying;
+                OnDead(tileMap);
+            }
+        }
+
+        private (bool isAmbusher, int number) IsAmbusher(TileMap tileMap){
+            if (IsVectorInside(Position, tileMap.Ambush1_TL, tileMap.Ambush1_BR))
+            {
+                return (true, 1);
+            }
+            else
+            {
+                return (false, 0);
+            }
+        }
+
+        private bool IsVectorInside(Vector2 point, Vector2 min, Vector2 max)
+        {
+            return point.X >= Math.Min(min.X, max.X) && point.X <= Math.Max(min.X, max.X) &&
+                point.Y >= Math.Min(min.Y, max.Y) && point.Y <= Math.Max(min.Y, max.Y);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

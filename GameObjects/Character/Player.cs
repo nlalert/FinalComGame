@@ -527,6 +527,12 @@ namespace FinalComGame
                             }
 
                         }
+
+                        if (tile.Type == TileType.Ambush_1_Trigger && IsTouching(tile))
+                        {
+                            tileMap.IsAmbush1Triggered = true;
+                            Console.WriteLine("Ambushed(1)");
+                        }
                     }
                 }
             }

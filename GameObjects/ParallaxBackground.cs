@@ -40,7 +40,7 @@ namespace FinalComGame
             + new Vector2 (Singleton.Instance.Player.Position.X - _startPosition.X,
             Singleton.Instance.Player.Position.Y - _startPosition.Y);
 
-            Console.WriteLine(_fgPosition + " " + _mgPosition + " " + _bgPosition);
+            //Console.WriteLine(_fgPosition + " " + _mgPosition + " " + _bgPosition);
         }
 
         public override void Draw(SpriteBatch spriteBatch){
