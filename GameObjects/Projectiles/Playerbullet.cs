@@ -12,7 +12,7 @@ namespace FinalComGame
         {
             Name = "BulletPlayer";
             DamageAmount = 15f;
-            Speed = 300f;
+            Speed = 500f;
             CanCollideTile = true;
         }
 
