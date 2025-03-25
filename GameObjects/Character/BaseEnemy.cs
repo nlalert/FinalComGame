@@ -72,7 +72,8 @@ namespace FinalComGame {
             // Determines if enemy can be hit by player
             // Can be overridden for specific enemy types
             return CurrentState != EnemyState.Dead && 
-                CurrentState != EnemyState.Dying;
+                CurrentState != EnemyState.Dying &&
+                _invincibilityTimer >0;
         }
         public override void OnHitByProjectile(GameObject projectile,float damageAmount)
         {
@@ -81,7 +82,7 @@ namespace FinalComGame {
         }
         public override void OnHit(float damageAmount)
         {
-            if (_invincibilityTimer > 0) 
+            if (CanBeHitByPlayer()) 
                 return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;
