@@ -137,8 +137,10 @@ namespace FinalComGame {
             {
                 foreach (Tile tile in tileMap.tiles.Values)
                 {
-                    if(ResolveHorizontalCollision(tile)){
-                        OnCollisionHorizon();
+                    if(tile.IsSolid){
+                        if(ResolveHorizontalCollision(tile)){
+                            OnCollisionHorizon();
+                        }
                     }
                 }
             }
