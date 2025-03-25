@@ -12,10 +12,10 @@ namespace FinalComGame
     /// </summary>
     public class PlatformEnemy : BaseEnemy
     {
-        private float moveSpeed = 30f; // Speed of movement
         public PlatformEnemy(Texture2D texture, SpriteFont font): base(texture, font)
         {
-            Velocity = new Vector2(moveSpeed, 0);
+            WalkSpeed = 30;
+            Velocity = new Vector2(WalkSpeed, 0);
             CanCollideTile = true;
         }
 
@@ -26,13 +26,8 @@ namespace FinalComGame
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
 
-            Velocity.X = Direction *moveSpeed;
+            Velocity.X = Direction * WalkSpeed;
             
-            // Move player if standing on top
-            if (IsTouchingBottom(Singleton.Instance.Player))
-            {
-                OnPlayerStompHead();
-            }
             base.Update(gameTime, gameObjects, tileMap);
         }
         public override void OnSpawn()
@@ -43,10 +38,6 @@ namespace FinalComGame
         {
             Direction *= -1;
             base.OnCollisionHorizon();
-        }
-        private void OnPlayerStompHead(){
-            if(Singleton.Instance.Player.Velocity.Y > 0)
-                Singleton.Instance.Player.Velocity.Y = -1000;
         }
     }
 }
