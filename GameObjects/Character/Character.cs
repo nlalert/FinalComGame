@@ -104,6 +104,7 @@ namespace FinalComGame {
         /// </summary>
         public virtual void OnHit(float damageAmount)
         {
+            StartInvincibility();
         }
         /// <summary>
         /// Do anything special when spawn

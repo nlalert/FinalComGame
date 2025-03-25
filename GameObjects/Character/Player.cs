@@ -651,7 +651,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"Dir {directionText} \nCHp {Health} \nMP {MP:F1} \nLife {Life}";
+            string displayText = $"Velocity {Velocity}";
             
             // Add charge info if charging
             if (_isCharging)

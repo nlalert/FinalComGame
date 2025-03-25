@@ -25,6 +25,7 @@ public class PlayScene : Scene
     private Texture2D _DemonTexture;
     private Texture2D _DemonBulletTexture;
     private Texture2D _TowerTexture;
+    private Texture2D _PlatformTexture;
 
     private Texture2D _parallaxFGtexture;
     private Texture2D _parallaxMGtexture;
@@ -44,6 +45,7 @@ public class PlayScene : Scene
     private BaseEnemy _enemySlime;
     private BaseEnemy _enemyDemon;
     private BaseEnemy _enemyTower;
+    private BaseEnemy _enemyPlatform;
 
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
@@ -68,6 +70,7 @@ public class PlayScene : Scene
         _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
         _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
         _TowerTexture = _content.Load<Texture2D>("EnemyTower");
+        _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
         _parallaxFGtexture = _content.Load<Texture2D>("Level_1_Parallax_fg");
@@ -370,20 +373,28 @@ public class PlayScene : Scene
             CanCollideTile = true,
             TowerBullet = new TowerBullet(_DemonBulletTexture)
         };
+        _enemyPlatform = new PlatformEnemy(_PlatformTexture,_font){
+            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            Viewport = new Rectangle(0, 0, 64, 32),
+            CanCollideTile = true,
+        };
     }
 
     private void SpawnEnemies()
     {
+        // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(Singleton.Instance.Player.Position), _gameObjects);
+        _enemyPlatform.Spawn(Singleton.Instance.Player.Position, _gameObjects);
+
         foreach (var enemySpawnPoint in _collisionTileMap.GetEnemySpawnPoints())
         {
             switch (enemySpawnPoint.Value)
             {
                 case 97:
                     // HellhoundEnemy.
-                     _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    //_enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // _enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    // _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
                     // _enemyTower.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-196), _gameObjects);
 
                     break;
