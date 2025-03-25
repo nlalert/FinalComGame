@@ -195,7 +195,7 @@ public class PlayScene : Scene
         _FGTileMap.Draw(_spriteBatch);
         
         //Should be hidden
-        //_collisionTileMap.Draw(_spriteBatch);
+        _collisionTileMap.Draw(_spriteBatch);
     }
 
     private void DrawAllObjects()
