@@ -88,11 +88,6 @@ namespace FinalComGame {
             Health -= damageAmount;
             StartInvincibility();
             Console.WriteLine("Damage " + damageAmount + " CurHP" + Health);
-            if (Health <= 0)
-            {
-                CurrentState = EnemyState.Dying;
-                OnDead();
-            }
         }
         /// <summary>
         /// This npc physically contact with Player
@@ -106,8 +101,13 @@ namespace FinalComGame {
         {   
             base.OnCollideNPC(npc, damageAmount);
         }
-        public override void OnDead()
+        public void OnDead(TileMap tileMap)
         {
+            if (IsAmbusher(tileMap).isAmbusher){
+                tileMap.Ambush1EnemiesCount -= 1;
+                Console.WriteLine(tileMap.Ambush1EnemiesCount);
+            }
+            
             DropItem();
             base.OnDead();
         }
@@ -115,7 +115,31 @@ namespace FinalComGame {
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
             //if touchting player do contact dmg
             CheckContactPlayer();
+
             base.Update(gameTime,gameObjects, tileMap);
+
+            if (Health <= 0)
+            {
+                CurrentState = EnemyState.Dying;
+                OnDead(tileMap);
+            }
+        }
+
+        private (bool isAmbusher, int number) IsAmbusher(TileMap tileMap){
+            if (IsVectorInside(Position, tileMap.Ambush1_TL, tileMap.Ambush1_BR))
+            {
+                return (true, 1);
+            }
+            else
+            {
+                return (false, 0);
+            }
+        }
+
+        private bool IsVectorInside(Vector2 point, Vector2 min, Vector2 max)
+        {
+            return point.X >= Math.Min(min.X, max.X) && point.X <= Math.Max(min.X, max.X) &&
+                point.Y >= Math.Min(min.Y, max.Y) && point.Y <= Math.Max(min.Y, max.Y);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -144,7 +168,7 @@ namespace FinalComGame {
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && tile.IsSolid)
+                    if(tile != null && (tile.IsSolid || isAmbushTile(tile)))
                     {
                         if(ResolveHorizontalCollision(tile)){
                             OnCollisionHorizon();
@@ -153,6 +177,7 @@ namespace FinalComGame {
                 }
             }
         }
+
         protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.Y += Velocity.Y * deltaTime;
@@ -163,7 +188,7 @@ namespace FinalComGame {
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && tile.IsSolid)
+                    if(tile != null && (tile.IsSolid || isAmbushTile(tile)))
                     {
                         if(ResolveVerticalCollision(tile)){
                             OnLandVerticle();
@@ -172,6 +197,11 @@ namespace FinalComGame {
                 }
             }
         }
+
+        private bool isAmbushTile(Tile tile){
+            return tile.Type == TileType.Ambush_1_Entry || tile.Type == TileType.Ambush_1_Exit;
+        }
+
         public virtual bool CheckContactPlayer(){
             if(this.IsTouching(Singleton.Instance.Player)){
                 OnCollidePlayer();
