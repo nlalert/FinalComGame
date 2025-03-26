@@ -11,11 +11,6 @@ namespace FinalComGame
         public Dictionary<Vector2, Tile> tiles; //Grid Position, tile
         public Dictionary<Vector2, int> enemySpawnPoints; // Grid position, enemy type ID
 
-        public bool IsAmbush1Triggered = false;
-        public int Ambush1EnemiesCount;
-
-        public Vector2 Ambush1_TL, Ambush1_BR; 
-
         private Texture2D textureAtlas;
         private int numTilesPerRow;
 
@@ -25,9 +20,6 @@ namespace FinalComGame
             this.numTilesPerRow = numTilesPerRow;
             tiles = new Dictionary<Vector2, Tile>();
             enemySpawnPoints = new Dictionary<Vector2, int>();
-            
-            Ambush1_TL = Vector2.Zero;
-            Ambush1_BR = Vector2.Zero;
 
             LoadMap(mapPath);
         }
@@ -37,16 +29,6 @@ namespace FinalComGame
             foreach (var tile in tiles)
             {
                 tile.Value.Update(gameTime, gameObjects, this);
-
-                if (IsAmbush1Triggered && Ambush1EnemiesCount > 0)
-                {
-                    if (tile.Value.Type == TileType.Ambush_1_Entry || tile.Value.Type == TileType.Ambush_1_Exit) tile.Value.IsSolid = true;
-                    if (tile.Value.Type == TileType.Ambush_1_Trigger) tile.Value.Type = TileType.None;
-                }
-                else if(Ambush1EnemiesCount <= 0)
-                {
-                    if (tile.Value.Type == TileType.Ambush_1_Entry || tile.Value.Type == TileType.Ambush_1_Exit) tile.Value.IsSolid = false;
-                }
             }
 
         }
@@ -88,11 +70,6 @@ namespace FinalComGame
                                 IsSolid = GetTileCollisionType(tileID)
                             };
                             tiles.Add(new Vector2(x, y), tile);
-
-                            if(isAmbushTile(tileID)){
-                                SetupAmbushArea(tileID, x, y);
-                            }
-
                         }
                     }
                     y++;
@@ -140,58 +117,11 @@ namespace FinalComGame
                 37 => TileType.Platform,
                 57 or 58 or 59 => TileType.Ladder,
                 77 or 78 or 79 => TileType.Platform_Ladder,
-
-                14 => TileType.Ambush_1_Entry,
-                34 => TileType.Ambush_1_Trigger,
-                54 => TileType.Ambush_1_Exit,
-                74 => TileType.Ambush_1_Area,
-
+                
                 97 => TileType.EnemySpawn,
 
                 _ => TileType.None
             };
-        }
-
-        private bool isAmbushTile(int tileID)
-        {
-            return tileID == 74;
-        }
-
-        private void SetupAmbushArea(int tileID, int x, int y){
-            Vector2 pos = GetTileWorldPositionAt(x, y);
-
-            if (GetTileType(tileID) == TileType.Ambush_1_Area){
-
-                if (Ambush1_TL.X == 0)
-                {
-                    Ambush1_TL = pos;
-                }
-                else if(Ambush1_TL.X < pos.X)
-                {
-                    Ambush1_BR = pos; //new Vector2 (pos.X + Singleton.BLOCK_SIZE, pos.Y + Singleton.BLOCK_SIZE);
-                    SetupAmbushEnemiesCount(1);
-
-                }
-                else if(Ambush1_TL.X > pos.X)
-                {
-                    Ambush1_BR = Ambush1_TL;
-                    Ambush1_TL = pos; //new Vector2 (pos.X + Singleton.BLOCK_SIZE, pos.Y + Singleton.BLOCK_SIZE);
-                    SetupAmbushEnemiesCount(1);
-
-                }
-
-                Console.WriteLine(Ambush1_TL + " " + Ambush1_BR + " " + Ambush1EnemiesCount);
-            }
-        }
-
-        private void SetupAmbushEnemiesCount(int index){
-            foreach (var tile in tiles)
-            {
-                if (tile.Value.Type == TileType.EnemySpawn)
-                {
-                    Ambush1EnemiesCount++;
-                }
-            }
         }
 
         private static bool GetTileCollisionType(int tileID)

@@ -57,12 +57,14 @@ namespace FinalComGame {
             gameObjects.Add(newEnemy);
             newEnemy.OnSpawn();
         }
+
         public virtual void Spawn(Vector2 position, List<GameObject> gameObjects)
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = position;
             newEnemy._patrolBoundaryLeft = position.X - 100f;
             newEnemy._patrolBoundaryRight = position.X + 100f;
+            newEnemy.Reset();
             gameObjects.Add(newEnemy);
             newEnemy.OnSpawn();
         }
@@ -103,11 +105,6 @@ namespace FinalComGame {
         }
         public void OnDead(TileMap tileMap)
         {
-            if (IsAmbusher(tileMap).isAmbusher){
-                tileMap.Ambush1EnemiesCount -= 1;
-                Console.WriteLine(tileMap.Ambush1EnemiesCount);
-            }
-            
             DropItem();
             base.OnDead();
         }
@@ -123,23 +120,6 @@ namespace FinalComGame {
                 CurrentState = EnemyState.Dying;
                 OnDead(tileMap);
             }
-        }
-
-        private (bool isAmbusher, int number) IsAmbusher(TileMap tileMap){
-            if (IsVectorInside(Position, tileMap.Ambush1_TL, tileMap.Ambush1_BR))
-            {
-                return (true, 1);
-            }
-            else
-            {
-                return (false, 0);
-            }
-        }
-
-        private bool IsVectorInside(Vector2 point, Vector2 min, Vector2 max)
-        {
-            return point.X >= Math.Min(min.X, max.X) && point.X <= Math.Max(min.X, max.X) &&
-                point.Y >= Math.Min(min.Y, max.Y) && point.Y <= Math.Max(min.Y, max.Y);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -169,7 +149,7 @@ namespace FinalComGame {
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && (tile.IsSolid || isAmbushTile(tile)))
+                    if(tile != null && tile.IsSolid)
                     {
                         if(ResolveHorizontalCollision(tile)){
                             OnCollisionHorizon();
@@ -189,7 +169,7 @@ namespace FinalComGame {
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && (tile.IsSolid || isAmbushTile(tile)))
+                    if(tile != null && tile.IsSolid)
                     {
                         if(ResolveVerticalCollision(tile)){
                             OnLandVerticle();
@@ -197,10 +177,6 @@ namespace FinalComGame {
                     }
                 }
             }
-        }
-
-        private bool isAmbushTile(Tile tile){
-            return tile.Type == TileType.Ambush_1_Entry || tile.Type == TileType.Ambush_1_Exit;
         }
 
         public virtual bool CheckContactPlayer(){
@@ -268,6 +244,8 @@ namespace FinalComGame {
             _attackCooldownTimer = 0f;
 
             _currentAnimation = "idle";
+
+            CurrentState = EnemyState.Idle;
             
             base.Reset();
         }
