@@ -71,24 +71,24 @@ namespace FinalComGame
 
             Animation = new Animation(texture, 48, 64, new Vector2(48*16 , 64*8), 24);
 
-            Animation.addAnimation("idle", new Vector2(0,0), 16);
-            Animation.addAnimation("run", new Vector2(0,1), 8);
-            Animation.addAnimation("melee", new Vector2(0,2), 8);
+            Animation.AddAnimation("idle", new Vector2(0,0), 16);
+            Animation.AddAnimation("run", new Vector2(0,1), 8);
+            Animation.AddAnimation("melee", new Vector2(0,2), 8);
 
-            Animation.addAnimation("jump_start", new Vector2(0,3), 4);
-            Animation.addAnimation("jump_up", new Vector2(5,3), 4);
-            Animation.addAnimation("jump_forward", new Vector2(10,3), 4);
+            Animation.AddAnimation("jump_start", new Vector2(0,3), 4);
+            Animation.AddAnimation("jump_up", new Vector2(5,3), 4);
+            Animation.AddAnimation("jump_forward", new Vector2(10,3), 4);
 
-            Animation.addAnimation("fall_start", new Vector2(0,4), 3);
-            Animation.addAnimation("fall_down", new Vector2(4,4), 4);
-            Animation.addAnimation("fall_forward", new Vector2(9,4), 4);
+            Animation.AddAnimation("fall_start", new Vector2(0,4), 3);
+            Animation.AddAnimation("fall_down", new Vector2(4,4), 4);
+            Animation.AddAnimation("fall_forward", new Vector2(9,4), 4);
 
-            Animation.addAnimation("dash", new Vector2(0,5), 4);
+            Animation.AddAnimation("dash", new Vector2(0,5), 4);
 
-            Animation.addAnimation("crouch", new Vector2(0,6), 16);
-            Animation.addAnimation("crawl", new Vector2(0,7), 8);
+            Animation.AddAnimation("crouch", new Vector2(0,6), 16);
+            Animation.AddAnimation("crawl", new Vector2(0,7), 8);
 
-            Animation.changeAnimation(_currentAnimation);
+            Animation.ChangeAnimation(_currentAnimation);
 
             paticleTexture.SetData([new Color(193, 255, 219)]);
             _particle = new SoulParticle(10, Position, paticleTexture);
@@ -212,18 +212,18 @@ namespace FinalComGame
                 switch (animation)
                 {
                     case "jump_start" :
-                        Animation.changeTransistionAnimation(_currentAnimation, "jump_up");
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "jump_up");
                         break;
                     case "fall_start" :
-                        Animation.changeTransistionAnimation(_currentAnimation, "fall_down");
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "fall_down");
                         break;
                     default:
-                        Animation.changeAnimation(_currentAnimation);
+                        Animation.ChangeAnimation(_currentAnimation);
                         break;
                 }    
             }
 
-            Console.WriteLine(Animation._currentFrameIndex);
+            // Console.WriteLine(Animation._currentFrameIndex);
             base.UpdateAnimation(deltaTime);
         }
 

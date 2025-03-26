@@ -13,13 +13,13 @@ namespace FinalComGame
         private float _fps;  // Time per frame
         private float _timer;      // Tracks time elapsed
         private string _nextAnimation;
-        public int _currentFrameIndex;
+        private int _currentFrameIndex;
         private int _currentFrameStart;
         private int _currentFrameCount;
 
         public List<string> _animationName = new List<string>();
-        public List<int> _frameIndex = new List<int>();
-        public List<int> _frameCount = new List<int>();
+        private List<int> _frameIndex = new List<int>();
+        private List<int> _frameCount = new List<int>();
         private int _frameIndexWidth;
         private int _frameIndexHeight;
 
@@ -71,7 +71,7 @@ namespace FinalComGame
                     {
                         if(IsTransition){
                             IsLooping = true;
-                            changeAnimation(_nextAnimation);
+                            ChangeAnimation(_nextAnimation);
                         }
                         else
                         {  
@@ -112,14 +112,14 @@ namespace FinalComGame
             _fps = fps;
         }
 
-        public void addAnimation(string name, Vector2 index, int count)
+        public void AddAnimation(string name, Vector2 index, int count)
         {
             _animationName.Add(name);
             _frameIndex.Add((int)index.X + (int)(index.Y * _frameIndexWidth));
             _frameCount.Add(count);
         }
 
-        public void changeAnimation(string name)
+        public void ChangeAnimation(string name)
         {
             _currentFrameIndex = _frameIndex[_animationName.IndexOf(name)];
             _currentFrameStart = _currentFrameIndex;
@@ -129,7 +129,7 @@ namespace FinalComGame
             IsFinished = false;
         }
 
-        public void changeTransistionAnimation(string currentName, string nextName)
+        public void ChangeTransitionAnimation(string currentName, string nextName)
         {
             _currentFrameIndex = _frameIndex[_animationName.IndexOf(currentName)];
             _currentFrameStart = _currentFrameIndex;

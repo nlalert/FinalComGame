@@ -14,14 +14,14 @@ namespace FinalComGame
         public SlimeEnemy(Texture2D texture, Texture2D particleTexture, SpriteFont font) : base(texture, font) { 
             Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
 
-            Animation.addAnimation("idle", new Vector2(0, 0), 8);
-            Animation.addAnimation("charge", new Vector2(0, 1), 6);
-            Animation.addAnimation("jump", new Vector2(0, 2), 5);
-            Animation.addAnimation("float", new Vector2(0, 3), 1);
-            Animation.addAnimation("land", new Vector2(0, 4), 5);
-            Animation.addAnimation("die", new Vector2(0, 5), 7);
+            Animation.AddAnimation("idle", new Vector2(0, 0), 8);
+            Animation.AddAnimation("charge", new Vector2(0, 1), 6);
+            Animation.AddAnimation("jump", new Vector2(0, 2), 5);
+            Animation.AddAnimation("float", new Vector2(0, 3), 1);
+            Animation.AddAnimation("land", new Vector2(0, 4), 5);
+            Animation.AddAnimation("die", new Vector2(0, 5), 7);
 
-            Animation.changeAnimation(_currentAnimation);
+            Animation.ChangeAnimation(_currentAnimation);
         }
 
         public override void Reset()
@@ -29,7 +29,7 @@ namespace FinalComGame
             Console.WriteLine("Slime respawned!");
             _jumpTimer = 0f;
             base.Reset();
-            Animation.changeAnimation(_currentAnimation);
+            Animation.ChangeAnimation(_currentAnimation);
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -79,18 +79,18 @@ namespace FinalComGame
                 switch (animation)
                 {
                     case "jump" :
-                        Animation.changeTransistionAnimation(_currentAnimation, "float");
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "float");
                         break;
                     case "land" :
-                        Animation.changeTransistionAnimation(_currentAnimation, "idle");
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "idle");
                         break;
                     case "charge": 
                     case "die":
-                        Animation.changeAnimation(_currentAnimation);
+                        Animation.ChangeAnimation(_currentAnimation);
                         Animation.IsLooping = false;
                         break;
                     default:
-                        Animation.changeAnimation(_currentAnimation);
+                        Animation.ChangeAnimation(_currentAnimation);
                         break;
                 }    
             }
