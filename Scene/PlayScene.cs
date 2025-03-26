@@ -259,7 +259,7 @@ public class PlayScene : Scene
     private void CreatePlayer()
     {
         // Load sprite sheets
-        Texture2D playerIdle = _content.Load<Texture2D>("Char_Idle");
+        Texture2D playerIdle = _content.Load<Texture2D>("Char");
         Texture2D playerRun = _content.Load<Texture2D>("Char_Run");
         Texture2D playerJump = _content.Load<Texture2D>("Char_Jump");
         Texture2D playerFall = _content.Load<Texture2D>("Char_Fall");

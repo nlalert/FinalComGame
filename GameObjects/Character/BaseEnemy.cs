@@ -43,7 +43,7 @@ namespace FinalComGame {
         public BaseEnemy(Texture2D texture,SpriteFont font) : base(texture){
             _DebugFont = font;
 
-            _idleAnimation = new Animation(texture, 16, 32, 1, 24); // 24 fps\
+            _idleAnimation = new Animation(texture, 16, 32, new Vector2(1,1), 24); // 24 fps\
             Animation = _idleAnimation;
         }
         
@@ -144,8 +144,8 @@ namespace FinalComGame {
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Position, Viewport, Color.White);
-            base.Draw(spriteBatch);
+            //spriteBatch.Draw(_texture, Position, Viewport, Color.White);
+            //base.Draw(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
