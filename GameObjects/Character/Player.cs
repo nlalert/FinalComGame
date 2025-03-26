@@ -201,11 +201,20 @@ namespace FinalComGame
                 animation = "jump_up";
             else if (Velocity.X != 0)
             {
-                animation = "run";
+                if(_isCrouching)
+                    animation = "crawl";
+                else
+                    animation = "run";
+
                 Animation.SetFPS(Math.Abs(Velocity.X / WalkSpeed * 24));
             }
             else
-                animation = "idle";
+            {
+                if(_isCrouching)
+                    animation = "crouch";
+                else
+                    animation = "idle";
+            }
 
             if(_currentAnimation != animation){
                 _currentAnimation = animation;
