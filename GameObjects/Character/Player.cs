@@ -59,28 +59,39 @@ namespace FinalComGame
         public SoundEffect JumpSound;
 
         //Animation
-        private Animation _meleeAttackAnimation;
-        private Animation _jumpAnimation;
-        private Animation _dashAnimation;
-        private Animation _glideAnimation;
-        private Animation _fallAnimation;
-        private Animation _chargeAnimation;
+        // private Animation _meleeAttackAnimation;
+        // private Animation _jumpAnimation;
+        // private Animation _dashAnimation;
+        // private Animation _glideAnimation;
+        // private Animation _fallAnimation;
+        // private Animation _chargeAnimation;
 
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, 
-                      Texture2D glideTexture, Texture2D chargeTexture, Texture2D paticleTexture) : base(idleTexture)
+        public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
         {
-            _idleAnimation = new Animation(idleTexture, 48, 64, 16, 24); // 24 fps
-            _runAnimation = new Animation(runTexture, 48, 64, 8, 24); //  24 fps
-            _jumpAnimation = new Animation(jumpTexture, 48, 64, 4, 24); //  24 fps
-            _fallAnimation = new Animation(fallTexture, 48, 64, 4, 24); //  24 fps
-            _meleeAttackAnimation = new Animation(meleeAttackTexture, 48, 64, 8, 24); // 24 fps
-            _dashAnimation = new Animation(dashTexture, 48, 64, 4, 24); //  24 fps
-            _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
-            _chargeAnimation = new Animation(chargeTexture, 16, 32, 16, 24); //  24 fps
 
+            Animation = new Animation(texture, 48, 64, new Vector2(48*16 , 64*8), 24);
+
+            Animation.AddAnimation("idle", new Vector2(0,0), 16);
+            Animation.AddAnimation("run", new Vector2(0,1), 8);
+            Animation.AddAnimation("melee", new Vector2(0,2), 8);
+
+            Animation.AddAnimation("jump_start", new Vector2(0,3), 4);
+            Animation.AddAnimation("jump_up", new Vector2(5,3), 4);
+            Animation.AddAnimation("jump_forward", new Vector2(10,3), 4);
+
+            Animation.AddAnimation("fall_start", new Vector2(0,4), 3);
+            Animation.AddAnimation("fall_down", new Vector2(4,4), 4);
+            Animation.AddAnimation("fall_forward", new Vector2(9,4), 4);
+
+            Animation.AddAnimation("dash", new Vector2(0,5), 4);
+
+            Animation.AddAnimation("crouch", new Vector2(0,6), 16);
+            Animation.AddAnimation("crawl", new Vector2(0,7), 8);
+
+            Animation.ChangeAnimation(_currentAnimation);
+
+            paticleTexture.SetData([new Color(193, 255, 219)]);
             _particle = new SoulParticle(10, Position, paticleTexture);
-
-            Animation = _idleAnimation;
         }
 
         public override void Reset()
@@ -160,31 +171,59 @@ namespace FinalComGame
         {
             _particle.Draw(spriteBatch);
             base.Draw(spriteBatch);
-            DrawDebug(spriteBatch);
+            //DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
         {
-            if (_isCharging)
-                Animation = _chargeAnimation;
+            string animation = "idle";
+
+            if (_isCharging);
+                //base.Animation = _chargeAnimation;
             else if(_isAttacking)
-                Animation = _meleeAttackAnimation;
+                animation = "melee";
             else if (_isDashing)
-                Animation = _dashAnimation;
-            else if (_isGliding)
-                Animation = _glideAnimation;
+                animation = "dash";
+            else if (_isGliding);
+                //animation = "fall_down";
             else if (Velocity.Y > 0)
-                Animation = _fallAnimation;
-            else if (_isJumping || Velocity.Y != 0)
-                Animation = _jumpAnimation;
+                animation = "fall_start";
+            else if (_isJumping && Velocity.Y < 0)
+                animation = "jump_start";
             else if (Velocity.X != 0)
             {
-                Animation = _runAnimation;
-                // Animation.SetFPS(Math.Abs(Velocity.X / WalkSpeed * 24));
+                if(_isCrouching)
+                    animation = "crawl";
+                else
+                    animation = "run";
+
+                //Animation.SetFPS(Math.Abs(Velocity.X / WalkSpeed * 24));
             }
             else
-                Animation = _idleAnimation;
+            {
+                if(_isCrouching)
+                    animation = "crouch";
+                else
+                    animation = "idle";
+            }
 
+            if(_currentAnimation != animation){
+                _currentAnimation = animation;
+                switch (animation)
+                {
+                    case "jump_start" :
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "jump_up");
+                        break;
+                    case "fall_start" :
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "fall_down");
+                        break;
+                    default:
+                        Animation.ChangeAnimation(_currentAnimation);
+                        break;
+                }    
+            }
+
+            // Console.WriteLine(Animation._currentFrameIndex);
             base.UpdateAnimation(deltaTime);
         }
 
@@ -247,7 +286,7 @@ namespace FinalComGame
             if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !_isJumping && !_isClimbing && !_isDashing && MP > 0)
             {
                 _isGliding = true;
-                _glideAnimation.Reset(); // Reset glide animation when starting to glide
+                Animation.Reset(); // Reset glide animation when starting to glide
             }
             else
             {
@@ -377,7 +416,7 @@ namespace FinalComGame
         {
             if (_attackCooldownTimer <= 0 && !_isAttacking)
             {
-                _meleeAttackAnimation.Reset();
+                Animation.Reset();
                 _isAttacking = true;
                 _attackTimer = AttackDuration;
                 _attackCooldownTimer = AttackCooldown;
@@ -550,7 +589,7 @@ namespace FinalComGame
                 // if (ChargeSound != null)
                 //     ChargeSound.Play();
                 
-                _chargeAnimation.Reset();
+                Animation.Reset();
             }
         }
         

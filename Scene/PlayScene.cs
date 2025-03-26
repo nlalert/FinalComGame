@@ -66,7 +66,7 @@ public class PlayScene : Scene
         _playerTexture = _content.Load<Texture2D>("Char_test");
         _enemyTexture = _content.Load<Texture2D>("EnemyRed");
         _DogTexture = _content.Load<Texture2D>("EnemyDog");
-        _SlimeTexture = _content.Load<Texture2D>("EnemySlime");
+        _SlimeTexture = _content.Load<Texture2D>("HellSlime");
         _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
         _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
         _TowerTexture = _content.Load<Texture2D>("EnemyTower");
@@ -259,20 +259,12 @@ public class PlayScene : Scene
     private void CreatePlayer()
     {
         // Load sprite sheets
-        Texture2D playerIdle = _content.Load<Texture2D>("Char_Idle");
-        Texture2D playerRun = _content.Load<Texture2D>("Char_Run");
-        Texture2D playerJump = _content.Load<Texture2D>("Char_Jump");
-        Texture2D playerFall = _content.Load<Texture2D>("Char_Fall");
-        Texture2D playerMelee = _content.Load<Texture2D>("Char_Melee");
-        Texture2D playerDash = _content.Load<Texture2D>("Char_Dash");
-        Texture2D playerGlide = _content.Load<Texture2D>("EnemyRed");
-        Texture2D playerCharge = _content.Load<Texture2D>("EnemyRed");
+        Texture2D playerTexture = _content.Load<Texture2D>("Char");
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
-        
-        playerParticle.SetData([new Color(193, 255, 219)]);
+    
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         
-        Singleton.Instance.Player = new Player(playerIdle, playerRun, playerMelee, playerJump, playerFall, playerDash, playerGlide, playerCharge, playerParticle)
+        Singleton.Instance.Player = new Player(playerTexture, playerParticle)
         {
             Name = "Player",
             Position = StageManager.GetPlayerWorldSpawnPosition(),// get player location of each stage
@@ -350,14 +342,14 @@ public class PlayScene : Scene
             ChaseDuration = 5f,
             DashDuration = 1.0f,
         };
-        _enemySlime = new SlimeEnemy(_SlimeTexture,_font){
+        _enemySlime = new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
             Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            Viewport = new Rectangle(0, 0, 32, 32),
+            Viewport = new Rectangle(0, 0, 16, 16),
             CanCollideTile = true,
             MaxHealth = 50f,
             AttackDamage = 3f,
 
-            JumpCooldown = 1.5f,
+            JumpCooldown = 3.0f,
             JumpStrength = 750,
             Friction = 0.96f
         };
@@ -391,7 +383,7 @@ public class PlayScene : Scene
             {
                 case 97:
                     // HellhoundEnemy.
-                    // _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
                     // _enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
                     // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
                     // _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
