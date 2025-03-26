@@ -33,6 +33,8 @@ namespace FinalComGame {
         protected Animation _idleAnimation;
         protected Animation _runAnimation;
 
+        public string _currentAnimation = "idle";
+
         public Character(Texture2D texture) : base(texture){
 
         }

@@ -87,7 +87,7 @@ namespace FinalComGame {
             // Generic hit handling
             Health -= damageAmount;
             StartInvincibility();
-            Console.WriteLine("Damage " + damageAmount + " CurHP" + Health);
+            //Console.WriteLine("Damage " + damageAmount + " CurHP" + Health);
         }
         /// <summary>
         /// This npc physically contact with Player
@@ -144,14 +144,15 @@ namespace FinalComGame {
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(_texture, Position, Viewport, Color.White);
-            //base.Draw(spriteBatch);
+            spriteBatch.Draw(_texture, Position, Viewport, Color.White);
+            if (Animation._animationName.Count > 0){
+                base.Draw(spriteBatch);
+            }
         }
 
         protected override void UpdateAnimation(float deltaTime)
         {
             //TODO : add more animation
-            Animation = _idleAnimation;
             base.UpdateAnimation(deltaTime);
         }
 
@@ -265,6 +266,8 @@ namespace FinalComGame {
             _invincibilityTimer = 0f;
             _attackTimer = 0f;
             _attackCooldownTimer = 0f;
+
+            _currentAnimation = "idle";
             
             base.Reset();
         }

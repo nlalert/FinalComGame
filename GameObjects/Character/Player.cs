@@ -58,8 +58,6 @@ namespace FinalComGame
         //SFX
         public SoundEffect JumpSound;
 
-        private string _currentAnimation = "idle";
-
         //Animation
         // private Animation _meleeAttackAnimation;
         // private Animation _jumpAnimation;
@@ -68,19 +66,10 @@ namespace FinalComGame
         // private Animation _fallAnimation;
         // private Animation _chargeAnimation;
 
-        public Player(Texture2D idleTexture, Texture2D runTexture, Texture2D meleeAttackTexture, Texture2D jumpTexture, Texture2D fallTexture, Texture2D dashTexture, 
-                      Texture2D glideTexture, Texture2D chargeTexture, Texture2D paticleTexture) : base(idleTexture)
+        public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
         {
-            // _idleAnimation = new Animation(idleTexture, 48, 64, 16, 24); // 24 fps
-            // _runAnimation = new Animation(runTexture, 48, 64, 8, 24); //  24 fps
-            // _jumpAnimation = new Animation(jumpTexture, 48, 64, 4, 24); //  24 fps
-            // _fallAnimation = new Animation(fallTexture, 48, 64, 4, 24); //  24 fps
-            // _meleeAttackAnimation = new Animation(meleeAttackTexture, 48, 64, 8, 24); // 24 fps
-            // _dashAnimation = new Animation(dashTexture, 48, 64, 4, 24); //  24 fps
-            // _glideAnimation = new Animation(glideTexture, 16, 32, 16, 24); //  24 fps
-            // _chargeAnimation = new Animation(chargeTexture, 16, 32, 16, 24); //  24 fps
 
-            Animation = new Animation(idleTexture, 48, 64, new Vector2(48*16 , 64*8), 24);
+            Animation = new Animation(texture, 48, 64, new Vector2(48*16 , 64*8), 24);
 
             Animation.addAnimation("idle", new Vector2(0,0), 16);
             Animation.addAnimation("run", new Vector2(0,1), 8);
@@ -100,6 +89,8 @@ namespace FinalComGame
             Animation.addAnimation("crawl", new Vector2(0,7), 8);
 
             Animation.changeAnimation(_currentAnimation);
+
+            paticleTexture.SetData([new Color(193, 255, 219)]);
             _particle = new SoulParticle(10, Position, paticleTexture);
         }
 
@@ -180,7 +171,7 @@ namespace FinalComGame
         {
             _particle.Draw(spriteBatch);
             base.Draw(spriteBatch);
-            DrawDebug(spriteBatch);
+            //DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
@@ -193,12 +184,12 @@ namespace FinalComGame
                 animation = "melee";
             else if (_isDashing)
                 animation = "dash";
-            else if (_isGliding)
-                animation = "fall_down";
+            else if (_isGliding);
+                //animation = "fall_down";
             else if (Velocity.Y > 0)
-                animation = "fall_down";
-            else if (_isJumping || Velocity.Y != 0)
-                animation = "jump_up";
+                animation = "fall_start";
+            else if (_isJumping && Velocity.Y < 0)
+                animation = "jump_start";
             else if (Velocity.X != 0)
             {
                 if(_isCrouching)
@@ -206,7 +197,7 @@ namespace FinalComGame
                 else
                     animation = "run";
 
-                Animation.SetFPS(Math.Abs(Velocity.X / WalkSpeed * 24));
+                //Animation.SetFPS(Math.Abs(Velocity.X / WalkSpeed * 24));
             }
             else
             {
@@ -218,9 +209,21 @@ namespace FinalComGame
 
             if(_currentAnimation != animation){
                 _currentAnimation = animation;
-                Animation.changeAnimation(_currentAnimation);
+                switch (animation)
+                {
+                    case "jump_start" :
+                        Animation.changeTransistionAnimation(_currentAnimation, "jump_up");
+                        break;
+                    case "fall_start" :
+                        Animation.changeTransistionAnimation(_currentAnimation, "fall_down");
+                        break;
+                    default:
+                        Animation.changeAnimation(_currentAnimation);
+                        break;
+                }    
             }
 
+            Console.WriteLine(Animation._currentFrameIndex);
             base.UpdateAnimation(deltaTime);
         }
 

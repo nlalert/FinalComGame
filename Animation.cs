@@ -12,7 +12,8 @@ namespace FinalComGame
         private List<Rectangle> _frames;
         private float _fps;  // Time per frame
         private float _timer;      // Tracks time elapsed
-        private int _currentFrameIndex;
+        private string _nextAnimation;
+        public int _currentFrameIndex;
         private int _currentFrameStart;
         private int _currentFrameCount;
 
@@ -26,6 +27,7 @@ namespace FinalComGame
 
         public bool IsLooping { get; set; } = true;
         public bool IsFinished { get; private set; } = false;
+        public bool IsTransition { get; set; } = false;
 
         public Animation(Texture2D spriteSheet, int frameWidth, int frameHeight, Vector2 spriteSize, float fps)
         {
@@ -67,8 +69,15 @@ namespace FinalComGame
                         _currentFrameIndex = _currentFrameStart;
                     else
                     {
-                        _currentFrameIndex = _currentFrameCount - 1;  // Stay on the last frame
-                        IsFinished = true;
+                        if(IsTransition){
+                            IsLooping = true;
+                            changeAnimation(_nextAnimation);
+                        }
+                        else
+                        {  
+                            _currentFrameIndex = _currentFrameCount - 1;  // Stay on the last frame
+                            IsFinished = true;
+                        }
                     }
                 }
             }
@@ -103,20 +112,32 @@ namespace FinalComGame
             _fps = fps;
         }
 
-        public void addAnimation(string name, Vector2 index, int count){
-
+        public void addAnimation(string name, Vector2 index, int count)
+        {
             _animationName.Add(name);
             _frameIndex.Add((int)index.X + (int)(index.Y * _frameIndexWidth));
             _frameCount.Add(count);
-            Console.WriteLine(name + " " + ((int)index.X + (int)(index.Y * _frameIndexWidth)));
         }
 
-        public void changeAnimation(string name){
+        public void changeAnimation(string name)
+        {
             _currentFrameIndex = _frameIndex[_animationName.IndexOf(name)];
             _currentFrameStart = _currentFrameIndex;
             _currentFrameCount = _frameCount[_animationName.IndexOf(name)];
+            IsTransition = false;
+            IsLooping = true;
+            IsFinished = false;
+        }
 
-            Console.WriteLine(_currentFrameIndex + " " + _currentFrameCount + " " + _currentFrameCount);
+        public void changeTransistionAnimation(string currentName, string nextName)
+        {
+            _currentFrameIndex = _frameIndex[_animationName.IndexOf(currentName)];
+            _currentFrameStart = _currentFrameIndex;
+            _currentFrameCount = _frameCount[_animationName.IndexOf(currentName)];
+            _nextAnimation = nextName;
+            IsTransition = true;
+            IsLooping = false;
+            IsFinished = false;
         }
     }
 }

@@ -11,13 +11,25 @@ namespace FinalComGame
         private float _jumpTimer;
         public float Friction;
 
-        public SlimeEnemy(Texture2D texture, SpriteFont font) : base(texture, font) { }
+        public SlimeEnemy(Texture2D texture, Texture2D particleTexture, SpriteFont font) : base(texture, font) { 
+            Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
+
+            Animation.addAnimation("idle", new Vector2(0, 0), 8);
+            Animation.addAnimation("charge", new Vector2(0, 1), 6);
+            Animation.addAnimation("jump", new Vector2(0, 2), 5);
+            Animation.addAnimation("float", new Vector2(0, 3), 1);
+            Animation.addAnimation("land", new Vector2(0, 4), 5);
+            Animation.addAnimation("die", new Vector2(0, 5), 7);
+
+            Animation.changeAnimation(_currentAnimation);
+        }
 
         public override void Reset()
         {
             Console.WriteLine("Slime respawned!");
             _jumpTimer = 0f;
             base.Reset();
+            Animation.changeAnimation(_currentAnimation);
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -44,6 +56,46 @@ namespace FinalComGame
             
             UpdateAnimation(deltaTime);
             base.Update(gameTime, gameObjects, tileMap);
+        }
+
+        protected override void UpdateAnimation(float deltaTime)
+        {
+            string animation = "idle";
+            if (CurrentState == EnemyState.Dying){
+                animation = "die";
+            }
+            else if (_jumpTimer < 0.75 && Velocity.Y == 0){
+                animation = "charge"; 
+            }
+            else if(Velocity.Y != 0){
+                animation = "jump";
+            }
+            else if (_jumpTimer >= 1)
+                animation = "land";
+
+            if(_currentAnimation != animation)
+            {
+                _currentAnimation = animation;
+                switch (animation)
+                {
+                    case "jump" :
+                        Animation.changeTransistionAnimation(_currentAnimation, "float");
+                        break;
+                    case "land" :
+                        Animation.changeTransistionAnimation(_currentAnimation, "idle");
+                        break;
+                    case "charge": 
+                    case "die":
+                        Animation.changeAnimation(_currentAnimation);
+                        Animation.IsLooping = false;
+                        break;
+                    default:
+                        Animation.changeAnimation(_currentAnimation);
+                        break;
+                }    
+            }
+            
+            base.UpdateAnimation(deltaTime);
         }
 
         private void AI_Idle(float deltaTime,List<GameObject> gameObjects, TileMap tileMap)
@@ -94,7 +146,7 @@ namespace FinalComGame
             //     SpriteEffects.None, 
             //     0f);
             base.Draw(spriteBatch);
-            DrawDebug(spriteBatch);
+            //DrawDebug(spriteBatch);
         }
         private void DrawDebug(SpriteBatch spriteBatch)
         {
