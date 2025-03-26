@@ -5,5 +5,6 @@ public enum TileType
     Platform,
     Ladder,
     Platform_Ladder,
+    AmbushBarrier,
     EnemySpawn,
 }

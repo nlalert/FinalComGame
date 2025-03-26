@@ -117,7 +117,7 @@ namespace FinalComGame
                 37 => TileType.Platform,
                 57 or 58 or 59 => TileType.Ladder,
                 77 or 78 or 79 => TileType.Platform_Ladder,
-                
+                14 or 54 => TileType.AmbushBarrier,
                 97 => TileType.EnemySpawn,
 
                 _ => TileType.None

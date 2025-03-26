@@ -48,17 +48,13 @@ namespace FinalComGame {
         }
         
         // Spawn method with optional spawn effects
-        public virtual void Spawn(float x, float y, List<GameObject> gameObjects)
+        public virtual void Spawn(float x, float y, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
         {
-            BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
-            newEnemy.Position = new Vector2(x, y);
-            newEnemy._patrolBoundaryLeft = x - 100f;
-            newEnemy._patrolBoundaryRight = x + 100f;
-            gameObjects.Add(newEnemy);
-            newEnemy.OnSpawn();
+            Vector2 position = new Vector2(x, y);
+            Spawn(position, gameObjects, spawnedEnemies);
         }
 
-        public virtual void Spawn(Vector2 position, List<GameObject> gameObjects)
+        public virtual void Spawn(Vector2 position, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = position;
@@ -66,6 +62,7 @@ namespace FinalComGame {
             newEnemy._patrolBoundaryRight = position.X + 100f;
             newEnemy.Reset();
             gameObjects.Add(newEnemy);
+            spawnedEnemies.Add(newEnemy);
             newEnemy.OnSpawn();
         }
 

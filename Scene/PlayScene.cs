@@ -40,12 +40,14 @@ public class PlayScene : Scene
 
     private Camera _camera;
 
-    private BaseEnemy _baseSkeleton;
-    private BaseEnemy _enemyDog;
-    private BaseEnemy _enemySlime;
-    private BaseEnemy _enemyDemon;
-    private BaseEnemy _enemyTower;
-    private BaseEnemy _enemyPlatform;
+    private List<AmbushArea> ambushAreas = new List<AmbushArea>();
+
+    private SkeletonEnemy _baseSkeleton;
+    private HellhoundEnemy _enemyDog;
+    private SlimeEnemy _enemySlime;
+    private DemonEnemy _enemyDemon;
+    private TowerEnemy _enemyTower;
+    private PlatformEnemy _enemyPlatform;
 
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
@@ -112,6 +114,7 @@ public class PlayScene : Scene
                 _parallaxBackground.Update();
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
+                UpdateAmbushAreas(gameTime);
                 RemoveInactiveObjects();
 
                 _camera.Follow(Singleton.Instance.Player); // Make camera follow the player
@@ -173,6 +176,14 @@ public class PlayScene : Scene
                 _gameObjects[i].Update(gameTime, _gameObjects, _collisionTileMap);
         }
         // Console.WriteLine(_gameObjects.Count);
+    }
+
+    private void UpdateAmbushAreas(GameTime gameTime)
+    {
+        foreach (var ambushArea in ambushAreas)
+        {
+            ambushArea.Update(gameTime, _gameObjects, _collisionTileMap);
+        }
     }
 
     public void RemoveInactiveObjects()
@@ -245,8 +256,8 @@ public class PlayScene : Scene
         Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
 
-
-        SpawnEnemies();
+        InitializeAmbushAreas();
+        
         AddItems();
         SetupUI();
         
@@ -254,6 +265,16 @@ public class PlayScene : Scene
         {
             s.Reset();
         }
+    }
+    
+    private void InitializeAmbushAreas()
+    {
+        //TODO : Read Area from
+        ambushAreas.Add(new AmbushArea(
+            new Rectangle(60*Singleton.BLOCK_SIZE, 20*Singleton.BLOCK_SIZE, 300*Singleton.BLOCK_SIZE, 200*Singleton.BLOCK_SIZE), // x, y, width, height of trigger zone
+            _collisionTileMap,
+            _enemySlime
+        ));
     }
 
     private void CreatePlayer()
@@ -372,30 +393,30 @@ public class PlayScene : Scene
         };
     }
 
-    private void SpawnEnemies()
-    {
-        // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(Singleton.Instance.Player.Position), _gameObjects);
-        _enemyPlatform.Spawn(Singleton.Instance.Player.Position, _gameObjects);
+    // private void SpawnEnemies()
+    // {
+    //     // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(Singleton.Instance.Player.Position), _gameObjects);
+    //     _enemyPlatform.Spawn(Singleton.Instance.Player.Position, _gameObjects);
 
-        foreach (var enemySpawnPoint in _collisionTileMap.GetEnemySpawnPoints())
-        {
-            switch (enemySpawnPoint.Value)
-            {
-                case 97:
-                    // HellhoundEnemy.
-                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // _enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // _enemyTower.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-196), _gameObjects);
+    //     foreach (var enemySpawnPoint in _collisionTileMap.GetEnemySpawnPoints())
+    //     {
+    //         switch (enemySpawnPoint.Value)
+    //         {
+    //             case 97:
+    //                 // HellhoundEnemy.
+    //                 _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+    //                 // _enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+    //                 // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+    //                 // _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+    //                 // _enemyTower.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-196), _gameObjects);
 
-                    break;
-                default:
-                    break;
-            }
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
             
-        }  
-    }
+    //     }  
+    // }
 
     private void AddItems()
     {
