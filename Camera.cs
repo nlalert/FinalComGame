@@ -17,6 +17,10 @@ public class Camera
     // Smoothing parameter
     private float _smoothSpeed = 0.1f;
 
+    // Screen Shake Variables
+    private float _shakeIntensity;
+    private float _shakeDuration;
+
     public Camera(Viewport viewport, Rectangle mapBounds)
     {
         _viewport = viewport;
@@ -32,7 +36,10 @@ public class Camera
 
     public Matrix GetTransformation()
     {
-        return Matrix.CreateTranslation(new Vector3(-_currentPosition, 0)) *
+        // Apply screen shake offset
+        Vector2 shakeOffset = GetScreenShakeOffset();
+        
+        return Matrix.CreateTranslation(new Vector3(-_currentPosition + shakeOffset, 0)) *
                Matrix.CreateScale(_zoom);
     }
 
@@ -65,5 +72,40 @@ public class Camera
             _mapBounds.Bottom - viewHeight);
 
         _currentPosition = new Vector2(clampedX, clampedY);
+
+        // Update screen shake
+        UpdateScreenShake();
+    }
+
+    public void ShakeScreen(float intensity, float duration)
+    {
+        _shakeIntensity = intensity;
+        _shakeDuration = duration;
+    }
+
+    private void UpdateScreenShake()
+    {
+        if (_shakeDuration > 0)
+        {
+            _shakeDuration -= 0.016f; // Assuming 60 FPS, adjust as needed
+        }
+        else
+        {
+            _shakeIntensity = 0;
+        }
+    }
+
+    private Vector2 GetScreenShakeOffset()
+    {
+        if (_shakeDuration > 0)
+        {
+            // Generate random shake offset
+            float offsetX = (float)(Singleton.Instance.Random.NextDouble() * 2 - 1) * _shakeIntensity * 10;
+            float offsetY = (float)(Singleton.Instance.Random.NextDouble() * 2 - 1) * _shakeIntensity * 10;
+            
+            return new Vector2(offsetX, offsetY);
+        }
+        
+        return Vector2.Zero;
     }
 }
