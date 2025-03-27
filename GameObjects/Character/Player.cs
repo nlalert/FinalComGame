@@ -226,7 +226,12 @@ namespace FinalComGame
             if(_isAttacking)
                 animation = "melee";
             else if (_isDashing)
-                animation = "dash";
+                if (HandAnimation._currentAnimation == "idle" || 
+                    HandAnimation._currentAnimation == "charge_1" || 
+                    HandAnimation._currentAnimation == "fire_1")
+                    animation = "dash";
+                else
+                    animation = "dash_charge";
             else if (_isGliding)
                 animation = "fall_down";
             else if (Velocity.Y > 0)
@@ -238,16 +243,13 @@ namespace FinalComGame
                 if(_isCrouching)
                     animation = "crawl";
                 else{
-                    if (HandAnimation._currentAnimation == "charge_1_to_2" || 
-                        HandAnimation._currentAnimation == "charge_2" ||
-                        HandAnimation._currentAnimation == "charge_3" ||
-                        HandAnimation._currentAnimation == "fire_2")
-                        animation = "run_charge_2";
+                    if (HandAnimation._currentAnimation == "idle")
+                        animation = "run";
                     else if (HandAnimation._currentAnimation == "charge_1" || 
                             HandAnimation._currentAnimation == "fire_1")
                         animation = "run_charge_1";
                     else{
-                        animation = "run";
+                        animation = "run_charge_2";
                     }
                     Console.WriteLine(HandAnimation._currentAnimation + " " + Animation._currentAnimation);
                 }

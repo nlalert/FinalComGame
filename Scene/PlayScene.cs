@@ -345,7 +345,7 @@ public class PlayScene : Scene
                 }
             },
             {
-                9934498,         
+                118,         
                 new SkeletonEnemy(_enemyTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
@@ -359,7 +359,7 @@ public class PlayScene : Scene
                 }
             },
             {
-                991239998,
+                98,
                 new HellhoundEnemy(_DogTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
@@ -375,7 +375,7 @@ public class PlayScene : Scene
                 }
             },
             {
-                918659998,
+                119,
                 new DemonEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
@@ -384,7 +384,7 @@ public class PlayScene : Scene
                 }
             },
             {
-                9398599,
+                99,
                 new TowerEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 32),
