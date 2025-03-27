@@ -18,6 +18,7 @@ class Singleton
     public Random Random;
     public int Stage;
     public Player Player;
+    public Camera Camera;
 
     public enum GameState
     {

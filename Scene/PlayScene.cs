@@ -37,8 +37,6 @@ public class PlayScene : Scene
     private TileMap _MGTileMap;
     private TileMap _BGTileMap;
 
-    private Camera _camera;
-
     private List<AmbushArea> ambushAreas;
 
     private Dictionary<int, BaseEnemy> _enemyPrefabs;
@@ -109,7 +107,7 @@ public class PlayScene : Scene
                 UpdateAmbushAreas(gameTime);
                 RemoveInactiveObjects();
 
-                _camera.Follow(Singleton.Instance.Player); // Make camera follow the player
+                Singleton.Instance.Camera.Follow(Singleton.Instance.Player); // Make camera follow the player
                 break;
             case Singleton.GameState.StageCompleted:
                 if (Singleton.Instance.Stage == 4){
@@ -137,7 +135,7 @@ public class PlayScene : Scene
             case Singleton.GameState.Playing:
                 // Draw the Game World (Apply Camera)
 
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransformation()); // Apply camera matrix
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Singleton.Instance.Camera.GetTransformation()); // Apply camera matrix
                 // _parallaxBackground.Draw(_spriteBatch);
                 DrawTileMap();
                 DrawAllObjects();
@@ -243,7 +241,8 @@ public class PlayScene : Scene
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
 
         Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.BLOCK_SIZE,  _collisionTileMap.MapHeight * Singleton.BLOCK_SIZE); // Map size
-        _camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
+        Singleton.Instance.Camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
+        
         _parallaxBackground = new ParallaxBackground(_parallaxFGtexture, _parallaxMGtexture, _parallaxBGtexture, StageManager.GetPlayerWorldSpawnPosition());
 
         Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
