@@ -14,12 +14,14 @@ namespace FinalComGame
         private bool _isActive;
         private bool _isCleared;
 
-        SlimeEnemy slimeEnemy;
-        public AmbushArea(Rectangle triggerZone, TileMap tileMap, SlimeEnemy tempSlime)
+        // Dictionary to map spawn types to enemy prefabs
+        private Dictionary<int, BaseEnemy> _enemyPrefabs;
+
+        public AmbushArea(Rectangle triggerZone, TileMap tileMap, Dictionary<int, BaseEnemy> enemyPrefabs)
         {
-            slimeEnemy = tempSlime;
-            this._triggerZone = triggerZone;
+            _triggerZone = triggerZone;
             _spawnedEnemies = new List<BaseEnemy>();
+            _enemyPrefabs = enemyPrefabs;
             
             // Find enemy spawn points within this area
             _enemySpawnPoints = new Dictionary<Vector2, int>();
@@ -28,8 +30,7 @@ namespace FinalComGame
                 Vector2 worldPosition = TileMap.GetTileWorldPositionAt(spawnPoint.Key);
                 if (triggerZone.Contains(worldPosition))
                 {
-                    Console.WriteLine("Add : "+spawnPoint.Value);
-                    _enemySpawnPoints.Add(spawnPoint.Key, spawnPoint.Value);
+                    _enemySpawnPoints.Add(worldPosition, spawnPoint.Value);
                 }
             }
         }
@@ -40,11 +41,11 @@ namespace FinalComGame
             if (!_isActive && _triggerZone.Contains(Singleton.Instance.Player.Position))
             {
                 ActivateAmbush(gameObjects, tileMap);
-                Console.WriteLine("Active!");
+                Console.WriteLine("Ambush Activate");
             }
 
             // Check if all enemies are defeated
-            if (!_isCleared)
+            if (_isActive && !_isCleared)
             {
                 _spawnedEnemies.RemoveAll(enemy => !enemy.IsActive);
 
@@ -52,7 +53,7 @@ namespace FinalComGame
                 {
                     _isCleared = true;
                     ChangeBarrierCollision(tileMap, false);
-                    Console.WriteLine("Clear");
+                    Console.WriteLine("Ambush Cleared");
                 }
             }
         }
@@ -66,28 +67,12 @@ namespace FinalComGame
 
             foreach (var enemySpawnPoint in _enemySpawnPoints)
             {
-                switch (enemySpawnPoint.Value)
-                {
-                    case 97:
-                        // HellhoundEnemy.
-                        slimeEnemy.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), gameObjects, _spawnedEnemies);
-                        // _enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                        // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                        // _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                        // _enemyTower.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-196), _gameObjects);
-                        break;
-                    default:
-                        break;
-                }
-                
-            }  
-
-            
+                _enemyPrefabs[enemySpawnPoint.Value].Spawn(enemySpawnPoint.Key, gameObjects, _spawnedEnemies);
+            }
         }
 
         private static void ChangeBarrierCollision(TileMap tileMap, bool IsSolid)
         {
-            //TODO : Optimize this
             foreach (var tile in tileMap.tiles)
             {
                 if(tile.Value.Type == TileType.AmbushBarrier)

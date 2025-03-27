@@ -80,10 +80,6 @@ namespace FinalComGame
                 }
                 _mapHeight = y;
             }
-            Console.WriteLine("_mapHeight");
-            Console.WriteLine(_mapHeight);
-            Console.WriteLine("_mapWidth");
-            Console.WriteLine(_mapWidth);
         }
 
         public static Vector2 GetTileWorldPositionAt(int tileGridX, int tileGridY)
@@ -198,7 +194,7 @@ namespace FinalComGame
             return enemySpawnPoints;
         }
 
-        public List<AmbushArea> GetAmbushAreas()
+        public List<AmbushArea> GetAmbushAreas(Dictionary<int, BaseEnemy> enemyPrefabs)
         {
             var ambushAreas = new List<AmbushArea>();
             var topLeftTiles = new List<Vector2>();
@@ -223,7 +219,7 @@ namespace FinalComGame
                     Rectangle ambushZone = CreateAmbushAreaRectangle(topLeft, bottomRight);
                     
                     // Create AmbushArea
-                    AmbushArea ambushArea = new AmbushArea(ambushZone, this, PlayScene._enemySlime);
+                    AmbushArea ambushArea = new AmbushArea(ambushZone, this, enemyPrefabs);
                     ambushAreas.Add(ambushArea);
                 }
             }
