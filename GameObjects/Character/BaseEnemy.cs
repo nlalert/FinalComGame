@@ -159,6 +159,8 @@ namespace FinalComGame {
         protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position.Y += Velocity.Y * deltaTime;
+            if(!CanCollideTile) 
+                return;
             int radius = 5;
             for (int i = -radius; i <= radius; i++)
             {
