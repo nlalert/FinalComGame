@@ -13,8 +13,8 @@ namespace FinalComGame
 
         private Texture2D textureAtlas;
         private int numTilesPerRow;
-        private int _mapWidth;
-        private int _mapHeight;
+        public int MapWidth;
+        public int MapHeight;
 
         public TileMap(Texture2D textureAtlas, string mapPath, int numTilesPerRow)
         {
@@ -53,9 +53,9 @@ namespace FinalComGame
                 {
                     string[] items = line.Split(',');
 
-                    _mapWidth = items.Length;
+                    MapWidth = items.Length;
 
-                    for (int x = 0; x < _mapWidth; x++)
+                    for (int x = 0; x < MapWidth; x++)
                     {
                         if (int.TryParse(items[x], out int tileID) && tileID >= 0)
                         {
@@ -78,7 +78,7 @@ namespace FinalComGame
                     }
                     y++;
                 }
-                _mapHeight = y;
+                MapHeight = y;
             }
         }
 
@@ -231,9 +231,9 @@ namespace FinalComGame
         private Vector2 FindCorrespondingBottomRightTile(Vector2 topLeft)
         {
             // Search for the corresponding bottom-right tile within a reasonable range
-            for (int x = (int)topLeft.X; x < _mapWidth; x++) // Limit search range
+            for (int x = (int)topLeft.X; x < MapWidth; x++) // Limit search range
             {
-                for (int y = (int)topLeft.Y; y < _mapHeight; y++) // Limit search range
+                for (int y = (int)topLeft.Y; y < MapHeight; y++) // Limit search range
                 {
                     Vector2 bottomRight = new Vector2(x, y);
                     Tile tile = GetTileAtGridPosition(bottomRight);

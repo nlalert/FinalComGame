@@ -51,7 +51,6 @@ public class PlayScene : Scene
         _graphics.ApplyChanges();
 
         _gameObjects = new List<GameObject>();
-        _camera = new Camera(_graphicsDevice.Viewport); // Initialize camera
     }
 
     public override void LoadContent(SpriteBatch spriteBatch)
@@ -139,7 +138,7 @@ public class PlayScene : Scene
                 // Draw the Game World (Apply Camera)
 
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _camera.GetTransformation()); // Apply camera matrix
-                _parallaxBackground.Draw(_spriteBatch);
+                // _parallaxBackground.Draw(_spriteBatch);
                 DrawTileMap();
                 DrawAllObjects();
                 _spriteBatch.End();
@@ -212,7 +211,7 @@ public class PlayScene : Scene
 
     public void ResetGame()
     {
-        _gameObjects.Clear();
+        _gameObjects = new List<GameObject>();
 
         Singleton.Instance.Stage = 1;
         Singleton.Instance.Random = new Random();
@@ -243,6 +242,8 @@ public class PlayScene : Scene
         _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
 
+        Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.BLOCK_SIZE,  _collisionTileMap.MapHeight * Singleton.BLOCK_SIZE); // Map size
+        _camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
         _parallaxBackground = new ParallaxBackground(_parallaxFGtexture, _parallaxMGtexture, _parallaxBGtexture, StageManager.GetPlayerWorldSpawnPosition());
 
         Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
@@ -288,14 +289,14 @@ public class PlayScene : Scene
             AttackDuration = 0.4f, // How long the attack lasts
             AttackCooldown = 0.2f,
 
-            JumpStrength = 800f,
+            JumpStrength = 600f,
 
             CoyoteTime = 0.1f, // 100ms of coyote time
             JumpBufferTime = 0.15f, // 150ms jump buffer
             DashSpeed = 400f,
-            DashDuration = 0.4f, // Dash lasts for 0.4 seconds
-            DashCooldown = 0.5f,
-            DashMP = 20f,
+            DashDuration = 0.3f, // Dash lasts for 0.25 seconds
+            DashCooldown = 0.2f,
+            DashMP = 10f,
             GlideGravityScale = 0.3f, // How much gravity affects gliding (lower = slower fall)
             GlideMaxFallSpeed = 80f, // Maximum fall speed while gliding
             GlideMP = 10f, // MP cost per second while gliding
@@ -343,7 +344,7 @@ public class PlayScene : Scene
                     BaseAttackDamage = 3f,
 
                     JumpCooldown = 3.0f,
-                    JumpStrength = 750,
+                    JumpStrength = 550,
                     Friction = 0.96f
                 }
             },
