@@ -8,12 +8,9 @@ namespace FinalComGame
 {
     public class PlayerBullet : Projectile
     {
+        public float BaseDamageAmount;
         public PlayerBullet(Texture2D texture) : base(texture)
         {
-            Name = "BulletPlayer";
-            DamageAmount = 15f;
-            Speed = 500f;
-            CanCollideTile = true;
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)

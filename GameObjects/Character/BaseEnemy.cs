@@ -232,7 +232,7 @@ namespace FinalComGame {
             Direction = -1; // Reset direction to left
 
             Health = MaxHealth;
-
+            AttackDamage = BaseAttackDamage;
             _isAttacking = false;
             _isJumping = false;
 

@@ -17,6 +17,7 @@ namespace FinalComGame
         public float MaxMP;
         public float MP;
         public int Life;
+        public float AbsorptionHealth;
 
         public Item[] HoldItem;
 
@@ -56,6 +57,12 @@ namespace FinalComGame
         public float MinChargePower;
         public float MaxChargePower;
         public float ChargeMPCost;
+
+        private bool _isFist;
+        private bool _isSoulBullet;
+
+        private int _rangeWeaponSlot;
+        private int _meleeWeaponSlot;
 
         //SFX
         public SoundEffect JumpSound;
@@ -103,6 +110,9 @@ namespace FinalComGame
             Animation.AddAnimation("crouch", new Vector2(0,7), 16);
             Animation.AddAnimation("crawl", new Vector2(0,8), 8);
 
+            //TODO : Add sword attack animation
+            Animation.AddAnimation("sword", new Vector2(0,7), 8);
+
             Animation.ChangeAnimation(_currentAnimation);
 
             HandAnimation = new Animation(texture, 48, 64, new Vector2(48*16 , 64*16), 24);
@@ -132,8 +142,13 @@ namespace FinalComGame
 
             Health = MaxHealth - 50; //REMOVE LATER FOR DEBUG
             MP = MaxMP;
+            AbsorptionHealth = 0;
+
+            ChangeToFistAttack();
+            ChangeToSoulBulletAttack();
 
             _overlappedTile = TileType.None;
+
 
             _isClimbing = false;
             _isCrouching = false;
@@ -152,6 +167,8 @@ namespace FinalComGame
             _invincibilityTimer = 0f;
             _attackTimer = 0f;
             _attackCooldownTimer = 0f;
+
+            Bullet.DamageAmount = Bullet.BaseDamageAmount;
             
             base.Reset();
         }
@@ -180,6 +197,8 @@ namespace FinalComGame
             UpdateHandAnimation(deltaTime);
             UpdateAnimation(deltaTime);
             if (!_isDashing) Velocity.X = 0;
+
+            Console.WriteLine(AttackDamage);
             
             base.Update(gameTime, gameObjects, tileMap);
             _particle.Update(Position);    
@@ -228,7 +247,10 @@ namespace FinalComGame
             string animation = "idle";
 
             if(_isAttacking)
-                animation = "melee";
+                if(_isFist)
+                    animation = "melee";
+                else
+                    animation = "sword";
             else if (_isDashing)
                 if (HandAnimation._currentAnimation == "idle" || 
                     HandAnimation._currentAnimation == "charge_1" || 
@@ -443,8 +465,11 @@ namespace FinalComGame
             // Handle Fire button (charge shot)
             if (Singleton.Instance.IsKeyJustPressed(Fire))
             {
-                // Start charging
-                StartCharging();
+                if(_isSoulBullet)
+                    // Start charging
+                    StartCharging();
+                else
+                    Shoot(gameObjects);
             }
             else if (Singleton.Instance.IsKeyPressed(Fire))
             {
@@ -543,7 +568,7 @@ namespace FinalComGame
 
                 if(!HoldItem[i].IsConsumable)
                 {
-                    HoldItem[i].ActiveAbility();
+                    HoldItem[i].ActiveAbility(i);
                 }
             }
         }
@@ -606,8 +631,6 @@ namespace FinalComGame
                 int offsetX = Direction == 1 ? Rectangle.Width : -attackWidth;
 
                 attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
-
-                // TODO: Detect enemies within this hitbox
             }
         }
 
@@ -626,7 +649,6 @@ namespace FinalComGame
         private void CheckAttackHit(List<GameObject> gameObjects)
         {
             if (!_isAttacking) return;
-
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
                 enemy.CheckHit(attackHitbox, AttackDamage);
@@ -749,6 +771,21 @@ namespace FinalComGame
                 }
             }
         }
+
+        private void Shoot(List<GameObject> gameObjects)
+        {
+            // Create and configure the bullet
+            Vector2 direction = new Vector2(Direction, 0);
+            PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
+            newBullet.DamageAmount = Bullet.DamageAmount; // Increase damage
+            newBullet.Shoot(Position, direction);
+
+            //TODO : More dynamic for more range weapon
+            (HoldItem[_rangeWeaponSlot] as Gun).DecreaseAmmo();
+            gameObjects.Add(newBullet);
+            Animation.Reset();
+        }
+
        // Charge shot methods
         private void StartCharging()
         {
@@ -835,12 +872,35 @@ namespace FinalComGame
         {
             OnHit(damageAmount);
         }
+        
         public override void OnHit(float damageAmount)
         {
             if (_invincibilityTimer > 0) 
                 return; // If i-frames are active, ignore damage
-            // Generic hit handling
-            Health -= damageAmount;
+
+            // Calculate damage to absorption health
+            if (AbsorptionHealth > 0)
+            {
+                // If absorption health can fully block the damage
+                if (AbsorptionHealth >= damageAmount)
+                {
+                    AbsorptionHealth -= damageAmount;
+                    damageAmount = 0;
+                }
+                // If absorption health is partially depleted
+                else
+                {
+                    float remainingDamage = damageAmount - AbsorptionHealth;
+                    AbsorptionHealth = 0;
+                    Health -= remainingDamage;
+                }
+            }
+            else
+            {
+                // If no absorption health, damage goes directly to HP
+                Health -= damageAmount;
+            }
+
             StartInvincibility();
             Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
             if (Health <= 0)
@@ -929,6 +989,37 @@ namespace FinalComGame
             Center.X += this.Viewport.Width/2;
             Center.Y += this.Viewport.Height/4; //idk why it need /4 instead of /2
             return Center;
+        }
+
+        public void ChangeToSwordAttack(float attackDamage)
+        {
+            _isFist = false;
+            AttackDamage = attackDamage;
+        }
+
+        public void ChangeToFistAttack()
+        {
+            _isFist = true;
+            AttackDamage = BaseAttackDamage;
+        }
+
+        public void ChangeToGunAttack(float damageAmount, int slot)
+        {
+            _isSoulBullet = false;
+            Bullet.DamageAmount = damageAmount;
+            _rangeWeaponSlot = slot;
+        }
+
+        public void ChangeToSoulBulletAttack()
+        {
+            _isSoulBullet = true;
+            Bullet.DamageAmount = Bullet.BaseDamageAmount;
+        }
+
+        public void RemoveItem(int slot)
+        {
+            HoldItem[slot].IsActive = false;
+            HoldItem[slot] = null;
         }
     }
 }

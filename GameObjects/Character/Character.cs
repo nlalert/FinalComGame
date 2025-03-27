@@ -18,6 +18,7 @@ namespace FinalComGame {
 
         //Attack
         protected bool _isAttacking;
+        public float BaseAttackDamage;
         public float AttackDamage;
         public float AttackDuration; // How long the attack lasts
         public float AttackCooldown; // Cooldown before attacking again
