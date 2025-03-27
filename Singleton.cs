@@ -85,5 +85,10 @@ class Singleton
         return CurrentKey.IsKeyUp(key) && PreviousKey.IsKeyDown(key);
     }
 
+    public bool IsKeyReleased(Keys key)
+    {
+        return CurrentKey.IsKeyUp(key);
+    }
+
 }
 

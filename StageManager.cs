@@ -8,7 +8,7 @@ public class StageManager
 {
     private static readonly Dictionary<int, Vector2> PlayerGridSpawnPoint = new Dictionary<int, Vector2>
     {
-        { 1, new Vector2(16, 98) },
+        { 1, new Vector2(10, 90) },
         { 2, new Vector2(16, 10) },
         { 3, new Vector2(16, 15) },
 

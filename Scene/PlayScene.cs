@@ -349,7 +349,7 @@ public class PlayScene : Scene
                 }
             },
             {
-                9934498,         
+                118,         
                 new SkeletonEnemy(_enemyTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
@@ -363,7 +363,7 @@ public class PlayScene : Scene
                 }
             },
             {
-                991239998,
+                98,
                 new HellhoundEnemy(_DogTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
@@ -379,7 +379,7 @@ public class PlayScene : Scene
                 }
             },
             {
-                918659998,
+                119,
                 new DemonEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
@@ -388,7 +388,7 @@ public class PlayScene : Scene
                 }
             },
             {
-                9398599,
+                99,
                 new TowerEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 32),
@@ -423,32 +423,32 @@ public class PlayScene : Scene
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
         Texture2D Gun = _content.Load<Texture2D>("Gun");
 
-        _gameObjects.Add(new Barrier(testItem, "barrier", TileMap.GetTileWorldPositionAt(18, 90)){
+        _gameObjects.Add(new Barrier(testItem, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new SpeedBoots(Hermes_Boots, "Hermes_Boots", TileMap.GetTileWorldPositionAt(28, 98)){
+        _gameObjects.Add(new SpeedBoots(Hermes_Boots, "Hermes_Boots", TileMap.GetTileWorldPositionAt(24, 90)){
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
         
-        _gameObjects.Add(new Potion(HealthPotionTemp, "Testing Potion", TileMap.GetTileWorldPositionAt(30, 98)){
+        _gameObjects.Add(new Potion(HealthPotionTemp, "Testing Potion", TileMap.GetTileWorldPositionAt(12, 90)){
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
         
-        _gameObjects.Add(new LifeUp(LifeUP, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 98)){
+        _gameObjects.Add(new LifeUp(LifeUP, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "1Up",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Sword(sword, "Testing Sword", TileMap.GetTileWorldPositionAt(12, 98)){
+        _gameObjects.Add(new Sword(sword, "Testing Sword", TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Gun(Gun, "Testing Gun", TileMap.GetTileWorldPositionAt(20, 98)){
+        _gameObjects.Add(new Gun(Gun, "Testing Gun", TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
             Viewport = new Rectangle(0, 0, 32,32)
         });

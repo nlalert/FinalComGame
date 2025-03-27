@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -51,6 +52,7 @@ namespace FinalComGame
         // Charge Shot properties
         private bool _isCharging;
         private float _chargeTime;
+        private float _lastChargeTime;
         public float MaxChargeTime;
         public float MinChargePower;
         public float MaxChargePower;
@@ -66,39 +68,67 @@ namespace FinalComGame
         public SoundEffect JumpSound;
 
         //Animation
-        // private Animation _meleeAttackAnimation;
-        // private Animation _jumpAnimation;
-        // private Animation _dashAnimation;
-        // private Animation _glideAnimation;
-        // private Animation _fallAnimation;
-        // private Animation _chargeAnimation;
+
+        private Animation HandAnimation;
+
+        private string _currentHandAnimation = "idle";
 
         public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
         {
 
-            Animation = new Animation(texture, 48, 64, new Vector2(48*16 , 64*8), 24);
+            Animation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*16), 24);
 
             Animation.AddAnimation("idle", new Vector2(0,0), 16);
             Animation.AddAnimation("run", new Vector2(0,1), 8);
+            Animation.AddAnimation("run_charge_1", new Vector2(8,1), 8);
+            Animation.AddAnimation("run_charge_2", new Vector2(8,2), 8);
+
             Animation.AddAnimation("melee", new Vector2(0,2), 8);
 
-            Animation.AddAnimation("jump_start", new Vector2(0,3), 4);
-            Animation.AddAnimation("jump_up", new Vector2(5,3), 4);
-            Animation.AddAnimation("jump_forward", new Vector2(10,3), 4);
+            Animation.AddAnimation("charge_1", new Vector2(4,10), 4);
+            Animation.AddAnimation("charge_1_to_2", new Vector2(9,10), 4);
+            Animation.AddAnimation("charge_2", new Vector2(4,9), 4);
+            Animation.AddAnimation("charge_3", new Vector2(9,9), 4);
 
-            Animation.AddAnimation("fall_start", new Vector2(0,4), 3);
-            Animation.AddAnimation("fall_down", new Vector2(4,4), 4);
-            Animation.AddAnimation("fall_forward", new Vector2(9,4), 4);
+            Animation.AddAnimation("fire_1", new Vector2(0,10), 8);
+            Animation.AddAnimation("fire_2", new Vector2(0,9), 8);
 
-            Animation.AddAnimation("dash", new Vector2(0,5), 4);
+            Animation.AddAnimation("jump", new Vector2(0,3), 4);
+            Animation.AddAnimation("jump_charge_1", new Vector2(0,4), 4);
+            Animation.AddAnimation("jump_charge_2", new Vector2(0,5), 4);
 
-            Animation.AddAnimation("crouch", new Vector2(0,6), 16);
-            Animation.AddAnimation("crawl", new Vector2(0,7), 8);
+            Animation.AddAnimation("fall", new Vector2(5,3), 4);
+            Animation.AddAnimation("fall_charge_1", new Vector2(5,4), 4);
+            Animation.AddAnimation("fall_charge_2", new Vector2(5,5), 4);    
+
+            Animation.AddAnimation("glide", new Vector2(10,3), 4);
+            Animation.AddAnimation("glide_charge", new Vector2(10,4), 4);
+
+            Animation.AddAnimation("dash", new Vector2(0,6), 4);
+            Animation.AddAnimation("dash_charge", new Vector2(5,6), 4);
+
+            Animation.AddAnimation("crouch", new Vector2(0,7), 16);
+            Animation.AddAnimation("crawl", new Vector2(0,8), 8);
 
             //TODO : Add sword attack animation
-            Animation.AddAnimation("sword", new Vector2(0,7), 8);
+            Animation.AddAnimation("sword", new Vector2(8,8), 8);
 
             Animation.ChangeAnimation(_currentAnimation);
+
+            HandAnimation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*16), 24);
+
+            HandAnimation.AddAnimation("idle", new Vector2(4,3), 1);
+
+            HandAnimation.AddAnimation("charge_1", new Vector2(3,11), 1);
+            HandAnimation.AddAnimation("charge_1_to_2", new Vector2(12,11), 4);
+            HandAnimation.AddAnimation("charge_2", new Vector2(3,12), 1);
+            HandAnimation.AddAnimation("charge_3", new Vector2(8,11), 4);
+            HandAnimation.AddAnimation("charge_4", new Vector2(8,12), 4);
+
+            HandAnimation.AddAnimation("fire_1", new Vector2(0,11), 8);
+            HandAnimation.AddAnimation("fire_2", new Vector2(0,12), 8);
+
+            HandAnimation.ChangeAnimation(_currentHandAnimation);
 
             paticleTexture.SetData([new Color(193, 255, 219)]);
             _particle = new SoulParticle(10, Position, paticleTexture);
@@ -164,10 +194,11 @@ namespace FinalComGame
             UpdateTileInteraction(tileMap);
             UpdateAttackHitbox();
             CheckAttackHit(gameObjects);
+            UpdateHandAnimation(deltaTime);
             UpdateAnimation(deltaTime);
             if (!_isDashing) Velocity.X = 0;
 
-            Console.WriteLine(AttackDamage);
+            //Console.WriteLine(AttackDamage);
             
             base.Update(gameTime, gameObjects, tileMap);
             _particle.Update(Position);    
@@ -190,6 +221,24 @@ namespace FinalComGame
         {
             _particle.Draw(spriteBatch);
             base.Draw(spriteBatch);
+
+            if (_currentHandAnimation != "none")
+            {
+                SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+                spriteBatch.Draw(
+                    HandAnimation.GetTexture(),
+                    GetDrawingPosition(),
+                    HandAnimation.GetCurrentFrame(),
+                    Color.White,
+                    0f, 
+                    Vector2.Zero,
+                    Scale,
+                    spriteEffect, 
+                    0f
+                );
+            }
+
             //DrawDebug(spriteBatch);
         }
 
@@ -197,47 +246,99 @@ namespace FinalComGame
         {
             string animation = "idle";
 
-            if (_isCharging);
-                //base.Animation = _chargeAnimation;
-            else if(_isAttacking)
+            if(_isAttacking)
                 if(_isFist)
                     animation = "melee";
                 else
                     animation = "sword";
             else if (_isDashing)
-                animation = "dash";
-            else if (_isGliding);
-                //animation = "fall_down";
+                if (HandAnimation._currentAnimation == "idle" || 
+                    HandAnimation._currentAnimation == "charge_1" || 
+                    HandAnimation._currentAnimation == "fire_1")
+                    animation = "dash";
+                else
+                    animation = "dash_charge";
+            else if (_isGliding && !_isJumping){
+                if (HandAnimation._currentAnimation == "idle")
+                    animation = "glide";
+                else
+                    animation = "glide_charge";
+                }
             else if (Velocity.Y > 0)
-                animation = "fall_start";
-            else if (_isJumping && Velocity.Y < 0)
-                animation = "jump_start";
+                if (HandAnimation._currentAnimation == "idle")
+                        animation = "fall";
+                else if (HandAnimation._currentAnimation == "charge_1" || 
+                        HandAnimation._currentAnimation == "fire_1")
+                    animation = "fall_charge_1";
+                else
+                    animation = "fall_charge_2";
+            else if (_isJumping && Velocity.Y < 0){
+                if (HandAnimation._currentAnimation == "idle")
+                        animation = "jump";
+                else if (HandAnimation._currentAnimation == "charge_1" || 
+                        HandAnimation._currentAnimation == "fire_1")
+                    animation = "jump_charge_1";
+                else
+                    animation = "jump_charge_2";
+            }
             else if (Velocity.X != 0)
             {
                 if(_isCrouching)
                     animation = "crawl";
-                else
-                    animation = "run";
+                else{
+                    if (HandAnimation._currentAnimation == "idle")
+                        animation = "run";
+                    else if (HandAnimation._currentAnimation == "charge_1" || 
+                            HandAnimation._currentAnimation == "fire_1")
+                        animation = "run_charge_1";
+                    else
+                        animation = "run_charge_2";
+                }
 
-                //Animation.SetFPS(Math.Abs(Velocity.X / WalkSpeed * 24));
             }
             else
             {
                 if(_isCrouching)
                     animation = "crouch";
-                else
-                    animation = "idle";
+                else{
+                    if (_lastChargeTime != 0)
+                    {
+                        if (_lastChargeTime >= MaxChargeTime/2)
+                        animation = "fire_2";
+                        else
+                        animation = "fire_1";
+
+                        _lastChargeTime = 0;
+                    }
+                    else if (_isCharging){
+                        if (_chargeTime == MaxChargeTime)
+                        animation = "charge_3";
+                        else if (_chargeTime >= MaxChargeTime/2)
+                        animation = "charge_1_to_2";
+                        else
+                        animation = "charge_1";
+                    }
+                    else
+                        animation = "idle";
+                }
             }
 
             if(_currentAnimation != animation){
                 _currentAnimation = animation;
                 switch (animation)
                 {
-                    case "jump_start" :
-                        Animation.ChangeTransitionAnimation(_currentAnimation, "jump_up");
+                    case "charge_1_to_2" :
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "charge_2");
                         break;
-                    case "fall_start" :
-                        Animation.ChangeTransitionAnimation(_currentAnimation, "fall_down");
+                    case "fire_1" :
+                    case "fire_2" :
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "idle");
+                        _currentAnimation = "idle";
+                        break;
+                    case "run" :
+                    case "run_charge_1" :
+                    case "run_charge_2" :
+                        Animation.ChangeAnimationAndKeepFrame(_currentAnimation);
                         break;
                     default:
                         Animation.ChangeAnimation(_currentAnimation);
@@ -245,15 +346,93 @@ namespace FinalComGame
                 }    
             }
 
-            // Console.WriteLine(Animation._currentFrameIndex);
             base.UpdateAnimation(deltaTime);
+        }
+
+        protected void UpdateHandAnimation(float deltaTime)
+        {
+            string handAnimation = "idle";
+
+            if (_isGliding && !_isJumping){
+                if (_lastChargeTime != 0)
+                {
+                        handAnimation = "fire_1";
+                    _lastChargeTime = 0;
+                }
+
+                else if (_isCharging){
+                    if (_chargeTime == MaxChargeTime){
+                        handAnimation = "charge_4";
+                    }
+                    else{
+                        handAnimation = "charge_1";
+                    }
+                }
+            }
+
+            else if (Velocity.X != 0 || Velocity.Y != 0)
+            {
+                if(_isCrouching){}
+
+                else{
+                    if (_lastChargeTime != 0)
+                    {
+                        if (_lastChargeTime >= MaxChargeTime/2)
+                        {
+                            handAnimation = "fire_2";
+                        }
+                        else{
+                            handAnimation = "fire_1";
+                        }
+
+                        _lastChargeTime = 0;
+                    }
+
+                    else if (_isCharging){
+                        if (_chargeTime == MaxChargeTime){
+                            handAnimation = "charge_3";
+                        }
+                        else if (_chargeTime >= MaxChargeTime/2)
+                        {
+                            handAnimation = "charge_1_to_2";
+                        }
+                        else{
+                            handAnimation = "charge_1";
+                        }
+                    }
+                }
+            }
+            else
+                handAnimation = "idle";
+                
+
+            if(_currentHandAnimation != handAnimation){
+                _currentHandAnimation = handAnimation;
+
+                switch (handAnimation)
+                {
+                    case "charge_1_to_2" :
+                        HandAnimation.ChangeTransitionAnimation(_currentHandAnimation, "charge_2");
+                        break;
+                    case "fire_1" :
+                    case "fire_2" :
+                        HandAnimation.ChangeTransitionAnimation(_currentHandAnimation, "idle");
+                        _currentHandAnimation = "idle";
+                        break;
+                    default:
+                        HandAnimation.ChangeAnimation(_currentHandAnimation);
+                        break;
+                }  
+            }
+
+            HandAnimation.Update(deltaTime);
         }
 
         private void HandleInput(float deltaTime, List<GameObject> gameObjects)
         {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
-                if (!_isDashing) 
+                if (!_isDashing && !_isAttacking) 
                 {
                     Direction = -1;
                     Velocity.X = -WalkSpeed;
@@ -261,7 +440,7 @@ namespace FinalComGame
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
-                if (!_isDashing) 
+                if (!_isDashing && !_isAttacking) 
                 {
                     Direction = 1;
                     Velocity.X = WalkSpeed;
@@ -311,7 +490,6 @@ namespace FinalComGame
             if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !_isJumping && !_isClimbing && !_isDashing && MP > 0)
             {
                 _isGliding = true;
-                Animation.Reset(); // Reset glide animation when starting to glide
             }
             else
             {
@@ -661,7 +839,13 @@ namespace FinalComGame
             Vector2 direction = new Vector2(Direction, 0);
             PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
             newBullet.DamageAmount *= chargePower; // Increase damage
-            newBullet.Shoot(Position, direction);
+
+            Vector2 bulletPosition; 
+            if (!_isCrouching) bulletPosition = Position + new Vector2(0, 10);
+            else bulletPosition = Position;
+
+            newBullet.Shoot(bulletPosition, direction);
+            
             gameObjects.Add(newBullet);
             
             // // Scale bullet size with charge (optional)
@@ -679,6 +863,7 @@ namespace FinalComGame
             
             // Reset charging state
             _isCharging = false;
+            _lastChargeTime = _chargeTime;
             _chargeTime = 0f;
         }
 
