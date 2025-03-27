@@ -57,6 +57,7 @@ namespace FinalComGame
         public float ChargeMPCost;
 
         private bool _isFist;
+        private bool _isSoulBullet;
 
         //SFX
         public SoundEffect JumpSound;
@@ -111,11 +112,11 @@ namespace FinalComGame
             AbsorptionHealth = 0;
 
             ChangeToFistAttack();
+            ChangeToSoulBulletAttack();
 
             _overlappedTile = TileType.None;
 
-            _isFist = true;
-            
+
             _isClimbing = false;
             _isCrouching = false;
             _isDropping = false;
@@ -133,6 +134,8 @@ namespace FinalComGame
             _invincibilityTimer = 0f;
             _attackTimer = 0f;
             _attackCooldownTimer = 0f;
+
+            Bullet.DamageAmount = Bullet.BaseDamageAmount;
             
             base.Reset();
         }
@@ -279,8 +282,11 @@ namespace FinalComGame
             // Handle Fire button (charge shot)
             if (Singleton.Instance.IsKeyJustPressed(Fire))
             {
-                // Start charging
-                StartCharging();
+                if(_isSoulBullet)
+                    // Start charging
+                    StartCharging();
+                else
+                    Shoot(gameObjects);
             }
             else if (Singleton.Instance.IsKeyPressed(Fire))
             {
@@ -586,6 +592,18 @@ namespace FinalComGame
                 }
             }
         }
+
+        private void Shoot(List<GameObject> gameObjects)
+        {
+            // Create and configure the bullet
+            Vector2 direction = new Vector2(Direction, 0);
+            PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
+            newBullet.DamageAmount = 999; // Increase damage
+            newBullet.Shoot(Position, direction);
+            gameObjects.Add(newBullet);
+            Animation.Reset();
+        }
+
        // Charge shot methods
         private void StartCharging()
         {
@@ -794,6 +812,18 @@ namespace FinalComGame
         {
             _isFist = true;
             AttackDamage = BaseAttackDamage;
+        }
+
+        public void ChangeToGunAttack(float damageAmount)
+        {
+            _isSoulBullet = false;
+            Bullet.DamageAmount = damageAmount;
+        }
+
+        public void ChangeToSoulBulletAttack()
+        {
+            _isSoulBullet = true;
+            Bullet.DamageAmount = Bullet.BaseDamageAmount;
         }
     }
 }

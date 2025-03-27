@@ -320,6 +320,9 @@ public class PlayScene : Scene
             Bullet = new PlayerBullet(_playerTexture)
             {
                 Name = "BulletPlayer",
+                BaseDamageAmount = 15f,
+                Speed = 500f,
+                CanCollideTile = true,
                 Viewport = new Rectangle(0, 0, 15, 10)
             }
         };
@@ -417,6 +420,7 @@ public class PlayScene : Scene
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
+        Texture2D Gun = _content.Load<Texture2D>("Gun");
 
         _gameObjects.Add(new Barrier(testItem, "barrier", TileMap.GetTileWorldPositionAt(18, 90)){
             Name =  "barrier",
@@ -440,6 +444,11 @@ public class PlayScene : Scene
 
         _gameObjects.Add(new Sword(sword, "Testing Sword", TileMap.GetTileWorldPositionAt(12, 98)){
             Name =  "Sword",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
+
+        _gameObjects.Add(new Gun(Gun, "Testing Gun", TileMap.GetTileWorldPositionAt(20, 98)){
+            Name =  "Gun",
             Viewport = new Rectangle(0, 0, 32,32)
         });
     }
