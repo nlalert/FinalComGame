@@ -33,20 +33,15 @@ public class PlayScene : Scene
     private ParallaxBackground _parallaxBackground;
 
     private TileMap _collisionTileMap;
-    private TileMap _enemyMap;
     private TileMap _FGTileMap;
     private TileMap _MGTileMap;
     private TileMap _BGTileMap;
 
     private Camera _camera;
 
-    private BaseEnemy _baseSkeleton;
-    private BaseEnemy _enemyDog;
-    private BaseEnemy _enemySlime;
-    private BaseEnemy _enemyDemon;
-    private BaseEnemy _enemyTower;
-    private BaseEnemy _enemyPlatform;
+    private List<AmbushArea> ambushAreas;
 
+    private Dictionary<int, BaseEnemy> _enemyPrefabs;
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         base.Initialize(graphicsDevice, graphicsDeviceManager, content);
@@ -112,6 +107,7 @@ public class PlayScene : Scene
                 _parallaxBackground.Update();
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
+                UpdateAmbushAreas(gameTime);
                 RemoveInactiveObjects();
 
                 _camera.Follow(Singleton.Instance.Player); // Make camera follow the player
@@ -175,6 +171,14 @@ public class PlayScene : Scene
         // Console.WriteLine(_gameObjects.Count);
     }
 
+    private void UpdateAmbushAreas(GameTime gameTime)
+    {
+        foreach (var ambushArea in ambushAreas)
+        {
+            ambushArea.Update(gameTime, _gameObjects, _collisionTileMap);
+        }
+    }
+
     public void RemoveInactiveObjects()
     {
         for (int i = 0; i < _numObject; i++)
@@ -219,7 +223,6 @@ public class PlayScene : Scene
         CreatePlayer();
         _gameObjects.Add(Singleton.Instance.Player);
 
-
         CreateEnemies();
         AddItems();
         SetupUI();
@@ -245,7 +248,7 @@ public class PlayScene : Scene
         Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
 
-
+        InitializeAmbushAreas();
         SpawnEnemies();
         AddItems();
         SetupUI();
@@ -254,6 +257,12 @@ public class PlayScene : Scene
         {
             s.Reset();
         }
+    }
+    
+    // In your PlayScene or main game class
+    public void InitializeAmbushAreas()
+    {
+        ambushAreas = _collisionTileMap.GetAmbushAreas(_enemyPrefabs);
     }
 
     private void CreatePlayer()
@@ -318,83 +327,87 @@ public class PlayScene : Scene
 
     private void CreateEnemies()
     {
-        _baseSkeleton = new SkeletonEnemy(_enemyTexture,_font){
-            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            Viewport = new Rectangle(0, 0, 32, 64),
-            CanCollideTile = true,
-            MaxHealth = 80f,
-            AttackDamage = 5f,
+        // Create a dictionary of enemy prefabs
+        _enemyPrefabs = new Dictionary<int, BaseEnemy>
+        {
+            {
+                97,         
+                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 16, 16),
+                    CanCollideTile = true,
+                    MaxHealth = 50f,
+                    AttackDamage = 3f,
 
-            LimitIdlePatrol = 100,
+                    JumpCooldown = 3.0f,
+                    JumpStrength = 750,
+                    Friction = 0.96f
+                }
+            },
+            {
+                9934498,         
+                new SkeletonEnemy(_enemyTexture,_font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 32, 64),
+                    CanCollideTile = true,
+                    MaxHealth = 80f,
+                    AttackDamage = 5f,
 
-            IgnorePlayerDuration = 3f,
-        };
-        _enemyDog = new HellhoundEnemy(_DogTexture,_font){
-            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            Viewport = new Rectangle(0, 0, 64, 32),
-            CanCollideTile = true,
-            MaxHealth = 100f,
-            AttackDamage = 8f,
+                    LimitIdlePatrol = 100,
 
-            LimitIdlePatrol = 100,
-            
-            ChargeTime = 2.0f,
-            ChaseDuration = 5f,
-            DashDuration = 1.0f,
-        };
-        _enemySlime = new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
-            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            Viewport = new Rectangle(0, 0, 16, 16),
-            CanCollideTile = true,
-            MaxHealth = 50f,
-            AttackDamage = 3f,
+                    IgnorePlayerDuration = 3f,
+                }
+            },
+            {
+                991239998,
+                new HellhoundEnemy(_DogTexture,_font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 64, 32),
+                    CanCollideTile = true,
+                    MaxHealth = 100f,
+                    AttackDamage = 8f,
 
-            JumpCooldown = 3.0f,
-            JumpStrength = 750,
-            Friction = 0.96f
-        };
-        _enemyDemon = new DemonEnemy(_DemonTexture,_font){
-            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            Viewport = new Rectangle(0, 0, 32, 64),
-            CanCollideTile = true,
-            DemonBullet = new DemonBullet(_DemonBulletTexture)
-        };
-        _enemyTower = new TowerEnemy(_DemonTexture,_font){
-            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            Viewport = new Rectangle(0, 0, 32, 32),
-            CanCollideTile = true,
-            TowerBullet = new TowerBullet(_DemonBulletTexture)
-        };
-        _enemyPlatform = new PlatformEnemy(_PlatformTexture,_font){
-            Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            Viewport = new Rectangle(0, 0, 64, 32),
-            CanCollideTile = true,
+                    LimitIdlePatrol = 100,
+                    
+                    ChargeTime = 2.0f,
+                    ChaseDuration = 5f,
+                    DashDuration = 1.0f,
+                }
+            },
+            {
+                918659998,
+                new DemonEnemy(_DemonTexture,_font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 32, 64),
+                    CanCollideTile = true,
+                    DemonBullet = new DemonBullet(_DemonBulletTexture)
+                }
+            },
+            {
+                9398599,
+                new TowerEnemy(_DemonTexture,_font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 32, 32),
+                    CanCollideTile = true,
+                    TowerBullet = new TowerBullet(_DemonBulletTexture)
+                }
+            },
+            {
+                99999,
+                new PlatformEnemy(_PlatformTexture,_font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 64, 32),
+                    CanCollideTile = true,
+                }
+            }
         };
     }
 
     private void SpawnEnemies()
     {
-        // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(Singleton.Instance.Player.Position), _gameObjects);
-        _enemyPlatform.Spawn(Singleton.Instance.Player.Position, _gameObjects);
+        // FOR ONLY SPAWNING Enemy in stage that always in stage (not ambush)
 
-        foreach (var enemySpawnPoint in _collisionTileMap.GetEnemySpawnPoints())
-        {
-            switch (enemySpawnPoint.Value)
-            {
-                case 97:
-                    // HellhoundEnemy.
-                    _enemySlime.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // _enemyDog.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // _baseSkeleton.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // _enemyDemon.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-                    // _enemyTower.Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key)+ new Vector2(0,-196), _gameObjects);
-
-                    break;
-                default:
-                    break;
-            }
-            
-        }  
+        // _enemyPlatform.Spawn(Singleton.Instance.Player.Position, _gameObjects);
     }
 
     private void AddItems()

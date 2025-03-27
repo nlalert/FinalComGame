@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
 {
-    class SlimeEnemy : BaseEnemy
+    public class SlimeEnemy : BaseEnemy
     {
         public float JumpCooldown;
         private float _jumpTimer;

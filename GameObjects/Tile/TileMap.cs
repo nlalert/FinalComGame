@@ -11,13 +11,10 @@ namespace FinalComGame
         public Dictionary<Vector2, Tile> tiles; //Grid Position, tile
         public Dictionary<Vector2, int> enemySpawnPoints; // Grid position, enemy type ID
 
-        public bool IsAmbush1Triggered = false;
-        public int Ambush1EnemiesCount;
-
-        public Vector2 Ambush1_TL, Ambush1_BR; 
-
         private Texture2D textureAtlas;
         private int numTilesPerRow;
+        private int _mapWidth;
+        private int _mapHeight;
 
         public TileMap(Texture2D textureAtlas, string mapPath, int numTilesPerRow)
         {
@@ -25,9 +22,6 @@ namespace FinalComGame
             this.numTilesPerRow = numTilesPerRow;
             tiles = new Dictionary<Vector2, Tile>();
             enemySpawnPoints = new Dictionary<Vector2, int>();
-            
-            Ambush1_TL = Vector2.Zero;
-            Ambush1_BR = Vector2.Zero;
 
             LoadMap(mapPath);
         }
@@ -37,16 +31,6 @@ namespace FinalComGame
             foreach (var tile in tiles)
             {
                 tile.Value.Update(gameTime, gameObjects, this);
-
-                if (IsAmbush1Triggered && Ambush1EnemiesCount > 0)
-                {
-                    if (tile.Value.Type == TileType.Ambush_1_Entry || tile.Value.Type == TileType.Ambush_1_Exit) tile.Value.IsSolid = true;
-                    if (tile.Value.Type == TileType.Ambush_1_Trigger) tile.Value.Type = TileType.None;
-                }
-                else if(Ambush1EnemiesCount <= 0)
-                {
-                    if (tile.Value.Type == TileType.Ambush_1_Entry || tile.Value.Type == TileType.Ambush_1_Exit) tile.Value.IsSolid = false;
-                }
             }
 
         }
@@ -69,7 +53,9 @@ namespace FinalComGame
                 {
                     string[] items = line.Split(',');
 
-                    for (int x = 0; x < items.Length; x++)
+                    _mapWidth = items.Length;
+
+                    for (int x = 0; x < _mapWidth; x++)
                     {
                         if (int.TryParse(items[x], out int tileID) && tileID >= 0)
                         {
@@ -88,17 +74,12 @@ namespace FinalComGame
                                 IsSolid = GetTileCollisionType(tileID)
                             };
                             tiles.Add(new Vector2(x, y), tile);
-
-                            if(isAmbushTile(tileID)){
-                                SetupAmbushArea(tileID, x, y);
-                            }
-
                         }
                     }
                     y++;
                 }
+                _mapHeight = y;
             }
-
         }
 
         public static Vector2 GetTileWorldPositionAt(int tileGridX, int tileGridY)
@@ -140,65 +121,20 @@ namespace FinalComGame
                 37 => TileType.Platform,
                 57 or 58 or 59 => TileType.Ladder,
                 77 or 78 or 79 => TileType.Platform_Ladder,
-
-                14 => TileType.Ambush_1_Entry,
-                34 => TileType.Ambush_1_Trigger,
-                54 => TileType.Ambush_1_Exit,
-                74 => TileType.Ambush_1_Area,
-
+                14 or 54 => TileType.AmbushBarrier,
+                74 => TileType.AmbushAreaTopLeft,
+                80 => TileType.AmbushAreaBottomRight,
                 97 => TileType.EnemySpawn,
 
                 _ => TileType.None
             };
         }
 
-        private bool isAmbushTile(int tileID)
-        {
-            return tileID == 74;
-        }
-
-        private void SetupAmbushArea(int tileID, int x, int y){
-            Vector2 pos = GetTileWorldPositionAt(x, y);
-
-            if (GetTileType(tileID) == TileType.Ambush_1_Area){
-
-                if (Ambush1_TL.X == 0)
-                {
-                    Ambush1_TL = pos;
-                }
-                else if(Ambush1_TL.X < pos.X)
-                {
-                    Ambush1_BR = pos; //new Vector2 (pos.X + Singleton.BLOCK_SIZE, pos.Y + Singleton.BLOCK_SIZE);
-                    SetupAmbushEnemiesCount(1);
-
-                }
-                else if(Ambush1_TL.X > pos.X)
-                {
-                    Ambush1_BR = Ambush1_TL;
-                    Ambush1_TL = pos; //new Vector2 (pos.X + Singleton.BLOCK_SIZE, pos.Y + Singleton.BLOCK_SIZE);
-                    SetupAmbushEnemiesCount(1);
-
-                }
-
-                Console.WriteLine(Ambush1_TL + " " + Ambush1_BR + " " + Ambush1EnemiesCount);
-            }
-        }
-
-        private void SetupAmbushEnemiesCount(int index){
-            foreach (var tile in tiles)
-            {
-                if (tile.Value.Type == TileType.EnemySpawn)
-                {
-                    Ambush1EnemiesCount++;
-                }
-            }
-        }
-
         private static bool GetTileCollisionType(int tileID)
         {
             return tileID switch
             {
-                17 or 37 or 54 => true,
+                17 or 37 => true,
                 _ => false
             };
         }
@@ -256,6 +192,77 @@ namespace FinalComGame
         public Dictionary<Vector2, int> GetEnemySpawnPoints()
         {
             return enemySpawnPoints;
+        }
+
+        public List<AmbushArea> GetAmbushAreas(Dictionary<int, BaseEnemy> enemyPrefabs)
+        {
+            var ambushAreas = new List<AmbushArea>();
+            var topLeftTiles = new List<Vector2>();
+
+            // First, find all top-left ambush area tiles
+            foreach (var tile in tiles)
+            {
+                if (tile.Value.Type == TileType.AmbushAreaTopLeft)
+                {
+                    topLeftTiles.Add(tile.Key);
+                }
+            }
+
+            // For each top-left tile, find corresponding bottom-right tile
+            foreach (Vector2 topLeft in topLeftTiles)
+            {
+                Vector2 bottomRight = FindCorrespondingBottomRightTile(topLeft);
+                
+                if (bottomRight != Vector2.Zero)
+                {
+                    // Create rectangle in world coordinates
+                    Rectangle ambushZone = CreateAmbushAreaRectangle(topLeft, bottomRight);
+                    
+                    // Create AmbushArea
+                    AmbushArea ambushArea = new AmbushArea(ambushZone, this, enemyPrefabs);
+                    ambushAreas.Add(ambushArea);
+                }
+            }
+
+            return ambushAreas;
+    
+        }
+
+        private Vector2 FindCorrespondingBottomRightTile(Vector2 topLeft)
+        {
+            // Search for the corresponding bottom-right tile within a reasonable range
+            for (int x = (int)topLeft.X; x < _mapWidth; x++) // Limit search range
+            {
+                for (int y = (int)topLeft.Y; y < _mapHeight; y++) // Limit search range
+                {
+                    Vector2 bottomRight = new Vector2(x, y);
+                    Tile tile = GetTileAtGridPosition(bottomRight);
+                    // Check if this tile is a bottom-right ambush area marker
+                    if (tile != null && tile.Type == TileType.AmbushAreaBottomRight)
+                    {
+                        return bottomRight;
+                    }
+                }
+            }
+            return Vector2.Zero;
+        }
+
+        private Rectangle CreateAmbushAreaRectangle(Vector2 topLeftGridPosition, Vector2 bottomRightGridPosition)
+        {
+            // Convert grid positions to world positions
+            Vector2 topLeftWorld = GetTileWorldPositionAt(topLeftGridPosition);
+            Vector2 bottomRightWorld = GetTileWorldPositionAt(bottomRightGridPosition);
+
+            // Calculate width and height
+            int width = (int)(bottomRightWorld.X - topLeftWorld.X + Singleton.BLOCK_SIZE);
+            int height = (int)(bottomRightWorld.Y - topLeftWorld.Y + Singleton.BLOCK_SIZE);
+
+            return new Rectangle(
+                (int)topLeftWorld.X, 
+                (int)topLeftWorld.Y, 
+                width, 
+                height
+            );
         }
     }
 }
