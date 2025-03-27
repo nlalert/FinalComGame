@@ -32,6 +32,7 @@ namespace FinalComGame
         private bool _isGliding;
 
         private TileType _overlappedTile;
+        private Vector2 _overlappedTilePosition;
         //Jump
         public float CoyoteTime;
         private float _coyoteTimeCounter;
@@ -211,7 +212,7 @@ namespace FinalComGame
 
         private void RegenerateMP(float deltaTime)
         {
-            if(!_isDashing && !_isGliding)
+            if(!_isDashing && !_isGliding && !_isCharging)
                 MP += 5 * deltaTime;
             if(MP >= MaxMP) 
                 MP = MaxMP;
@@ -220,11 +221,31 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             _particle.Draw(spriteBatch);
-            base.Draw(spriteBatch);
+            //base.Draw(spriteBatch);
+
+            SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+            Vector2 offset = new Vector2(0 , 0);
+
+            if (_isCrouching)
+            {
+                offset = new Vector2(0 , 8);
+            }
+
+            spriteBatch.Draw(
+                Animation.GetTexture(),
+                GetDrawingPosition() - offset,
+                Animation.GetCurrentFrame(),
+                Color.White,
+                0f, 
+                Vector2.Zero,
+                Scale,
+                spriteEffect, 
+                0f
+            );
 
             if (_currentHandAnimation != "none")
             {
-                SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
                 spriteBatch.Draw(
                     HandAnimation.GetTexture(),
@@ -432,7 +453,7 @@ namespace FinalComGame
         {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
-                if (!_isDashing && !_isAttacking) 
+                if (!_isDashing && !_isAttacking && !_isClimbing) 
                 {
                     Direction = -1;
                     Velocity.X = -WalkSpeed;
@@ -440,7 +461,7 @@ namespace FinalComGame
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
-                if (!_isDashing && !_isAttacking) 
+                if (!_isDashing && !_isAttacking && !_isClimbing)  
                 {
                     Direction = 1;
                     Velocity.X = WalkSpeed;
@@ -462,7 +483,7 @@ namespace FinalComGame
             }
 
             // Handle Fire button (charge shot)
-            if (Singleton.Instance.IsKeyJustPressed(Fire))
+            if (Singleton.Instance.IsKeyJustPressed(Fire) && !_isClimbing)
             {
                 if(_isSoulBullet)
                     // Start charging
@@ -470,12 +491,12 @@ namespace FinalComGame
                 else
                     Shoot(gameObjects);
             }
-            else if (Singleton.Instance.IsKeyPressed(Fire))
+            else if (Singleton.Instance.IsKeyPressed(Fire) && !_isClimbing)
             {
                 // Continue charging
                 ContinueCharging(deltaTime);
             }
-            else if (Singleton.Instance.IsKeyJustReleased(Fire))
+            else if (Singleton.Instance.IsKeyJustReleased(Fire) && !_isClimbing)
             {
                 // Release shot
                 ReleaseChargedShot(gameObjects);
@@ -487,7 +508,7 @@ namespace FinalComGame
                 _jumpBufferCounter -= deltaTime; // Decrease over time
 
             // Gliding - activate when holding Jump while in air and not climbing or dashing
-            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !_isJumping && !_isClimbing && !_isDashing && MP > 0)
+            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !_isJumping && !_isClimbing && !_isDashing && !_isDropping && MP > 0)
             {
                 _isGliding = true;
             }
@@ -522,8 +543,11 @@ namespace FinalComGame
             if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && _overlappedTile == TileType.Ladder && !_isClimbing && !_isCrouching && !_isDashing)
             {
                 _isClimbing = true;
+                _isCharging = false;
                 _isJumping = false;
+                _chargeTime = 0;
                 Velocity.Y = 0;
+                Position.X = _overlappedTilePosition.X;
             }
 
             if (_isClimbing)
@@ -535,7 +559,7 @@ namespace FinalComGame
 
                 else if (Singleton.Instance.IsKeyPressed(Crouch))
                 {
-                    Velocity.Y = ClimbSpeed;
+                    Velocity.Y = WalkSpeed;
                 }
 
                 else Velocity.Y = 0;
@@ -752,6 +776,7 @@ namespace FinalComGame
                         {
                             if (IsTouching(tile)){
                                 _overlappedTile = TileType.Ladder;
+                                _overlappedTilePosition = new Vector2(tile.Position.X, 0);
                             }
                         }
 
@@ -777,7 +802,12 @@ namespace FinalComGame
             Vector2 direction = new Vector2(Direction, 0);
             PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
             newBullet.DamageAmount = Bullet.DamageAmount; // Increase damage
-            newBullet.Shoot(Position, direction);
+
+            Vector2 bulletPosition; 
+            if (!_isCrouching) bulletPosition = Position + new Vector2(0, 10);
+            else bulletPosition = Position;
+            
+            newBullet.Shoot(bulletPosition, direction);
 
             //TODO : More dynamic for more range weapon
             (HoldItem[_rangeWeaponSlot] as Gun).DecreaseAmmo();
@@ -798,7 +828,6 @@ namespace FinalComGame
                 // if (ChargeSound != null)
                 //     ChargeSound.Play();
                 
-                Animation.Reset();
             }
         }
         
@@ -823,6 +852,7 @@ namespace FinalComGame
             //     1.0f); // Alpha always max
                 
             // Drain MP while charging (more MP for longer charge)
+            if (_chargeTime < MaxChargeTime)
             DrainMP(ChargeMPCost / MaxChargeTime, deltaTime);
         }
         
