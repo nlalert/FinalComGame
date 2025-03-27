@@ -22,7 +22,7 @@ namespace FinalComGame
         public HellhoundEnemy(Texture2D texture, SpriteFont font) : base(texture, font) { }
         public override void Reset()
         {
-            Console.WriteLine("Reset Hellhound");
+            //Console.WriteLine("Reset Hellhound");
 
             _isDashing = false;
             _dashTimer = 0f;
@@ -66,12 +66,12 @@ namespace FinalComGame
 
         public override void OnSpawn()
         {
-            Console.WriteLine("Hellhound emerges from the shadows!");
+            //Console.WriteLine("Hellhound emerges from the shadows!");
         }
 
         public override void OnDead()
         {
-            Console.WriteLine("Hellhound fades into darkness...");
+            //Console.WriteLine("Hellhound fades into darkness...");
             base.OnDead();
         }
         public override void Draw(SpriteBatch spriteBatch)
@@ -101,7 +101,7 @@ namespace FinalComGame
 
             if (Singleton.Instance.Player != null && this.HaveLineOfSight(tileMap) && Vector2.Distance(Singleton.Instance.Player.Position, this.Position) <= 100)
             {
-                Console.WriteLine("Hellhound spots the player! Preparing to charge.");
+                //Console.WriteLine("Hellhound spots the player! Preparing to charge.");
                 CurrentState = EnemyState.Charging;
                 _chargeTimer = ChargeTime;
                 _dashTarget = Singleton.Instance.Player.GetPlayerCenter(); // Lock on to player's position
@@ -117,7 +117,7 @@ namespace FinalComGame
             _chargeTimer -= deltaTime;
             if (_chargeTimer <= 0)
             {
-                Console.WriteLine("Hellhound dashes!");
+                //Console.WriteLine("Hellhound dashes!");
                 CurrentState = EnemyState.Dash;
                 _isDashing = true;
                 _dashTimer = DashDuration;
@@ -144,7 +144,7 @@ namespace FinalComGame
                 _dashTimer -= deltaTime;
                 if (_dashTimer <=0 )
                 {
-                    Console.WriteLine("Hellhound finished dashing, switching to chase mode.");
+                    //Console.WriteLine("Hellhound finished dashing, switching to chase mode.");
                     _isDashing = false;
                     CurrentState = EnemyState.Chase;
                     _chaseTimer = ChaseDuration;
@@ -161,7 +161,7 @@ namespace FinalComGame
 
             if (!this.HaveLineOfSight(tileMap) || _chaseTimer <= 0)
             {
-                Console.WriteLine("Hellhound lost sight of the player, returning to idle.");
+                //Console.WriteLine("Hellhound lost sight of the player, returning to idle.");
                 CurrentState = EnemyState.Idle;
                 _patrolCenterPoint = this.Position;
                 return;
@@ -176,7 +176,7 @@ namespace FinalComGame
 
             if (_chaseTimer <= 0 && this.HaveLineOfSight(tileMap))
             {
-                Console.WriteLine("Hellhound still sees the player, preparing to charge again.");
+                //Console.WriteLine("Hellhound still sees the player, preparing to charge again.");
                 CurrentState = EnemyState.Charging;
                 _chargeTimer = ChargeTime;
                 _dashTarget = Singleton.Instance.Player.Position;
@@ -187,16 +187,16 @@ namespace FinalComGame
         {
             if (CurrentState == EnemyState.Idle || CurrentState == EnemyState.Charging)
             {
-                Console.WriteLine("Hellhound collided and turned around.");
+                //Console.WriteLine("Hellhound collided and turned around.");
                 Direction *= -1;
             }
             else if (CurrentState == EnemyState.Chase )
             {
-                Console.WriteLine("Hellhound jumps over obstacles.");
+                //Console.WriteLine("Hellhound jumps over obstacles.");
                 if (Velocity.Y == 0)
                     Velocity.Y = -900f; // Jump over obstacles
             }else if(CurrentState == EnemyState.Dash){
-                Console.WriteLine("Hellhound dash Hit wall, changing to chase state");
+                //Console.WriteLine("Hellhound dash Hit wall, changing to chase state");
                 _isDashing = false;
                 CurrentState = EnemyState.Chase;
                 _chaseTimer = ChaseDuration;
@@ -207,7 +207,7 @@ namespace FinalComGame
 
         public override void OnCollidePlayer()
         {
-            Console.WriteLine("Hellhound bites the player!");
+            //Console.WriteLine("Hellhound bites the player!");
             Singleton.Instance.Player.OnCollideNPC(this,AttackDamage);
             if(CurrentState == EnemyState.Chase){
                 CurrentState = EnemyState.Idle;
