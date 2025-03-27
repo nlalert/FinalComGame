@@ -417,8 +417,8 @@ public class PlayScene : Scene
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
 
-        _gameObjects.Add(new Item(testItem, "test", TileMap.GetTileWorldPositionAt(18, 90)){
-            Name =  "Pickaxe1",
+        _gameObjects.Add(new Barrier(testItem, "barrier", TileMap.GetTileWorldPositionAt(18, 90)){
+            Name =  "barrier",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
@@ -431,7 +431,7 @@ public class PlayScene : Scene
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
-
+        
         _gameObjects.Add(new LifeUp(LifeUP, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 98)){
             Name =  "1Up",
             Viewport = new Rectangle(0, 0, 32,32)

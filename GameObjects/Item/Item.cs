@@ -31,8 +31,10 @@ namespace FinalComGame
         // // Method to be overridden by specific item types
         public virtual void Use(int slot)
         {
-            if(IsConsumable) 
-                Singleton.Instance.Player.HoldItem[slot] = null;
+            if(!IsConsumable) return;
+
+            Singleton.Instance.Player.HoldItem[slot] = null;
+            IsActive = false;
             Console.WriteLine("Using Item");      
         }
         
@@ -69,19 +71,22 @@ namespace FinalComGame
         
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if(IsPickedUp) return;
+            if(!IsPickedUp)
+            {
+                spriteBatch.Draw(
+                    _texture,
+                    Position,
+                    Viewport,
+                    Color.White,
+                    0f, 
+                    Vector2.Zero,
+                    1f,
+                    SpriteEffects.None, 
+                    0f
+                );
+            }
 
-            spriteBatch.Draw(
-                _texture,
-                Position,
-                Viewport,
-                Color.White,
-                0f, 
-                Vector2.Zero,
-                1f,
-                SpriteEffects.None, 
-                0f
-            );
+
 
             // // Draw pickup range indicator when player is nearby
             // if (isInRange)

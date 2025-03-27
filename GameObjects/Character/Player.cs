@@ -16,6 +16,7 @@ namespace FinalComGame
         public float MaxMP;
         public float MP;
         public int Life;
+        public float AbsorptionHealth;
 
         public Item[] HoldItem;
 
@@ -102,6 +103,7 @@ namespace FinalComGame
 
             Health = MaxHealth - 50; //REMOVE LATER FOR DEBUG
             MP = MaxMP;
+            AbsorptionHealth = 0;
 
             _overlappedTile = TileType.None;
 
@@ -649,12 +651,35 @@ namespace FinalComGame
         {
             OnHit(damageAmount);
         }
+        
         public override void OnHit(float damageAmount)
         {
             if (_invincibilityTimer > 0) 
                 return; // If i-frames are active, ignore damage
-            // Generic hit handling
-            Health -= damageAmount;
+
+            // Calculate damage to absorption health
+            if (AbsorptionHealth > 0)
+            {
+                // If absorption health can fully block the damage
+                if (AbsorptionHealth >= damageAmount)
+                {
+                    AbsorptionHealth -= damageAmount;
+                    damageAmount = 0;
+                }
+                // If absorption health is partially depleted
+                else
+                {
+                    float remainingDamage = damageAmount - AbsorptionHealth;
+                    AbsorptionHealth = 0;
+                    Health -= remainingDamage;
+                }
+            }
+            else
+            {
+                // If no absorption health, damage goes directly to HP
+                Health -= damageAmount;
+            }
+
             StartInvincibility();
             Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
             if (Health <= 0)
