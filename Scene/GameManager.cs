@@ -94,7 +94,7 @@ public class GameManager : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(new Color(64, 28, 4));
+        GraphicsDevice.Clear(Color.Black);
 
         // _spriteBatch.Begin();
 
@@ -106,11 +106,10 @@ public class GameManager : Game
                 _mainMenu.Draw(gameTime);
                 break;
             case Singleton.GameState.Pause:
-                _playScene.Draw(gameTime);
+                // _playScene.Draw(gameTime);
                 _pauseMenu.Draw(gameTime);
                 break;
             default:
-                GraphicsDevice.Clear(Color.DarkGray);
                 _playScene.Draw(gameTime);
                 break;
         //     case Singleton.GameState.MainMenu:

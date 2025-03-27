@@ -108,9 +108,11 @@ public class PauseMenu : Scene
     protected override void SetupUI()
     {
         Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
+        int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
+        int ButtonHeight = 80;
 
         _resumeButton = new Button(
-            new Rectangle(50,0,200,200),
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
             Singleton.Instance.Debug_Font,
@@ -120,7 +122,7 @@ public class PauseMenu : Scene
         _resumeButton.OnClick += ResumeButton_OnClick;
 
         _restartButton = new Button(
-            new Rectangle(100,50,200,200),
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
             Singleton.Instance.Debug_Font,
@@ -130,7 +132,7 @@ public class PauseMenu : Scene
         _restartButton.OnClick += RestartButton_OnClick;
 
         _settingsButton = new Button(
-            new Rectangle(150,100,200,200),
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
             Singleton.Instance.Debug_Font,
@@ -140,7 +142,7 @@ public class PauseMenu : Scene
         _settingsButton.OnClick += SettingButton_OnClick;
 
         _mainmenuButton = new Button(
-            new Rectangle(200,150,200,200),
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
             Singleton.Instance.Debug_Font,
@@ -150,7 +152,7 @@ public class PauseMenu : Scene
         _mainmenuButton.OnClick += MainMenuButton_OnClick;
 
         _backButton = new Button(
-            new Rectangle(250,150,200,200),
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
             Singleton.Instance.Debug_Font,

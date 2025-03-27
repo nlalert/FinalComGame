@@ -37,8 +37,10 @@ public class MainMenu : Scene
     protected override void SetupUI()
     {
         Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
+        int startButtonWidth = Singleton.SCREEN_WIDTH / 2;
+        int startButtonHeight = 100;
         _StartButton = new Button(
-            new Rectangle(0,0,200,200),
+            new Rectangle((Singleton.SCREEN_WIDTH - startButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - startButtonHeight) / 3, startButtonWidth, startButtonHeight),
             Button,
             Button,
             _font,
@@ -47,8 +49,10 @@ public class MainMenu : Scene
         );
         _StartButton.OnClick += StartGameButton_OnClick;
 
+        int exitButtonWidth = Singleton.SCREEN_WIDTH / 2;
+        int exitButtonHeight = 100;
         _ExitButton = new Button(
-            new Rectangle(0,300,200,200),
+            new Rectangle((Singleton.SCREEN_WIDTH - exitButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - exitButtonHeight) * 2 / 3, exitButtonWidth, exitButtonHeight),
             Button,
             Button,
             _font,
