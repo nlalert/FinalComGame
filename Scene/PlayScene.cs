@@ -44,7 +44,7 @@ public class PlayScene : Scene
 
     private SkeletonEnemy _baseSkeleton;
     private HellhoundEnemy _enemyDog;
-    private SlimeEnemy _enemySlime;
+    public static SlimeEnemy _enemySlime;
     private DemonEnemy _enemyDemon;
     private TowerEnemy _enemyTower;
     private PlatformEnemy _enemyPlatform;
@@ -269,12 +269,15 @@ public class PlayScene : Scene
     
     private void InitializeAmbushAreas()
     {
-        //TODO : Read Area from
-        ambushAreas.Add(new AmbushArea(
-            new Rectangle(60*Singleton.BLOCK_SIZE, 20*Singleton.BLOCK_SIZE, 300*Singleton.BLOCK_SIZE, 200*Singleton.BLOCK_SIZE), // x, y, width, height of trigger zone
-            _collisionTileMap,
-            _enemySlime
-        ));
+        ambushAreas = _collisionTileMap.GetAmbushAreas();
+
+        Console.WriteLine(ambushAreas.Count+"L");
+        // //TODO : Read Area from
+        // ambushAreas.Add(new AmbushArea(
+        //     new Rectangle(60*Singleton.BLOCK_SIZE, 20*Singleton.BLOCK_SIZE, 300*Singleton.BLOCK_SIZE, 200*Singleton.BLOCK_SIZE), // x, y, width, height of trigger zone
+        //     _collisionTileMap,
+        //     _enemySlime
+        // ));
     }
 
     private void CreatePlayer()

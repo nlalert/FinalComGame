@@ -13,6 +13,8 @@ namespace FinalComGame
 
         private Texture2D textureAtlas;
         private int numTilesPerRow;
+        private int _mapWidth;
+        private int _mapHeight;
 
         public TileMap(Texture2D textureAtlas, string mapPath, int numTilesPerRow)
         {
@@ -51,7 +53,9 @@ namespace FinalComGame
                 {
                     string[] items = line.Split(',');
 
-                    for (int x = 0; x < items.Length; x++)
+                    _mapWidth = items.Length;
+
+                    for (int x = 0; x < _mapWidth; x++)
                     {
                         if (int.TryParse(items[x], out int tileID) && tileID >= 0)
                         {
@@ -74,8 +78,12 @@ namespace FinalComGame
                     }
                     y++;
                 }
+                _mapHeight = y;
             }
-
+            Console.WriteLine("_mapHeight");
+            Console.WriteLine(_mapHeight);
+            Console.WriteLine("_mapWidth");
+            Console.WriteLine(_mapWidth);
         }
 
         public static Vector2 GetTileWorldPositionAt(int tileGridX, int tileGridY)
@@ -118,6 +126,8 @@ namespace FinalComGame
                 57 or 58 or 59 => TileType.Ladder,
                 77 or 78 or 79 => TileType.Platform_Ladder,
                 14 or 54 => TileType.AmbushBarrier,
+                74 => TileType.AmbushAreaTopLeft,
+                80 => TileType.AmbushAreaBottomRight,
                 97 => TileType.EnemySpawn,
 
                 _ => TileType.None
@@ -186,6 +196,77 @@ namespace FinalComGame
         public Dictionary<Vector2, int> GetEnemySpawnPoints()
         {
             return enemySpawnPoints;
+        }
+
+        public List<AmbushArea> GetAmbushAreas()
+        {
+            var ambushAreas = new List<AmbushArea>();
+            var topLeftTiles = new List<Vector2>();
+
+            // First, find all top-left ambush area tiles
+            foreach (var tile in tiles)
+            {
+                if (tile.Value.Type == TileType.AmbushAreaTopLeft)
+                {
+                    topLeftTiles.Add(tile.Key);
+                }
+            }
+
+            // For each top-left tile, find corresponding bottom-right tile
+            foreach (Vector2 topLeft in topLeftTiles)
+            {
+                Vector2 bottomRight = FindCorrespondingBottomRightTile(topLeft);
+                
+                if (bottomRight != Vector2.Zero)
+                {
+                    // Create rectangle in world coordinates
+                    Rectangle ambushZone = CreateAmbushAreaRectangle(topLeft, bottomRight);
+                    
+                    // Create AmbushArea
+                    AmbushArea ambushArea = new AmbushArea(ambushZone, this, PlayScene._enemySlime);
+                    ambushAreas.Add(ambushArea);
+                }
+            }
+
+            return ambushAreas;
+    
+        }
+
+        private Vector2 FindCorrespondingBottomRightTile(Vector2 topLeft)
+        {
+            // Search for the corresponding bottom-right tile within a reasonable range
+            for (int x = (int)topLeft.X; x < _mapWidth; x++) // Limit search range
+            {
+                for (int y = (int)topLeft.Y; y < _mapHeight; y++) // Limit search range
+                {
+                    Vector2 bottomRight = new Vector2(x, y);
+                    Tile tile = GetTileAtGridPosition(bottomRight);
+                    // Check if this tile is a bottom-right ambush area marker
+                    if (tile != null && tile.Type == TileType.AmbushAreaBottomRight)
+                    {
+                        return bottomRight;
+                    }
+                }
+            }
+            return Vector2.Zero;
+        }
+
+        private Rectangle CreateAmbushAreaRectangle(Vector2 topLeftGridPosition, Vector2 bottomRightGridPosition)
+        {
+            // Convert grid positions to world positions
+            Vector2 topLeftWorld = GetTileWorldPositionAt(topLeftGridPosition);
+            Vector2 bottomRightWorld = GetTileWorldPositionAt(bottomRightGridPosition);
+
+            // Calculate width and height
+            int width = (int)(bottomRightWorld.X - topLeftWorld.X + Singleton.BLOCK_SIZE);
+            int height = (int)(bottomRightWorld.Y - topLeftWorld.Y + Singleton.BLOCK_SIZE);
+
+            return new Rectangle(
+                (int)topLeftWorld.X, 
+                (int)topLeftWorld.Y, 
+                width, 
+                height
+            );
         }
     }
 }
