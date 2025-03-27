@@ -284,7 +284,7 @@ public class PlayScene : Scene
             MaxHealth = 100,
             MaxMP = 100,
 
-            AttackDamage = 10f,
+            BaseAttackDamage = 10f,
             AttackDuration = 0.4f, // How long the attack lasts
             AttackCooldown = 0.2f,
 
@@ -337,7 +337,7 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 16, 16),
                     CanCollideTile = true,
                     MaxHealth = 50f,
-                    AttackDamage = 3f,
+                    BaseAttackDamage = 3f,
 
                     JumpCooldown = 3.0f,
                     JumpStrength = 750,
@@ -351,7 +351,7 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 32, 64),
                     CanCollideTile = true,
                     MaxHealth = 80f,
-                    AttackDamage = 5f,
+                    BaseAttackDamage = 5f,
 
                     LimitIdlePatrol = 100,
 
@@ -365,7 +365,7 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 64, 32),
                     CanCollideTile = true,
                     MaxHealth = 100f,
-                    AttackDamage = 8f,
+                    BaseAttackDamage = 8f,
 
                     LimitIdlePatrol = 100,
                     
@@ -413,6 +413,7 @@ public class PlayScene : Scene
     private void AddItems()
     {
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
+        Texture2D sword = _content.Load<Texture2D>("sword");
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
@@ -434,6 +435,11 @@ public class PlayScene : Scene
         
         _gameObjects.Add(new LifeUp(LifeUP, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 98)){
             Name =  "1Up",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
+
+        _gameObjects.Add(new Sword(sword, "Testing Sword", TileMap.GetTileWorldPositionAt(12, 98)){
+            Name =  "Sword",
             Viewport = new Rectangle(0, 0, 32,32)
         });
     }

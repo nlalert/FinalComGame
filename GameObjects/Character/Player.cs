@@ -56,6 +56,8 @@ namespace FinalComGame
         public float MaxChargePower;
         public float ChargeMPCost;
 
+        private bool _isFist;
+
         //SFX
         public SoundEffect JumpSound;
 
@@ -89,6 +91,9 @@ namespace FinalComGame
             Animation.AddAnimation("crouch", new Vector2(0,6), 16);
             Animation.AddAnimation("crawl", new Vector2(0,7), 8);
 
+            //TODO : Add sword attack animation
+            Animation.AddAnimation("sword", new Vector2(0,7), 8);
+
             Animation.ChangeAnimation(_currentAnimation);
 
             paticleTexture.SetData([new Color(193, 255, 219)]);
@@ -105,8 +110,12 @@ namespace FinalComGame
             MP = MaxMP;
             AbsorptionHealth = 0;
 
+            ChangeToFistAttack();
+
             _overlappedTile = TileType.None;
 
+            _isFist = true;
+            
             _isClimbing = false;
             _isCrouching = false;
             _isDropping = false;
@@ -151,6 +160,8 @@ namespace FinalComGame
             CheckAttackHit(gameObjects);
             UpdateAnimation(deltaTime);
             if (!_isDashing) Velocity.X = 0;
+
+            Console.WriteLine(AttackDamage);
             
             base.Update(gameTime, gameObjects, tileMap);
             _particle.Update(Position);    
@@ -183,7 +194,10 @@ namespace FinalComGame
             if (_isCharging);
                 //base.Animation = _chargeAnimation;
             else if(_isAttacking)
-                animation = "melee";
+                if(_isFist)
+                    animation = "melee";
+                else
+                    animation = "sword";
             else if (_isDashing)
                 animation = "dash";
             else if (_isGliding);
@@ -768,6 +782,18 @@ namespace FinalComGame
             Center.X += this.Viewport.Width/2;
             Center.Y += this.Viewport.Height/4; //idk why it need /4 instead of /2
             return Center;
+        }
+
+        public void ChangeToSwordAttack(float attackDamage)
+        {
+            _isFist = false;
+            AttackDamage = attackDamage;
+        }
+
+        public void ChangeToFistAttack()
+        {
+            _isFist = true;
+            AttackDamage = BaseAttackDamage;
         }
     }
 }
