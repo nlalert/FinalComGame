@@ -347,7 +347,6 @@ namespace FinalComGame
             }
 
             base.UpdateAnimation(deltaTime);
-            //Console.WriteLine(HandAnimation._currentAnimation + " " + Animation._currentAnimation);
         }
 
         protected void UpdateHandAnimation(float deltaTime)
@@ -374,7 +373,7 @@ namespace FinalComGame
             else if (Velocity.X != 0 || Velocity.Y != 0)
             {
                 if(_isCrouching){}
-                    //animation = "crawl";
+
                 else{
                     if (_lastChargeTime != 0)
                     {
