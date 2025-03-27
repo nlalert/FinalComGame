@@ -76,7 +76,7 @@ namespace FinalComGame
         public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
         {
 
-            Animation = new Animation(texture, 48, 64, new Vector2(48*16 , 64*16), 24);
+            Animation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*16), 24);
 
             Animation.AddAnimation("idle", new Vector2(0,0), 16);
             Animation.AddAnimation("run", new Vector2(0,1), 8);
@@ -111,11 +111,11 @@ namespace FinalComGame
             Animation.AddAnimation("crawl", new Vector2(0,8), 8);
 
             //TODO : Add sword attack animation
-            Animation.AddAnimation("sword", new Vector2(0,7), 8);
+            Animation.AddAnimation("sword", new Vector2(8,8), 8);
 
             Animation.ChangeAnimation(_currentAnimation);
 
-            HandAnimation = new Animation(texture, 48, 64, new Vector2(48*16 , 64*16), 24);
+            HandAnimation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*16), 24);
 
             HandAnimation.AddAnimation("idle", new Vector2(4,3), 1);
 
@@ -198,7 +198,7 @@ namespace FinalComGame
             UpdateAnimation(deltaTime);
             if (!_isDashing) Velocity.X = 0;
 
-            Console.WriteLine(AttackDamage);
+            //Console.WriteLine(AttackDamage);
             
             base.Update(gameTime, gameObjects, tileMap);
             _particle.Update(Position);    
@@ -258,7 +258,7 @@ namespace FinalComGame
                     animation = "dash";
                 else
                     animation = "dash_charge";
-            else if (_isGliding){
+            else if (_isGliding && !_isJumping){
                 if (HandAnimation._currentAnimation == "idle")
                     animation = "glide";
                 else
@@ -347,14 +347,14 @@ namespace FinalComGame
             }
 
             base.UpdateAnimation(deltaTime);
-            Console.WriteLine(HandAnimation._currentAnimation + " " + Animation._currentAnimation);
+            //Console.WriteLine(HandAnimation._currentAnimation + " " + Animation._currentAnimation);
         }
 
         protected void UpdateHandAnimation(float deltaTime)
         {
             string handAnimation = "idle";
 
-            if (_isGliding){
+            if (_isGliding && !_isJumping){
                 if (_lastChargeTime != 0)
                 {
                         handAnimation = "fire_1";
@@ -433,7 +433,7 @@ namespace FinalComGame
         {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
-                if (!_isDashing) 
+                if (!_isDashing && !_isAttacking) 
                 {
                     Direction = -1;
                     Velocity.X = -WalkSpeed;
@@ -441,7 +441,7 @@ namespace FinalComGame
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
-                if (!_isDashing) 
+                if (!_isDashing && !_isAttacking) 
                 {
                     Direction = 1;
                     Velocity.X = WalkSpeed;
