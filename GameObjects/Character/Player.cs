@@ -59,6 +59,9 @@ namespace FinalComGame
         private bool _isFist;
         private bool _isSoulBullet;
 
+        private int _rangeWeaponSlot;
+        private int _meleeWeaponSlot;
+
         //SFX
         public SoundEffect JumpSound;
 
@@ -386,7 +389,7 @@ namespace FinalComGame
 
                 if(!HoldItem[i].IsConsumable)
                 {
-                    HoldItem[i].ActiveAbility();
+                    HoldItem[i].ActiveAbility(i);
                 }
             }
         }
@@ -449,8 +452,6 @@ namespace FinalComGame
                 int offsetX = Direction == 1 ? Rectangle.Width : -attackWidth;
 
                 attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
-
-                // TODO: Detect enemies within this hitbox
             }
         }
 
@@ -469,7 +470,6 @@ namespace FinalComGame
         private void CheckAttackHit(List<GameObject> gameObjects)
         {
             if (!_isAttacking) return;
-
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
                 enemy.CheckHit(attackHitbox, AttackDamage);
@@ -598,8 +598,11 @@ namespace FinalComGame
             // Create and configure the bullet
             Vector2 direction = new Vector2(Direction, 0);
             PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
-            newBullet.DamageAmount = 999; // Increase damage
+            newBullet.DamageAmount = Bullet.DamageAmount; // Increase damage
             newBullet.Shoot(Position, direction);
+
+            //TODO : More dynamic for more range weapon
+            (HoldItem[_rangeWeaponSlot] as Gun).DecreaseAmmo();
             gameObjects.Add(newBullet);
             Animation.Reset();
         }
@@ -814,16 +817,23 @@ namespace FinalComGame
             AttackDamage = BaseAttackDamage;
         }
 
-        public void ChangeToGunAttack(float damageAmount)
+        public void ChangeToGunAttack(float damageAmount, int slot)
         {
             _isSoulBullet = false;
             Bullet.DamageAmount = damageAmount;
+            _rangeWeaponSlot = slot;
         }
 
         public void ChangeToSoulBulletAttack()
         {
             _isSoulBullet = true;
             Bullet.DamageAmount = Bullet.BaseDamageAmount;
+        }
+
+        public void RemoveItem(int slot)
+        {
+            HoldItem[slot].IsActive = false;
+            HoldItem[slot] = null;
         }
     }
 }

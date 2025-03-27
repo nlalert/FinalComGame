@@ -8,6 +8,7 @@ namespace FinalComGame
     public class Sword : Item
     {
         private float _attackDamage;
+        private int _playerInventorySlot;
 
         public Sword(Texture2D texture, string description, Vector2 Position, float attackDamage = 30f)
             : base(texture, description, Position)
@@ -23,10 +24,11 @@ namespace FinalComGame
             base.OnDrop(position);
         }
 
-        public override void ActiveAbility()
+        public override void ActiveAbility(int slot)
         {
+            _playerInventorySlot = slot;
             Singleton.Instance.Player.ChangeToSwordAttack(_attackDamage);
-            base.ActiveAbility();
+            base.ActiveAbility(_playerInventorySlot);
         }
     }
 }

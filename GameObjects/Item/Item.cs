@@ -32,13 +32,12 @@ namespace FinalComGame
         public virtual void Use(int slot)
         {
             if(!IsConsumable) return;
-
-            Singleton.Instance.Player.HoldItem[slot] = null;
-            IsActive = false;
+            
+            Singleton.Instance.Player.RemoveItem(slot);
             Console.WriteLine("Using Item");      
         }
         
-        public virtual void ActiveAbility()
+        public virtual void ActiveAbility(int slot)
         {    
         }
         
