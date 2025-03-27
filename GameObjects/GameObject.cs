@@ -220,7 +220,7 @@ public class GameObject : ICloneable
         {
             for (int j = -radius; j <= radius; j++)
             {
-                Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
+                Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
                 Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
                 if(tile != null && tile.IsSolid)
                 {
@@ -238,7 +238,7 @@ public class GameObject : ICloneable
         {
             for (int j = -radius; j <= radius; j++)
             {
-                Vector2 newPosition = new(Position.X + i * Singleton.BLOCK_SIZE, Position.Y + j * Singleton.BLOCK_SIZE);
+                Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
                 Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
                 if(tile != null && tile.IsSolid)
                 {

@@ -85,19 +85,19 @@ namespace FinalComGame
 
         public static Vector2 GetTileWorldPositionAt(int tileGridX, int tileGridY)
         {
-            return new Vector2(tileGridX * Singleton.BLOCK_SIZE, tileGridY * Singleton.BLOCK_SIZE);
+            return new Vector2(tileGridX * Singleton.TILE_SIZE, tileGridY * Singleton.TILE_SIZE);
         }
         public static Vector2 GetTileWorldPositionAt(Vector2 tileGridPosition)
         {
-            return new Vector2(tileGridPosition.X * Singleton.BLOCK_SIZE, tileGridPosition.Y * Singleton.BLOCK_SIZE);
+            return new Vector2(tileGridPosition.X * Singleton.TILE_SIZE, tileGridPosition.Y * Singleton.TILE_SIZE);
         }
         public static Vector2 GetTileGridPositionAt(int x, int y)
         {
-            return new Vector2(x / Singleton.BLOCK_SIZE, y / Singleton.BLOCK_SIZE); // Grid Position ust be int
+            return new Vector2(x / Singleton.TILE_SIZE, y / Singleton.TILE_SIZE); // Grid Position ust be int
         }
         public static Vector2 GetTileGridPositionAt(Vector2 tileWorldPosition)
         {
-            return new Vector2((int) tileWorldPosition.X / Singleton.BLOCK_SIZE, (int) tileWorldPosition.Y / Singleton.BLOCK_SIZE); // Grid Position ust be int
+            return new Vector2((int) tileWorldPosition.X / Singleton.TILE_SIZE, (int) tileWorldPosition.Y / Singleton.TILE_SIZE); // Grid Position ust be int
         }
 
         private static string GetTileName(int tileID)
@@ -141,10 +141,10 @@ namespace FinalComGame
             int tileY = tileID / numTilesPerRow;
             
             return new Rectangle(
-                tileX * Singleton.BLOCK_SIZE, 
-                tileY * Singleton.BLOCK_SIZE, 
-                Singleton.BLOCK_SIZE, 
-                Singleton.BLOCK_SIZE
+                tileX * Singleton.TILE_SIZE, 
+                tileY * Singleton.TILE_SIZE, 
+                Singleton.TILE_SIZE, 
+                Singleton.TILE_SIZE
             );              
         }
 
@@ -250,8 +250,8 @@ namespace FinalComGame
             Vector2 bottomRightWorld = GetTileWorldPositionAt(bottomRightGridPosition);
 
             // Calculate width and height
-            int width = (int)(bottomRightWorld.X - topLeftWorld.X + Singleton.BLOCK_SIZE);
-            int height = (int)(bottomRightWorld.Y - topLeftWorld.Y + Singleton.BLOCK_SIZE);
+            int width = (int)(bottomRightWorld.X - topLeftWorld.X + Singleton.TILE_SIZE);
+            int height = (int)(bottomRightWorld.Y - topLeftWorld.Y + Singleton.TILE_SIZE);
 
             return new Rectangle(
                 (int)topLeftWorld.X, 
