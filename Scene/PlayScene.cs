@@ -270,14 +270,6 @@ public class PlayScene : Scene
     private void InitializeAmbushAreas()
     {
         ambushAreas = _collisionTileMap.GetAmbushAreas();
-
-        Console.WriteLine(ambushAreas.Count+"L");
-        // //TODO : Read Area from
-        // ambushAreas.Add(new AmbushArea(
-        //     new Rectangle(60*Singleton.BLOCK_SIZE, 20*Singleton.BLOCK_SIZE, 300*Singleton.BLOCK_SIZE, 200*Singleton.BLOCK_SIZE), // x, y, width, height of trigger zone
-        //     _collisionTileMap,
-        //     _enemySlime
-        // ));
     }
 
     private void CreatePlayer()

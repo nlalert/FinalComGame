@@ -138,7 +138,7 @@ namespace FinalComGame
         {
             return tileID switch
             {
-                17 or 37 or 54 => true,
+                17 or 37 => true,
                 _ => false
             };
         }
