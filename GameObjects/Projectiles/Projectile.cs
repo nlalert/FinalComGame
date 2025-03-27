@@ -66,7 +66,7 @@ namespace FinalComGame
         {
             spriteBatch.Draw(_texture, Position, Viewport, Color.White);
             base.Draw(spriteBatch);
-            DrawDebug(spriteBatch);
+            //DrawDebug(spriteBatch);
         }
         private void DrawDebug(SpriteBatch spriteBatch)
         {

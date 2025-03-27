@@ -12,6 +12,7 @@ namespace FinalComGame
         private List<Rectangle> _frames;
         private float _fps;  // Time per frame
         private float _timer;      // Tracks time elapsed
+        public string _currentAnimation { get; private set; }
         private string _nextAnimation;
         private int _currentFrameIndex;
         private int _currentFrameStart;
@@ -28,6 +29,7 @@ namespace FinalComGame
         public bool IsLooping { get; set; } = true;
         public bool IsFinished { get; private set; } = false;
         public bool IsTransition { get; set; } = false;
+        public bool KeepFrame { get; set; } = false;
 
         public Animation(Texture2D spriteSheet, int frameWidth, int frameHeight, Vector2 spriteSize, float fps)
         {
@@ -82,12 +84,11 @@ namespace FinalComGame
                 }
             }
 
-            //Console.WriteLine(_currentFrameIndex);
         }
 
         public void Reset()
         {
-            _currentFrameIndex = 0;
+            //_currentFrameIndex = 0;
             _timer = 0f;
             IsFinished = false;
         }
@@ -116,6 +117,7 @@ namespace FinalComGame
         {
             _animationName.Add(name);
             _frameIndex.Add((int)index.X + (int)(index.Y * _frameIndexWidth));
+            Console.WriteLine(name + " " + ((int)index.X + (int)(index.Y * _frameIndexWidth)));
             _frameCount.Add(count);
         }
 
@@ -124,9 +126,32 @@ namespace FinalComGame
             _currentFrameIndex = _frameIndex[_animationName.IndexOf(name)];
             _currentFrameStart = _currentFrameIndex;
             _currentFrameCount = _frameCount[_animationName.IndexOf(name)];
+
+            _currentAnimation = name;
+
             IsTransition = false;
             IsLooping = true;
             IsFinished = false;
+        }
+
+        public void ChangeAnimationAndKeepFrame(string name)
+        {
+            int _currentIndex = Math.Abs(_currentFrameIndex - _currentFrameStart);
+
+            //Console.WriteLine(name + " " + _currentFrameIndex + " " + _currentFrameStart + " " + _currentIndex);
+
+            _currentFrameIndex = _frameIndex[_animationName.IndexOf(name)];
+            _currentFrameStart = _currentFrameIndex;
+            _currentFrameCount = _frameCount[_animationName.IndexOf(name)];
+
+            _currentAnimation = name;
+            
+            IsTransition = false;
+            IsLooping = true;
+            IsFinished = false;
+
+            _currentFrameIndex += _currentIndex;
+
         }
 
         public void ChangeTransitionAnimation(string currentName, string nextName)
@@ -134,7 +159,10 @@ namespace FinalComGame
             _currentFrameIndex = _frameIndex[_animationName.IndexOf(currentName)];
             _currentFrameStart = _currentFrameIndex;
             _currentFrameCount = _frameCount[_animationName.IndexOf(currentName)];
+
+            _currentAnimation = currentName;
             _nextAnimation = nextName;
+
             IsTransition = true;
             IsLooping = false;
             IsFinished = false;
