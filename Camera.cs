@@ -6,7 +6,8 @@ namespace FinalComGame;
 
 public class Camera
 {
-    private Vector2 _position;
+    private Vector2 _currentPosition;
+    private Vector2 _previousPosition;
     private float _zoom;
     private Viewport _viewport;
     
@@ -21,17 +22,24 @@ public class Camera
         _viewport = viewport;
         _mapBounds = mapBounds;
         _zoom = 2.0f;
-        _position = Singleton.Instance.Player.Position;
+        _currentPosition = Singleton.Instance.Player.Position;
+    }
+
+    public Vector2 GetMovement()
+    {
+        return _currentPosition - _previousPosition;
     }
 
     public Matrix GetTransformation()
     {
-        return Matrix.CreateTranslation(new Vector3(-_position, 0)) *
+        return Matrix.CreateTranslation(new Vector3(-_currentPosition, 0)) *
                Matrix.CreateScale(_zoom);
     }
 
     public void Follow(GameObject target)
     {
+        _previousPosition = _currentPosition;
+
         // Calculate the desired camera center position
         Vector2 targetPosition = new Vector2(
             target.Position.X + target.Viewport.X / 2,
@@ -43,7 +51,7 @@ public class Camera
         float viewHeight = _viewport.Height / _zoom;
 
         // Smoothly interpolate towards the target
-        Vector2 smoothedPosition = Vector2.Lerp(_position, 
+        Vector2 smoothedPosition = Vector2.Lerp(_currentPosition, 
             targetPosition - new Vector2(viewWidth / 2, viewHeight / 2), 
             _smoothSpeed);
 
@@ -56,6 +64,6 @@ public class Camera
             _mapBounds.Top, 
             _mapBounds.Bottom - viewHeight);
 
-        _position = new Vector2(clampedX, clampedY);
+        _currentPosition = new Vector2(clampedX, clampedY);
     }
 }

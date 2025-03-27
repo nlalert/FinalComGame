@@ -11,8 +11,8 @@ namespace FinalComGame;
 
 class Singleton
 {
-    public const int SCREEN_HEIGHT = 640;
-    public const int SCREEN_WIDTH = 640;
+    public const int SCREEN_HEIGHT = 720;
+    public const int SCREEN_WIDTH = 1280;
     public const int TILE_SIZE = 16;
     public const int GRAVITY = 2000;
     public Random Random;
