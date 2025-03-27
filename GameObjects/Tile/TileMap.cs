@@ -59,7 +59,8 @@ namespace FinalComGame
                     {
                         if (int.TryParse(items[x], out int tileID) && tileID >= 0)
                         {
-                            if(IsEnemyTile(tileID))
+                            TileType type = GetTileType(tileID);
+                            if(type == TileType.EnemySpawn)
                             {
                                 // Store enemy spawn point with its type
                                 enemySpawnPoints.Add(new Vector2(x, y), tileID);
@@ -68,7 +69,7 @@ namespace FinalComGame
                             Tile tile = new Tile(textureAtlas)
                             {
                                 Name = GetTileName(tileID),
-                                Type = GetTileType(tileID),
+                                Type = type,
                                 Position = GetTileWorldPositionAt(x, y), // Convert grid position to pixel position
                                 Viewport = GetTileViewport(tileID),
                                 IsSolid = GetTileCollisionType(tileID)
@@ -97,11 +98,6 @@ namespace FinalComGame
         public static Vector2 GetTileGridPositionAt(Vector2 tileWorldPosition)
         {
             return new Vector2((int) tileWorldPosition.X / Singleton.BLOCK_SIZE, (int) tileWorldPosition.Y / Singleton.BLOCK_SIZE); // Grid Position ust be int
-        }
-
-        private static bool IsEnemyTile(int tileID)
-        {
-            return tileID == 97; //Add more later
         }
 
         private static string GetTileName(int tileID)
