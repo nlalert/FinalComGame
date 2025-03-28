@@ -439,32 +439,32 @@ public class PlayScene : Scene
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
         Texture2D Gun = _content.Load<Texture2D>("Gun");
 
-        _gameObjects.Add(new Barrier(testItem, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
+        _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new SpeedBoots(Hermes_Boots, "Hermes_Boots", TileMap.GetTileWorldPositionAt(24, 90)){
+        _gameObjects.Add(new SpeedBoots(Hermes_Boots, ItemType.Accessory, "Hermes_Boots", TileMap.GetTileWorldPositionAt(24, 90)){
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
         
-        _gameObjects.Add(new Potion(HealthPotionTemp, "Testing Potion", TileMap.GetTileWorldPositionAt(12, 90)){
+        _gameObjects.Add(new Potion(HealthPotionTemp, ItemType.Consumable, "Testing Potion", TileMap.GetTileWorldPositionAt(12, 90)){
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
         
-        _gameObjects.Add(new LifeUp(LifeUP, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 90)){
+        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "1Up",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Sword(sword, "Testing Sword", TileMap.GetTileWorldPositionAt(4, 90)){
+        _gameObjects.Add(new Sword(sword, ItemType.MeleeWeapon, "Testing Sword", TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Gun(Gun, "Testing Gun", TileMap.GetTileWorldPositionAt(8, 90)){
+        _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, "Testing Gun", TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
             Viewport = new Rectangle(0, 0, 32,32)
         });
@@ -485,16 +485,32 @@ public class PlayScene : Scene
         );
 
         Texture2D slot = _content.Load<Texture2D>("ItemSlot");
-        ItemSlot Slot1 = new ItemSlot(
+
+        ItemSlot MeleeWeaponSlot = new ItemSlot(
             0, // first slot
             new Rectangle(250, 30, 50, 50),
             slot,
             slot,
             _font
         );
-        ItemSlot Slot2 = new ItemSlot(
-            1, //second slot
+
+        ItemSlot RangeWeaponSlot = new ItemSlot(
+            1, // first slot
             new Rectangle(350, 30, 50, 50),
+            slot,
+            slot,
+            _font
+        );
+        ItemSlot ItemSlot1 = new ItemSlot(
+            2, // first slot
+            new Rectangle(550, 30, 50, 50),
+            slot,
+            slot,
+            _font
+        );
+        ItemSlot ItemSlot2 = new ItemSlot(
+            3, //second slot
+            new Rectangle(650, 30, 50, 50),
             slot,
             slot,
             _font
@@ -502,7 +518,9 @@ public class PlayScene : Scene
 
         _ui.AddElement(playerHealth);
         _ui.AddElement(playerMP);
-        _ui.AddElement(Slot1);
-        _ui.AddElement(Slot2);
+        _ui.AddElement(MeleeWeaponSlot);
+        _ui.AddElement(RangeWeaponSlot);
+        _ui.AddElement(ItemSlot1);
+        _ui.AddElement(ItemSlot2);
     }
 }

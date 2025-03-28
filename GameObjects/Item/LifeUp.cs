@@ -7,10 +7,9 @@ namespace FinalComGame
 {
     public class LifeUp : Item
     {
-        public LifeUp(Texture2D texture, string description, Vector2 Position)
-            : base(texture, description, Position)
+        public LifeUp(Texture2D texture, ItemType type, string description, Vector2 Position)
+            : base(texture, description, Position, type)
         {
-            IsConsumable = true;
         }
         public override void OnPickup(int slot)
         {

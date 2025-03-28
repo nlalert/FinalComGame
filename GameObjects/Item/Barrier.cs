@@ -9,11 +9,10 @@ namespace FinalComGame
     {
         private int _damageAbsorptionAmount;
 
-        public Barrier(Texture2D texture, string description, Vector2 Position, int damageAbsorptionAmount = 50)
-            : base(texture, description, Position)
+        public Barrier(Texture2D texture, ItemType type, string description, Vector2 Position, int damageAbsorptionAmount = 50)
+            : base(texture, description, Position, type)
         {
             _damageAbsorptionAmount = damageAbsorptionAmount;
-            IsConsumable = true;
         }
         
         public override void OnPickup(int slot)

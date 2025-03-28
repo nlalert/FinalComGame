@@ -10,7 +10,8 @@ namespace FinalComGame
         // Item properties
         public string Description;
         public bool IsPickedUp;
-        public bool IsConsumable;
+
+        public ItemType Type;
         
         // Visual indicator for pickup range
         public float pickupRadius = 40f;
@@ -18,11 +19,12 @@ namespace FinalComGame
         protected Vector2 originalPosition;
         
         // Constructor
-        public Item(Texture2D texture, string description, Vector2 Position)
+        public Item(Texture2D texture, string description, Vector2 Position, ItemType type)
             : base(texture)
         {
             Description = description;
             IsPickedUp = false;
+            Type = type;
 
             this.Position = Position;
             originalPosition = Position;
@@ -31,7 +33,7 @@ namespace FinalComGame
         // // Method to be overridden by specific item types
         public virtual void Use(int slot)
         {
-            if(!IsConsumable) return;
+            if(Type != ItemType.Consumable) return;
             
             Singleton.Instance.Player.RemoveItem(slot);
             Console.WriteLine("Using Item");      
@@ -44,7 +46,7 @@ namespace FinalComGame
         // Called when item is picked up
         public virtual void OnPickup(int slot)
         {
-            Singleton.Instance.Player.HoldItem[slot] = this;
+            Singleton.Instance.Player.ItemSlot[slot] = this;
             IsPickedUp = true;
         }
         

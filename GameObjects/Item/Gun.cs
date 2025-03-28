@@ -11,12 +11,11 @@ namespace FinalComGame
         private int _ammoAmount;
         private int _playerInventorySlot;
 
-        public Gun(Texture2D texture, string description, Vector2 Position, float attackDamage = 100f, int ammoAmount = 6)
-            : base(texture, description, Position)
+        public Gun(Texture2D texture, ItemType type, string description, Vector2 Position, float attackDamage = 100f, int ammoAmount = 6)
+            : base(texture, description, Position, type)
         {
             _attackDamage = attackDamage;
             _ammoAmount = ammoAmount;
-            IsConsumable = false;
         }
 
         public void DecreaseAmmo()

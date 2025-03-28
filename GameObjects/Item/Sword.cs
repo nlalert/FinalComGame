@@ -10,11 +10,10 @@ namespace FinalComGame
         private float _attackDamage;
         private int _playerInventorySlot;
 
-        public Sword(Texture2D texture, string description, Vector2 Position, float attackDamage = 30f)
-            : base(texture, description, Position)
+        public Sword(Texture2D texture, ItemType type, string description, Vector2 Position, float attackDamage = 30f)
+            : base(texture, description, Position, type)
         {
             this._attackDamage = attackDamage;
-            IsConsumable = false;
         }
 
         // // Method to be overridden by specific item types

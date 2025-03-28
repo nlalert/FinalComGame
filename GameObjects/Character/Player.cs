@@ -19,7 +19,10 @@ namespace FinalComGame
         public int Life;
         public float AbsorptionHealth;
 
-        public Item[] HoldItem;
+        public Item[] ItemSlot;
+        //slot 0 for melee item
+        //slot 1 for range item
+        //slot 2-3 for items
 
         public SoulParticle _particle;
 
@@ -136,7 +139,7 @@ namespace FinalComGame
 
         public override void Reset()
         {
-            HoldItem = new Item[2];
+            ItemSlot = new Item[4];
 
             Direction = 1; // Reset direction to right
 
@@ -554,20 +557,20 @@ namespace FinalComGame
                 CheckInteraction(gameObjects);
 
             if (Singleton.Instance.IsKeyJustPressed(Item1))
-                UseItem(0);
+                UseItem(2);
             if (Singleton.Instance.IsKeyJustPressed(Item2))
-                UseItem(1);
+                UseItem(3);
         }
 
         private void ActiveItemPassiveAbility()
         {
             for (int i = 0; i < 2; i++)
             {
-                if (HoldItem[i] == null) continue;
+                if (ItemSlot[i] == null) continue;
 
-                if(!HoldItem[i].IsConsumable)
+                if(ItemSlot[i].Type != ItemType.Consumable)
                 {
-                    HoldItem[i].ActiveAbility(i);
+                    ItemSlot[i].ActiveAbility(i);
                 }
             }
         }
@@ -581,9 +584,9 @@ namespace FinalComGame
 
         private void UseItem(int itemSlotIndex)
         {
-            if(HoldItem[itemSlotIndex] == null) return;
+            if(ItemSlot[itemSlotIndex] == null) return;
 
-            HoldItem[itemSlotIndex].Use(itemSlotIndex);
+            ItemSlot[itemSlotIndex].Use(itemSlotIndex);
         }
 
         private void CheckInteraction(List<GameObject> gameObjects)
@@ -592,16 +595,31 @@ namespace FinalComGame
             {
                 if (item.InPickupRadius() && !item.IsPickedUp)
                 {
-                    // Check if player has empty slot
-                    if (HoldItem[0] == null)
+                    if(item.Type == ItemType.MeleeWeapon)
                     {
+                        if(ItemSlot[0] != null)
+                            item.OnDrop(Position);
                         item.OnPickup(0);
                         break;
                         // You could add a pickup sound or effect here
                     }
-                    else if (HoldItem[1] == null)
+                    else if(item.Type == ItemType.RangeWeapon)
                     {
+                        if(ItemSlot[1] != null)
+                            item.OnDrop(Position);
                         item.OnPickup(1);
+                        break;
+                        // You could add a pickup sound or effect here
+                    }
+                    else if(item.Type != ItemType.MeleeWeapon && item.Type != ItemType.RangeWeapon && ItemSlot[2] == null)
+                    {
+                        item.OnPickup(2);
+                        break;
+                        // You could add a pickup sound or effect here
+                    }
+                    else if(item.Type != ItemType.MeleeWeapon && item.Type != ItemType.RangeWeapon && ItemSlot[3] == null)
+                    {
+                        item.OnPickup(3);
                         break;
                         // You could add a pickup sound or effect here
                     }
@@ -780,7 +798,7 @@ namespace FinalComGame
             newBullet.Shoot(Position, direction);
 
             //TODO : More dynamic for more range weapon
-            (HoldItem[_rangeWeaponSlot] as Gun).DecreaseAmmo();
+            (ItemSlot[_rangeWeaponSlot] as Gun).DecreaseAmmo();
             gameObjects.Add(newBullet);
             Animation.Reset();
         }
@@ -1019,8 +1037,8 @@ namespace FinalComGame
 
         public void RemoveItem(int slot)
         {
-            HoldItem[slot].IsActive = false;
-            HoldItem[slot] = null;
+            ItemSlot[slot].IsActive = false;
+            ItemSlot[slot] = null;
         }
     }
 }

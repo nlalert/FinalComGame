@@ -9,11 +9,10 @@ namespace FinalComGame
     {
         private int _healAmount;
 
-        public Potion(Texture2D texture, string description, Vector2 Position, int healAmount = 30)
-            : base(texture, description, Position)
+        public Potion(Texture2D texture, ItemType type, string description, Vector2 Position, int healAmount = 30)
+            : base(texture, description, Position, type)
         {
             this._healAmount = healAmount;
-            IsConsumable = true;
         }
         
         // // Method to be overridden by specific item types
