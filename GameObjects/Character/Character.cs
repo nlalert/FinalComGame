@@ -73,7 +73,7 @@ namespace FinalComGame {
                                 ,Position.Y - (Animation.GetFrameSize().Y - Viewport.Height) / 2);
         }
 
-        protected bool IsOnGround()
+        protected virtual bool IsOnGround()
         {
             //TODO apex of jump is grounded?
             return Velocity.Y == 0;
