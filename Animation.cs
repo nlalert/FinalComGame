@@ -49,8 +49,6 @@ namespace FinalComGame
                 _frames.Add(new Rectangle(i % _frameIndexWidth * frameWidth, i / _frameIndexWidth * frameHeight, frameWidth, frameHeight));
             }
 
-            Console.WriteLine(_frames.Count);
-
             _frameSize = new Vector2(frameWidth, frameHeight);
         }
 
@@ -88,7 +86,6 @@ namespace FinalComGame
 
         public void Reset()
         {
-            //_currentFrameIndex = 0;
             _timer = 0f;
             IsFinished = false;
         }
@@ -117,7 +114,6 @@ namespace FinalComGame
         {
             _animationName.Add(name);
             _frameIndex.Add((int)index.X + (int)(index.Y * _frameIndexWidth));
-            Console.WriteLine(name + " " + ((int)index.X + (int)(index.Y * _frameIndexWidth)));
             _frameCount.Add(count);
         }
 
@@ -137,8 +133,6 @@ namespace FinalComGame
         public void ChangeAnimationAndKeepFrame(string name)
         {
             int _currentIndex = Math.Abs(_currentFrameIndex - _currentFrameStart);
-
-            //Console.WriteLine(name + " " + _currentFrameIndex + " " + _currentFrameStart + " " + _currentIndex);
 
             _currentFrameIndex = _frameIndex[_animationName.IndexOf(name)];
             _currentFrameStart = _currentFrameIndex;

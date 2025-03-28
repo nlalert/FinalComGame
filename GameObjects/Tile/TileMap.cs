@@ -115,8 +115,11 @@ namespace FinalComGame
             {
                 17 => TileType.Barrier,
                 37 => TileType.Platform,
-                57 or 58 or 59 => TileType.Ladder,
-                77 or 78 or 79 => TileType.Platform_Ladder,
+                57 => TileType.Ladder,
+                58 => TileType.Ladder_Left,
+                59 => TileType.Ladder_Right,
+                77 or 78 or 79 => TileType.Ladder_Platform,
+                18 => TileType.Ladder_Top,
                 14 or 54 => TileType.AmbushBarrier,
                 74 => TileType.AmbushAreaTopLeft,
                 34 => TileType.AmbushAreaBottomRight,
