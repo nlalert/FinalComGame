@@ -82,6 +82,7 @@ namespace FinalComGame
         private bool _isFist;
         private bool _isSoulBullet;
 
+        private bool _isUsingWeapon;
         private int _rangeWeaponSlot;
         private int _meleeWeaponSlot;
 
@@ -264,6 +265,16 @@ namespace FinalComGame
                 offset = new Vector2(0 , 8);
             }
 
+            if (_isClimbing && _overlappedTile == TileType.Ladder)
+            {
+                if (Direction == 1){
+                    offset = new Vector2(6 , 0);
+                }
+                else if(Direction == -1){
+                    offset = new Vector2(-6 , 0);
+                }
+            }
+
             spriteBatch.Draw(
                 Animation.GetTexture(),
                 GetDrawingPosition() - offset,
@@ -428,11 +439,15 @@ namespace FinalComGame
         {
             string handAnimation = "idle";
 
-            if (_isGliding && !_isJumping)
+            if(_isAttacking){
+                handAnimation = "idle";
+            }
+
+            else if (_isGliding && !_isJumping)
             {
-                if (_lastChargeTime != 0)
+                if (_lastChargeTime != 0 || (Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon))
                 {
-                        handAnimation = "fire_1";
+                    handAnimation = "fire_1";
                     _lastChargeTime = 0;
                 }
 
@@ -446,9 +461,9 @@ namespace FinalComGame
 
             else
             {
-                if (_lastChargeTime != 0)
+                if (_lastChargeTime != 0 || (Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon))
                 {
-                    if (_lastChargeTime >= MaxChargeTime/2)
+                    if (_lastChargeTime >= MaxChargeTime/2 || (Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon))
                         handAnimation = "fire_2";
 
                     else
@@ -467,9 +482,8 @@ namespace FinalComGame
                         handAnimation = "charge_1";
                 }
             }
-                
 
-            if(_currentHandAnimation != handAnimation){
+            if(_currentHandAnimation != handAnimation || _isAttacking){
                 _currentHandAnimation = handAnimation;
 
                 switch (handAnimation)
@@ -495,23 +509,36 @@ namespace FinalComGame
         {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
-                if (!_isDashing && !_isAttacking && !_isClimbing) 
+                if (!_isDashing && !_isAttacking) 
                 {
-                    Direction = -1;
-                    Velocity.X = -WalkSpeed;
+                    if (_isClimbing && _overlappedTile == TileType.Ladder)
+                        Direction = 1;
+                    else if(!_isClimbing)
+                    {
+                        Direction = -1;
+                        Velocity.X = -WalkSpeed;
+                    }
                 }
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
-                if (!_isDashing && !_isAttacking && !_isClimbing)  
+                if (!_isDashing && !_isAttacking)  
                 {
-                    Direction = 1;
-                    Velocity.X = WalkSpeed;
+                    if (_isClimbing && _overlappedTile == TileType.Ladder)
+                        Direction = -1;
+                    else if(!_isClimbing)
+                    {
+                        Direction = 1;
+                        Velocity.X = WalkSpeed;
+                    }
                 }
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Attack))
+            if (Singleton.Instance.IsKeyJustPressed(Attack)){
+                _isCharging = false;
+                _chargeTime = 0;
                 StartAttack();
+            }
 
             if (_isAttacking)
             {
@@ -525,21 +552,24 @@ namespace FinalComGame
             }
 
             // Handle Fire button (charge shot)
-            if (Singleton.Instance.IsKeyJustPressed(Fire) && !_isClimbing)
+            if (Singleton.Instance.IsKeyJustPressed(Fire) && !_isClimbing && !_isAttacking)
             {
                 if(_isSoulBullet){
                     // Start charging
+                    _isUsingWeapon = false;
                     StartCharging();
                 }
-                else
+                else{
+                    _isUsingWeapon = true;
                     Shoot(gameObjects);
+                }
             }
-            else if (Singleton.Instance.IsKeyPressed(Fire) && !_isClimbing)
+            else if (Singleton.Instance.IsKeyPressed(Fire) && !_isClimbing && !_isAttacking)
             {
                 // Continue charging
                 ContinueCharging(deltaTime);
             }
-            else if (Singleton.Instance.IsKeyJustReleased(Fire) && !_isClimbing)
+            else if (Singleton.Instance.IsKeyJustReleased(Fire) && !_isClimbing && !_isAttacking)
             {
                 // Release shot
                 ReleaseChargedShot(gameObjects);
@@ -570,7 +600,9 @@ namespace FinalComGame
                 _jumpBufferCounter -= deltaTime; // Decrease over time
 
             // Gliding - activate when holding Jump while in air and not climbing or dashing
-            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !_isJumping && !_isClimbing && !_isDashing && MP > 0 && _coyoteTimeCounter <= 0)
+            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && 
+            !_isJumping && !_isClimbing && !_isDashing && !_isAttacking && 
+            MP > 0 && _coyoteTimeCounter <= 0)
             {
                 _isGliding = true;
             }
@@ -623,6 +655,7 @@ namespace FinalComGame
 
             if (_isClimbing)
             {
+                Position.X = _overlappedTilePosition.X;
                 
                 if (Singleton.Instance.IsKeyPressed(Climb) && Position.Y >= (_ladderTopPosition.Y + 8))
                 {
@@ -636,18 +669,15 @@ namespace FinalComGame
 
                 else Velocity.Y = 0;
                 
+                
                 if (_overlappedTile == TileType.None)
                     _isClimbing = false;
 
             }
 
             if (Singleton.Instance.IsKeyJustPressed(Dash)){
-                if(_overlappedTile == TileType.Ladder_Left && _isClimbing){
-                    Direction = 1;
-                    _isClimbing = false;
-                }
-                else if(_overlappedTile == TileType.Ladder_Right && _isClimbing){
-                    Direction = -1;
+                if(_isClimbing){
+                    Direction *= -1;
                     _isClimbing = false;
                 }
                 StartDash();
@@ -912,7 +942,7 @@ namespace FinalComGame
 
             Vector2 bulletPosition; 
             if (!_isCrouching) bulletPosition = Position + new Vector2(0, 10);
-            else bulletPosition = Position;
+            else bulletPosition = Position + new Vector2(0, 2);
             
             newBullet.Shoot(bulletPosition, direction);
 
@@ -980,7 +1010,7 @@ namespace FinalComGame
 
             Vector2 bulletPosition; 
             if (!_isCrouching) bulletPosition = Position + new Vector2(0, 10);
-            else bulletPosition = Position;
+            else bulletPosition = Position + new Vector2(0, 2);
 
             newBullet.Shoot(bulletPosition, direction);
             
