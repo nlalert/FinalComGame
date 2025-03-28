@@ -92,22 +92,18 @@ namespace FinalComGame
         public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
         {
 
-            Animation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*17), 24);
+            Animation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*18), 24);
 
             Animation.AddAnimation("idle", new Vector2(0,0), 16);
+            Animation.AddAnimation("idle_charge_1", new Vector2(0,11), 8);
+            Animation.AddAnimation("idle_charge_2", new Vector2(12,11), 4);
+            Animation.AddAnimation("idle_fire", new Vector2(8,11), 8);
+
             Animation.AddAnimation("run", new Vector2(0,1), 8);
             Animation.AddAnimation("run_charge_1", new Vector2(8,1), 8);
             Animation.AddAnimation("run_charge_2", new Vector2(8,2), 8);
 
             Animation.AddAnimation("melee", new Vector2(0,2), 8);
-
-            Animation.AddAnimation("charge_1", new Vector2(4,10), 4);
-            Animation.AddAnimation("charge_1_to_2", new Vector2(9,10), 4);
-            Animation.AddAnimation("charge_2", new Vector2(4,9), 4);
-            Animation.AddAnimation("charge_3", new Vector2(9,9), 4);
-
-            Animation.AddAnimation("fire_1", new Vector2(0,10), 8);
-            Animation.AddAnimation("fire_2", new Vector2(0,9), 8);
 
             Animation.AddAnimation("jump", new Vector2(0,3), 4);
             Animation.AddAnimation("jump_charge_1", new Vector2(0,4), 4);
@@ -124,29 +120,34 @@ namespace FinalComGame
             Animation.AddAnimation("dash_charge", new Vector2(5,6), 4);
 
             Animation.AddAnimation("crouch", new Vector2(0,7), 16);
-            Animation.AddAnimation("crawl", new Vector2(0,8), 8);
+            Animation.AddAnimation("crouch_charge_1", new Vector2(0,9), 4);
+            Animation.AddAnimation("crouch_charge_2", new Vector2(0,10), 4);
 
-            Animation.AddAnimation("climb_idle_1", new Vector2(0,11), 16);
-            Animation.AddAnimation("climb_up_1", new Vector2(0,12), 8);
-            Animation.AddAnimation("climb_down_1", new Vector2(8,12), 4);
+            Animation.AddAnimation("crawl", new Vector2(0,8), 8);
+            Animation.AddAnimation("crawl_charge_1", new Vector2(4,9), 8);
+            Animation.AddAnimation("crawl_charge_2", new Vector2(4,10), 8);
+
+            Animation.AddAnimation("climb_idle_1", new Vector2(0,12), 16);
+            Animation.AddAnimation("climb_up_1", new Vector2(0,13), 8);
+            Animation.AddAnimation("climb_down_1", new Vector2(8,13), 4);
 
             //TODO : Add sword attack animation
             Animation.AddAnimation("sword", new Vector2(8,8), 8);
 
             Animation.ChangeAnimation(_currentAnimation);
 
-            HandAnimation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*17), 24);
+            HandAnimation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*18), 24);
 
             HandAnimation.AddAnimation("idle", new Vector2(4,3), 1);
 
-            HandAnimation.AddAnimation("charge_1", new Vector2(3,13), 1);
-            HandAnimation.AddAnimation("charge_1_to_2", new Vector2(12,13), 4);
-            HandAnimation.AddAnimation("charge_2", new Vector2(3,14), 1);
-            HandAnimation.AddAnimation("charge_3", new Vector2(8,13), 4);
-            HandAnimation.AddAnimation("charge_4", new Vector2(8,14), 4);
+            HandAnimation.AddAnimation("charge_1", new Vector2(3,14), 1);
+            HandAnimation.AddAnimation("charge_1_to_2", new Vector2(12,14), 4);
+            HandAnimation.AddAnimation("charge_2", new Vector2(3,15), 1);
+            HandAnimation.AddAnimation("charge_3", new Vector2(8,14), 4);
+            HandAnimation.AddAnimation("charge_4", new Vector2(8,15), 4);
 
-            HandAnimation.AddAnimation("fire_1", new Vector2(0,13), 8);
-            HandAnimation.AddAnimation("fire_2", new Vector2(0,14), 8);
+            HandAnimation.AddAnimation("fire_1", new Vector2(0,14), 8);
+            HandAnimation.AddAnimation("fire_2", new Vector2(0,15), 8);
 
             HandAnimation.ChangeAnimation(_currentHandAnimation);
 
@@ -352,8 +353,16 @@ namespace FinalComGame
 
             else if (Velocity.X != 0)
             {
-                if(_isCrouching)
-                    animation = "crawl";
+                if(_isCrouching){
+                    if (HandAnimation._currentAnimation == "idle")
+                        animation = "crawl";
+                    else if (HandAnimation._currentAnimation == "charge_1" || 
+                             HandAnimation._currentAnimation == "fire_1")
+                        animation = "crawl_charge_1";
+                    else
+                        animation = "crawl_charge_2";
+                }
+
                 else
                 {
                     if (HandAnimation._currentAnimation == "idle")
@@ -369,27 +378,28 @@ namespace FinalComGame
             else
             {
                 if(_isCrouching)
-                    animation = "crouch";
-                else{
-                    if (_lastChargeTime != 0)
-                    {
-                        if (_lastChargeTime >= MaxChargeTime/2)
-                        animation = "fire_2";
-                        else
-                        animation = "fire_1";
-
-                        _lastChargeTime = 0;
-                    }
-                    else if (_isCharging){
-                        if (_chargeTime == MaxChargeTime)
-                        animation = "charge_3";
-                        else if (_chargeTime >= MaxChargeTime/2)
-                        animation = "charge_1_to_2";
-                        else
-                        animation = "charge_1";
-                    }
+                {
+                    if (HandAnimation._currentAnimation == "idle")
+                        animation = "crouch";
+                    else if (HandAnimation._currentAnimation == "charge_1" || 
+                             HandAnimation._currentAnimation == "fire_1")
+                        animation = "crouch_charge_1";
                     else
+                        animation = "crouch_charge_2";
+                }
+
+                else
+                {
+                    if (HandAnimation._currentAnimation == "idle")
                         animation = "idle";
+                    else if (HandAnimation._currentAnimation == "charge_1" || 
+                             HandAnimation._currentAnimation == "fire_1")
+                        animation = "idle_charge_1";
+                    else if(HandAnimation._currentAnimation == "fire_2")
+                        animation = "idle_fire";
+                    else
+                        animation = "idle_charge_2";
+
                 }
             }
 
@@ -397,14 +407,6 @@ namespace FinalComGame
                 _currentAnimation = animation;
                 switch (animation)
                 {
-                    case "charge_1_to_2" :
-                        Animation.ChangeTransitionAnimation(_currentAnimation, "charge_2");
-                        break;
-                    case "fire_1" :
-                    case "fire_2" :
-                        Animation.ChangeTransitionAnimation(_currentAnimation, "idle");
-                        _currentAnimation = "idle";
-                        break;
                     case "run" :
                     case "run_charge_1" :
                     case "run_charge_2" :
@@ -423,7 +425,8 @@ namespace FinalComGame
         {
             string handAnimation = "idle";
 
-            if (_isGliding && !_isJumping){
+            if (_isGliding && !_isJumping)
+            {
                 if (_lastChargeTime != 0)
                 {
                         handAnimation = "fire_1";
@@ -431,49 +434,36 @@ namespace FinalComGame
                 }
 
                 else if (_isCharging){
-                    if (_chargeTime == MaxChargeTime){
-                        handAnimation = "charge_4";
-                    }
-                    else{
-                        handAnimation = "charge_1";
-                    }
+                    if (_chargeTime == MaxChargeTime)
+                        handAnimation = "charge_4"; 
+                    else
+                        handAnimation = "charge_1";                 
                 }
             }
 
-            else if (Velocity.X != 0 || Velocity.Y != 0)
-            {
-                if(_isCrouching){}
-
-                else{
-                    if (_lastChargeTime != 0)
-                    {
-                        if (_lastChargeTime >= MaxChargeTime/2)
-                        {
-                            handAnimation = "fire_2";
-                        }
-                        else{
-                            handAnimation = "fire_1";
-                        }
-
-                        _lastChargeTime = 0;
-                    }
-
-                    else if (_isCharging){
-                        if (_chargeTime == MaxChargeTime){
-                            handAnimation = "charge_3";
-                        }
-                        else if (_chargeTime >= MaxChargeTime/2)
-                        {
-                            handAnimation = "charge_1_to_2";
-                        }
-                        else{
-                            handAnimation = "charge_1";
-                        }
-                    }
-                }
-            }
             else
-                handAnimation = "idle";
+            {
+                if (_lastChargeTime != 0)
+                {
+                    if (_lastChargeTime >= MaxChargeTime/2)
+                        handAnimation = "fire_2";
+
+                    else
+                        handAnimation = "fire_1";
+
+                    _lastChargeTime = 0;
+                }
+
+                else if (_isCharging)
+                {
+                    if (_chargeTime == MaxChargeTime)
+                        handAnimation = "charge_3";
+                    else if (_chargeTime >= MaxChargeTime/2)
+                        handAnimation = "charge_1_to_2";
+                    else
+                        handAnimation = "charge_1";
+                }
+            }
                 
 
             if(_currentHandAnimation != handAnimation){
