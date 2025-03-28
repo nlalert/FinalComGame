@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -34,12 +35,21 @@ namespace FinalComGame
         private bool _isDropping;
         private bool _isGliding;
 
+        //Crouch
+        //private bool _isHeadHitting;
+        private bool _isOnPlatform;
+
+        //Climb
         private TileType _overlappedTile;
+        private Vector2 _overlappedTilePosition;
+        private Vector2 _ladderTopPosition;
+
         //Jump
         public float CoyoteTime;
         private float _coyoteTimeCounter;
         public float JumpBufferTime;
         private float _jumpBufferCounter;
+
         // Dash 
         private bool _isDashing;
         public float DashSpeed;
@@ -48,10 +58,12 @@ namespace FinalComGame
         private float _dashTimer;
         private float _dashCooldownTimer;
         public float DashMP;
+
         // Glide
         public float GlideGravityScale;
         public float GlideMaxFallSpeed;        
         public float GlideMP;
+
         // Charge Shot properties
         private bool _isCharging;
         private float _chargeTime;
@@ -60,6 +72,12 @@ namespace FinalComGame
         public float MinChargePower;
         public float MaxChargePower;
         public float ChargeMPCost;
+        public float StartChargeMPCost;
+
+        //MP
+        public float MPRegenCooldown;
+        public float MPRegenRate;
+        private float _MPRegenTime;
 
         private bool _isFist;
         private bool _isSoulBullet;
@@ -71,30 +89,24 @@ namespace FinalComGame
         public SoundEffect JumpSound;
 
         //Animation
-
         private Animation HandAnimation;
-
         private string _currentHandAnimation = "idle";
 
         public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
         {
 
-            Animation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*16), 24);
+            Animation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*18), 24);
 
             Animation.AddAnimation("idle", new Vector2(0,0), 16);
+            Animation.AddAnimation("idle_charge_1", new Vector2(0,11), 8);
+            Animation.AddAnimation("idle_charge_2", new Vector2(12,11), 4);
+            Animation.AddAnimation("idle_fire", new Vector2(8,11), 8);
+
             Animation.AddAnimation("run", new Vector2(0,1), 8);
             Animation.AddAnimation("run_charge_1", new Vector2(8,1), 8);
             Animation.AddAnimation("run_charge_2", new Vector2(8,2), 8);
 
             Animation.AddAnimation("melee", new Vector2(0,2), 8);
-
-            Animation.AddAnimation("charge_1", new Vector2(4,10), 4);
-            Animation.AddAnimation("charge_1_to_2", new Vector2(9,10), 4);
-            Animation.AddAnimation("charge_2", new Vector2(4,9), 4);
-            Animation.AddAnimation("charge_3", new Vector2(9,9), 4);
-
-            Animation.AddAnimation("fire_1", new Vector2(0,10), 8);
-            Animation.AddAnimation("fire_2", new Vector2(0,9), 8);
 
             Animation.AddAnimation("jump", new Vector2(0,3), 4);
             Animation.AddAnimation("jump_charge_1", new Vector2(0,4), 4);
@@ -111,25 +123,34 @@ namespace FinalComGame
             Animation.AddAnimation("dash_charge", new Vector2(5,6), 4);
 
             Animation.AddAnimation("crouch", new Vector2(0,7), 16);
+            Animation.AddAnimation("crouch_charge_1", new Vector2(0,9), 4);
+            Animation.AddAnimation("crouch_charge_2", new Vector2(0,10), 4);
+
             Animation.AddAnimation("crawl", new Vector2(0,8), 8);
+            Animation.AddAnimation("crawl_charge_1", new Vector2(4,9), 8);
+            Animation.AddAnimation("crawl_charge_2", new Vector2(4,10), 8);
+
+            Animation.AddAnimation("climb_idle_1", new Vector2(0,12), 16);
+            Animation.AddAnimation("climb_up_1", new Vector2(0,13), 8);
+            Animation.AddAnimation("climb_down_1", new Vector2(8,13), 4);
 
             //TODO : Add sword attack animation
             Animation.AddAnimation("sword", new Vector2(8,8), 8);
 
             Animation.ChangeAnimation(_currentAnimation);
 
-            HandAnimation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*16), 24);
+            HandAnimation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*18), 24);
 
             HandAnimation.AddAnimation("idle", new Vector2(4,3), 1);
 
-            HandAnimation.AddAnimation("charge_1", new Vector2(3,11), 1);
-            HandAnimation.AddAnimation("charge_1_to_2", new Vector2(12,11), 4);
-            HandAnimation.AddAnimation("charge_2", new Vector2(3,12), 1);
-            HandAnimation.AddAnimation("charge_3", new Vector2(8,11), 4);
-            HandAnimation.AddAnimation("charge_4", new Vector2(8,12), 4);
+            HandAnimation.AddAnimation("charge_1", new Vector2(3,14), 1);
+            HandAnimation.AddAnimation("charge_1_to_2", new Vector2(12,14), 4);
+            HandAnimation.AddAnimation("charge_2", new Vector2(3,15), 1);
+            HandAnimation.AddAnimation("charge_3", new Vector2(8,14), 4);
+            HandAnimation.AddAnimation("charge_4", new Vector2(8,15), 4);
 
-            HandAnimation.AddAnimation("fire_1", new Vector2(0,11), 8);
-            HandAnimation.AddAnimation("fire_2", new Vector2(0,12), 8);
+            HandAnimation.AddAnimation("fire_1", new Vector2(0,14), 8);
+            HandAnimation.AddAnimation("fire_2", new Vector2(0,15), 8);
 
             HandAnimation.ChangeAnimation(_currentHandAnimation);
 
@@ -170,6 +191,7 @@ namespace FinalComGame
             _invincibilityTimer = 0f;
             _attackTimer = 0f;
             _attackCooldownTimer = 0f;
+            _MPRegenTime = 0f;
 
             Bullet.DamageAmount = Bullet.BaseDamageAmount;
             
@@ -214,8 +236,16 @@ namespace FinalComGame
 
         private void RegenerateMP(float deltaTime)
         {
-            if(!_isDashing && !_isGliding)
-                MP += 5 * deltaTime;
+            if(!_isDashing && !_isGliding && !_isCharging)
+                _MPRegenTime += deltaTime;
+            else
+                _MPRegenTime = 0;
+
+            if(_MPRegenTime >= MPRegenCooldown){
+                _MPRegenTime = MPRegenCooldown;
+                MP += MPRegenRate * deltaTime;
+            }
+
             if(MP >= MaxMP) 
                 MP = MaxMP;
         }
@@ -223,11 +253,31 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             _particle.Draw(spriteBatch);
-            base.Draw(spriteBatch);
+            //base.Draw(spriteBatch);
+
+            SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+            Vector2 offset = new Vector2(0 , 0);
+
+            if (_isCrouching)
+            {
+                offset = new Vector2(0 , 8);
+            }
+
+            spriteBatch.Draw(
+                Animation.GetTexture(),
+                GetDrawingPosition() - offset,
+                Animation.GetCurrentFrame(),
+                Color.White,
+                0f, 
+                Vector2.Zero,
+                Scale,
+                spriteEffect, 
+                0f
+            );
 
             if (_currentHandAnimation != "none")
             {
-                SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
                 spriteBatch.Draw(
                     HandAnimation.GetTexture(),
@@ -249,80 +299,110 @@ namespace FinalComGame
         {
             string animation = "idle";
 
-            if(_isAttacking)
+            if(_isAttacking){
                 if(_isFist)
                     animation = "melee";
                 else
                     animation = "sword";
-            else if (_isDashing)
+            }
+
+            else if (_isDashing){
                 if (HandAnimation._currentAnimation == "idle" || 
                     HandAnimation._currentAnimation == "charge_1" || 
                     HandAnimation._currentAnimation == "fire_1")
                     animation = "dash";
                 else
                     animation = "dash_charge";
-            else if (_isGliding && !_isJumping){
+            }
+
+            else if (_isGliding && !_isJumping)
+            {
                 if (HandAnimation._currentAnimation == "idle")
                     animation = "glide";
                 else
                     animation = "glide_charge";
-                }
+            }
+            else if (_isClimbing)
+            {
+                if (Velocity.Y < 0)
+                    animation = "climb_up_1";
+                else if(Velocity.Y > 0)
+                    animation = "climb_down_1";
+                else
+                    animation = "climb_idle_1";
+            }
+
             else if (Velocity.Y > 0)
+            {
                 if (HandAnimation._currentAnimation == "idle")
-                        animation = "fall";
+                    animation = "fall";
                 else if (HandAnimation._currentAnimation == "charge_1" || 
-                        HandAnimation._currentAnimation == "fire_1")
+                         HandAnimation._currentAnimation == "fire_1")
                     animation = "fall_charge_1";
                 else
                     animation = "fall_charge_2";
-            else if (_isJumping && Velocity.Y < 0){
+            }
+
+            else if (_isJumping && Velocity.Y < 0)
+            {
                 if (HandAnimation._currentAnimation == "idle")
-                        animation = "jump";
+                    animation = "jump";
                 else if (HandAnimation._currentAnimation == "charge_1" || 
-                        HandAnimation._currentAnimation == "fire_1")
+                         HandAnimation._currentAnimation == "fire_1")
                     animation = "jump_charge_1";
                 else
                     animation = "jump_charge_2";
             }
+
             else if (Velocity.X != 0)
             {
-                if(_isCrouching)
-                    animation = "crawl";
-                else{
+                if(_isCrouching){
+                    if (HandAnimation._currentAnimation == "idle")
+                        animation = "crawl";
+                    else if (HandAnimation._currentAnimation == "charge_1" || 
+                             HandAnimation._currentAnimation == "fire_1")
+                        animation = "crawl_charge_1";
+                    else
+                        animation = "crawl_charge_2";
+                }
+
+                else
+                {
                     if (HandAnimation._currentAnimation == "idle")
                         animation = "run";
                     else if (HandAnimation._currentAnimation == "charge_1" || 
-                            HandAnimation._currentAnimation == "fire_1")
+                             HandAnimation._currentAnimation == "fire_1")
                         animation = "run_charge_1";
                     else
                         animation = "run_charge_2";
                 }
-
             }
+
             else
             {
                 if(_isCrouching)
-                    animation = "crouch";
-                else{
-                    if (_lastChargeTime != 0)
-                    {
-                        if (_lastChargeTime >= MaxChargeTime/2)
-                        animation = "fire_2";
-                        else
-                        animation = "fire_1";
-
-                        _lastChargeTime = 0;
-                    }
-                    else if (_isCharging){
-                        if (_chargeTime == MaxChargeTime)
-                        animation = "charge_3";
-                        else if (_chargeTime >= MaxChargeTime/2)
-                        animation = "charge_1_to_2";
-                        else
-                        animation = "charge_1";
-                    }
+                {
+                    if (HandAnimation._currentAnimation == "idle")
+                        animation = "crouch";
+                    else if (HandAnimation._currentAnimation == "charge_1" || 
+                             HandAnimation._currentAnimation == "fire_1")
+                        animation = "crouch_charge_1";
                     else
+                        animation = "crouch_charge_2";
+                }
+
+                else
+                {
+                    if (HandAnimation._currentAnimation == "idle")
                         animation = "idle";
+                    else if (HandAnimation._currentAnimation == "charge_1" || 
+                             HandAnimation._currentAnimation == "fire_1")
+                        animation = "idle_charge_1";
+                    else if(HandAnimation._currentAnimation == "fire_2")
+                        animation = "idle_fire";
+                    else
+                        animation = "idle_charge_2";
+
                 }
             }
 
@@ -330,14 +410,6 @@ namespace FinalComGame
                 _currentAnimation = animation;
                 switch (animation)
                 {
-                    case "charge_1_to_2" :
-                        Animation.ChangeTransitionAnimation(_currentAnimation, "charge_2");
-                        break;
-                    case "fire_1" :
-                    case "fire_2" :
-                        Animation.ChangeTransitionAnimation(_currentAnimation, "idle");
-                        _currentAnimation = "idle";
-                        break;
                     case "run" :
                     case "run_charge_1" :
                     case "run_charge_2" :
@@ -356,7 +428,8 @@ namespace FinalComGame
         {
             string handAnimation = "idle";
 
-            if (_isGliding && !_isJumping){
+            if (_isGliding && !_isJumping)
+            {
                 if (_lastChargeTime != 0)
                 {
                         handAnimation = "fire_1";
@@ -364,49 +437,36 @@ namespace FinalComGame
                 }
 
                 else if (_isCharging){
-                    if (_chargeTime == MaxChargeTime){
-                        handAnimation = "charge_4";
-                    }
-                    else{
-                        handAnimation = "charge_1";
-                    }
+                    if (_chargeTime == MaxChargeTime)
+                        handAnimation = "charge_4"; 
+                    else
+                        handAnimation = "charge_1";                 
                 }
             }
 
-            else if (Velocity.X != 0 || Velocity.Y != 0)
-            {
-                if(_isCrouching){}
-
-                else{
-                    if (_lastChargeTime != 0)
-                    {
-                        if (_lastChargeTime >= MaxChargeTime/2)
-                        {
-                            handAnimation = "fire_2";
-                        }
-                        else{
-                            handAnimation = "fire_1";
-                        }
-
-                        _lastChargeTime = 0;
-                    }
-
-                    else if (_isCharging){
-                        if (_chargeTime == MaxChargeTime){
-                            handAnimation = "charge_3";
-                        }
-                        else if (_chargeTime >= MaxChargeTime/2)
-                        {
-                            handAnimation = "charge_1_to_2";
-                        }
-                        else{
-                            handAnimation = "charge_1";
-                        }
-                    }
-                }
-            }
             else
-                handAnimation = "idle";
+            {
+                if (_lastChargeTime != 0)
+                {
+                    if (_lastChargeTime >= MaxChargeTime/2)
+                        handAnimation = "fire_2";
+
+                    else
+                        handAnimation = "fire_1";
+
+                    _lastChargeTime = 0;
+                }
+
+                else if (_isCharging)
+                {
+                    if (_chargeTime == MaxChargeTime)
+                        handAnimation = "charge_3";
+                    else if (_chargeTime >= MaxChargeTime/2)
+                        handAnimation = "charge_1_to_2";
+                    else
+                        handAnimation = "charge_1";
+                }
+            }
                 
 
             if(_currentHandAnimation != handAnimation){
@@ -435,7 +495,7 @@ namespace FinalComGame
         {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
-                if (!_isDashing && !_isAttacking) 
+                if (!_isDashing && !_isAttacking && !_isClimbing) 
                 {
                     Direction = -1;
                     Velocity.X = -WalkSpeed;
@@ -443,7 +503,7 @@ namespace FinalComGame
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
-                if (!_isDashing && !_isAttacking) 
+                if (!_isDashing && !_isAttacking && !_isClimbing)  
                 {
                     Direction = 1;
                     Velocity.X = WalkSpeed;
@@ -465,32 +525,52 @@ namespace FinalComGame
             }
 
             // Handle Fire button (charge shot)
-            if (Singleton.Instance.IsKeyJustPressed(Fire))
+            if (Singleton.Instance.IsKeyJustPressed(Fire) && !_isClimbing)
             {
-                if(_isSoulBullet)
+                if(_isSoulBullet){
                     // Start charging
                     StartCharging();
+                }
                 else
                     Shoot(gameObjects);
             }
-            else if (Singleton.Instance.IsKeyPressed(Fire))
+            else if (Singleton.Instance.IsKeyPressed(Fire) && !_isClimbing)
             {
                 // Continue charging
                 ContinueCharging(deltaTime);
             }
-            else if (Singleton.Instance.IsKeyJustReleased(Fire))
+            else if (Singleton.Instance.IsKeyJustReleased(Fire) && !_isClimbing)
             {
                 // Release shot
                 ReleaseChargedShot(gameObjects);
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Jump) && !Singleton.Instance.IsKeyPressed(Crouch) && !_isDashing && _coyoteTimeCounter > 0)
-                _jumpBufferCounter = JumpBufferTime;
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && _coyoteTimeCounter > 0)
+            {
+
+                if (!(Singleton.Instance.IsKeyPressed(Crouch) && _isClimbing) && 
+                !(Singleton.Instance.IsKeyPressed(Crouch) && _isOnPlatform))
+                {
+
+                    _isClimbing = false;
+                    if (_isCrouching) {
+                        Position.Y -= 16;
+                        Viewport.Height = 32;
+                        WalkSpeed = 200;
+                        _isCrouching = false;
+                    }
+
+                    _jumpBufferCounter = JumpBufferTime;
+                }
+
+                _isClimbing = false;
+
+            }
             else
                 _jumpBufferCounter -= deltaTime; // Decrease over time
 
             // Gliding - activate when holding Jump while in air and not climbing or dashing
-            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !_isJumping && !_isClimbing && !_isDashing && MP > 0)
+            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && !_isJumping && !_isClimbing && !_isDashing && MP > 0 && _coyoteTimeCounter <= 0)
             {
                 _isGliding = true;
             }
@@ -514,7 +594,7 @@ namespace FinalComGame
                 _isCrouching = false;
             }
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && Singleton.Instance.IsKeyJustPressed(Jump)){
+            if (Singleton.Instance.IsKeyPressed(Crouch) && Singleton.Instance.IsKeyJustPressed(Jump) && _isOnPlatform){
                 _isDropping = true;
             }
             else
@@ -522,16 +602,29 @@ namespace FinalComGame
                 _isDropping = false;
             }
 
-            if ((Singleton.Instance.IsKeyPressed(Climb) || Singleton.Instance.IsKeyPressed(Crouch)) && _overlappedTile == TileType.Ladder && !_isClimbing && !_isCrouching && !_isDashing)
+            if (Singleton.Instance.IsKeyPressed(Climb) && (Velocity.Y >= 0) &&
+                !_isClimbing && !_isCrouching && !_isDashing && Position.Y > (_ladderTopPosition.Y + 8) &&
+                (_overlappedTile == TileType.Ladder || _overlappedTile == TileType.Ladder_Platform ||
+                _overlappedTile == TileType.Ladder_Left || _overlappedTile == TileType.Ladder_Right))
             {
                 _isClimbing = true;
+                _isCharging = false;
                 _isJumping = false;
+                _chargeTime = 0;
                 Velocity.Y = 0;
+                Position.X = _overlappedTilePosition.X;
+
+                if(_overlappedTile == TileType.Ladder_Left)
+                    Direction = -1;
+                else if(_overlappedTile == TileType.Ladder_Right)
+                    Direction = 1;
+
             }
 
             if (_isClimbing)
             {
-                if (Singleton.Instance.IsKeyPressed(Climb))
+                
+                if (Singleton.Instance.IsKeyPressed(Climb) && Position.Y >= (_ladderTopPosition.Y + 8))
                 {
                     Velocity.Y = -ClimbSpeed;
                 }
@@ -543,15 +636,22 @@ namespace FinalComGame
 
                 else Velocity.Y = 0;
                 
-                if (Singleton.Instance.IsKeyJustPressed(Jump) || _overlappedTile == TileType.None)
-                {
+                if (_overlappedTile == TileType.None)
                     _isClimbing = false;
-                }
 
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Dash))
+            if (Singleton.Instance.IsKeyJustPressed(Dash)){
+                if(_overlappedTile == TileType.Ladder_Left && _isClimbing){
+                    Direction = 1;
+                    _isClimbing = false;
+                }
+                else if(_overlappedTile == TileType.Ladder_Right && _isClimbing){
+                    Direction = -1;
+                    _isClimbing = false;
+                }
                 StartDash();
+            }
             
             if (Singleton.Instance.IsKeyJustPressed(Interact))
                 CheckInteraction(gameObjects);
@@ -560,6 +660,12 @@ namespace FinalComGame
                 UseItem(2);
             if (Singleton.Instance.IsKeyJustPressed(Item2))
                 UseItem(3);
+        }
+
+        protected override bool IsOnGround()
+        {
+            //TODO apex of jump is grounded?
+            return Velocity.Y == 0 || _isClimbing;
         }
 
         private void ActiveItemPassiveAbility()
@@ -691,7 +797,7 @@ namespace FinalComGame
             if (_isDashing)
             {
                 _dashTimer -= deltaTime;
-                if (_dashTimer <= 0)
+                if (_dashTimer <= 0 || Velocity.X == 0)
                 {
                     _isDashing = false;
                     Velocity.X = 0;
@@ -756,7 +862,10 @@ namespace FinalComGame
 
         protected void UpdateTileInteraction (TileMap tileMap){
 
+            _isOnPlatform = false;
+            _ladderTopPosition = Vector2.Zero;
             _overlappedTile = TileType.None;
+
             int radius = 5;
             for (int i = -radius; i <= radius; i++)
             {
@@ -766,24 +875,29 @@ namespace FinalComGame
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
                     if(tile != null)
                     {
-                        if (tile.Type == TileType.Ladder || tile.Type == TileType.Platform_Ladder)
+                        if (tile.Type == TileType.Ladder || tile.Type == TileType.Ladder_Left || 
+                        tile.Type == TileType.Ladder_Right || tile.Type == TileType.Ladder_Platform)
                         {
                             if (IsTouching(tile)){
-                                _overlappedTile = TileType.Ladder;
+                                _overlappedTile = tile.Type;
+                                _overlappedTilePosition = tile.Position;
                             }
                         }
 
-                        if (tile.Type == TileType.Platform|| tile.Type == TileType.Platform_Ladder)
+                        if (tile.Type == TileType.Ladder_Top && IsTouching(tile))
+                            _ladderTopPosition = tile.Position;
+
+
+                        if (tile.Type == TileType.Platform|| tile.Type == TileType.Ladder_Platform)
                         {
-                            if (tile.Position.Y < Position.Y + Viewport.Height || _isDropping){
+                            if(IsTouchingTop(tile))
+                                _isOnPlatform = true;
+                            if (tile.Position.Y < Position.Y + Viewport.Height || _isDropping)
                                 tile.IsSolid = false;
-                            }
-
-                            else{
+                            else
                                 tile.IsSolid = true;
-                            }
-
                         }
+
                     }
                 }
             }
@@ -795,7 +909,12 @@ namespace FinalComGame
             Vector2 direction = new Vector2(Direction, 0);
             PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
             newBullet.DamageAmount = Bullet.DamageAmount; // Increase damage
-            newBullet.Shoot(Position, direction);
+
+            Vector2 bulletPosition; 
+            if (!_isCrouching) bulletPosition = Position + new Vector2(0, 10);
+            else bulletPosition = Position;
+            
+            newBullet.Shoot(bulletPosition, direction);
 
             //TODO : More dynamic for more range weapon
             (ItemSlot[_rangeWeaponSlot] as Gun).DecreaseAmmo();
@@ -806,8 +925,9 @@ namespace FinalComGame
        // Charge shot methods
         private void StartCharging()
         {
-            if (MP > 0)
+            if (MP >= StartChargeMPCost)
             {
+                MP -= StartChargeMPCost;
                 _isCharging = true;
                 _chargeTime = 0f;
                 // chargeColor = Color.White;
@@ -816,7 +936,6 @@ namespace FinalComGame
                 // if (ChargeSound != null)
                 //     ChargeSound.Play();
                 
-                Animation.Reset();
             }
         }
         
@@ -841,6 +960,7 @@ namespace FinalComGame
             //     1.0f); // Alpha always max
                 
             // Drain MP while charging (more MP for longer charge)
+            if (_chargeTime < MaxChargeTime)
             DrainMP(ChargeMPCost / MaxChargeTime, deltaTime);
         }
         

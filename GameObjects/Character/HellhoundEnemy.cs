@@ -123,7 +123,7 @@ namespace FinalComGame
                 _dashTimer = DashDuration;
                 Velocity = (_dashTarget - Position);
                 Velocity.Normalize();
-                Velocity *= 1000f;//Dash speed
+                Velocity *= 600f;//Dash speed
                 
             }
             else{
@@ -194,7 +194,7 @@ namespace FinalComGame
             {
                 //Console.WriteLine("Hellhound jumps over obstacles.");
                 if (Velocity.Y == 0)
-                    Velocity.Y = -900f; // Jump over obstacles
+                    Velocity.Y = -600f; // Jump over obstacles
             }else if(CurrentState == EnemyState.Dash){
                 //Console.WriteLine("Hellhound dash Hit wall, changing to chase state");
                 _isDashing = false;

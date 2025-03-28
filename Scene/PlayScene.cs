@@ -298,14 +298,20 @@ public class PlayScene : Scene
             DashSpeed = 400f,
             DashDuration = 0.3f, // Dash lasts for 0.25 seconds
             DashCooldown = 0.2f,
-            DashMP = 10f,
+            DashMP = 20f,
+
             GlideGravityScale = 0.3f, // How much gravity affects gliding (lower = slower fall)
             GlideMaxFallSpeed = 80f, // Maximum fall speed while gliding
-            GlideMP = 10f, // MP cost per second while gliding
+            GlideMP = 20f, // MP cost per second while gliding
+
             MaxChargeTime = 2.0f, // Maximum charge time in seconds
             MinChargePower = 1.0f, // Minimum damage/speed multiplier
             MaxChargePower = 3.0f, // Maximum damage/speed multiplier
+            StartChargeMPCost = 5f, // Minimum MP cost per shot
             ChargeMPCost = 15f, // MP cost for fully charged shot
+
+            MPRegenCooldown = 0.6f, // 0.5 seconds before starting MP regenaration
+            MPRegenRate = 30f, // MP regenaration per second
 
             Viewport = new Rectangle(0, 0, 16, 32),
             Left = Keys.Left,
