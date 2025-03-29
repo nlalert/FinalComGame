@@ -19,7 +19,8 @@ namespace FinalComGame {
             Charging,
             Dash,
             Jump,
-            Dead
+            Dead,
+            Floating
         }
 
         // Enemy Properties
