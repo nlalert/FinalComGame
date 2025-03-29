@@ -291,6 +291,9 @@ public class PlayScene : Scene
             AttackDuration = 0.4f, // How long the attack lasts
             AttackCooldown = 0.2f,
 
+            AttackWidth = 20, 
+            AttackHeight = 32,
+
             JumpStrength = 600f,
 
             CoyoteTime = 0.1f, // 100ms of coyote time
@@ -333,7 +336,7 @@ public class PlayScene : Scene
                 Speed = 500f,
                 CanCollideTile = true,
                 Viewport = new Rectangle(0, 0, 15, 10)
-            }
+            },
         };
     }
 

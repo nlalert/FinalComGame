@@ -254,7 +254,7 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             _particle.Draw(spriteBatch);
-            //base.Draw(spriteBatch);
+            // base.Draw(spriteBatch);
 
             SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
@@ -303,7 +303,7 @@ namespace FinalComGame
                 );
             }
 
-            //DrawDebug(spriteBatch);
+            // DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
@@ -778,12 +778,7 @@ namespace FinalComGame
                 _attackTimer = AttackDuration;
                 _attackCooldownTimer = AttackCooldown;
 
-                // Set attack hitbox in front of the player
-                int attackWidth = 20; // Adjust the size of the attack area
-                int attackHeight = 32;
-                int offsetX = Direction == 1 ? Rectangle.Width : -attackWidth;
-
-                attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
+                UpdateAttackHitbox();
             }
         }
 
@@ -791,11 +786,16 @@ namespace FinalComGame
         {
             if (_isAttacking)
             {
-                int attackWidth = 20; // Adjust as needed
-                int attackHeight = 32;
-                int offsetX = Direction == 1 ? Rectangle.Width : -attackWidth;
+                if(ItemSlot[0] != null)
+                {
+                    AttackHitbox = (ItemSlot[0] as Sword).GetAttackHitbox();
+                }
+                else
+                {
+                    int offsetX = Direction == 1 ? Rectangle.Width : -AttackWidth;
 
-                attackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, attackWidth, attackHeight);
+                    AttackHitbox = new Rectangle((int)Position.X + offsetX, (int)Position.Y, AttackWidth, AttackHeight);
+                }
             }
         }
         
@@ -804,7 +804,7 @@ namespace FinalComGame
             if (!_isAttacking) return;
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
-                enemy.CheckHit(attackHitbox, AttackDamage);
+                enemy.CheckHit(AttackHitbox, AttackDamage);
             }
         }
 
@@ -1068,7 +1068,7 @@ namespace FinalComGame
                 Health -= damageAmount;
             }
 
-            Singleton.Instance.Camera.ShakeScreen(damageAmount * 1.5f / MaxHealth, 0.3f);
+            Singleton.Instance.Camera.ShakeScreen(damageAmount * 1.75f / MaxHealth, 0.3f);
 
             StartInvincibility();
             Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);

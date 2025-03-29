@@ -24,7 +24,9 @@ namespace FinalComGame {
         public float AttackCooldown; // Cooldown before attacking again
         protected float _attackTimer;
         protected float _attackCooldownTimer;
-        protected Rectangle attackHitbox;
+        public Rectangle AttackHitbox;
+        public int AttackWidth;
+        public int AttackHeight;
         
         //Jump
         protected bool _isJumping;
@@ -47,7 +49,7 @@ namespace FinalComGame {
             debugTexture.SetData(new Color[] { Color.Red });
 
             if (_attackTimer > 0)
-                spriteBatch.Draw(debugTexture, attackHitbox, Color.Red);
+                spriteBatch.Draw(debugTexture, AttackHitbox, Color.Red);
             // end hitbox debug drawing
 
             SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
