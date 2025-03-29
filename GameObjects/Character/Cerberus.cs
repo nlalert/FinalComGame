@@ -304,9 +304,9 @@ namespace FinalComGame
             this._actionTimeOffset = 0.90f;
             GameObject newObject2 = (GameObject)this.Clone(); // Cloning the current object
             this._actionTimeOffset = 0.85f;
-            
-            newObject1.Position = new Vector2(this.Position.X + 50, this.Position.Y);
-            newObject2.Position = new Vector2(this.Position.X - 50, this.Position.Y); 
+
+            newObject1.Position = new Vector2(this.Position.X + 150, this.Position.Y-100);
+            newObject2.Position = new Vector2(this.Position.X - 150, this.Position.Y-100); 
 
             newObject1.Name = "Split Object"; // Give the new object a unique name if necessary
             newObject2.Name = "Split Object"; // Give the new object a unique name if necessary
