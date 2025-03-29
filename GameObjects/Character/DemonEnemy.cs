@@ -120,7 +120,7 @@ namespace FinalComGame
             base.Draw(spriteBatch);
             DrawDebug(spriteBatch);
         }
-        private void DrawDebug(SpriteBatch spriteBatch)
+        protected override void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";

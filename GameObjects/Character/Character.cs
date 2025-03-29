@@ -44,21 +44,14 @@ namespace FinalComGame {
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // hitbox debug drawing
-            Texture2D debugTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            debugTexture.SetData(new Color[] { Color.Red });
-
-            if (_attackTimer > 0)
-                spriteBatch.Draw(debugTexture, AttackHitbox, Color.Red);
-            // end hitbox debug drawing
-
             SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
+            Color color = IsInvincible() ? Color.HotPink : Color.White;
             spriteBatch.Draw(
                 Animation.GetTexture(),
                 GetDrawingPosition(),
                 Animation.GetCurrentFrame(),
-                Color.White,
+                color,
                 0f, 
                 Vector2.Zero,
                 Scale,
@@ -67,6 +60,16 @@ namespace FinalComGame {
             );
 
             base.Draw(spriteBatch);
+        }
+
+        protected virtual void DrawDebug(SpriteBatch spriteBatch)
+        {
+            // hitbox debug drawing
+            Texture2D debugTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            debugTexture.SetData(new Color[] { Color.Red });
+
+            if (_attackTimer > 0)
+                spriteBatch.Draw(debugTexture, AttackHitbox, Color.Red);
         }
 
         protected Vector2 GetDrawingPosition()
@@ -86,9 +89,14 @@ namespace FinalComGame {
             Animation?.Update(deltaTime);
         }
 
+        protected bool IsInvincible()
+        {
+            return _invincibilityTimer > 0;
+        }
+
         protected void UpdateInvincibilityTimer(float deltaTime)
         {
-            if (_invincibilityTimer > 0)
+            if (IsInvincible())
                 _invincibilityTimer -= deltaTime;
         }
         /// <summary>

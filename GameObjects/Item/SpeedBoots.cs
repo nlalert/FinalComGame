@@ -9,7 +9,7 @@ namespace FinalComGame
     {
         private float _speedModifier;
 
-        public SpeedBoots(Texture2D texture, ItemType type, string description, Vector2 Position, float speedModifier = 0.5f)
+        public SpeedBoots(Texture2D texture, ItemType type, string description, Vector2 Position, float speedModifier = 1.5f)
             : base(texture, description, Position, type)
         {
             this._speedModifier = speedModifier;

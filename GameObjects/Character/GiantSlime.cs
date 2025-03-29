@@ -231,7 +231,7 @@ namespace FinalComGame
             DrawDebug(spriteBatch);
         }
 
-        private void DrawDebug(SpriteBatch spriteBatch)
+        protected override void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             Vector2 aim  = Singleton.Instance.Player.GetPlayerCenter() + new Vector2(-this.Rectangle.Width/2,-100);

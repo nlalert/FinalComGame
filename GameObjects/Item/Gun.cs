@@ -9,7 +9,6 @@ namespace FinalComGame
     {
         private float _attackDamage;
         private int _ammoAmount;
-        private int _playerInventorySlot;
 
         public Gun(Texture2D texture, ItemType type, string description, Vector2 Position, float attackDamage = 100f, int ammoAmount = 6)
             : base(texture, description, Position, type)
@@ -24,7 +23,7 @@ namespace FinalComGame
             Console.WriteLine("Ammo "+ _ammoAmount);
             if(_ammoAmount <= 0)
             {
-                Singleton.Instance.Player.RemoveItem(_playerInventorySlot);
+                Singleton.Instance.Player.RemoveItem(1);
                 Singleton.Instance.Player.ChangeToSoulBulletAttack();
             }
         }
@@ -37,9 +36,8 @@ namespace FinalComGame
 
         public override void ActiveAbility(int slot)
         {
-            _playerInventorySlot = slot;
-            Singleton.Instance.Player.ChangeToGunAttack(_attackDamage, _playerInventorySlot);
-            base.ActiveAbility(_playerInventorySlot);
+            Singleton.Instance.Player.ChangeToGunAttack(_attackDamage);
+            base.ActiveAbility(slot);
         }
     }
 }

@@ -83,8 +83,6 @@ namespace FinalComGame
         private bool _isSoulBullet;
 
         private bool _isUsingWeapon;
-        private int _rangeWeaponSlot;
-        private int _meleeWeaponSlot;
 
         //SFX
         public SoundEffect JumpSound;
@@ -254,7 +252,6 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             _particle.Draw(spriteBatch);
-            // base.Draw(spriteBatch);
 
             SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
@@ -275,11 +272,13 @@ namespace FinalComGame
                 }
             }
 
+            Color color = IsInvincible() ? Color.Red : Color.White;
+
             spriteBatch.Draw(
                 Animation.GetTexture(),
                 GetDrawingPosition() - offset,
                 Animation.GetCurrentFrame(),
-                Color.White,
+                color,
                 0f, 
                 Vector2.Zero,
                 Scale,
@@ -289,7 +288,6 @@ namespace FinalComGame
 
             if (_currentHandAnimation != "none")
             {
-
                 spriteBatch.Draw(
                     HandAnimation.GetTexture(),
                     GetDrawingPosition(),
@@ -303,7 +301,7 @@ namespace FinalComGame
                 );
             }
 
-            // DrawDebug(spriteBatch);
+            DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
@@ -700,7 +698,7 @@ namespace FinalComGame
 
         private void ActiveItemPassiveAbility()
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 4; i++)
             {
                 if (ItemSlot[i] == null) continue;
 
@@ -947,7 +945,7 @@ namespace FinalComGame
             newBullet.Shoot(bulletPosition, direction);
 
             //TODO : More dynamic for more range weapon
-            (ItemSlot[_rangeWeaponSlot] as Gun).DecreaseAmmo();
+            (ItemSlot[1] as Gun).DecreaseAmmo();
             gameObjects.Add(newBullet);
             Animation.Reset();
         }
@@ -1042,7 +1040,7 @@ namespace FinalComGame
         
         public override void OnHit(float damageAmount)
         {
-            if (_invincibilityTimer > 0) 
+            if (IsInvincible()) 
                 return; // If i-frames are active, ignore damage
 
             // Calculate damage to absorption health
@@ -1095,7 +1093,7 @@ namespace FinalComGame
                 Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;  
         }
 
-        private void DrawDebug(SpriteBatch spriteBatch)
+        protected override void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             string directionText = Direction != 1 ? "Left" : "Right";
@@ -1109,6 +1107,7 @@ namespace FinalComGame
             }
             spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
             spriteBatch.DrawString(Singleton.Instance.Debug_Font, ".", this.GetPlayerCenter(), Color.Red);
+            base.DrawDebug(spriteBatch);
         }
 
                 // New method to apply gravity depending on glide state
@@ -1172,11 +1171,10 @@ namespace FinalComGame
             AttackDamage = BaseAttackDamage;
         }
 
-        public void ChangeToGunAttack(float damageAmount, int slot)
+        public void ChangeToGunAttack(float damageAmount)
         {
             _isSoulBullet = false;
             Bullet.DamageAmount = damageAmount;
-            _rangeWeaponSlot = slot;
         }
 
         public void ChangeToSoulBulletAttack()

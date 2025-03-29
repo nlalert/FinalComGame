@@ -72,7 +72,7 @@ namespace FinalComGame {
             // Can be overridden for specific enemy types
             return CurrentState != EnemyState.Dead && 
                 CurrentState != EnemyState.Dying &&
-                _invincibilityTimer >0;
+                IsInvincible();
         }
         public override void OnHitByProjectile(GameObject projectile,float damageAmount)
         {
@@ -121,7 +121,8 @@ namespace FinalComGame {
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Position, Viewport, Color.White);
+            Color color = IsInvincible() ? Color.HotPink : Color.White;
+            spriteBatch.Draw(_texture, Position, Viewport, color);
             if (Animation._animationName.Count > 0){
                 base.Draw(spriteBatch);
             }
