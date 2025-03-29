@@ -825,10 +825,9 @@ namespace FinalComGame
             if (_isDashing)
             {
                 _dashTimer -= deltaTime;
-                if (_dashTimer <= 0 || Velocity.X == 0)
+                if (_dashTimer <= 0)
                 {
                     _isDashing = false;
-                    Velocity.X = 0;
                 }
             }
             else
