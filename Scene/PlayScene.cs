@@ -483,6 +483,11 @@ public class PlayScene : Scene
             Name =  "Gun",
             Viewport = new Rectangle(0, 0, 32,32)
         });
+
+        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, "Testing jumppotion", TileMap.GetTileWorldPositionAt(35, 90)){
+            Name =  "jumppotion",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
     }
 
     protected override void SetupUI()
