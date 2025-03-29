@@ -30,6 +30,7 @@ namespace FinalComGame {
         
         //Jump
         protected bool _isJumping;
+        public float BaseJumpStrength;
         public float JumpStrength;
 
         //Animation

@@ -173,6 +173,8 @@ namespace FinalComGame
             ChangeToFistAttack();
             ChangeToSoulBulletAttack();
 
+            JumpStrength = BaseJumpStrength;
+
             _overlappedTile = TileType.None;
 
 
@@ -731,7 +733,12 @@ namespace FinalComGame
         {
             if(_isDashing) 
                 return;
-            Velocity.X *= (1 + speedModifier);
+            Velocity.X *= speedModifier;
+        }
+
+        public void BoostJump(float jumpStrengthModifier)
+        {
+            JumpStrength *= jumpStrengthModifier;
         }
 
         private void UseItem(int itemSlotIndex)

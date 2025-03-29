@@ -236,6 +236,7 @@ namespace FinalComGame {
 
             Health = MaxHealth;
             AttackDamage = BaseAttackDamage;
+            JumpStrength = BaseJumpStrength;
             _isAttacking = false;
             _isJumping = false;
 

@@ -294,7 +294,7 @@ public class PlayScene : Scene
             AttackWidth = 20, 
             AttackHeight = 32,
 
-            JumpStrength = 600f,
+            BaseJumpStrength = 600f,
 
             CoyoteTime = 0.1f, // 100ms of coyote time
             JumpBufferTime = 0.15f, // 150ms jump buffer
@@ -425,7 +425,7 @@ public class PlayScene : Scene
                     BaseAttackDamage = 3f,
 
                     // JumpCooldown = 3.0f,
-                    JumpStrength = 550,
+                    BaseJumpStrength = 550,
                     Friction = 0.96f
                 }
             },
@@ -447,6 +447,7 @@ public class PlayScene : Scene
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
         Texture2D Gun = _content.Load<Texture2D>("Gun");
+        Texture2D Bunny = _content.Load<Texture2D>("Bunny");
 
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",

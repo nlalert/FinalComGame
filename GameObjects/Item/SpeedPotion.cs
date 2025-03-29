@@ -11,7 +11,7 @@ namespace FinalComGame
         private float _speedBoostDuration;
         private float _speedBoostTimer;
 
-        public SpeedPotion(Texture2D texture, ItemType type, string description, Vector2 Position, float speedModifier = 0.5f, float speedBoostDuration = 5.0f)
+        public SpeedPotion(Texture2D texture, ItemType type, string description, Vector2 Position, float speedModifier = 1.5f, float speedBoostDuration = 5.0f)
             : base(texture, description, Position, type)
         {
             _speedModifier = speedModifier;
