@@ -34,10 +34,10 @@ namespace FinalComGame
             base.OnDrop(position);
         }
 
-        public override void ActiveAbility(int slot)
+        public override void ActiveAbility(float deltaTime, int slot)
         {
             Singleton.Instance.Player.ChangeToGunAttack(_attackDamage);
-            base.ActiveAbility(slot);
+            base.ActiveAbility(deltaTime, slot);
         }
     }
 }

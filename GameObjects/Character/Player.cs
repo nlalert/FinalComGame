@@ -24,6 +24,7 @@ namespace FinalComGame
         //slot 0 for melee item
         //slot 1 for range item
         //slot 2-3 for items
+        private List<Item> usingConsumableItem;
 
         public SoulParticle _particle;
 
@@ -90,6 +91,7 @@ namespace FinalComGame
         //Animation
         private Animation HandAnimation;
         private string _currentHandAnimation = "idle";
+
 
         public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
         {
@@ -160,6 +162,7 @@ namespace FinalComGame
         public override void Reset()
         {
             ItemSlot = new Item[4];
+            usingConsumableItem = new List<Item>();
 
             Direction = 1; // Reset direction to right
 
@@ -203,7 +206,8 @@ namespace FinalComGame
 
             HandleInput(deltaTime, gameObjects);
             RegenerateMP(deltaTime);
-            ActiveItemPassiveAbility();
+            ActiveItemPassiveAbility(deltaTime);
+            UpdateUsingItem(deltaTime);
             UpdateInvincibilityTimer(deltaTime);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
@@ -220,6 +224,7 @@ namespace FinalComGame
             CheckAttackHit(gameObjects);
             UpdateHandAnimation(deltaTime);
             UpdateAnimation(deltaTime);
+
             if (!_isDashing) Velocity.X = 0;
 
             //Console.WriteLine(AttackDamage);
@@ -696,15 +701,28 @@ namespace FinalComGame
             return Velocity.Y == 0 || _isClimbing;
         }
 
-        private void ActiveItemPassiveAbility()
+        private void ActiveItemPassiveAbility(float deltaTime)
         {
             for (int i = 0; i < 4; i++)
             {
-                if (ItemSlot[i] == null) continue;
+                if (ItemSlot[i] == null || ItemSlot[i].Type == ItemType.Consumable) continue;
 
-                if(ItemSlot[i].Type != ItemType.Consumable)
+                ItemSlot[i].ActiveAbility(deltaTime, i);
+                
+            }
+        }
+
+        private void UpdateUsingItem(float deltaTime)
+        {
+            for (int i = usingConsumableItem.Count - 1; i >= 0; i--)
+            {
+                if(!usingConsumableItem[i].IsActive)
                 {
-                    ItemSlot[i].ActiveAbility(i);
+                    usingConsumableItem.RemoveAt(i);
+                }
+                else
+                {
+                    usingConsumableItem[i].ActiveAbility(deltaTime, i);
                 }
             }
         }
@@ -1185,6 +1203,12 @@ namespace FinalComGame
         public void RemoveItem(int slot)
         {
             ItemSlot[slot].IsActive = false;
+            ItemSlot[slot] = null;
+        }
+
+        public void AddUsingItem(int slot)
+        {
+            usingConsumableItem.Add(ItemSlot[slot]);
             ItemSlot[slot] = null;
         }
     }

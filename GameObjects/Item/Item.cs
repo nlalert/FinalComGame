@@ -33,13 +33,11 @@ namespace FinalComGame
         // // Method to be overridden by specific item types
         public virtual void Use(int slot)
         {
-            if(Type != ItemType.Consumable) return;
-            
-            Singleton.Instance.Player.RemoveItem(slot);
+            Singleton.Instance.Player.AddUsingItem(slot);
             Console.WriteLine("Using Item");      
         }
         
-        public virtual void ActiveAbility(int slot)
+        public virtual void ActiveAbility(float deltaTime, int slot)
         {    
         }
         

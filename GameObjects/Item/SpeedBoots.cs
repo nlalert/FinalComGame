@@ -16,10 +16,10 @@ namespace FinalComGame
         }
         
         // // Method to be overridden by specific item types
-        public override void ActiveAbility(int slot)
+        public override void ActiveAbility(float deltaTime, int slot)
         {
             Singleton.Instance.Player.BoostSpeed(_speedModifier);
-            base.ActiveAbility(slot);
+            base.ActiveAbility(deltaTime, slot);
         }
     }
 }

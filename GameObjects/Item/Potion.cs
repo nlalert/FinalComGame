@@ -14,14 +14,12 @@ namespace FinalComGame
         {
             this._healAmount = healAmount;
         }
-        
-        // // Method to be overridden by specific item types
-        public override void Use(int slot)
+
+        public override void ActiveAbility(float deltaTime, int slot)
         {
             Singleton.Instance.Player.Health += _healAmount;
             Singleton.Instance.Player.Health = Math.Min(Singleton.Instance.Player.Health, Singleton.Instance.Player.MaxHealth);
-            
-            base.Use(slot);
+            IsActive = false;
         }
     }
 }

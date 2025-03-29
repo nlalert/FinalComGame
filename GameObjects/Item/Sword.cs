@@ -10,7 +10,6 @@ namespace FinalComGame
         private float _attackDamage;
         private int _attackWidth;
         private int _attackHeight;
-        private int _playerInventorySlot;
 
         public Sword(Texture2D texture, ItemType type, string description, Vector2 Position, float attackDamage = 30f, int attackWidth = 32, int attackHeight = 32)
             : base(texture, description, Position, type)
@@ -34,11 +33,10 @@ namespace FinalComGame
             return new Rectangle((int)Singleton.Instance.Player.Position.X + offsetX, (int)Singleton.Instance.Player.Position.Y, _attackWidth, _attackHeight);
         }
 
-        public override void ActiveAbility(int slot)
+        public override void ActiveAbility(float deltaTime, int slot)
         {
-            _playerInventorySlot = slot;
             Singleton.Instance.Player.ChangeToSwordAttack(_attackDamage);
-            base.ActiveAbility(_playerInventorySlot);
+            base.ActiveAbility(deltaTime, slot);
         }
     }
 }

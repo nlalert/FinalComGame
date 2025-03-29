@@ -21,10 +21,10 @@ namespace FinalComGame
             Use(slot);
         }
 
-        public override void Use(int slot)
+        public override void ActiveAbility(float deltaTime, int slot)
         {
             Singleton.Instance.Player.AbsorptionHealth = _damageAbsorptionAmount;
-            base.Use(slot);
+            IsActive = false;
         }
     }
 }

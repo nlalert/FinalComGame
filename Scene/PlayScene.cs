@@ -462,6 +462,11 @@ public class PlayScene : Scene
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
+
+        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, "Testing Speed Potion", TileMap.GetTileWorldPositionAt(31, 90)){
+            Name =  "SpeedPotion",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
         
         _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "1Up",

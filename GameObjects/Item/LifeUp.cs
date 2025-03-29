@@ -11,16 +11,17 @@ namespace FinalComGame
             : base(texture, description, Position, type)
         {
         }
+        
         public override void OnPickup(int slot)
         {
             base.OnPickup(slot);
             Use(slot);
         }
-        // // Method to be overridden by specific item types
-        public override void Use(int slot)
+
+        public override void ActiveAbility(float deltaTime, int slot)
         {
             Singleton.Instance.Player.Life++;
-            base.Use(slot);
+            IsActive = false;
         }
     }
 }
