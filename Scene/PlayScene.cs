@@ -294,7 +294,7 @@ public class PlayScene : Scene
             AttackDuration = 0.4f, // How long the attack lasts
             AttackCooldown = 0.2f,
 
-            AttackWidth = 20, 
+            AttackWidth = 24, 
             AttackHeight = 32,
 
             BaseJumpStrength = 600f,

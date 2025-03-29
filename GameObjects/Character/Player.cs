@@ -153,6 +153,9 @@ namespace FinalComGame
             HandAnimation.AddAnimation("fire_1", new Vector2(0,14), 8);
             HandAnimation.AddAnimation("fire_2", new Vector2(0,15), 8);
 
+            HandAnimation.AddAnimation("gun_1", new Vector2(0,16), 8);
+            HandAnimation.AddAnimation("gun_2", new Vector2(8,16), 8);
+
             HandAnimation.ChangeAnimation(_currentHandAnimation);
 
             paticleTexture.SetData([new Color(193, 255, 219)]);
@@ -309,7 +312,7 @@ namespace FinalComGame
                 );
             }
 
-            DrawDebug(spriteBatch);
+            //DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
@@ -451,7 +454,10 @@ namespace FinalComGame
 
             else if (_isGliding && !_isJumping)
             {
-                if (_lastChargeTime != 0 || (Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon))
+                if(Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon)
+                    handAnimation = "gun_2";
+                    
+                else if (_lastChargeTime != 0)
                 {
                     handAnimation = "fire_1";
                     _lastChargeTime = 0;
@@ -467,9 +473,12 @@ namespace FinalComGame
 
             else
             {
-                if (_lastChargeTime != 0 || (Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon))
+                if(Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon)
+                    handAnimation = "gun_1";
+
+                else if (_lastChargeTime != 0)
                 {
-                    if (_lastChargeTime >= MaxChargeTime/2 || (Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon))
+                    if (_lastChargeTime >= MaxChargeTime/2)
                         handAnimation = "fire_2";
 
                     else
@@ -499,6 +508,8 @@ namespace FinalComGame
                         break;
                     case "fire_1" :
                     case "fire_2" :
+                    case "gun_1" :
+                    case "gun_2" :
                         HandAnimation.ChangeTransitionAnimation(_currentHandAnimation, "idle");
                         _currentHandAnimation = "idle";
                         break;
