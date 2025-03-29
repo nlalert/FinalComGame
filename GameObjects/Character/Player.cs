@@ -172,8 +172,7 @@ namespace FinalComGame
 
             ChangeToFistAttack();
             ChangeToSoulBulletAttack();
-
-            JumpStrength = BaseJumpStrength;
+            ResetJumpStrength();
 
             _overlappedTile = TileType.None;
 
@@ -228,6 +227,8 @@ namespace FinalComGame
             UpdateAnimation(deltaTime);
 
             if (!_isDashing) Velocity.X = 0;
+
+            ResetJumpStrength();
 
             //Console.WriteLine(AttackDamage);
             

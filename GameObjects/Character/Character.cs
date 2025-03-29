@@ -137,5 +137,10 @@ namespace FinalComGame {
         {
             _invincibilityTimer = _invincibilityDuration; // Activate i-frames
         }
+
+        public void ResetJumpStrength()
+        {
+            JumpStrength = BaseJumpStrength;
+        }
     }
 }
