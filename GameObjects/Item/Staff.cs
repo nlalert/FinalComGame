@@ -7,6 +7,7 @@ namespace FinalComGame
 {
     public class Staff : RangeWeapon
     {
+        public FireBall FireBall;
         public Staff(Texture2D texture, ItemType type, string description, Vector2 Position, float attackDamage = 100f, int ammoAmount = 15)
             : base(texture, type, description, Position, attackDamage, ammoAmount)
         {

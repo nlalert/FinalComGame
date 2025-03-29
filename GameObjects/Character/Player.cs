@@ -957,13 +957,24 @@ namespace FinalComGame
         private void Shoot(List<GameObject> gameObjects)
         {
             // Create and configure the bullet
-            Vector2 direction = new Vector2(Direction, 0);
-            PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
-            newBullet.DamageAmount = Bullet.DamageAmount; // Increase damage
+            Vector2 direction;
+            Projectile newBullet;
 
-            Vector2 bulletPosition; 
-            if (!_isCrouching) bulletPosition = Position + new Vector2(0, 10);
-            else bulletPosition = Position + new Vector2(0, 2);
+            if(ItemSlot[1] is Staff)
+            {
+                newBullet = (ItemSlot[1] as Staff).FireBall.Clone() as FireBall;
+                direction = new Vector2(Direction , (float) Math.Sin(MathHelper.ToRadians(-45)));
+                newBullet.DamageAmount = (newBullet as FireBall).BaseDamageAmount;
+            }
+            else
+            {
+                direction = new Vector2(Direction, 0);
+                newBullet = Bullet.Clone() as PlayerBullet;
+                newBullet.DamageAmount = Bullet.DamageAmount; // Increase damage
+            }
+
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 2) : new Vector2(0, 10); 
+            Vector2 bulletPosition = Position + bulletPositionOffset;
             
             newBullet.Shoot(bulletPosition, direction);
 

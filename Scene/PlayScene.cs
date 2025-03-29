@@ -450,6 +450,7 @@ public class PlayScene : Scene
         Texture2D Staff = _content.Load<Texture2D>("Staff");
         Texture2D Bunny = _content.Load<Texture2D>("Bunny");
         Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
+        Texture2D FireBall = _content.Load<Texture2D>("FireBall");
 
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
@@ -493,7 +494,15 @@ public class PlayScene : Scene
 
         _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, "Testing Staff", TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32,32),
+            FireBall = new FireBall(FireBall)
+            {
+                Name = "FireBall",
+                BaseDamageAmount = 30f,
+                Speed = 500f,
+                CanCollideTile = true,
+                Viewport = new Rectangle(0, 0, 8, 8)
+            },
         });
 
         _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, "Testing jumppotion", TileMap.GetTileWorldPositionAt(35, 90)){
