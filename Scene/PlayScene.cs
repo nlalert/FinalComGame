@@ -27,6 +27,8 @@ public class PlayScene : Scene
     private Texture2D _TowerTexture;
     private Texture2D _PlatformTexture;
     private Texture2D _GiantSlimeTexture;
+    private Texture2D _CerberusTexture;
+
 
     private Texture2D _parallaxFGtexture;
     private Texture2D _parallaxMGtexture;
@@ -65,6 +67,7 @@ public class PlayScene : Scene
         _TowerTexture = _content.Load<Texture2D>("EnemyTower");
         _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
         _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
+        _CerberusTexture = _content.Load<Texture2D>("Cerberus");
 
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
@@ -345,20 +348,20 @@ public class PlayScene : Scene
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
-            {
-                97,         
-                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 16, 16),
-                    CanCollideTile = true,
-                    MaxHealth = 50f,
-                    BaseAttackDamage = 3f,
+            // {
+            //     97,         
+            //     new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            //         Viewport = new Rectangle(0, 0, 16, 16),
+            //         CanCollideTile = true,
+            //         MaxHealth = 50f,
+            //         BaseAttackDamage = 3f,
 
-                    JumpCooldown = 3.0f,
-                    BaseJumpStrength = 550,
-                    Friction = 0.96f
-                }
-            },
+            //         JumpCooldown = 3.0f,
+            //         BaseJumpStrength = 550,
+            //         Friction = 0.96f
+            //     }
+            // },
             {
                 118,         
                 new SkeletonEnemy(_enemyTexture,_font){
@@ -380,7 +383,7 @@ public class PlayScene : Scene
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
                     CanCollideTile = true,
-                    MaxHealth = 100f,
+                    MaxHealth = 1f,
                     BaseAttackDamage = 8f,
 
                     LimitIdlePatrol = 100,
@@ -438,14 +441,14 @@ public class PlayScene : Scene
                     MaxHealth = float.MaxValue,
                 }
             },
+            //DONOT REMOVE This just add new number please cuz Feen's dont know where and what to assign this number
             // {
             //     97,         
             //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 48),
             //         CanCollideTile = true,
-
-            //         MaxHealth = 50f,
+            //         MaxHealth = 1f,
             //         BaseAttackDamage = 3f,
 
             //         // JumpCooldown = 3.0f,
@@ -453,6 +456,20 @@ public class PlayScene : Scene
             //         Friction = 0.96f
             //     }
             // },
+            {
+                97,         
+                new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 64, 48),
+                    CanCollideTile = true,
+                    MaxHealth = 100f,
+                    BaseAttackDamage = 3f,
+
+            //         // JumpCooldown = 3.0f,
+            //         BaseJumpStrength = 550,
+            //         Friction = 0.96f
+                }
+            },
         };
     }
 
