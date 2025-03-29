@@ -8,7 +8,6 @@ namespace FinalComGame
 {
     public class PlayerBullet : Projectile
     {
-        public float BaseDamageAmount;
         public PlayerBullet(Texture2D texture) : base(texture)
         {
         }

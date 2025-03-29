@@ -365,6 +365,7 @@ public class PlayScene : Scene
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
                     CanCollideTile = true,
+
                     MaxHealth = 80f,
                     BaseAttackDamage = 5f,
 
@@ -390,21 +391,41 @@ public class PlayScene : Scene
                 }
             },
             {
-                119,
+                353123,
                 new DemonEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
                     CanCollideTile = true,
+
+                    MaxHealth = 100f,
+
                     DemonBullet = new DemonBullet(_DemonBulletTexture)
+                    {
+                        Name = "BulletEnemy",
+                        BaseDamageAmount = 15f,
+                        Speed = 150f,
+                        CanCollideTile = true,
+                        Viewport = new Rectangle(0, 0, 32, 32)
+                    }
                 }
             },
             {
-                99,
+                67123,
                 new TowerEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 32),
                     CanCollideTile = true,
+
+                    MaxHealth = 100f,
+
                     TowerBullet = new TowerBullet(_DemonBulletTexture)
+                    {
+                        Name = "BulletEnemy",
+                        BaseDamageAmount = 20f,
+                        Speed = 250f,
+                        CanCollideTile = true,
+                        Viewport = new Rectangle(0, 0, 32, 32)
+                    }
                 }
             },
             {
@@ -413,6 +434,8 @@ public class PlayScene : Scene
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
                     CanCollideTile = true,
+
+                    MaxHealth = float.MaxValue,
                 }
             },
             // {
@@ -421,6 +444,7 @@ public class PlayScene : Scene
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 48),
             //         CanCollideTile = true,
+
             //         MaxHealth = 50f,
             //         BaseAttackDamage = 3f,
 

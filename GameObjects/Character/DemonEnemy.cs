@@ -112,6 +112,7 @@ namespace FinalComGame
         {
             Vector2 direction = Vector2.Normalize(Singleton.Instance.Player.Position - Position);
             DemonBullet bullet = DemonBullet.Clone() as DemonBullet;
+            bullet.DamageAmount = bullet.BaseDamageAmount;
             bullet.Shoot(Position, direction);
             gameObjects.Add(bullet);
         }

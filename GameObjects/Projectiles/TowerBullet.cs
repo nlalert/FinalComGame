@@ -7,11 +7,6 @@ namespace FinalComGame
     {
         public TowerBullet(Texture2D texture) : base(texture)
         {
-            Name = "BulletEnemy";
-            DamageAmount = 15f;
-            Speed = 250f;
-            CanCollideTile = true;
-            Viewport = new Rectangle(0, 0, 32, 32);
         }
     }
 }
