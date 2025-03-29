@@ -76,6 +76,7 @@ namespace FinalComGame
         {
             Vector2 direction = Vector2.Normalize(Singleton.Instance.Player.Position - Position);
             TowerBullet bullet = TowerBullet.Clone() as TowerBullet;
+            bullet.DamageAmount = bullet.BaseDamageAmount;
             bullet.Shoot(Position, direction);
             gameObjects.Add(bullet);
         }

@@ -7,9 +7,10 @@ namespace FinalComGame
 {
     public abstract class Projectile : GameObject
     {
-        public float DamageAmount { get; set; }
-        public float Speed { get; set; }
-        public bool CanCollideTile {get;set;}
+        public float BaseDamageAmount;
+        public float DamageAmount;
+        public float Speed;
+        public bool CanCollideTile;
         protected Vector2 StartPosition;
         public Projectile(Texture2D texture, float damage = 15f, float speed = 300f ) : base(texture)
         {

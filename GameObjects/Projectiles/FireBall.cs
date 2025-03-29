@@ -8,7 +8,6 @@ namespace FinalComGame
 {
     public class FireBall : Projectile
     {
-        public float BaseDamageAmount;
         public FireBall(Texture2D texture) : base(texture)
         {
         }
