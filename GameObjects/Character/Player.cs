@@ -757,16 +757,14 @@ namespace FinalComGame
                 {
                     if(item.Type == ItemType.MeleeWeapon)
                     {
-                        if(ItemSlot[0] != null)
-                            item.OnDrop(Position);
+                        ItemSlot[0]?.OnDrop(Position);
                         item.OnPickup(0);
                         break;
                         // You could add a pickup sound or effect here
                     }
                     else if(item.Type == ItemType.RangeWeapon)
                     {
-                        if(ItemSlot[1] != null)
-                            item.OnDrop(Position);
+                        ItemSlot[1]?.OnDrop(Position);
                         item.OnPickup(1);
                         break;
                         // You could add a pickup sound or effect here
@@ -969,8 +967,7 @@ namespace FinalComGame
             
             newBullet.Shoot(bulletPosition, direction);
 
-            //TODO : More dynamic for more range weapon
-            (ItemSlot[1] as Gun).DecreaseAmmo();
+            (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
             gameObjects.Add(newBullet);
             Animation.Reset();
         }

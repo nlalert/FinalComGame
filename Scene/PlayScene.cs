@@ -447,6 +447,7 @@ public class PlayScene : Scene
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
         Texture2D Gun = _content.Load<Texture2D>("Gun");
+        Texture2D Staff = _content.Load<Texture2D>("Staff");
         Texture2D Bunny = _content.Load<Texture2D>("Bunny");
         Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
 
@@ -459,7 +460,7 @@ public class PlayScene : Scene
             Name =  "HealthPotion",
             Viewport = new Rectangle(0, 0, 32,32)
         });
-        
+
         _gameObjects.Add(new CursedGauntlet(Gauntlet, ItemType.Accessory, "Gauntlet", TileMap.GetTileWorldPositionAt(26, 80)){
             Name =  "CursedGauntlet",
             Viewport = new Rectangle(0, 0, 32,32)
@@ -487,6 +488,11 @@ public class PlayScene : Scene
 
         _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, "Testing Gun", TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
+
+        _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, "Testing Staff", TileMap.GetTileWorldPositionAt(40, 90)){
+            Name =  "Staff",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 

@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
 {
-    public class Gun : RangeWeapon
+    public class Staff : RangeWeapon
     {
-        public Gun(Texture2D texture, ItemType type, string description, Vector2 Position, float attackDamage = 100f, int ammoAmount = 6)
+        public Staff(Texture2D texture, ItemType type, string description, Vector2 Position, float attackDamage = 100f, int ammoAmount = 15)
             : base(texture, type, description, Position, attackDamage, ammoAmount)
         {
-            //TODO : Add Gun Bullet Texture
+            //TODO : Add Staff Bullet Texture
         }
     }
 }
