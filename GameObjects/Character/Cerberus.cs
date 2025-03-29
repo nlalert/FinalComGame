@@ -7,7 +7,6 @@ namespace FinalComGame
 {
     public class Cerberus : BaseEnemy
     {
-        private int _jumpCounter = 0;       // Counts jumps before high jump
         private float _actionTimer = 0;     // Timer for aim/charge states
         private bool _isEnraged = false;    // Enrage phase flag
         public float Friction ;
@@ -258,7 +257,7 @@ namespace FinalComGame
             DrawDebug(spriteBatch);
         }
 
-        private void DrawDebug(SpriteBatch spriteBatch)
+        protected override void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             string displayText = $"State: {CurrentState}\n{Direction}\n HP {Health} \nAT:{_actionTimer}";
@@ -270,6 +269,7 @@ namespace FinalComGame
 
             }
         }
+
         private void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color)
         {
             // Calculate the length and direction of the line
@@ -284,16 +284,19 @@ namespace FinalComGame
             // Draw the line (scaled 1x1 texture)
             spriteBatch.Draw(pixel, start, null, color, (float)Math.Atan2(direction.Y, direction.X), Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
         }
+
         protected override void ApplyGravity(float deltaTime)
         {
             Velocity.Y += Singleton.GRAVITY * deltaTime * (_isEnraged ? 1.2f : 1.0f);
         }
+
         public override void OnSpawn()
         {
             _actionTimer = 3f;
             CurrentState = EnemyState.Chase;
             base.OnSpawn();
         }
+        
         private void Split(List<GameObject> gameObjects){
             if(_isSummoned)
                 return;
