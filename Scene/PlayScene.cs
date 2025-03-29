@@ -448,6 +448,7 @@ public class PlayScene : Scene
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
         Texture2D Gun = _content.Load<Texture2D>("Gun");
         Texture2D Bunny = _content.Load<Texture2D>("Bunny");
+        Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
 
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
@@ -456,6 +457,11 @@ public class PlayScene : Scene
 
         _gameObjects.Add(new SpeedBoots(Hermes_Boots, ItemType.Accessory, "Hermes_Boots", TileMap.GetTileWorldPositionAt(24, 90)){
             Name =  "HealthPotion",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
+        
+        _gameObjects.Add(new CursedGauntlet(Gauntlet, ItemType.Accessory, "Gauntlet", TileMap.GetTileWorldPositionAt(26, 80)){
+            Name =  "CursedGauntlet",
             Viewport = new Rectangle(0, 0, 32,32)
         });
         
