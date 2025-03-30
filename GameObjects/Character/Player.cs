@@ -87,6 +87,8 @@ namespace FinalComGame
 
         //SFX
         public SoundEffect JumpSound;
+        public SoundEffect DashSound;
+        public SoundEffect PunchSound;
 
         //Animation
         private Animation HandAnimation;
@@ -816,6 +818,15 @@ namespace FinalComGame
                 _attackTimer = AttackDuration;
                 _attackCooldownTimer = AttackCooldown;
 
+                if(_isFist)
+                {
+                    PunchSound.Play();
+                }
+                else
+                {
+                    (ItemSlot[0] as Sword).SlashSound.Play();
+                }
+
                 UpdateAttackHitbox();
             }
         }
@@ -857,6 +868,7 @@ namespace FinalComGame
                 Velocity.Y = 0;
                 Velocity.X = DashSpeed * Direction;
                 UseMP(DashMP);
+                DashSound.Play();
             }
         }
 

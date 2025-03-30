@@ -2,25 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
 {
     public class Explosion : GameObject
     {
+        
+        public SoundEffect ExplosionSound;
         public float Duration; // How long the explosion lasts in seconds
         public float Damage; // Damage dealt by explosion
         private float _alpha;
         private float _timer;
         private List<GameObject> _damagedObjects; // Track already damaged objects
 
-        public Explosion(Texture2D texture) : base(texture)
+        public Explosion(Texture2D texture, SoundEffect explosionSound) : base(texture)
         {
             _damagedObjects = new List<GameObject>();
 
             _timer = 0f;
             _alpha = 1.0f;
             Duration = 0.5f;
+
+            ExplosionSound = explosionSound;
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -34,8 +39,7 @@ namespace FinalComGame
         {
             _damagedObjects.Clear(); // Reset the list of damaged objects
 
-            // TODO: Play explosion sound here
-            // Singleton.Instance.SoundManager.PlaySound("explosion");
+            ExplosionSound.Play();
             
             // Shake the camera
             Singleton.Instance.Camera.ShakeScreen(0.25f, Duration / 2);

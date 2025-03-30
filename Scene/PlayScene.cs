@@ -260,6 +260,8 @@ public class PlayScene : Scene
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
     
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
+        SoundEffect playerDashSound = _content.Load<SoundEffect>("Dash");
+        SoundEffect playerPunchSound = _content.Load<SoundEffect>("PlayerPunch");
         
         Singleton.Instance.Player = new Player(playerTexture, playerParticle)
         {
@@ -314,6 +316,8 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             JumpSound = playerJumpSound,
+            DashSound = playerDashSound,
+            PunchSound = playerPunchSound,
             Bullet = new PlayerBullet(_playerTexture)
             {
                 Name = "BulletPlayer",
@@ -538,10 +542,12 @@ public class PlayScene : Scene
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
+        SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
         _gameObjects.Add(new Sword(sword, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
             Description = "Test Sword Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32,32),
+            SlashSound = SwordSlashSound,
         });
 
         _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
@@ -552,13 +558,14 @@ public class PlayScene : Scene
 
 
         SoundEffect FireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
+        SoundEffect FireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
         _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
             Description = "Test Staff Description",
             MPCost = 10,
             FireBallShootingSound = FireBallShootingSound,
 
-            FireBall = new FireBall(FireBall, ExplosionEffect)
+            FireBall = new FireBall(FireBall, ExplosionEffect, FireBallExplosionSound)
             {
                 Name = "FireBall",
                 BaseDamageAmount = 30f,

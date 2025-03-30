@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -10,6 +11,8 @@ namespace FinalComGame
         public float AttackDamage;
         private int _attackWidth;
         private int _attackHeight;
+
+        public SoundEffect SlashSound;
 
         public Sword(Texture2D texture, ItemType type, Vector2 Position, float attackDamage = 30f, int attackWidth = 32, int attackHeight = 32)
             : base(texture, Position, type)
