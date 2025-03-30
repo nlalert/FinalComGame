@@ -11,7 +11,6 @@ namespace FinalComGame;
 
 public class MainMenu : Scene
 {
-    private SpriteFont _font;
     private Button _BackButton;
     private Button _StartButton;
     private Button _ScoreBoardButton;
@@ -26,7 +25,6 @@ public class MainMenu : Scene
     {
         Console.WriteLine("Loading Content");
         _spriteBatch = spriteBatch;
-        _font = _content.Load<SpriteFont>("GameFont");
 
         SetupUI();
 
@@ -43,7 +41,6 @@ public class MainMenu : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - startButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - startButtonHeight) / 3, startButtonWidth, startButtonHeight),
             Button,
             Button,
-            _font,
             "Start Button",
             Color.Wheat
         );
@@ -55,7 +52,6 @@ public class MainMenu : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - exitButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - exitButtonHeight) * 2 / 3, exitButtonWidth, exitButtonHeight),
             Button,
             Button,
-            _font,
             "Exit Button",
             Color.Wheat
         );

@@ -12,7 +12,7 @@ namespace FinalComGame
     /// </summary>
     public class PlatformEnemy : BaseEnemy
     {
-        public PlatformEnemy(Texture2D texture, SpriteFont font): base(texture, font)
+        public PlatformEnemy(Texture2D texture): base(texture)
         {
             WalkSpeed = 30;
             Velocity = new Vector2(WalkSpeed, 0);

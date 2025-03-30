@@ -29,7 +29,7 @@ namespace FinalComGame
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
 
-        public Cerberus(Texture2D texture, Texture2D particleTexture, SpriteFont font) : base(texture, font) 
+        public Cerberus(Texture2D texture, Texture2D particleTexture) : base(texture) 
         { 
             // Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
             // Animation.AddAnimation("Chase", new Vector2(0, 0), 8);
@@ -263,7 +263,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             string displayText = $"State: {CurrentState}\n{Direction}\n HP {Health} \nAT:{_actionTimer}";
-            spriteBatch.DrawString(_DebugFont, displayText, textPosition , Color.White);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition , Color.White);
             if(CurrentState == EnemyState.Charging || CurrentState == EnemyState.Dash){
                 DrawLine(spriteBatch, _dashAim, Position, Color.Green);
                 // Draw 90-degree line at the Aim position

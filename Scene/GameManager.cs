@@ -35,6 +35,9 @@ public class GameManager : Game
 
     protected override void LoadContent()
     {
+        
+        Singleton.Instance.GameFont = Content.Load<SpriteFont>("GameFont");
+
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         _playScene = new PlayScene();

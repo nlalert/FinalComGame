@@ -9,8 +9,8 @@ namespace FinalComGame
     {
         private int _damageAbsorptionAmount;
 
-        public Barrier(Texture2D texture, ItemType type, string description, Vector2 Position, int damageAbsorptionAmount = 50)
-            : base(texture, description, Position, type)
+        public Barrier(Texture2D texture, ItemType type, Vector2 Position, int damageAbsorptionAmount = 50)
+            : base(texture, Position, type)
         {
             _damageAbsorptionAmount = damageAbsorptionAmount;
         }

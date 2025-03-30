@@ -16,7 +16,7 @@ namespace FinalComGame
         public float SlamSpeed = 1500f;
         public int JumpsBeforeHighJump = 3;   // Number of normal jumps before high jump
 
-        public GiantSlime(Texture2D texture, Texture2D particleTexture, SpriteFont font) : base(texture, font) 
+        public GiantSlime(Texture2D texture, Texture2D particleTexture) : base(texture) 
         { 
             // Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
             // Animation.AddAnimation("Chase", new Vector2(0, 0), 8);
@@ -238,8 +238,8 @@ namespace FinalComGame
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             Vector2 aim  = Singleton.Instance.Player.GetPlayerCenter() + new Vector2(-this.Rectangle.Width/2,-100);
             string displayText = $"State: {CurrentState}\nJumps: {_jumpCounter}/{JumpsBeforeHighJump}\nHP: {Health}/{MaxHealth}\nEnraged: {_isEnraged}";
-            spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
-            spriteBatch.DrawString(_DebugFont, "AIM POS", aim, Color.White);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition, Color.White);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, "AIM POS", aim, Color.White);
             
         }
 

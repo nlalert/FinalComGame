@@ -115,7 +115,6 @@ public class PauseMenu : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
-            Singleton.Instance.Debug_Font,
             "Resume Button",
             Color.Wheat
         );
@@ -125,7 +124,6 @@ public class PauseMenu : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
-            Singleton.Instance.Debug_Font,
             "_restartButton Button",
             Color.Wheat
         );
@@ -135,7 +133,6 @@ public class PauseMenu : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
-            Singleton.Instance.Debug_Font,
             "_settingsButton Button",
             Color.Wheat
         );
@@ -145,7 +142,6 @@ public class PauseMenu : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
-            Singleton.Instance.Debug_Font,
             "_mainmenuButton Button",
             Color.Wheat
         );
@@ -155,7 +151,6 @@ public class PauseMenu : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
-            Singleton.Instance.Debug_Font,
             "_backButton Button",
             Color.Wheat
         );

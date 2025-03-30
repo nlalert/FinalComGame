@@ -1155,8 +1155,8 @@ namespace FinalComGame
                 float chargePercent = (_chargeTime / MaxChargeTime) * 100;
                 displayText += $"\nCharge {chargePercent:F0}%";
             }
-            spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
-            spriteBatch.DrawString(Singleton.Instance.Debug_Font, ".", this.GetPlayerCenter(), Color.Red);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition, Color.White);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, ".", this.GetPlayerCenter(), Color.Red);
             base.DrawDebug(spriteBatch);
         }
 

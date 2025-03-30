@@ -11,9 +11,6 @@ namespace FinalComGame;
 
 public class PlayScene : Scene
 {
-    //UI
-    SpriteFont _font;
-
     List<GameObject> _gameObjects;
     int _numObject;
 
@@ -74,9 +71,6 @@ public class PlayScene : Scene
         _parallaxFGtexture = _content.Load<Texture2D>("Level_1_Parallax_fg");
         _parallaxMGtexture = _content.Load<Texture2D>("Level_1_Parallax_mg");
         _parallaxBGtexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
-
-        _font = _content.Load<SpriteFont>("GameFont");
-        Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
 
         _song = _content.Load<Song>("ChillSong");
     }
@@ -150,8 +144,8 @@ public class PlayScene : Scene
                 _spriteBatch.End();
 
                 _spriteBatch.Begin(); 
-                _spriteBatch.DrawString(_font, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
-                _spriteBatch.DrawString(_font, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
+                _spriteBatch.DrawString(Singleton.Instance.GameFont, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
+                _spriteBatch.DrawString(Singleton.Instance.GameFont, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
         }
@@ -359,39 +353,40 @@ public class PlayScene : Scene
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
-            // {
-            //     97,         
-            //     new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
-            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = new Rectangle(0, 0, 16, 16),
-            //         MaxHealth = 50f,
-            //         BaseAttackDamage = 3f,
+            {
+                97,         
+                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 16, 16),
+                    MaxHealth = 50f,
+                    BaseAttackDamage = 3f,
 
-            //         JumpCooldown = 3.0f,
-            //         BaseJumpStrength = 550,
-            //         Friction = 0.96f
-            //     }
-            // },
-            //             {
-            //     98,         
-            //     new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
-            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = new Rectangle(0, 0, 64, 32),
-                    
-            //         MaxHealth = 1f,
-            //         BaseAttackDamage = 8f,
+                    JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f
+                }
+            },
 
-            //         LimitIdlePatrol = 100,
+            {
+                98,
+                new HellhoundEnemy(_DogTexture){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 64, 32),
                     
-            //         ChargeTime = 2.0f,
-            //         ChaseDuration = 5f,
-            //         DashDuration = 1.0f,
-            //     }
-            // },
+                    MaxHealth = 1f,
+                    BaseAttackDamage = 8f,
+
+                    LimitIdlePatrol = 100,
+                    
+                    ChargeTime = 2.0f,
+                    ChaseDuration = 5f,
+                    DashDuration = 1.0f,
+                }
+            },
 
             {
                 99,         
-                new SkeletonEnemy(_enemyTexture,_font){
+                new SkeletonEnemy(_enemyTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 32),
 
@@ -406,7 +401,7 @@ public class PlayScene : Scene
             
             {
                 119,
-                new DemonEnemy(_DemonTexture,_font){
+                new DemonEnemy(_DemonTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
 
@@ -424,7 +419,7 @@ public class PlayScene : Scene
             
             {
                 118,
-                new TowerEnemy(_DemonTexture,_font){
+                new TowerEnemy(_DemonTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 32),
 
@@ -442,7 +437,7 @@ public class PlayScene : Scene
             
             {
                 117,
-                new PlatformEnemy(_PlatformTexture,_font){
+                new PlatformEnemy(_PlatformTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
 
@@ -452,7 +447,7 @@ public class PlayScene : Scene
             //DONOT REMOVE This. just add new number please cuz Feen's dont know where and what to assign this number
             // {
             //     97,         
-            //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+            //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 48),
 
@@ -466,7 +461,7 @@ public class PlayScene : Scene
             // },
             // {
             //     97,         
-            //     new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+            //     new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 48),
 
@@ -480,7 +475,7 @@ public class PlayScene : Scene
             // },
             {
                 97,         
-                new Rhulk(_RhulkTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+                new Rhulk(_RhulkTexture, new Texture2D(_graphicsDevice, 1, 1), Singleton.Instance.GameFont){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 22, 64),
 
@@ -517,48 +512,63 @@ public class PlayScene : Scene
         Texture2D FireBall = _content.Load<Texture2D>("FireBall");
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
-        _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
+        // Create a pixel texture for the background
+        Texture2D TooltipBackgroundTexture = new Texture2D(_graphicsDevice, 1, 1);
+        TooltipBackgroundTexture.SetData(new[] { Color.White });
+        //set for all item
+        Item.TooltipBackgroundTexture = TooltipBackgroundTexture;
+
+        _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
+            Description = "Test Barrier Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new SpeedBoots(Hermes_Boots, ItemType.Accessory, "Hermes_Boots", TileMap.GetTileWorldPositionAt(24, 90)){
+        _gameObjects.Add(new SpeedBoots(Hermes_Boots, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
             Name =  "HealthPotion",
+            Description = "Test SpeedBoots Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new CursedGauntlet(Gauntlet, ItemType.Accessory, "Gauntlet", TileMap.GetTileWorldPositionAt(26, 80)){
+        _gameObjects.Add(new CursedGauntlet(Gauntlet, ItemType.Accessory, TileMap.GetTileWorldPositionAt(26, 80)){
             Name =  "CursedGauntlet",
+            Description = "Test CursedGauntlet Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
         
-        _gameObjects.Add(new Potion(HealthPotionTemp, ItemType.Consumable, "Testing Potion", TileMap.GetTileWorldPositionAt(12, 90)){
+        _gameObjects.Add(new Potion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
             Name =  "HealthPotion",
+            Description = "Test HealthPotion Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, "Testing Speed Potion", TileMap.GetTileWorldPositionAt(31, 90)){
+        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
             Name =  "SpeedPotion",
+            Description = "Test SpeedPotion Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
         
-        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 90)){
+        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "1Up",
+            Description = "Test LifeUp Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Sword(sword, ItemType.MeleeWeapon, "Testing Sword", TileMap.GetTileWorldPositionAt(4, 90)){
+        _gameObjects.Add(new Sword(sword, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
+            Description = "Test Sword Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, "Testing Gun", TileMap.GetTileWorldPositionAt(8, 90)){
+        _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
+            Description = "Test Gun Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, "Testing Staff", TileMap.GetTileWorldPositionAt(40, 90)){
+        _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
+            Description = "Test Staff Description",
             MPCost = 10,
 
             FireBall = new FireBall(FireBall, ExplosionEffect)
@@ -573,8 +583,9 @@ public class PlayScene : Scene
             Viewport = new Rectangle(0, 0, 32,32),
         });
 
-        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, "Testing jumppotion", TileMap.GetTileWorldPositionAt(35, 90)){
+        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
             Name =  "jumppotion",
+            Description = "Test JumpPotion Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
     }
@@ -599,30 +610,26 @@ public class PlayScene : Scene
             0, // first slot
             new Rectangle(250, 30, 50, 50),
             slot,
-            slot,
-            _font
+            slot
         );
 
         ItemSlot RangeWeaponSlot = new ItemSlot(
             1, // first slot
             new Rectangle(350, 30, 50, 50),
             slot,
-            slot,
-            _font
+            slot
         );
         ItemSlot ItemSlot1 = new ItemSlot(
             2, // first slot
             new Rectangle(550, 30, 50, 50),
             slot,
-            slot,
-            _font
+            slot
         );
         ItemSlot ItemSlot2 = new ItemSlot(
             3, //second slot
             new Rectangle(650, 30, 50, 50),
             slot,
-            slot,
-            _font
+            slot
         );
 
         _ui.AddElement(playerHealth);

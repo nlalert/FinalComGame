@@ -9,8 +9,8 @@ namespace FinalComGame
     {
         private int _healAmount;
 
-        public Potion(Texture2D texture, ItemType type, string description, Vector2 Position, int healAmount = 30)
-            : base(texture, description, Position, type)
+        public Potion(Texture2D texture, ItemType type, Vector2 Position, int healAmount = 30)
+            : base(texture, Position, type)
         {
             this._healAmount = healAmount;
         }

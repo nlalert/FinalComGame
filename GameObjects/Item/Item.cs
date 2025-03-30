@@ -7,6 +7,7 @@ namespace FinalComGame
 {
     public class Item : GameObject
     {
+        public static Texture2D TooltipBackgroundTexture;
         // Item properties
         public string Description;
         public bool IsPickedUp;
@@ -18,16 +19,23 @@ namespace FinalComGame
 
         protected Vector2 originalPosition;
         
+        // Tooltip related properties
+        private bool isPlayerNearby = false;
+        private ItemTooltip tooltip;
+        private const float TOOLTIP_FADE_SPEED = 5f; // Fade speed per second
+        
         // Constructor
-        public Item(Texture2D texture, string description, Vector2 Position, ItemType type)
+        public Item(Texture2D texture, Vector2 Position, ItemType type)
             : base(texture)
         {
-            Description = description;
             IsPickedUp = false;
             Type = type;
 
             this.Position = Position;
             originalPosition = Position;
+            
+            // Create tooltip
+            tooltip = new ItemTooltip(this, TooltipBackgroundTexture);
         }
         
         // // Method to be overridden by specific item types
@@ -65,6 +73,23 @@ namespace FinalComGame
             ApplyGravity(deltaTime);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             
+            // Check if player is in pickup radius
+            bool wasPlayerNearby = isPlayerNearby;
+            isPlayerNearby = InPickupRadius();
+            
+            // // Update tooltip fade
+            // if (isPlayerNearby)
+            // {
+            //     tooltipFadeIn = Math.Min(1f, tooltipFadeIn + TOOLTIP_FADE_SPEED * deltaTime);
+            // }
+            // else
+            // {
+            //     tooltipFadeIn = Math.Max(0f, tooltipFadeIn - TOOLTIP_FADE_SPEED * deltaTime);
+            // }
+            
+            // Update tooltip
+            tooltip.Update(gameTime);
+            
             base.Update(gameTime, gameObjects, tileMap);
         }
         
@@ -83,36 +108,10 @@ namespace FinalComGame
                     SpriteEffects.None, 
                     0f
                 );
+
+                if(InPickupRadius())
+                    tooltip.Draw(spriteBatch); 
             }
-
-
-
-            // // Draw pickup range indicator when player is nearby
-            // if (isInRange)
-            // {
-            //     // Draw a circle around the item to indicate it can be picked up
-            //     // This is a simplified approach - you might want to use a proper circle texture
-            //     Texture2D rangeIndicator = Singleton.Instance.Content.Load<Texture2D>("rangeIndicator");
-            //     spriteBatch.Draw(
-            //         rangeIndicator,
-            //         new Rectangle(
-            //             (int)(Position.X + Rectangle.Width / 2 - pickupRadius),
-            //             (int)(Position.Y + Rectangle.Height / 2 - pickupRadius),
-            //             (int)(pickupRadius * 2),
-            //             (int)(pickupRadius * 2)
-            //         ),
-            //         rangeIndicatorColor
-            //     );
-                
-            //     // Draw item name above
-            //     Singleton.Instance.DrawText(
-            //         spriteBatch,
-            //         ItemName,
-            //         new Vector2(Position.X + Rectangle.Width / 2, Position.Y - 20),
-            //         Color.White,
-            //         true
-            //     );
-            // }
         }
 
         // Add this method to the Item class
