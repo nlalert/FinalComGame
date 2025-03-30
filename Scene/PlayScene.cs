@@ -525,10 +525,12 @@ public class PlayScene : Scene
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
+        SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
         _gameObjects.Add(new Sword(sword, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
             Description = "Test Sword Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32,32),
+            SlashSound = SwordSlashSound,
         });
 
         _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){

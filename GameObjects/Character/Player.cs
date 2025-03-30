@@ -822,6 +822,10 @@ namespace FinalComGame
                 {
                     PunchSound.Play();
                 }
+                else
+                {
+                    (ItemSlot[0] as Sword).SlashSound.Play();
+                }
 
                 UpdateAttackHitbox();
             }

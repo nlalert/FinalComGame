@@ -548,6 +548,12 @@
 /processorParam:TextureFormat=Color
 /build:sword.png
 
+#begin SwordSlash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SwordSlash.wav
+
 #begin Tile32.png
 /importer:TextureImporter
 /processor:TextureProcessor
