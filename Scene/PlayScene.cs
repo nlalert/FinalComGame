@@ -11,9 +11,6 @@ namespace FinalComGame;
 
 public class PlayScene : Scene
 {
-    //UI
-    SpriteFont _font;
-
     List<GameObject> _gameObjects;
     int _numObject;
 
@@ -55,9 +52,6 @@ public class PlayScene : Scene
         _parallaxFGtexture = _content.Load<Texture2D>("Level_1_Parallax_fg");
         _parallaxMGtexture = _content.Load<Texture2D>("Level_1_Parallax_mg");
         _parallaxBGtexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
-
-        _font = _content.Load<SpriteFont>("GameFont");
-        Singleton.Instance.Debug_Font = _content.Load<SpriteFont>("GameFont");
 
         _song = _content.Load<Song>("ChillSong");
     }
@@ -131,8 +125,8 @@ public class PlayScene : Scene
                 _spriteBatch.End();
 
                 _spriteBatch.Begin(); 
-                _spriteBatch.DrawString(_font, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
-                _spriteBatch.DrawString(_font, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
+                _spriteBatch.DrawString(Singleton.Instance.GameFont, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
+                _spriteBatch.DrawString(Singleton.Instance.GameFont, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
         }
@@ -342,7 +336,7 @@ public class PlayScene : Scene
         {
             {
                 97,         
-                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
                     MaxHealth = 50f,
@@ -356,7 +350,7 @@ public class PlayScene : Scene
 
             {
                 98,
-                new HellhoundEnemy(_DogTexture,_font){
+                new HellhoundEnemy(_DogTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
                     
@@ -373,7 +367,7 @@ public class PlayScene : Scene
 
             {
                 99,         
-                new SkeletonEnemy(_enemyTexture,_font){
+                new SkeletonEnemy(_enemyTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 32),
 
@@ -388,7 +382,7 @@ public class PlayScene : Scene
             
             {
                 119,
-                new DemonEnemy(_DemonTexture,_font){
+                new DemonEnemy(_DemonTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
 
@@ -406,7 +400,7 @@ public class PlayScene : Scene
             
             {
                 118,
-                new TowerEnemy(_DemonTexture,_font){
+                new TowerEnemy(_DemonTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 32),
 
@@ -424,7 +418,7 @@ public class PlayScene : Scene
             
             {
                 117,
-                new PlatformEnemy(_PlatformTexture,_font){
+                new PlatformEnemy(_PlatformTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
 
@@ -435,7 +429,7 @@ public class PlayScene : Scene
             //DONOT REMOVE This just add new number please cuz Feen's dont know where and what to assign this number
             // {
             //     97,         
-            //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+            //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 48),
 
@@ -449,7 +443,7 @@ public class PlayScene : Scene
             // },
             // {
             //     97,         
-            //     new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+            //     new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 48),
 
@@ -584,30 +578,26 @@ public class PlayScene : Scene
             0, // first slot
             new Rectangle(250, 30, 50, 50),
             slot,
-            slot,
-            _font
+            slot
         );
 
         ItemSlot RangeWeaponSlot = new ItemSlot(
             1, // first slot
             new Rectangle(350, 30, 50, 50),
             slot,
-            slot,
-            _font
+            slot
         );
         ItemSlot ItemSlot1 = new ItemSlot(
             2, // first slot
             new Rectangle(550, 30, 50, 50),
             slot,
-            slot,
-            _font
+            slot
         );
         ItemSlot ItemSlot2 = new ItemSlot(
             3, //second slot
             new Rectangle(650, 30, 50, 50),
             slot,
-            slot,
-            _font
+            slot
         );
 
         _ui.AddElement(playerHealth);

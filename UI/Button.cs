@@ -7,7 +7,6 @@ namespace FinalComGame
 {
     public class Button : UIElement
     {
-        private SpriteFont font;
         private Texture2D texture;
         private Texture2D hoverTexture;
         private string text;
@@ -17,17 +16,15 @@ namespace FinalComGame
         public event EventHandler OnClick;
         private bool wasPressed = false;
         
-        public Button(Rectangle bounds, Texture2D texture, Texture2D hoverTexture, 
-                    SpriteFont font, string text, Color textColor) : base(bounds)
+        public Button(Rectangle bounds, Texture2D texture, Texture2D hoverTexture, string text, Color textColor) : base(bounds)
         {
             this.texture = texture;
             this.hoverTexture = hoverTexture;
-            this.font = font;
             this.text = text;
             this.textColor = textColor;
             
             // Center text
-            Vector2 textSize = font.MeasureString(text);
+            Vector2 textSize = Singleton.Instance.GameFont.MeasureString(text);
             textPosition = new Vector2(
                 bounds.X + (bounds.Width - textSize.X) / 2,
                 bounds.Y + (bounds.Height - textSize.Y) / 2
@@ -52,7 +49,7 @@ namespace FinalComGame
         {
             Texture2D currentTexture = isHovered ? hoverTexture : texture;
             spriteBatch.Draw(currentTexture, bounds, Color.White);
-            spriteBatch.DrawString(font, text, textPosition, textColor);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, text, textPosition, textColor);
         }
     }
 }

@@ -73,7 +73,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string displayText = $"Damage {DamageAmount}\n Speed {Speed} ";
-            spriteBatch.DrawString(Singleton.Instance.Debug_Font, displayText, textPosition, Color.White);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition, Color.White);
         }
         /// <summary>
         /// Modify Projectiles data onhit enemy 

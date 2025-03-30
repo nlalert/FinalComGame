@@ -37,7 +37,7 @@ class Singleton
 
     public KeyboardState PreviousKey, CurrentKey;
     public MouseState PreviousMouseState, CurrentMouseState;
-    public SpriteFont Debug_Font;
+    public SpriteFont GameFont;
     private static Singleton instance;
 
     private Singleton() { 

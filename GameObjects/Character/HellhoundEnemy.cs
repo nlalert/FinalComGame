@@ -19,7 +19,7 @@ namespace FinalComGame
         public float DashDuration;
 
 
-        public HellhoundEnemy(Texture2D texture, SpriteFont font) : base(texture, font) { }
+        public HellhoundEnemy(Texture2D texture) : base(texture) { }
         public override void Reset()
         {
             //Console.WriteLine("Reset Hellhound");
@@ -84,7 +84,7 @@ namespace FinalComGame
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";
             string displayText = $"State {CurrentState}\n Charge timer {_chargeTimer} ";
-            spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition, Color.White);
         }
         private void AI_IdlePatrol(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {

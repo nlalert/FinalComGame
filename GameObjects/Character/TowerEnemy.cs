@@ -12,8 +12,8 @@ namespace FinalComGame
 
         public TowerBullet TowerBullet;
 
-        public TowerEnemy(Texture2D texture, SpriteFont font) 
-            : base(texture, font)
+        public TowerEnemy(Texture2D texture) 
+            : base(texture)
         {
             DetectionRange = 900f;
             AttackRange = 900f;
@@ -90,7 +90,7 @@ namespace FinalComGame
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";
             string displayText = $"State {CurrentState}\n ";
-            spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition, Color.White);
         }
     }
 }

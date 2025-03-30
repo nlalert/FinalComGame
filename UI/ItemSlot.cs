@@ -11,18 +11,16 @@ namespace FinalComGame
         private Item item;
         private Texture2D slotTexture;
         private Texture2D highlightTexture;
-        private SpriteFont font;
         private bool isSelected;
         private float scale;
         private Vector2 itemOffset;
 
-        public ItemSlot(int slotNumber, Rectangle bounds, Texture2D slotTexture, Texture2D highlightTexture, SpriteFont font, float scale = 0.8f) 
+        public ItemSlot(int slotNumber, Rectangle bounds, Texture2D slotTexture, Texture2D highlightTexture, float scale = 0.8f) 
             : base(bounds)
         {
             this.slotNumber = slotNumber;
             this.slotTexture = slotTexture;
             this.highlightTexture = highlightTexture;
-            this.font = font;
             this.scale = scale;
             this.isSelected = false;
 
