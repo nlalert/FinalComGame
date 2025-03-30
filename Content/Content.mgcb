@@ -49,30 +49,6 @@
 /processorParam:TextureFormat=Color
 /build:Bunny.png
 
-#begin Items.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Items.png
-
-#begin Sword.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sword.png
-
 #begin Cerberus.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -247,6 +223,18 @@
 /processorParam:TextureFormat=Color
 /build:EnemyRed.png
 
+#begin EnemyRhulk.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:EnemyRhulk.png
+
 #begin EnemySlime.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -415,6 +403,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Hermes_Boots.png
+
+#begin Items.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Items.png
 
 #begin ItemSlot.png
 /importer:TextureImporter

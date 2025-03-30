@@ -28,6 +28,7 @@ public class PlayScene : Scene
     private Texture2D _PlatformTexture;
     private Texture2D _GiantSlimeTexture;
     private Texture2D _CerberusTexture;
+    private Texture2D _RhulkTexture;
 
 
     private Texture2D _parallaxFGtexture;
@@ -68,6 +69,8 @@ public class PlayScene : Scene
         _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
         _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
         _CerberusTexture = _content.Load<Texture2D>("Cerberus");
+        _RhulkTexture = _content.Load<Texture2D>("EnemyRhulk");
+
 
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
@@ -349,19 +352,19 @@ public class PlayScene : Scene
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
-            {
-                97,         
-                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 16, 16),
-                    MaxHealth = 50f,
-                    BaseAttackDamage = 3f,
+            // {
+            //     97,         
+            //     new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            //         Viewport = new Rectangle(0, 0, 16, 16),
+            //         MaxHealth = 50f,
+            //         BaseAttackDamage = 3f,
 
-                    JumpCooldown = 3.0f,
-                    BaseJumpStrength = 550,
-                    Friction = 0.96f
-                }
-            },
+            //         JumpCooldown = 3.0f,
+            //         BaseJumpStrength = 550,
+            //         Friction = 0.96f
+            //     }
+            // },
                         {
                 98,         
                 new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
@@ -448,7 +451,7 @@ public class PlayScene : Scene
                     MaxHealth = float.MaxValue,
                 }
             },
-            //DONOT REMOVE This just add new number please cuz Feen's dont know where and what to assign this number
+            //DONOT REMOVE This. just add new number please cuz Feen's dont know where and what to assign this number
             // {
             //     97,         
             //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
@@ -477,6 +480,20 @@ public class PlayScene : Scene
             //         Friction = 0.96f
             //     }
             // },
+            {
+                97,         
+                new Rhulk(_RhulkTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 22, 64),
+
+                    MaxHealth = 100f,
+                    BaseAttackDamage = 3f,
+
+                    // JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f
+                }
+            },
         };
     }
 
