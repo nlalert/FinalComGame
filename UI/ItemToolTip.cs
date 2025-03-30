@@ -19,9 +19,6 @@ public class ItemTooltip : UIElement
         this.font = Singleton.Instance.Debug_Font;
 
         this.backgroundTexture = backgroundTexture;
-
-        // Calculate bounds based on text size
-        UpdateBounds();
     }
     
     private void UpdateBounds()
