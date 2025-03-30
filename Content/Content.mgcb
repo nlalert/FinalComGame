@@ -283,6 +283,12 @@
 /processorParam:TextureFormat=Color
 /build:FireBall.jpg
 
+#begin FireballExplosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:FireballExplosion.wav
+
 #begin FireballShooting.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
