@@ -340,7 +340,7 @@ public class PlayScene : Scene
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
             {
-                979999,         
+                97,         
                 new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
@@ -384,7 +384,32 @@ public class PlayScene : Scene
                     IgnorePlayerDuration = 3f,
                 }
             },
-            
+            {
+                117,
+                new PlatformEnemy(_PlatformTexture){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 64, 32),
+
+                    MaxHealth = float.MaxValue,
+                }
+            },
+            {
+                118,
+                new TowerEnemy(_TowerTexture){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 16, 16),
+
+                    MaxHealth = 100f,
+
+                    TowerBullet = new TowerBullet(_DemonBulletTexture)
+                    {
+                        Name = "BulletEnemy",
+                        BaseDamageAmount = 20f,
+                        Speed = 250f,
+                        Viewport = new Rectangle(0, 0, 32, 32)
+                    }
+                }
+            },
             {
                 119,
                 new DemonEnemy(_DemonTexture){
@@ -402,63 +427,38 @@ public class PlayScene : Scene
                     }
                 }
             },
-            
             {
-                97,
-                new TowerEnemy(_TowerTexture){
+                137,         
+                new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 16, 16),
+                    Viewport = new Rectangle(0, 0, 64, 48),
+
+                    MaxHealth = 1f,
+                    BaseAttackDamage = 3f,
+
+                    // JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f
+                }
+            },
+            {
+                138,         
+                new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 64, 48),
 
                     MaxHealth = 100f,
+                    BaseAttackDamage = 3f,
 
-                    TowerBullet = new TowerBullet(_DemonBulletTexture)
-                    {
-                        Name = "BulletEnemy",
-                        BaseDamageAmount = 20f,
-                        Speed = 250f,
-                        Viewport = new Rectangle(0, 0, 32, 32)
-                    }
+                    // JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f
                 }
             },
-            
-            {
-                117,
-                new PlatformEnemy(_PlatformTexture){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 32),
-
-                    MaxHealth = float.MaxValue,
-                }
-            },
-
-            //DONOT REMOVE This just add new number please cuz Feen's dont know where and what to assign this number
             // {
-            //     97,         
-            //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
-            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = new Rectangle(0, 0, 64, 48),
-
-            //         MaxHealth = 1f,
-            //         BaseAttackDamage = 3f,
-
-            //         // JumpCooldown = 3.0f,
-            //         BaseJumpStrength = 550,
-            //         Friction = 0.96f
-            //     }
-            // },
-            // {
-            //     97,         
-            //     new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
-            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = new Rectangle(0, 0, 64, 48),
-
-            //         MaxHealth = 100f,
-            //         BaseAttackDamage = 3f,
-
-            //         // JumpCooldown = 3.0f,
-            //         BaseJumpStrength = 550,
-            //         Friction = 0.96f
-            //     }
+            //     199,         
+            //     new ตัว Final Boss{
+            //      }
             // },
         };
 
@@ -466,9 +466,21 @@ public class PlayScene : Scene
 
     private void SpawnEnemies()
     {
-        // FOR ONLY SPAWNING Enemy in stage that always in stage (not ambush)
-
-        // _enemyPlatform.Spawn(Singleton.Instance.Player.Position, _gameObjects);
+        foreach (var enemySpawnPoint in _collisionTileMap.GetEnemySpawnPoints())
+        {
+            bool isEnemyPositionInAmbushArea = false;
+            foreach (AmbushArea ambushArea in ambushAreas)
+            {
+                if(ambushArea.IsEnemyPositionInAmbushArea(enemySpawnPoint.Key))
+                {
+                    isEnemyPositionInAmbushArea = true;
+                    break;
+                }
+            }
+            if(!isEnemyPositionInAmbushArea)
+                _enemyPrefabs[enemySpawnPoint.Value].Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+            
+        }
     }
 
     private void AddItems()
