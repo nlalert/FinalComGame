@@ -12,7 +12,13 @@ namespace FinalComGame
         public float Friction;
 
         public SlimeEnemy(Texture2D texture, Texture2D particleTexture) : base(texture) { 
-            Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
+            _texture = texture;
+            CanCollideTile = true;
+        }
+
+        public override void AddAnimation()
+        {
+            Animation = new Animation(_texture, 48, 48, new Vector2(48*8 , 48*6), 12);
 
             Animation.AddAnimation("idle", new Vector2(0, 0), 8);
             Animation.AddAnimation("charge", new Vector2(0, 1), 6);
@@ -22,8 +28,6 @@ namespace FinalComGame
             Animation.AddAnimation("die", new Vector2(0, 5), 7);
 
             Animation.ChangeAnimation(_currentAnimation);
-
-            CanCollideTile = true;
         }
 
         public override void Reset()
