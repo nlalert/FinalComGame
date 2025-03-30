@@ -533,10 +533,13 @@ public class PlayScene : Scene
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
+
+        SoundEffect FireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
         _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
             Description = "Test Staff Description",
             MPCost = 10,
+            FireBallShootingSound = FireBallShootingSound,
 
             FireBall = new FireBall(FireBall, ExplosionEffect)
             {
