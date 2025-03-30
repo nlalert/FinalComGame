@@ -490,16 +490,16 @@ public class PlayScene : Scene
     private void AddItems()
     {
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
-        Texture2D sword = _content.Load<Texture2D>("sword");
+        Texture2D sword = _content.Load<Texture2D>("Sword");
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
-        Texture2D Gun = _content.Load<Texture2D>("Gun");
+        Texture2D Gun = _content.Load<Texture2D>("Items");
         Texture2D Staff = _content.Load<Texture2D>("Staff");
         Texture2D Bunny = _content.Load<Texture2D>("Bunny");
         Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
         Texture2D FireBall = _content.Load<Texture2D>("FireBall");
-        Texture2D ExplosionEffect = _content.Load<Texture2D>("ExplosionEffect");
+        Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",

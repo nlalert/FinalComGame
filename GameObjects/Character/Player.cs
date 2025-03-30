@@ -246,12 +246,10 @@ namespace FinalComGame
 
         private void RegenerateMP(float deltaTime)
         {
-            if(!_isDashing && !_isGliding && !_isCharging)
+            if(_MPRegenTime < MPRegenCooldown)
                 _MPRegenTime += deltaTime;
-            else
-                _MPRegenTime = 0;
 
-            if(_MPRegenTime >= MPRegenCooldown){
+            else if(_MPRegenTime >= MPRegenCooldown){
                 _MPRegenTime = MPRegenCooldown;
                 MP += MPRegenRate * deltaTime;
             }
@@ -577,8 +575,15 @@ namespace FinalComGame
                     StartCharging();
                 }
                 else{
-                    _isUsingWeapon = true;
-                    Shoot(gameObjects);
+                    if ((ItemSlot[1] is Staff && MP >= 0) || ItemSlot[1] is Gun)
+                    {
+                        _isUsingWeapon = true;
+                        Shoot(gameObjects);
+                    }
+                    else
+                    {
+                        _isUsingWeapon = false;
+                    }
                 }
             }
             else if (Singleton.Instance.IsKeyPressed(Fire) && !_isClimbing && !_isAttacking)
@@ -973,12 +978,16 @@ namespace FinalComGame
 
             if(ItemSlot[1] is Staff)
             {
+                UseMP(0);
                 newBullet = (ItemSlot[1] as Staff).FireBall.Clone() as FireBall;
                 direction = new Vector2(Direction , (float) Math.Sin(MathHelper.ToRadians(-45)));
                 newBullet.DamageAmount = (newBullet as FireBall).BaseDamageAmount;
+                (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
             }
             else
             {
+                if(ItemSlot[1] is Gun)
+                    (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
                 direction = new Vector2(Direction, 0);
                 newBullet = Bullet.Clone() as PlayerBullet;
                 newBullet.DamageAmount = Bullet.DamageAmount; // Increase damage
@@ -989,7 +998,6 @@ namespace FinalComGame
             
             newBullet.Shoot(bulletPosition, direction);
 
-            (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
             gameObjects.Add(newBullet);
             Animation.Reset();
         }
@@ -1177,6 +1185,7 @@ namespace FinalComGame
 
         private void UseMP(float MPAmount)
         {
+            _MPRegenTime = 0;
             MP -= MPAmount;
             ClampMP();
         }
@@ -1184,6 +1193,7 @@ namespace FinalComGame
         private void DrainMP(float MPAmount, float deltaTime)
         {
             // Consume MP while gliding
+            _MPRegenTime = 0;
             MP -= MPAmount * deltaTime;
             ClampMP();
         }

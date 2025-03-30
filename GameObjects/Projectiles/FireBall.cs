@@ -9,11 +9,13 @@ namespace FinalComGame
     public class FireBall : Projectile
     {
         public Explosion BaseExplosion;
+        
         public float ExplosionDuration;
         public FireBall(Texture2D texture, Texture2D explosionTexture) : base(texture)
         {
             CanCollideTile = true;
             BaseExplosion = new Explosion(explosionTexture);
+
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
