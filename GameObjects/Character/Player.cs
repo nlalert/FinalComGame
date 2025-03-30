@@ -581,6 +581,14 @@ namespace FinalComGame
                 ReleaseChargedShot(gameObjects);
             }
 
+            if (Singleton.Instance.IsKeyJustPressed(Dash)){
+                if(_isClimbing){
+                    Direction *= -1;
+                    _isClimbing = false;
+                }
+                StartDash();
+            }
+
             if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && _coyoteTimeCounter > 0)
             {
 
@@ -679,14 +687,6 @@ namespace FinalComGame
                 if (_overlappedTile == TileType.None)
                     _isClimbing = false;
 
-            }
-
-            if (Singleton.Instance.IsKeyJustPressed(Dash)){
-                if(_isClimbing){
-                    Direction *= -1;
-                    _isClimbing = false;
-                }
-                StartDash();
             }
             
             if (Singleton.Instance.IsKeyJustPressed(Interact))
