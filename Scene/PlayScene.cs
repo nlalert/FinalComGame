@@ -296,7 +296,7 @@ public class PlayScene : Scene
             AttackDuration = 0.4f, // How long the attack lasts
             AttackCooldown = 0.2f,
 
-            AttackWidth = 20, 
+            AttackWidth = 24, 
             AttackHeight = 32,
 
             BaseJumpStrength = 600f,
@@ -490,16 +490,16 @@ public class PlayScene : Scene
     private void AddItems()
     {
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
-        Texture2D sword = _content.Load<Texture2D>("sword");
+        Texture2D sword = _content.Load<Texture2D>("Sword");
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
         Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
         Texture2D LifeUP = _content.Load<Texture2D>("1Up");
-        Texture2D Gun = _content.Load<Texture2D>("Gun");
+        Texture2D Gun = _content.Load<Texture2D>("Items");
         Texture2D Staff = _content.Load<Texture2D>("Staff");
         Texture2D Bunny = _content.Load<Texture2D>("Bunny");
         Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
         Texture2D FireBall = _content.Load<Texture2D>("FireBall");
-        Texture2D ExplosionEffect = _content.Load<Texture2D>("ExplosionEffect");
+        Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
@@ -543,7 +543,8 @@ public class PlayScene : Scene
 
         _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, "Testing Staff", TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
-            Viewport = new Rectangle(0, 0, 32,32),
+            MPCost = 10,
+
             FireBall = new FireBall(FireBall, ExplosionEffect)
             {
                 Name = "FireBall",
@@ -553,6 +554,7 @@ public class PlayScene : Scene
                 ExplosionDuration = 0.5f,
                 Viewport = new Rectangle(0, 0, 8, 8)
             },
+            Viewport = new Rectangle(0, 0, 32,32),
         });
 
         _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, "Testing jumppotion", TileMap.GetTileWorldPositionAt(35, 90)){

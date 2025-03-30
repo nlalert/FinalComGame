@@ -153,6 +153,9 @@ namespace FinalComGame
             HandAnimation.AddAnimation("fire_1", new Vector2(0,14), 8);
             HandAnimation.AddAnimation("fire_2", new Vector2(0,15), 8);
 
+            HandAnimation.AddAnimation("gun_1", new Vector2(0,16), 8);
+            HandAnimation.AddAnimation("gun_2", new Vector2(8,16), 8);
+
             HandAnimation.ChangeAnimation(_currentHandAnimation);
 
             paticleTexture.SetData([new Color(193, 255, 219)]);
@@ -243,12 +246,10 @@ namespace FinalComGame
 
         private void RegenerateMP(float deltaTime)
         {
-            if(!_isDashing && !_isGliding && !_isCharging)
+            if(_MPRegenTime < MPRegenCooldown)
                 _MPRegenTime += deltaTime;
-            else
-                _MPRegenTime = 0;
 
-            if(_MPRegenTime >= MPRegenCooldown){
+            else if(_MPRegenTime >= MPRegenCooldown){
                 _MPRegenTime = MPRegenCooldown;
                 MP += MPRegenRate * deltaTime;
             }
@@ -309,7 +310,7 @@ namespace FinalComGame
                 );
             }
 
-            DrawDebug(spriteBatch);
+            //DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
@@ -451,7 +452,10 @@ namespace FinalComGame
 
             else if (_isGliding && !_isJumping)
             {
-                if (_lastChargeTime != 0 || (Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon))
+                if(Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon)
+                    handAnimation = "gun_2";
+                    
+                else if (_lastChargeTime != 0)
                 {
                     handAnimation = "fire_1";
                     _lastChargeTime = 0;
@@ -467,9 +471,12 @@ namespace FinalComGame
 
             else
             {
-                if (_lastChargeTime != 0 || (Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon))
+                if(Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon)
+                    handAnimation = "gun_1";
+
+                else if (_lastChargeTime != 0)
                 {
-                    if (_lastChargeTime >= MaxChargeTime/2 || (Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon))
+                    if (_lastChargeTime >= MaxChargeTime/2)
                         handAnimation = "fire_2";
 
                     else
@@ -499,6 +506,8 @@ namespace FinalComGame
                         break;
                     case "fire_1" :
                     case "fire_2" :
+                    case "gun_1" :
+                    case "gun_2" :
                         HandAnimation.ChangeTransitionAnimation(_currentHandAnimation, "idle");
                         _currentHandAnimation = "idle";
                         break;
@@ -566,8 +575,15 @@ namespace FinalComGame
                     StartCharging();
                 }
                 else{
-                    _isUsingWeapon = true;
-                    Shoot(gameObjects);
+                    if ((ItemSlot[1] is Staff && MP >= 0) || ItemSlot[1] is Gun)
+                    {
+                        _isUsingWeapon = true;
+                        Shoot(gameObjects);
+                    }
+                    else
+                    {
+                        _isUsingWeapon = false;
+                    }
                 }
             }
             else if (Singleton.Instance.IsKeyPressed(Fire) && !_isClimbing && !_isAttacking)
@@ -962,6 +978,7 @@ namespace FinalComGame
 
             if(ItemSlot[1] is Staff)
             {
+                UseMP((ItemSlot[1] as Staff).MPCost);
                 newBullet = (ItemSlot[1] as Staff).FireBall.Clone() as FireBall;
                 direction = new Vector2(Direction , (float) Math.Sin(MathHelper.ToRadians(-45)));
                 newBullet.DamageAmount = (newBullet as FireBall).BaseDamageAmount;
@@ -976,9 +993,9 @@ namespace FinalComGame
             Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 2) : new Vector2(0, 10); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
             
+            (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
             newBullet.Shoot(bulletPosition, direction);
 
-            (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
             gameObjects.Add(newBullet);
             Animation.Reset();
         }
@@ -1166,6 +1183,7 @@ namespace FinalComGame
 
         private void UseMP(float MPAmount)
         {
+            _MPRegenTime = 0;
             MP -= MPAmount;
             ClampMP();
         }
@@ -1173,6 +1191,7 @@ namespace FinalComGame
         private void DrainMP(float MPAmount, float deltaTime)
         {
             // Consume MP while gliding
+            _MPRegenTime = 0;
             MP -= MPAmount * deltaTime;
             ClampMP();
         }
