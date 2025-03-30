@@ -88,6 +88,7 @@ namespace FinalComGame
         //SFX
         public SoundEffect JumpSound;
         public SoundEffect DashSound;
+        public SoundEffect PunchSound;
 
         //Animation
         private Animation HandAnimation;
@@ -816,6 +817,11 @@ namespace FinalComGame
                 _isAttacking = true;
                 _attackTimer = AttackDuration;
                 _attackCooldownTimer = AttackCooldown;
+
+                if(_isFist)
+                {
+                    PunchSound.Play();
+                }
 
                 UpdateAttackHitbox();
             }

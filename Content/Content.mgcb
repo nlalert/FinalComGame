@@ -494,6 +494,12 @@
 /processorParam:TextureFormat=Color
 /build:Player.png
 
+#begin PlayerPunch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:PlayerPunch.wav
+
 #begin Skeleton.png
 /importer:TextureImporter
 /processor:TextureProcessor
