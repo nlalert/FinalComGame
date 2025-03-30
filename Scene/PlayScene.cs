@@ -481,8 +481,7 @@ public class PlayScene : Scene
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
         // Create a pixel texture for the background
-        Texture2D TooltipBackgroundTexture = new Texture2D(_graphicsDevice, 1, 1);
-        TooltipBackgroundTexture.SetData(new[] { Color.White });
+        Texture2D TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
         //set for all item
         Item.TooltipBackgroundTexture = TooltipBackgroundTexture;
 

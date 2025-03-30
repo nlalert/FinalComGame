@@ -7,13 +7,13 @@ namespace FinalComGame
 {
     public class RangeWeapon : Item
     {
-        private float _attackDamage;
+        public float AttackDamage;
         private int _ammoAmount;
 
         public RangeWeapon(Texture2D texture, ItemType type, Vector2 Position, float attackDamage, int ammoAmount)
             : base(texture, Position, type)
         {
-            _attackDamage = attackDamage;
+            AttackDamage = attackDamage;
             _ammoAmount = ammoAmount;
         }
 
@@ -36,8 +36,14 @@ namespace FinalComGame
 
         public override void ActiveAbility(float deltaTime, int slot)
         {
-            Singleton.Instance.Player.ChangeToRangeWeaponAttack(_attackDamage);
+            Singleton.Instance.Player.ChangeToRangeWeaponAttack(AttackDamage);
             base.ActiveAbility(deltaTime, slot);
+        }
+
+        public override string GetDisplayProperties()
+        {
+            Console.WriteLine(AttackDamage);
+            return $"\nDamage: {AttackDamage}";
         }
     }
 }
