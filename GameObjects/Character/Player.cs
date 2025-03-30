@@ -744,7 +744,7 @@ namespace FinalComGame
 
         private void UseItem(int itemSlotIndex)
         {
-            if(ItemSlot[itemSlotIndex] == null) return;
+            if(ItemSlot[itemSlotIndex] == null || ItemSlot[itemSlotIndex].Type != ItemType.Consumable) return;
 
             ItemSlot[itemSlotIndex].Use(itemSlotIndex);
         }
