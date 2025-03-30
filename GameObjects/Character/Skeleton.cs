@@ -12,7 +12,16 @@ namespace FinalComGame
         public float IgnorePlayerDuration;
         private float _ignorePlayerTimer;
         private bool _isIgnoringPlayer;
-        public SkeletonEnemy(Texture2D texture, SpriteFont font) : base(texture, font) { }
+        public SkeletonEnemy(Texture2D texture, SpriteFont font) : base(texture, font) { 
+            Animation = new Animation(texture, 64, 64, new Vector2(64*8 , 64*3), 6);
+
+            Animation.AddAnimation("idle", new Vector2(0, 0), 8);
+            Animation.AddAnimation("walk", new Vector2(0, 1), 8);
+            Animation.AddAnimation("hurt",new Vector2(0, 7), 1);
+            Animation.AddAnimation("die",new Vector2(0, 2), 6);
+
+            Animation.ChangeAnimation(_currentAnimation);
+        }
 
         public override void Reset()
         {
@@ -51,6 +60,38 @@ namespace FinalComGame
             
             UpdateAnimation(deltaTime);
             base.Update(gameTime, gameObjects, tileMap);
+        }
+
+        protected override void UpdateAnimation(float deltaTime)
+        {
+            string animation = "idle";
+
+            if (Velocity.X != 0f)
+            {
+                animation = "walk";
+            }
+
+            if (CurrentState == EnemyState.Idle)
+            {
+                Animation.SetFPS(6);
+            }
+            else
+            {
+                Animation.SetFPS(12);
+            }
+
+            if(_currentAnimation != animation)
+            {
+                _currentAnimation = animation;
+                switch (animation)
+                {
+                    default:
+                        Animation.ChangeAnimation(_currentAnimation);
+                        break;
+                }    
+            }
+     
+            base.UpdateAnimation(deltaTime);
         }
 
         public override void OnSpawn()
@@ -100,6 +141,7 @@ namespace FinalComGame
                 CurrentState = EnemyState.Chase;
             }
         }
+
         private void AI_ChasingPlayer(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             ApplyGravity(deltaTime);
@@ -126,7 +168,9 @@ namespace FinalComGame
             Velocity.X = 80f * Direction; //faster when chasing
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
         }
-        private void AI_CoolDown(float deltaTime, List<GameObject> gameObjects, TileMap tileMap){
+
+        private void AI_CoolDown(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
@@ -137,7 +181,8 @@ namespace FinalComGame
 
             Velocity.X = 50f * Direction;
             _ignorePlayerTimer -= deltaTime;
-            if(_ignorePlayerTimer <=0 && _isIgnoringPlayer ==true){
+
+            if(_ignorePlayerTimer <=0 && _isIgnoringPlayer == true){
                 CurrentState = EnemyState.Idle;
                 _isIgnoringPlayer = false;
             }
@@ -155,7 +200,7 @@ namespace FinalComGame
             {
                 Console.WriteLine("test jump");
                 if(Velocity.Y == 0)
-                    Velocity.Y = -1000f;
+                    Velocity.Y = -500;
             }
             
             base.OnCollisionHorizon();
