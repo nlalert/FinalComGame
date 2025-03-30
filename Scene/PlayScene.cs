@@ -255,6 +255,7 @@ public class PlayScene : Scene
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
     
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
+        SoundEffect playerDashSound = _content.Load<SoundEffect>("Dash");
         
         Singleton.Instance.Player = new Player(playerTexture, playerParticle)
         {
@@ -309,6 +310,7 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             JumpSound = playerJumpSound,
+            DashSound = playerDashSound,
             Bullet = new PlayerBullet(_playerTexture)
             {
                 Name = "BulletPlayer",

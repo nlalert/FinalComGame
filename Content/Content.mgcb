@@ -163,6 +163,12 @@
 /processorParam:Quality=Best
 /build:ChillSong.mp3
 
+#begin Dash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Dash.wav
+
 #begin DemonBullet.png
 /importer:TextureImporter
 /processor:TextureProcessor

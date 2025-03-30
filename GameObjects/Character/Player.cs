@@ -87,6 +87,7 @@ namespace FinalComGame
 
         //SFX
         public SoundEffect JumpSound;
+        public SoundEffect DashSound;
 
         //Animation
         private Animation HandAnimation;
@@ -857,6 +858,7 @@ namespace FinalComGame
                 Velocity.Y = 0;
                 Velocity.X = DashSpeed * Direction;
                 UseMP(DashMP);
+                DashSound.Play();
             }
         }
 
