@@ -39,6 +39,8 @@ namespace FinalComGame
             // Animation.AddAnimation("land", new Vector2(0, 4), 5);
             // Animation.AddAnimation("die", new Vector2(0, 5), 7);
             // Animation.ChangeAnimation(_currentAnimation);
+
+            CanCollideTile = true;
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)

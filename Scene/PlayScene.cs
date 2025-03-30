@@ -339,7 +339,6 @@ public class PlayScene : Scene
                 Name = "BulletPlayer",
                 BaseDamageAmount = 15f,
                 Speed = 500f,
-                CanCollideTile = true,
                 Viewport = new Rectangle(0, 0, 15, 10)
             },
         };
@@ -355,7 +354,6 @@ public class PlayScene : Scene
                 new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
-                    CanCollideTile = true,
                     MaxHealth = 50f,
                     BaseAttackDamage = 3f,
 
@@ -369,7 +367,6 @@ public class PlayScene : Scene
                 new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
-                    CanCollideTile = true,
                     MaxHealth = 50f,
                     BaseAttackDamage = 3f,
 
@@ -383,7 +380,6 @@ public class PlayScene : Scene
                 new SkeletonEnemy(_enemyTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
-                    CanCollideTile = true,
 
                     MaxHealth = 80f,
                     BaseAttackDamage = 5f,
@@ -398,7 +394,7 @@ public class PlayScene : Scene
             //     new HellhoundEnemy(_DogTexture,_font){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 32),
-            //         CanCollideTile = true,
+            //         
             //         MaxHealth = 1f,
             //         BaseAttackDamage = 8f,
 
@@ -414,7 +410,6 @@ public class PlayScene : Scene
                 new DemonEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
-                    CanCollideTile = true,
 
                     MaxHealth = 100f,
 
@@ -423,7 +418,6 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 15f,
                         Speed = 150f,
-                        CanCollideTile = true,
                         Viewport = new Rectangle(0, 0, 32, 32)
                     }
                 }
@@ -433,7 +427,6 @@ public class PlayScene : Scene
                 new TowerEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 32),
-                    CanCollideTile = true,
 
                     MaxHealth = 100f,
 
@@ -442,7 +435,6 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 20f,
                         Speed = 250f,
-                        CanCollideTile = true,
                         Viewport = new Rectangle(0, 0, 32, 32)
                     }
                 }
@@ -452,7 +444,6 @@ public class PlayScene : Scene
                 new PlatformEnemy(_PlatformTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
-                    CanCollideTile = true,
 
                     MaxHealth = float.MaxValue,
                 }
@@ -463,7 +454,7 @@ public class PlayScene : Scene
             //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 48),
-            //         CanCollideTile = true,
+
             //         MaxHealth = 1f,
             //         BaseAttackDamage = 3f,
 
@@ -477,7 +468,7 @@ public class PlayScene : Scene
             //     new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 48),
-            //         CanCollideTile = true,
+
             //         MaxHealth = 100f,
             //         BaseAttackDamage = 3f,
 
@@ -560,8 +551,6 @@ public class PlayScene : Scene
                 Speed = 500f,
                 Radius = 60f,
                 ExplosionDuration = 0.5f,
-
-                CanCollideTile = true,
                 Viewport = new Rectangle(0, 0, 8, 8)
             },
         });

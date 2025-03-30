@@ -22,6 +22,8 @@ namespace FinalComGame
             Animation.AddAnimation("die", new Vector2(0, 5), 7);
 
             Animation.ChangeAnimation(_currentAnimation);
+
+            CanCollideTile = true;
         }
 
         public override void Reset()

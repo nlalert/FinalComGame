@@ -7,6 +7,7 @@ namespace FinalComGame
     {
         public DemonBullet(Texture2D texture) : base(texture)
         {
+            CanCollideTile = true;
         }
     }
 }

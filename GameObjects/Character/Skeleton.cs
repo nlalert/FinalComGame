@@ -18,6 +18,7 @@ namespace FinalComGame
         {
             Console.WriteLine("Reset Skeleton");
 
+            CanCollideTile = true;
             _ignorePlayerTimer = 0f;
             _isIgnoringPlayer = false;
             _patrolCenterPoint = Position;
