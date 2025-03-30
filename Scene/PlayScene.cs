@@ -23,6 +23,7 @@ public class PlayScene : Scene
     private Texture2D _GiantSlimeTexture;
     private Texture2D _CerberusTexture;
     private Texture2D _RhulkTexture;
+    private Texture2D _LaserTexture;
 
 
     private Texture2D _parallaxFGtexture;
@@ -64,6 +65,7 @@ public class PlayScene : Scene
         _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
         _CerberusTexture = _content.Load<Texture2D>("Cerberus");
         _RhulkTexture = _content.Load<Texture2D>("EnemyRhulk");
+        _LaserTexture = _content.Load<Texture2D>("Laserbeam");
 
 
 
@@ -123,7 +125,7 @@ public class PlayScene : Scene
                 break;
         }
 
-        Console.WriteLine("GameObject :" + _numObject);
+        // Console.WriteLine("GameObject :" + _numObject);
 
         base.Update(gameTime);
     }
@@ -353,19 +355,19 @@ public class PlayScene : Scene
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
-            {
-                97,         
-                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 16, 16),
-                    MaxHealth = 50f,
-                    BaseAttackDamage = 3f,
+            // {
+            //     97,         
+            //     new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
+            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            //         Viewport = new Rectangle(0, 0, 16, 16),
+            //         MaxHealth = 50f,
+            //         BaseAttackDamage = 3f,
 
-                    JumpCooldown = 3.0f,
-                    BaseJumpStrength = 550,
-                    Friction = 0.96f
-                }
-            },
+            //         JumpCooldown = 3.0f,
+            //         BaseJumpStrength = 550,
+            //         Friction = 0.96f
+            //     }
+            // },
 
             {
                 98,
@@ -475,7 +477,7 @@ public class PlayScene : Scene
             // },
             {
                 97,         
-                new Rhulk(_RhulkTexture, new Texture2D(_graphicsDevice, 1, 1), Singleton.Instance.GameFont){
+                new Rhulk(_RhulkTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 22, 64),
 
@@ -484,7 +486,14 @@ public class PlayScene : Scene
 
                     // JumpCooldown = 3.0f,
                     BaseJumpStrength = 550,
-                    Friction = 0.96f
+                    Friction = 0.96f,
+                    Laserproj = new DemonLaser(_LaserTexture)
+                    {
+                        Name = "BulletEnemy",
+                        BaseDamageAmount = 20f,
+                        Speed = 250f,
+                        Viewport = new Rectangle(0, 0, 10, 200)
+                    },
                 }
             },
         };

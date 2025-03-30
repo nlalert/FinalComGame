@@ -17,14 +17,16 @@ namespace FinalComGame
         private float _dashDuration = 2f;
         private float _beamchargingTime = 5.0f;
         private float _beamingTime = 20.0f; 
+        private float _rotationAngle = 0f;
         private Vector2 _dashAim;
         private Vector2 _dashStart;
         
         private Vector2 _barrierstart;
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
+        public DemonLaser Laserproj;
 
-        public Rhulk(Texture2D texture, Texture2D particleTexture, SpriteFont font) : base(texture, font) 
+        public Rhulk(Texture2D texture) : base(texture)
         { 
             // Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
             // Animation.AddAnimation("Chase", new Vector2(0, 0), 8);
@@ -152,7 +154,7 @@ namespace FinalComGame
                     //Console.WriteLine("Hellhound finished dashing, switching to chase mode.");
                     _isDashing = false;
                     CurrentState = EnemyState.Chase;
-                    _actionTimer =5f;
+                    _actionTimer =3f;
                     CanCollideTile = true;
                     _isJumping = false;
                 }
@@ -181,14 +183,25 @@ namespace FinalComGame
             }else{
                 CurrentState = EnemyState.Attack;
                 _actionTimer = _beamingTime;
+                //Spawn Projectiles
+                Console.WriteLine("Spawn Laser");
+                DemonLaser laser = Laserproj.Clone() as DemonLaser;
+                laser.Activate(Position + new Vector2(Rectangle.Width / 2, Rectangle.Height / 2), _rotationAngle);
+                laser.Shoot(Position, Vector2.Zero);
+                gameObjects.Add(laser);
             }
         }
         private void AI_Attack(float deltaTime,List<GameObject> gameObjects, TileMap tileMap){
+            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+            _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
             if(_actionTimer>0){
+                _rotationAngle += 0.5f * deltaTime * (_isEnraged ? 1.5f : 1); // Adjust speed of rotation (increase for faster rotation)
                 //do Attack
             }else{
                 CurrentState = EnemyState.Chase;
                 CanCollideTile = true;
+                _actionTimer =3f;
             }
         }
         //MATH STUFF
@@ -247,16 +260,35 @@ namespace FinalComGame
 
         protected override void DrawDebug(SpriteBatch spriteBatch)
         {
-            Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
-            string displayText = $"State: {CurrentState}\n{Direction}\n HP {Health} \nAT:{_actionTimer}";
-            spriteBatch.DrawString(_DebugFont, displayText, textPosition , Color.White);
+            // Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
+            // string displayText = $"State: {CurrentState}\n{Direction}\n HP {Health} \nAT:{_actionTimer}";
+            // spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition , Color.White);
             if(CurrentState == EnemyState.Charging || CurrentState == EnemyState.Dash){
                 DrawLine(spriteBatch, _dashAim, Position, Color.Green);
                 // Draw 90-degree line at the Aim position
                 DrawLine(spriteBatch,_barrierEnd,_barrierEnd1, Color.Blue);
             }
+            else if(CurrentState == EnemyState.Floating || CurrentState == EnemyState.Attack){
+                // spriteBatch.DrawString(Singleton.Instance.GameFont, "StartPos", textPosition , Color.White);
+                DrawRotatingLines(spriteBatch);
+            }
         }
+        private void DrawRotatingLines(SpriteBatch spriteBatch)
+        {
+            int numLines = 5; // Number of lines
+            float radius = 600f; // Length of each line
+            float angleOffset = MathHelper.TwoPi / numLines; // 360 degrees / numLines
+            Vector2 centerPos = this.Position + new Vector2(this.Rectangle.Width/2,this.Rectangle.Height/2);
+            for (int i = 0; i < numLines; i++)
+            {
+                float angle = _rotationAngle + (i * angleOffset);
+                Vector2 direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * radius;
+                Vector2 endPosition = centerPos + direction;
 
+                DrawLine(spriteBatch, centerPos, endPosition, Color.Red);
+            }
+
+        }
         private void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color)
         {
             // Calculate the length and direction of the line
