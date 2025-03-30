@@ -129,6 +129,8 @@ public class PlayScene : Scene
                 break;
         }
 
+        Console.WriteLine("GameObject :" + _numObject);
+
         base.Update(gameTime);
     }
 
@@ -556,6 +558,9 @@ public class PlayScene : Scene
                 Name = "FireBall",
                 BaseDamageAmount = 30f,
                 Speed = 500f,
+                Radius = 60f,
+                ExplosionDuration = 0.5f,
+
                 CanCollideTile = true,
                 Viewport = new Rectangle(0, 0, 8, 8)
             },
