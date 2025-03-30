@@ -124,9 +124,11 @@ namespace FinalComGame {
         {
             Color color = IsInvincible() ? Color.HotPink : Color.White;
             spriteBatch.Draw(_texture, Position, Viewport, color);
+
             if (Animation._animationName.Count > 0){
                 base.Draw(spriteBatch);
             }
+            
         }
 
         protected override void UpdateAnimation(float deltaTime)

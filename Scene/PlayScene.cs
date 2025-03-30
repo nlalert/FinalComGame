@@ -18,9 +18,6 @@ public class PlayScene : Scene
     int _numObject;
 
     private Texture2D _playerTexture;
-    private Texture2D _enemyTexture;
-    private Texture2D _DogTexture;
-    private Texture2D _SlimeTexture;
     private Texture2D _textureAtlas;
     private Texture2D _DemonTexture;
     private Texture2D _DemonBulletTexture;
@@ -349,6 +346,16 @@ public class PlayScene : Scene
 
     private void CreateEnemies()
     {
+        Texture2D _enemyTexture = _content.Load<Texture2D>("Skeleton");
+        Texture2D _DogTexture = _content.Load<Texture2D>("EnemyDog");
+        Texture2D _SlimeTexture = _content.Load<Texture2D>("HellSlime");
+        Texture2D _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
+        Texture2D _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
+        Texture2D _TowerTexture = _content.Load<Texture2D>("EnemyTower");
+        Texture2D _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
+        Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
+        Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
+
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
@@ -369,20 +376,24 @@ public class PlayScene : Scene
                 98,         
                 new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 16, 16),
-                    MaxHealth = 50f,
-                    BaseAttackDamage = 3f,
+                    Viewport = new Rectangle(0, 0, 64, 32),
+                    
+                    MaxHealth = 1f,
+                    BaseAttackDamage = 8f,
 
-                    JumpCooldown = 3.0f,
-                    BaseJumpStrength = 550,
-                    Friction = 0.96f
+                    LimitIdlePatrol = 100,
+                    
+                    ChargeTime = 2.0f,
+                    ChaseDuration = 5f,
+                    DashDuration = 1.0f,
                 }
             },
+
             {
-                118,         
+                99,         
                 new SkeletonEnemy(_enemyTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 32, 64),
+                    Viewport = new Rectangle(0, 0, 16, 32),
 
                     MaxHealth = 80f,
                     BaseAttackDamage = 5f,
@@ -392,24 +403,9 @@ public class PlayScene : Scene
                     IgnorePlayerDuration = 3f,
                 }
             },
-            // {
-            //     98,
-            //     new HellhoundEnemy(_DogTexture,_font){
-            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = new Rectangle(0, 0, 64, 32),
-            //         
-            //         MaxHealth = 1f,
-            //         BaseAttackDamage = 8f,
-
-            //         LimitIdlePatrol = 100,
-                    
-            //         ChargeTime = 2.0f,
-            //         ChaseDuration = 5f,
-            //         DashDuration = 1.0f,
-            //     }
-            // },
+            
             {
-                353123,
+                119,
                 new DemonEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
@@ -425,8 +421,9 @@ public class PlayScene : Scene
                     }
                 }
             },
+            
             {
-                67123,
+                118,
                 new TowerEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 32),
@@ -442,8 +439,9 @@ public class PlayScene : Scene
                     }
                 }
             },
+            
             {
-                99999,
+                117,
                 new PlatformEnemy(_PlatformTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
@@ -495,6 +493,7 @@ public class PlayScene : Scene
                 }
             },
         };
+
     }
 
     private void SpawnEnemies()
