@@ -25,6 +25,7 @@ namespace FinalComGame
         {
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            UpdateInvincibilityTimer(deltaTime);
             shootTimer += deltaTime;
             if (CurrentState == EnemyState.Idle && shootTimer >= shootCooldown * 4/5)
             {
@@ -32,7 +33,7 @@ namespace FinalComGame
             }
             UpdateHorizontalMovement(deltaTime,gameObjects,tileMap);
             UpdateVerticalMovement(deltaTime,gameObjects,tileMap);
-
+            
             if (Singleton.Instance.Player != null)
             {
                 switch (CurrentState)
@@ -155,7 +156,6 @@ namespace FinalComGame
                 }
             }
         }
-
         private void ShootBullet(List<GameObject> gameObjects)
         {
             Vector2 direction = Vector2.Normalize(Singleton.Instance.Player.Position - Position);
@@ -172,7 +172,7 @@ namespace FinalComGame
             float rotation = 0.0f;
             if (CurrentState == EnemyState.Chase) {
                 rotation = MathF.Atan2(direction.Y, direction.X) + MathF.PI / 2;
-                Console.WriteLine(rotation);
+                // Console.WriteLine(rotation);
             }
 
             {
@@ -213,7 +213,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"State {CurrentState}\n ";
+            string displayText = $"State {CurrentState}\n HP{Health}";
             spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition, Color.White);
         }
     }
