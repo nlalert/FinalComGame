@@ -40,10 +40,7 @@ namespace FinalComGame {
         public bool CanCollideTile;
         public bool IsDead() => CurrentState == EnemyState.Dead;
         
-        protected SpriteFont _DebugFont;
-        public BaseEnemy(Texture2D texture,SpriteFont font) : base(texture){
-            _DebugFont = font;
-
+        public BaseEnemy(Texture2D texture) : base(texture){
             _idleAnimation = new Animation(texture, 16, 32, new Vector2(1,1), 24); // 24 fps\
             Animation = _idleAnimation;
         }

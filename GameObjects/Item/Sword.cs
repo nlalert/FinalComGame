@@ -11,8 +11,8 @@ namespace FinalComGame
         private int _attackWidth;
         private int _attackHeight;
 
-        public Sword(Texture2D texture, ItemType type, string description, Vector2 Position, float attackDamage = 30f, int attackWidth = 32, int attackHeight = 32)
-            : base(texture, description, Position, type)
+        public Sword(Texture2D texture, ItemType type, Vector2 Position, float attackDamage = 30f, int attackWidth = 32, int attackHeight = 32)
+            : base(texture, Position, type)
         {
             _attackDamage = attackDamage;
             _attackWidth = attackWidth;

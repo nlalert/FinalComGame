@@ -10,8 +10,8 @@ namespace FinalComGame
         private float _attackDamage;
         private int _ammoAmount;
 
-        public RangeWeapon(Texture2D texture, ItemType type, string description, Vector2 Position, float attackDamage, int ammoAmount)
-            : base(texture, description, Position, type)
+        public RangeWeapon(Texture2D texture, ItemType type, Vector2 Position, float attackDamage, int ammoAmount)
+            : base(texture, Position, type)
         {
             _attackDamage = attackDamage;
             _ammoAmount = ammoAmount;

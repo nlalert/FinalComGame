@@ -11,7 +11,7 @@ namespace FinalComGame
         private float _jumpTimer;
         public float Friction;
 
-        public SlimeEnemy(Texture2D texture, Texture2D particleTexture, SpriteFont font) : base(texture, font) { 
+        public SlimeEnemy(Texture2D texture, Texture2D particleTexture) : base(texture) { 
             Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
 
             Animation.AddAnimation("idle", new Vector2(0, 0), 8);
@@ -146,7 +146,7 @@ namespace FinalComGame
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";
             string displayText = $"State {CurrentState}\nHP {Health} \nCharge timer {_jumpTimer}";
-            spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
+            spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition, Color.White);
         }
         protected override void ApplyGravity(float deltaTime)
         {

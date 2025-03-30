@@ -12,9 +12,9 @@ namespace FinalComGame
         private float _speedModifier;
         private bool _isActivated;
 
-        public CursedGauntlet(Texture2D texture, ItemType type, string description, Vector2 Position, 
+        public CursedGauntlet(Texture2D texture, ItemType type, Vector2 Position, 
             float MPUsageRateModifier = 1.25f, float DamageModifier = 2.0f, float SpeedModifier = 0.7f)
-            : base(texture, description, Position, type)
+            : base(texture, Position, type)
         {
             _MPUsageRateModifier = MPUsageRateModifier;
             _damageModifier = DamageModifier;
