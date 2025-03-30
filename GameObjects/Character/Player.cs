@@ -169,7 +169,7 @@ namespace FinalComGame
 
             Direction = 1; // Reset direction to right
 
-            Health = MaxHealth - 50; //REMOVE LATER FOR DEBUG
+            Health = MaxHealth;
             MP = MaxMP;
             AbsorptionHealth = 0;
 
@@ -755,7 +755,7 @@ namespace FinalComGame
 
         private void UseItem(int itemSlotIndex)
         {
-            if(ItemSlot[itemSlotIndex] == null) return;
+            if(ItemSlot[itemSlotIndex] == null || ItemSlot[itemSlotIndex].Type != ItemType.Consumable) return;
 
             ItemSlot[itemSlotIndex].Use(itemSlotIndex);
         }
@@ -1215,7 +1215,7 @@ namespace FinalComGame
             AttackDamage = BaseAttackDamage;
         }
 
-        public void ChangeToGunAttack(float damageAmount)
+        public void ChangeToRangeWeaponAttack(float damageAmount)
         {
             _isSoulBullet = false;
             Bullet.DamageAmount = damageAmount;

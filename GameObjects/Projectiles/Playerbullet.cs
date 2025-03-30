@@ -10,6 +10,7 @@ namespace FinalComGame
     {
         public PlayerBullet(Texture2D texture) : base(texture)
         {
+            CanCollideTile = true;
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)

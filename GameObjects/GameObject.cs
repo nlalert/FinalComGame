@@ -11,7 +11,7 @@ public class GameObject : ICloneable
 
     public Vector2 Position;
 
-    public int Radius;
+    public float Radius;
 
     public float Rotation;
     public Vector2 Scale;

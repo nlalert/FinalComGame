@@ -23,7 +23,7 @@ namespace FinalComGame
         public override void Reset()
         {
             //Console.WriteLine("Reset Hellhound");
-
+            CanCollideTile = true;
             _isDashing = false;
             _dashTimer = 0f;
             _chargeTimer = 0f;

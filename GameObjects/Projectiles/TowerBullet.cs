@@ -7,6 +7,7 @@ namespace FinalComGame
     {
         public TowerBullet(Texture2D texture) : base(texture)
         {
+            CanCollideTile = true;
         }
     }
 }

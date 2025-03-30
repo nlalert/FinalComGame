@@ -22,6 +22,7 @@ namespace FinalComGame
         public DemonEnemy(Texture2D texture, SpriteFont font) 
             : base(texture, font)
         {
+
             DetectionRange =300f;
             AttackRange = 400f;
             verticalOffset = Singleton.Instance.Random.Next(0, 100); // Randomize hover start

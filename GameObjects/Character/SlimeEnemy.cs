@@ -22,6 +22,8 @@ namespace FinalComGame
             Animation.AddAnimation("die", new Vector2(0, 5), 7);
 
             Animation.ChangeAnimation(_currentAnimation);
+
+            CanCollideTile = true;
         }
 
         public override void Reset()
@@ -152,7 +154,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);
             string directionText = Direction != 1 ? "Left" : "Right";
-            string displayText = $"State {CurrentState}\n Charge timer {_jumpTimer}";
+            string displayText = $"State {CurrentState}\nHP {Health} \nCharge timer {_jumpTimer}";
             spriteBatch.DrawString(_DebugFont, displayText, textPosition, Color.White);
         }
         protected override void ApplyGravity(float deltaTime)

@@ -8,40 +8,49 @@ namespace FinalComGame
 {
     public class FireBall : Projectile
     {
-        public FireBall(Texture2D texture) : base(texture)
+        public Explosion BaseExplosion;
+        public float ExplosionDuration;
+        public FireBall(Texture2D texture, Texture2D explosionTexture) : base(texture)
         {
+            CanCollideTile = true;
+            BaseExplosion = new Explosion(explosionTexture);
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Position += Velocity * deltaTime;
 
+            Position += Velocity * deltaTime;
             ApplyGravity(deltaTime);
 
+            // Check enemy collision
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
                 if(IsTouching(enemy))
                 {
                     OnProjectileHit(enemy);
                     enemy.OnHitByProjectile(this, DamageAmount);
-                        
-                    IsActive = false;
+                    StartExplosion(gameObjects);
+                    return;
                 }
             }
+
+            // Check collision with other projectiles
             foreach (var bullet in gameObjects.OfType<Projectile>())
             {
-                if(IsTouching(bullet))
+                if(bullet != this && IsTouching(bullet))
                 {
                     if(bullet is not PlayerBullet)
                     {
-                        IsActive = false;
+                        StartExplosion(gameObjects);
+                        return;
                     }
                 } 
             }
 
             // Check collision with tiles
-            if(CanCollideTile){
+            if(CanCollideTile)
+            {
                 int radius = 5;
                 for (int i = -radius; i <= radius; i++)
                 {
@@ -53,13 +62,28 @@ namespace FinalComGame
                         {
                             if (IsTouching(tile))
                             {
-                                IsActive = false;
-                                break;
+                                StartExplosion(gameObjects);
+                                return;
                             }
                         }
                     }
                 }
             }
         }
+
+        public void StartExplosion(List<GameObject> gameObjects)
+        {
+            IsActive = false; // Remove Fireball and left with only explosion
+
+            Velocity = Vector2.Zero;
+            Explosion newExplosion = BaseExplosion.Clone() as Explosion;
+            newExplosion.Position = Position;
+            newExplosion.Radius = Radius;
+            newExplosion.Duration = ExplosionDuration;
+            newExplosion.Damage = DamageAmount * 0.8f;
+            newExplosion.TriggerExplosion();
+            gameObjects.Add(newExplosion);
+        }
+
     }
-}
+} 

@@ -129,6 +129,8 @@ public class PlayScene : Scene
                 break;
         }
 
+        Console.WriteLine("GameObject :" + _numObject);
+
         base.Update(gameTime);
     }
 
@@ -337,7 +339,6 @@ public class PlayScene : Scene
                 Name = "BulletPlayer",
                 BaseDamageAmount = 15f,
                 Speed = 500f,
-                CanCollideTile = true,
                 Viewport = new Rectangle(0, 0, 15, 10)
             },
         };
@@ -348,26 +349,37 @@ public class PlayScene : Scene
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
-            // {
-            //     97,         
-            //     new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
-            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = new Rectangle(0, 0, 16, 16),
-            //         CanCollideTile = true,
-            //         MaxHealth = 50f,
-            //         BaseAttackDamage = 3f,
+            {
+                97,         
+                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 16, 16),
+                    MaxHealth = 50f,
+                    BaseAttackDamage = 3f,
 
-            //         JumpCooldown = 3.0f,
-            //         BaseJumpStrength = 550,
-            //         Friction = 0.96f
-            //     }
-            // },
+                    JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f
+                }
+            },
+                        {
+                98,         
+                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 16, 16),
+                    MaxHealth = 50f,
+                    BaseAttackDamage = 3f,
+
+                    JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f
+                }
+            },
             {
                 118,         
                 new SkeletonEnemy(_enemyTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
-                    CanCollideTile = true,
 
                     MaxHealth = 80f,
                     BaseAttackDamage = 5f,
@@ -377,28 +389,27 @@ public class PlayScene : Scene
                     IgnorePlayerDuration = 3f,
                 }
             },
-            {
-                98,
-                new HellhoundEnemy(_DogTexture,_font){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 32),
-                    CanCollideTile = true,
-                    MaxHealth = 1f,
-                    BaseAttackDamage = 8f,
+            // {
+            //     98,
+            //     new HellhoundEnemy(_DogTexture,_font){
+            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            //         Viewport = new Rectangle(0, 0, 64, 32),
+            //         
+            //         MaxHealth = 1f,
+            //         BaseAttackDamage = 8f,
 
-                    LimitIdlePatrol = 100,
+            //         LimitIdlePatrol = 100,
                     
-                    ChargeTime = 2.0f,
-                    ChaseDuration = 5f,
-                    DashDuration = 1.0f,
-                }
-            },
+            //         ChargeTime = 2.0f,
+            //         ChaseDuration = 5f,
+            //         DashDuration = 1.0f,
+            //     }
+            // },
             {
                 353123,
                 new DemonEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 64),
-                    CanCollideTile = true,
 
                     MaxHealth = 100f,
 
@@ -407,7 +418,6 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 15f,
                         Speed = 150f,
-                        CanCollideTile = true,
                         Viewport = new Rectangle(0, 0, 32, 32)
                     }
                 }
@@ -417,7 +427,6 @@ public class PlayScene : Scene
                 new TowerEnemy(_DemonTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 32, 32),
-                    CanCollideTile = true,
 
                     MaxHealth = 100f,
 
@@ -426,7 +435,6 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 20f,
                         Speed = 250f,
-                        CanCollideTile = true,
                         Viewport = new Rectangle(0, 0, 32, 32)
                     }
                 }
@@ -436,7 +444,6 @@ public class PlayScene : Scene
                 new PlatformEnemy(_PlatformTexture,_font){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 32),
-                    CanCollideTile = true,
 
                     MaxHealth = float.MaxValue,
                 }
@@ -447,7 +454,7 @@ public class PlayScene : Scene
             //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
             //         Viewport = new Rectangle(0, 0, 64, 48),
-            //         CanCollideTile = true,
+
             //         MaxHealth = 1f,
             //         BaseAttackDamage = 3f,
 
@@ -456,20 +463,20 @@ public class PlayScene : Scene
             //         Friction = 0.96f
             //     }
             // },
-            {
-                97,         
-                new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 48),
-                    CanCollideTile = true,
-                    MaxHealth = 100f,
-                    BaseAttackDamage = 3f,
+            // {
+            //     97,         
+            //     new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            //         Viewport = new Rectangle(0, 0, 64, 48),
+
+            //         MaxHealth = 100f,
+            //         BaseAttackDamage = 3f,
 
             //         // JumpCooldown = 3.0f,
             //         BaseJumpStrength = 550,
             //         Friction = 0.96f
-                }
-            },
+            //     }
+            // },
         };
     }
 
@@ -492,6 +499,7 @@ public class PlayScene : Scene
         Texture2D Bunny = _content.Load<Texture2D>("Bunny");
         Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
         Texture2D FireBall = _content.Load<Texture2D>("FireBall");
+        Texture2D ExplosionEffect = _content.Load<Texture2D>("ExplosionEffect");
 
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
@@ -536,12 +544,13 @@ public class PlayScene : Scene
         _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, "Testing Staff", TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
             Viewport = new Rectangle(0, 0, 32,32),
-            FireBall = new FireBall(FireBall)
+            FireBall = new FireBall(FireBall, ExplosionEffect)
             {
                 Name = "FireBall",
                 BaseDamageAmount = 30f,
                 Speed = 500f,
-                CanCollideTile = true,
+                Radius = 60f,
+                ExplosionDuration = 0.5f,
                 Viewport = new Rectangle(0, 0, 8, 8)
             },
         });
