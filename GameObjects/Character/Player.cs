@@ -978,16 +978,13 @@ namespace FinalComGame
 
             if(ItemSlot[1] is Staff)
             {
-                UseMP(0);
+                UseMP((ItemSlot[1] as Staff).MPCost);
                 newBullet = (ItemSlot[1] as Staff).FireBall.Clone() as FireBall;
                 direction = new Vector2(Direction , (float) Math.Sin(MathHelper.ToRadians(-45)));
                 newBullet.DamageAmount = (newBullet as FireBall).BaseDamageAmount;
-                (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
             }
             else
             {
-                if(ItemSlot[1] is Gun)
-                    (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
                 direction = new Vector2(Direction, 0);
                 newBullet = Bullet.Clone() as PlayerBullet;
                 newBullet.DamageAmount = Bullet.DamageAmount; // Increase damage
@@ -996,6 +993,7 @@ namespace FinalComGame
             Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 2) : new Vector2(0, 10); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
             
+            (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
             newBullet.Shoot(bulletPosition, direction);
 
             gameObjects.Add(newBullet);

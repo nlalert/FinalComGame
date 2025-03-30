@@ -49,7 +49,7 @@
 /processorParam:TextureFormat=Color
 /build:Bunny.png
 
-#begin C:/Users/NigaiNamida/Desktop/Items.png
+#begin Items.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -59,9 +59,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:C:/Users/NigaiNamida/Desktop/Items.png;Items.png
+/build:Items.png
 
-#begin C:/Users/NigaiNamida/Desktop/Sword.png
+#begin Sword.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -71,7 +71,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:C:/Users/NigaiNamida/Desktop/Sword.png;Sword.png
+/build:Sword.png
 
 #begin Cerberus.png
 /importer:TextureImporter

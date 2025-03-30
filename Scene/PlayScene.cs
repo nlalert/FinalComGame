@@ -543,7 +543,8 @@ public class PlayScene : Scene
 
         _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, "Testing Staff", TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
-            Viewport = new Rectangle(0, 0, 32,32),
+            MPCost = 10,
+
             FireBall = new FireBall(FireBall, ExplosionEffect)
             {
                 Name = "FireBall",
@@ -553,6 +554,7 @@ public class PlayScene : Scene
                 ExplosionDuration = 0.5f,
                 Viewport = new Rectangle(0, 0, 8, 8)
             },
+            Viewport = new Rectangle(0, 0, 32,32),
         });
 
         _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, "Testing jumppotion", TileMap.GetTileWorldPositionAt(35, 90)){
