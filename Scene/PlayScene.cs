@@ -57,9 +57,9 @@ public class PlayScene : Scene
         base.LoadContent(spriteBatch);
         
         _playerTexture = _content.Load<Texture2D>("Char_test");
-        _enemyTexture = _content.Load<Texture2D>("EnemyRed");
-        _DogTexture = _content.Load<Texture2D>("EnemyDog");
-        _SlimeTexture = _content.Load<Texture2D>("HellSlime");
+        // _enemyTexture = _content.Load<Texture2D>("EnemyRed");
+        // _DogTexture = _content.Load<Texture2D>("EnemyDog");
+        // _SlimeTexture = _content.Load<Texture2D>("HellSlime");
         _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
         _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
         _TowerTexture = _content.Load<Texture2D>("EnemyTower");
@@ -372,22 +372,22 @@ public class PlayScene : Scene
             //         Friction = 0.96f
             //     }
             // },
-                        {
-                98,         
-                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 32),
+            //             {
+            //     98,         
+            //     new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1), _font){
+            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            //         Viewport = new Rectangle(0, 0, 64, 32),
                     
-                    MaxHealth = 1f,
-                    BaseAttackDamage = 8f,
+            //         MaxHealth = 1f,
+            //         BaseAttackDamage = 8f,
 
-                    LimitIdlePatrol = 100,
+            //         LimitIdlePatrol = 100,
                     
-                    ChargeTime = 2.0f,
-                    ChaseDuration = 5f,
-                    DashDuration = 1.0f,
-                }
-            },
+            //         ChargeTime = 2.0f,
+            //         ChaseDuration = 5f,
+            //         DashDuration = 1.0f,
+            //     }
+            // },
 
             {
                 99,         
