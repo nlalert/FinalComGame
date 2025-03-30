@@ -1204,7 +1204,7 @@ namespace FinalComGame
             AttackDamage = BaseAttackDamage;
         }
 
-        public void ChangeToGunAttack(float damageAmount)
+        public void ChangeToRangeWeaponAttack(float damageAmount)
         {
             _isSoulBullet = false;
             Bullet.DamageAmount = damageAmount;

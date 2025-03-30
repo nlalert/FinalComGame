@@ -36,7 +36,7 @@ namespace FinalComGame
 
         public override void ActiveAbility(float deltaTime, int slot)
         {
-            Singleton.Instance.Player.ChangeToGunAttack(_attackDamage);
+            Singleton.Instance.Player.ChangeToRangeWeaponAttack(_attackDamage);
             base.ActiveAbility(deltaTime, slot);
         }
     }
