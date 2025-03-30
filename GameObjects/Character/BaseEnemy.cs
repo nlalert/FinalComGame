@@ -64,6 +64,9 @@ namespace FinalComGame {
             newEnemy.OnSpawn();
         }
 
+        public virtual void AddAnimation(){
+        }
+
         public virtual bool CanBeHitByPlayer()
         {
             // Determines if enemy can be hit by player
@@ -244,6 +247,7 @@ namespace FinalComGame {
             _attackTimer = 0f;
             _attackCooldownTimer = 0f;
 
+            AddAnimation();
             _currentAnimation = "idle";
 
             CurrentState = EnemyState.Idle;

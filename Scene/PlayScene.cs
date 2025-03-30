@@ -104,7 +104,7 @@ public class PlayScene : Scene
                 break;
         }
 
-        Console.WriteLine("GameObject :" + _numObject);
+        //Console.WriteLine("GameObject :" + _numObject);
 
         base.Update(gameTime);
     }
@@ -331,7 +331,7 @@ public class PlayScene : Scene
         Texture2D _SlimeTexture = _content.Load<Texture2D>("HellSlime");
         Texture2D _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
         Texture2D _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
-        Texture2D _TowerTexture = _content.Load<Texture2D>("EnemyTower");
+        Texture2D _TowerTexture = _content.Load<Texture2D>("Spitter");
         Texture2D _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
         Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
         Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
@@ -340,7 +340,7 @@ public class PlayScene : Scene
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
             {
-                97,         
+                979999,         
                 new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
@@ -404,10 +404,10 @@ public class PlayScene : Scene
             },
             
             {
-                118,
-                new TowerEnemy(_DemonTexture){
+                97,
+                new TowerEnemy(_TowerTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 32, 32),
+                    Viewport = new Rectangle(0, 0, 16, 16),
 
                     MaxHealth = 100f,
 

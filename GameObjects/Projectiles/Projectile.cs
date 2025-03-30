@@ -48,7 +48,7 @@ namespace FinalComGame
                     {
                         Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
                         Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                        if(tile != null && tile.IsSolid)
+                        if(tile != null && tile.Type == TileType.Barrier)
                         {
                             if (IsTouching(tile))
                             {
