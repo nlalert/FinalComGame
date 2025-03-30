@@ -486,48 +486,63 @@ public class PlayScene : Scene
         Texture2D FireBall = _content.Load<Texture2D>("FireBall");
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
-        _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, "barrier", TileMap.GetTileWorldPositionAt(20, 90)){
+        // Create a pixel texture for the background
+        Texture2D TooltipBackgroundTexture = new Texture2D(_graphicsDevice, 1, 1);
+        TooltipBackgroundTexture.SetData(new[] { Color.White });
+        //set for all item
+        Item.TooltipBackgroundTexture = TooltipBackgroundTexture;
+
+        _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
+            Description = "Test Barrier Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new SpeedBoots(Hermes_Boots, ItemType.Accessory, "Hermes_Boots", TileMap.GetTileWorldPositionAt(24, 90)){
+        _gameObjects.Add(new SpeedBoots(Hermes_Boots, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
             Name =  "HealthPotion",
+            Description = "Test SpeedBoots Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new CursedGauntlet(Gauntlet, ItemType.Accessory, "Gauntlet", TileMap.GetTileWorldPositionAt(26, 80)){
+        _gameObjects.Add(new CursedGauntlet(Gauntlet, ItemType.Accessory, TileMap.GetTileWorldPositionAt(26, 80)){
             Name =  "CursedGauntlet",
+            Description = "Test CursedGauntlet Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
         
-        _gameObjects.Add(new Potion(HealthPotionTemp, ItemType.Consumable, "Testing Potion", TileMap.GetTileWorldPositionAt(12, 90)){
+        _gameObjects.Add(new Potion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
             Name =  "HealthPotion",
+            Description = "Test HealthPotion Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, "Testing Speed Potion", TileMap.GetTileWorldPositionAt(31, 90)){
+        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
             Name =  "SpeedPotion",
+            Description = "Test SpeedPotion Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
         
-        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, "Testing 1Up", TileMap.GetTileWorldPositionAt(16, 90)){
+        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "1Up",
+            Description = "Test LifeUp Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Sword(sword, ItemType.MeleeWeapon, "Testing Sword", TileMap.GetTileWorldPositionAt(4, 90)){
+        _gameObjects.Add(new Sword(sword, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
+            Description = "Test Sword Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, "Testing Gun", TileMap.GetTileWorldPositionAt(8, 90)){
+        _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
+            Description = "Test Gun Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, "Testing Staff", TileMap.GetTileWorldPositionAt(40, 90)){
+        _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
+            Description = "Test Staff Description",
             MPCost = 10,
 
             FireBall = new FireBall(FireBall, ExplosionEffect)
@@ -542,8 +557,9 @@ public class PlayScene : Scene
             Viewport = new Rectangle(0, 0, 32,32),
         });
 
-        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, "Testing jumppotion", TileMap.GetTileWorldPositionAt(35, 90)){
+        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
             Name =  "jumppotion",
+            Description = "Test JumpPotion Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
     }
