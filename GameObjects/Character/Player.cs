@@ -166,7 +166,7 @@ namespace FinalComGame
 
             Direction = 1; // Reset direction to right
 
-            Health = MaxHealth - 50; //REMOVE LATER FOR DEBUG
+            Health = MaxHealth;
             MP = MaxMP;
             AbsorptionHealth = 0;
 
