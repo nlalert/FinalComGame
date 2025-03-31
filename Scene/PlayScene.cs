@@ -340,7 +340,7 @@ public class PlayScene : Scene
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
             {
-                979999,         
+                97,         
                 new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
@@ -404,7 +404,7 @@ public class PlayScene : Scene
             },
             
             {
-                97,
+                118,
                 new TowerEnemy(_TowerTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
