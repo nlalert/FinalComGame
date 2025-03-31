@@ -283,6 +283,7 @@ public class PlayScene : Scene
         SoundEffect playerDashSound = _content.Load<SoundEffect>("Dash");
         SoundEffect playerPunchSound = _content.Load<SoundEffect>("PlayerPunch");
         SoundEffect playerChargeBulletSound = _content.Load<SoundEffect>("ChargingBullet");
+        SoundEffect playerBulletShotSound = _content.Load<SoundEffect>("BulletShot");
         
         Singleton.Instance.Player = new Player(playerTexture, playerParticle)
         {
@@ -340,6 +341,7 @@ public class PlayScene : Scene
             DashSound = playerDashSound,
             PunchSound = playerPunchSound,
             ChargingSound = playerChargeBulletSound,
+            BulletShotSound = playerBulletShotSound,
 
             Bullet = new PlayerBullet(projectileTexture)
             {

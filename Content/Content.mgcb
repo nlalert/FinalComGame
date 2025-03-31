@@ -37,6 +37,12 @@
 /processorParam:TextureFormat=Color
 /build:atlas.png
 
+#begin BulletShot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BulletShot.wav
+
 #begin Bunny.png
 /importer:TextureImporter
 /processor:TextureProcessor

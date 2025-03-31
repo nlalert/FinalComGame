@@ -90,6 +90,7 @@ namespace FinalComGame
         public SoundEffect DashSound;
         public SoundEffect PunchSound;
         public SoundEffect ChargingSound;
+        public SoundEffect BulletShotSound;
         private SoundEffectInstance _chargingSoundInstance;
         //Animation
         private Animation HandAnimation;
@@ -1054,7 +1055,7 @@ namespace FinalComGame
 
             if(_chargingSoundInstance.State == SoundState.Playing)
                 _chargingSoundInstance.Volume *= 0.5f;
-
+            
             // Calculate charge power (linear scaling from min to max)
             float chargeRatio = Math.Min(_chargeTime / MaxChargeTime, 1.0f);
             float chargePower = MinChargePower + chargeRatio * (MaxChargePower - MinChargePower);
@@ -1084,11 +1085,8 @@ namespace FinalComGame
             
             // Change color based on charge (optional)
             // newBullet.Color = chargeColor;
-;
-            
-            // // Play charged shot sound if available
-            // if (ChargeShotSound != null && chargeRatio > 0.5f)
-            //     ChargeShotSound.Play();
+
+            BulletShotSound.Play();
             
             // Reset charging state
             _isCharging = false;
