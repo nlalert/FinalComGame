@@ -55,9 +55,8 @@ public class ItemTooltip : WorldSpaceUIElement
     
     public override void Draw(SpriteBatch spriteBatch)
     {
-        if(_displayText == null) return;
-
-        if(!item.InPickupRadius()) return;
+        if(_displayText == null || item.IsPickedUp || !item.InPickupRadius()) 
+            return;
 
         // Draw background
         spriteBatch.Draw(

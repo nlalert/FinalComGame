@@ -28,7 +28,7 @@ namespace FinalComGame
             }
             else if(_jumpBoostTimer < 0){
                 Singleton.Instance.Player.ResetJumpStrength();
-                IsActive = false;
+                RemoveItem();
             }
         }
         // // Method to be overridden by specific item types

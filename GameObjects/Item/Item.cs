@@ -70,6 +70,12 @@ public class Item : GameObject, IItemDisplayable
         originalPosition = position;
     }
 
+    public virtual void RemoveItem()
+    {
+        IsActive = false;
+        Singleton.Instance.CurrentUI.RemoveWorldSpaceElement(tooltip);
+    }
+
     public virtual string GetDisplayProperties()
     {
         return ""; // Default is no additional properties
