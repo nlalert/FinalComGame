@@ -15,7 +15,7 @@ namespace FinalComGame
         private bool _isDashing;
         private float _dashTimer = 0f;
         private float _dashDuration = 2f;
-        private float _beamchargingTime = 5.0f;
+        private float _beamchargingTime = 2.0f;
         private float _beamingTime = 20.0f; 
         private float _rotationAngle = 0f;
         private Vector2 _dashAim;
@@ -25,6 +25,7 @@ namespace FinalComGame
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
         public DemonLaser Laserproj;
+
 
         public Rhulk(Texture2D texture) : base(texture)
         { 
@@ -185,10 +186,26 @@ namespace FinalComGame
                 _actionTimer = _beamingTime;
                 //Spawn Projectiles
                 Console.WriteLine("Spawn Laser");
-                DemonLaser laser = Laserproj.Clone() as DemonLaser;
-                laser.Activate(Position + new Vector2(Rectangle.Width / 2, Rectangle.Height / 2), _rotationAngle);
-                laser.Shoot(Position, Vector2.Zero);
-                gameObjects.Add(laser);
+                int numLines = 4; // Number of lines
+                float angleOffset = MathHelper.TwoPi / numLines;
+                for (int i = 0; i < numLines; i++){
+                    DemonLaser laser = Laserproj.Clone() as DemonLaser;
+                    laser.Shoot(Position, new Vector2(_rotationAngle+ (i * angleOffset),400f) );
+                    gameObjects.Add(laser);
+                }
+                //draw line is working
+                // int numLines = 5; // Number of lines
+                // float radius = 600f; // Length of each line
+                // float angleOffset = MathHelper.TwoPi / numLines; // 360 degrees / numLines
+                // Vector2 centerPos = this.Position + new Vector2(this.Rectangle.Width/2,this.Rectangle.Height/2);
+                // for (int i = 0; i < numLines; i++)
+                // {
+                //     float angle = _rotationAngle + (i * angleOffset);
+                //     Vector2 direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * radius;
+                //     Vector2 endPosition = cent rPos + direction;
+
+                //     // DrawLine(spriteBatch, centerPos, endPosition, Color.Red);
+                // }
             }
         }
         private void AI_Attack(float deltaTime,List<GameObject> gameObjects, TileMap tileMap){
@@ -196,8 +213,7 @@ namespace FinalComGame
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
             if(_actionTimer>0){
-                _rotationAngle += 0.5f * deltaTime * (_isEnraged ? 1.5f : 1); // Adjust speed of rotation (increase for faster rotation)
-                //do Attack
+                //doing Attack
             }else{
                 CurrentState = EnemyState.Chase;
                 CanCollideTile = true;
@@ -270,7 +286,7 @@ namespace FinalComGame
             }
             else if(CurrentState == EnemyState.Floating || CurrentState == EnemyState.Attack){
                 // spriteBatch.DrawString(Singleton.Instance.GameFont, "StartPos", textPosition , Color.White);
-                DrawRotatingLines(spriteBatch);
+                // DrawRotatingLines(spriteBatch);
             }
         }
         private void DrawRotatingLines(SpriteBatch spriteBatch)
