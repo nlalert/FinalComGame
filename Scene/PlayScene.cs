@@ -368,19 +368,19 @@ public class PlayScene : Scene
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
-            // {
-            //     97,         
-            //     new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
-            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = new Rectangle(0, 0, 16, 16),
-            //         MaxHealth = 50f,
-            //         BaseAttackDamage = 3f,
+            {
+                97,         
+                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 16, 16),
+                    MaxHealth = 50f,
+                    BaseAttackDamage = 3f,
 
-            //         JumpCooldown = 3.0f,
-            //         BaseJumpStrength = 550,
-            //         Friction = 0.96f
-            //     }
-            // },
+                    JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f
+                }
+            },
 
             {
                 98,
