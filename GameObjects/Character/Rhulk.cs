@@ -90,7 +90,7 @@ namespace FinalComGame
             if (_actionTimer <= 0)
             {
                 // random attack pattern
-                if(false){
+                if(Singleton.Instance.Random.NextDouble() > 0.5f){
                     // start charging
                     CurrentState = EnemyState.Charging;
                     _actionTimer = _chargeTime;
@@ -193,19 +193,6 @@ namespace FinalComGame
                     laser.Shoot(Position, new Vector2(_rotationAngle+ (i * angleOffset),400f) );
                     gameObjects.Add(laser);
                 }
-                //draw line is working
-                // int numLines = 5; // Number of lines
-                // float radius = 600f; // Length of each line
-                // float angleOffset = MathHelper.TwoPi / numLines; // 360 degrees / numLines
-                // Vector2 centerPos = this.Position + new Vector2(this.Rectangle.Width/2,this.Rectangle.Height/2);
-                // for (int i = 0; i < numLines; i++)
-                // {
-                //     float angle = _rotationAngle + (i * angleOffset);
-                //     Vector2 direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * radius;
-                //     Vector2 endPosition = cent rPos + direction;
-
-                //     // DrawLine(spriteBatch, centerPos, endPosition, Color.Red);
-                // }
             }
         }
         private void AI_Attack(float deltaTime,List<GameObject> gameObjects, TileMap tileMap){
