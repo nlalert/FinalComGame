@@ -367,6 +367,8 @@ public class PlayScene : Scene
 
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
 
+        SoundEffect hitSound = _content.Load<SoundEffect>("HitEnemy");
+
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
@@ -380,7 +382,9 @@ public class PlayScene : Scene
 
                     JumpCooldown = 3.0f,
                     BaseJumpStrength = 550,
-                    Friction = 0.96f
+                    Friction = 0.96f,
+
+                    HitSound = hitSound
                 }
             },
 
@@ -398,6 +402,8 @@ public class PlayScene : Scene
                     ChargeTime = 2.0f,
                     ChaseDuration = 5f,
                     DashDuration = 1.0f,
+
+                    HitSound = hitSound
                 }
             },
 
@@ -413,6 +419,8 @@ public class PlayScene : Scene
                     LimitIdlePatrol = 100,
 
                     IgnorePlayerDuration = 3f,
+
+                    HitSound = hitSound
                 }
             },
             {
@@ -422,6 +430,8 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 64, 32),
 
                     MaxHealth = float.MaxValue,
+
+                    HitSound = hitSound // Temp
                 }
             },
             {
@@ -431,6 +441,8 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 16, 16),
 
                     MaxHealth = 150f,
+
+                    HitSound = hitSound,
 
                     TowerBullet = new TowerBullet(projectileTexture)
                     {
@@ -449,6 +461,8 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 32, 64),
 
                     MaxHealth = 100f,
+
+                    HitSound = hitSound,
 
                     DemonBullet = new DemonBullet(_DemonBulletTexture)
                     {
@@ -470,7 +484,9 @@ public class PlayScene : Scene
 
                     // JumpCooldown = 3.0f,
                     BaseJumpStrength = 550,
-                    Friction = 0.96f
+                    Friction = 0.96f,
+
+                    HitSound = hitSound
                 }
             },
             //DONOT REMOVE This. just add new number please cuz Feen's dont know where and what to assign this number
@@ -485,7 +501,9 @@ public class PlayScene : Scene
 
             //         // JumpCooldown = 3.0f,
             //         BaseJumpStrength = 550,
-            //         Friction = 0.96f
+            //         Friction = 0.96f,
+
+                    // HitSound = hitSound
             //     }
             // },
             {
@@ -499,7 +517,9 @@ public class PlayScene : Scene
 
                     // JumpCooldown = 3.0f,
                     BaseJumpStrength = 550,
-                    Friction = 0.96f
+                    Friction = 0.96f,
+
+                    HitSound = hitSound
                 }
             },
             {
@@ -514,6 +534,9 @@ public class PlayScene : Scene
                     // JumpCooldown = 3.0f,
                     BaseJumpStrength = 550,
                     Friction = 0.96f,
+
+                    HitSound = hitSound,
+                    
                     Laserproj = new DemonLaser(_LaserTexture)
                     {
                         Name = "BulletEnemy",

@@ -1,5 +1,6 @@
 using FinalComGame;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,8 @@ namespace FinalComGame {
         //Animation
         protected Animation _idleAnimation;
         protected Animation _runAnimation;
+
+        public SoundEffect HitSound;
 
         public string _currentAnimation = "idle";
 

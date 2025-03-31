@@ -440,6 +440,12 @@
 /processorParam:TextureFormat=Color
 /build:Hermes_Boots.png
 
+#begin HitEnemy.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:HitEnemy.wav
+
 #begin Items.png
 /importer:TextureImporter
 /processor:TextureProcessor
