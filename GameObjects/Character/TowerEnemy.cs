@@ -160,8 +160,11 @@ namespace FinalComGame
         {
             Vector2 direction = Vector2.Normalize(Singleton.Instance.Player.Position - Position);
             TowerBullet bullet = TowerBullet.Clone() as TowerBullet;
+
+            Vector2 bulletPosition = new Vector2(Position.X + Viewport.Width / 2, Position.Y + Viewport.Height / 2);
+
             bullet.DamageAmount = bullet.BaseDamageAmount;
-            bullet.Shoot(Position, direction);
+            bullet.Shoot(bulletPosition, direction);
             gameObjects.Add(bullet);
         }
         public override void Draw(SpriteBatch spriteBatch)

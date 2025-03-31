@@ -277,7 +277,7 @@
 /processorParam:TextureFormat=Color
 /build:ExplosionEffect.png
 
-#begin FireBall.jpg
+#begin FireBall.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -287,7 +287,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:FireBall.jpg
+/build:FireBall.png
 
 #begin FireballExplosion.wav
 /importer:WavImporter
@@ -505,6 +505,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:PlayerPunch.wav
+
+#begin Projectile.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Projectile.png
 
 #begin Skeleton.png
 /importer:TextureImporter
