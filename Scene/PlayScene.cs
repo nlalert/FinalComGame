@@ -685,14 +685,7 @@ public class PlayScene : Scene
             spriteViewport = new Rectangle(64, 0, 32, 32),
         });
 
-        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
-            Name =  "jumppotion",
-            Description = "Test JumpPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32)
-        });
-
-
-        _gameObjects.Add(new SoulStaff(SoulStaff,ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
+        _gameObjects.Add(new SoulStaff(ItemTexture,ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "Staff",
             Description = "Summon Your best Minion!",
             MPCost = 10,
@@ -709,6 +702,7 @@ public class PlayScene : Scene
                 }
             },
             Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(0, 32, 32, 32),
         });
     }
 
