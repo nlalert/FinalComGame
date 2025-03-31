@@ -6,14 +6,16 @@ namespace FinalComGame
 {
     public class HealthBar : Bar
     {
-        public HealthBar(Rectangle bounds, Color foregroundColor, Color backgroundColor, bool showBorder = true, Color? borderColor = null, int borderThickness = 2) 
+        public Character Target;
+        public HealthBar(Character target, Rectangle bounds, Color foregroundColor, Color backgroundColor, bool showBorder = true, Color? borderColor = null, int borderThickness = 2) 
             : base(bounds, foregroundColor, backgroundColor, showBorder,  borderColor, borderThickness)
         {
+            Target = target;
         }
 
         public override float GetPercentage()
         {
-            return Singleton.Instance.Player.Health / Singleton.Instance.Player.MaxHealth;
+            return Target.Health / Target.MaxHealth;
         }
     }
 }

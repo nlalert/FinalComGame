@@ -587,6 +587,7 @@ public class PlayScene : Scene
     protected override void SetupUI()
     {
         HealthBar playerHealth = new HealthBar(
+            Singleton.Instance.Player,
             new Rectangle(20, 40, 200, 30),
             Color.Red,
             Color.Gray
