@@ -41,21 +41,16 @@ public class Scene
 
     public virtual void Update(GameTime gameTime)
     {
-        _ui.Update(gameTime);
+        Singleton.Instance.CurrentUI = _ui;
     }   
 
     public virtual void Draw(GameTime gameTime)
     {
-        DrawUI();
     }   
-
-    protected void DrawUI()
+    
+    protected void DrawWorldSpaceUI()
     {
-        _spriteBatch.Begin(); 
-
-        _ui.Draw(_spriteBatch);
-
-        _spriteBatch.End();
+        _ui.DrawWorldSpaceUI(_spriteBatch);
     }
     
     protected virtual void Reset()

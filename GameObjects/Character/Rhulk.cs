@@ -26,6 +26,8 @@ namespace FinalComGame
         private Vector2 _barrierEnd1;
         public DemonLaser Laserproj;
 
+        public HealthBar HealthBar;
+
 
         public Rhulk(Texture2D texture) : base(texture)
         { 
@@ -316,8 +318,20 @@ namespace FinalComGame
             _spawnPoint = this.Position;
             _actionTimer = 3f;
             CurrentState = EnemyState.Chase;
+            HealthBar = new HealthBar(
+                this,
+                new Rectangle((Singleton.SCREEN_WIDTH - 200)/2, Singleton.SCREEN_HEIGHT * 5 / 6, 200, 30),
+                Color.Red,
+                Color.Gray
+            );
+            Singleton.Instance.CurrentUI.AddHUDElement(HealthBar);
             base.OnSpawn();
         }
-        
+        public override void OnDead()
+        {
+            Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+            Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
+            base.OnDead();
+        }
     }
 }

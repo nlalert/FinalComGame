@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FinalComGame
 {
-    public class Button : UIElement
+    public class Button : HUDElement
     {
         private Texture2D texture;
         private Texture2D hoverTexture;

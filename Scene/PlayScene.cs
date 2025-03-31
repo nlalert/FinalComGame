@@ -149,14 +149,12 @@ public class PlayScene : Scene
                 DrawAllObjects();
                 _spriteBatch.End();
 
-                _spriteBatch.Begin(); 
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp); 
                 _spriteBatch.DrawString(Singleton.Instance.GameFont, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
                 _spriteBatch.DrawString(Singleton.Instance.GameFont, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
         }
-
-        DrawUI();
 
         _graphics.BeginDraw();
     }
@@ -228,11 +226,7 @@ public class PlayScene : Scene
         _parallaxBackground = new ParallaxBackground(_parallaxFGtexture, _parallaxMGtexture, _parallaxBGtexture, StageManager.GetPlayerWorldSpawnPosition());
 
         CreatePlayer();
-        _gameObjects.Add(Singleton.Instance.Player);
-
         CreateEnemies();
-        AddItems();
-        SetupUI();
 
         foreach (GameObject s in _gameObjects)
         {
@@ -262,7 +256,7 @@ public class PlayScene : Scene
         _gameObjects.Add(Singleton.Instance.Player);
 
         InitializeAmbushAreas();
-        SpawnEnemies();
+        // SpawnEnemies();
         AddItems();
         SetupUI();
         
@@ -649,6 +643,8 @@ public class PlayScene : Scene
 
     protected override void SetupUI()
     {
+        _ui.ClearAllUI();
+
         HealthBar playerHealth = new HealthBar(
             Singleton.Instance.Player,
             new Rectangle(20, 40, 200, 30),
@@ -690,11 +686,11 @@ public class PlayScene : Scene
             slot
         );
 
-        _ui.AddElement(playerHealth);
-        _ui.AddElement(playerMP);
-        _ui.AddElement(MeleeWeaponSlot);
-        _ui.AddElement(RangeWeaponSlot);
-        _ui.AddElement(ItemSlot1);
-        _ui.AddElement(ItemSlot2);
+        _ui.AddHUDElement(playerHealth);
+        _ui.AddHUDElement(playerMP);
+        _ui.AddHUDElement(MeleeWeaponSlot);
+        _ui.AddHUDElement(RangeWeaponSlot);
+        _ui.AddHUDElement(ItemSlot1);
+        _ui.AddHUDElement(ItemSlot2);
     }
 }

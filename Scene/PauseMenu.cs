@@ -156,11 +156,11 @@ public class PauseMenu : Scene
         );
         _backButton.OnClick += BackButton_OnClick;
 
-        _ui.AddElement(_resumeButton);
-        _ui.AddElement(_restartButton);
-        _ui.AddElement(_settingsButton);
-        _ui.AddElement(_mainmenuButton);
-        _ui.AddElement(_backButton);
+        _ui.AddHUDElement(_resumeButton);
+        _ui.AddHUDElement(_restartButton);
+        _ui.AddHUDElement(_settingsButton);
+        _ui.AddHUDElement(_mainmenuButton);
+        _ui.AddHUDElement(_backButton);
 
         // _musicSlideChip = new Button(_texture)
         // {

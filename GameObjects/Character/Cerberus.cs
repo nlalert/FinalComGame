@@ -29,6 +29,8 @@ namespace FinalComGame
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
 
+        public HealthBar HealthBar;
+
         public Cerberus(Texture2D texture, Texture2D particleTexture) : base(texture) 
         { 
             // Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
@@ -296,6 +298,13 @@ namespace FinalComGame
         {
             _actionTimer = 3f;
             CurrentState = EnemyState.Chase;
+            HealthBar = new HealthBar(
+                this,
+                new Rectangle((Singleton.SCREEN_WIDTH - 200)/2, Singleton.SCREEN_HEIGHT * 5 / 6, 200, 30),
+                Color.Red,
+                Color.Gray
+            );
+            Singleton.Instance.CurrentUI.AddHUDElement(HealthBar);
             base.OnSpawn();
         }
         
@@ -323,6 +332,7 @@ namespace FinalComGame
         public override void OnDead()
         {
             Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+            Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
             base.OnDead();
         }
     }
