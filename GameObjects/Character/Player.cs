@@ -214,8 +214,8 @@ namespace FinalComGame
 
             HandleInput(deltaTime, gameObjects);
             RegenerateMP(deltaTime);
-            ActiveItemPassiveAbility(deltaTime);
-            UpdateUsingItem(deltaTime);
+            ActiveItemPassiveAbility(deltaTime,gameObjects);
+            UpdateUsingItem(deltaTime,gameObjects);
             UpdateInvincibilityTimer(deltaTime);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
@@ -725,18 +725,18 @@ namespace FinalComGame
             return Velocity.Y == 0 || _isClimbing;
         }
 
-        private void ActiveItemPassiveAbility(float deltaTime)
+        private void ActiveItemPassiveAbility(float deltaTime,List<GameObject> gameObjects)
         {
             for (int i = 0; i < 4; i++)
             {
                 if (ItemSlot[i] == null || ItemSlot[i].Type == ItemType.Consumable) continue;
 
-                ItemSlot[i].ActiveAbility(deltaTime, i);
+                ItemSlot[i].ActiveAbility(deltaTime,i,gameObjects);
                 
             }
         }
 
-        private void UpdateUsingItem(float deltaTime)
+        private void UpdateUsingItem(float deltaTime,List<GameObject> gameObjects)
         {
             for (int i = usingConsumableItem.Count - 1; i >= 0; i--)
             {
@@ -746,7 +746,7 @@ namespace FinalComGame
                 }
                 else
                 {
-                    usingConsumableItem[i].ActiveAbility(deltaTime, i);
+                    usingConsumableItem[i].ActiveAbility(deltaTime, i, gameObjects);
                 }
             }
         }

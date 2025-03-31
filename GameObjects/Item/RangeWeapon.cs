@@ -64,10 +64,10 @@ public class RangeWeapon : Item, IShootable
         base.OnDrop(position);
     }
 
-    public override void ActiveAbility(float deltaTime, int slot)
+    public override void ActiveAbility(float deltaTime, int slot,List<GameObject> gameObjects)
     {
         Singleton.Instance.Player.ChangeToRangeWeaponAttack(AttackDamage);
-        base.ActiveAbility(deltaTime, slot);
+        base.ActiveAbility(deltaTime, slot, gameObjects);
     }
 
     public override string GetDisplayProperties()

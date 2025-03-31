@@ -24,7 +24,8 @@ public class PlayScene : Scene
     private Texture2D _CerberusTexture;
     private Texture2D _RhulkTexture;
     private Texture2D _LaserTexture;
-
+    private Texture2D _SoulMinion;
+    private Texture2D _MinionSoulBullet;
 
     private Texture2D _parallaxFGtexture;
     private Texture2D _parallaxMGtexture;
@@ -66,7 +67,8 @@ public class PlayScene : Scene
         _CerberusTexture = _content.Load<Texture2D>("Cerberus");
         _RhulkTexture = _content.Load<Texture2D>("EnemyRhulk");
         _LaserTexture = _content.Load<Texture2D>("Laserbeam");
-
+        _SoulMinion = _content.Load<Texture2D>("SoulMinion");
+        _MinionSoulBullet = _content.Load<Texture2D>("MinionSoulBullet");
 
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
@@ -581,6 +583,8 @@ public class PlayScene : Scene
         Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
         Texture2D FireBall = _content.Load<Texture2D>("Projectile");
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
+        Texture2D SoulStaff = _content.Load<Texture2D>("SoulStaff");
+        
 
         //set for all item
         Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
@@ -667,6 +671,32 @@ public class PlayScene : Scene
                 Radius = 60f,
                 ExplosionDuration = 0.5f,
                 Viewport = new Rectangle(0, 0, 8, 8)
+            },
+            Viewport = new Rectangle(0, 0, 32,32),
+        });
+
+        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
+            Name =  "jumppotion",
+            Description = "Test JumpPotion Description",
+            Viewport = new Rectangle(0, 0, 32,32)
+        });
+
+
+        _gameObjects.Add(new SoulStaff(SoulStaff,ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
+            Name =  "Staff",
+            Description = "Summon Your best Minion!",
+            MPCost = 10,
+            soulMinion = new SoulMinion(_SoulMinion)
+            {
+                Name = "Soul Minion",
+                BaseDamageAmount = 0f,
+                Viewport = new Rectangle(0, 0, 12, 12),
+                soulBullet = new SoulBullet(_MinionSoulBullet){
+                    Name = "Soul Bullet",
+                    BaseDamageAmount = 15f,
+                    Speed = 150f,
+                    Viewport = new Rectangle(0, 0, 10, 10),
+                }
             },
             Viewport = new Rectangle(0, 0, 32,32),
         });

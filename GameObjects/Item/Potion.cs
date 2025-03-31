@@ -15,7 +15,7 @@ namespace FinalComGame
             this._healAmount = healAmount;
         }
 
-        public override void ActiveAbility(float deltaTime, int slot)
+        public override void ActiveAbility(float deltaTime, int slot,List<GameObject> gameObjects)
         {
             Singleton.Instance.Player.Health += _healAmount;
             Singleton.Instance.Player.Health = Math.Min(Singleton.Instance.Player.Health, Singleton.Instance.Player.MaxHealth);

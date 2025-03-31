@@ -55,10 +55,9 @@ public class Item : GameObject, IItemDisplayable
         Console.WriteLine("Using Item");      
     }
     
-    public virtual void ActiveAbility(float deltaTime, int slot)
+    public virtual void ActiveAbility(float deltaTime, int slot,List<GameObject> gameObject)
     {    
     }
-    
     // Called when item is picked up
     public virtual void OnPickup(int slot)
     {
