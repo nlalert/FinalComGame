@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 
 namespace FinalComGame {
     public abstract class BaseEnemy : Character
@@ -94,13 +95,11 @@ namespace FinalComGame {
                 return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;
+            HitSound?.Play();
             StartInvincibility();
             //Console.WriteLine("Damage " + damageAmount + " CurHP" + Health);
         }
-        /// <summary>
-        /// This npc physically contact with Player
-        /// </summary>
-        /// <param name="player">Player Character</param>
+
         public virtual void OnCollidePlayer()
         {
             Singleton.Instance.Player.OnCollideNPC(this,this.AttackDamage);
@@ -158,7 +157,7 @@ namespace FinalComGame {
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && tile.IsSolid)
+                    if(tile != null && (tile.Type == TileType.Barrier || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile))))
                     {
                         if(ResolveHorizontalCollision(tile)){
                             OnCollisionHorizon();
@@ -180,7 +179,7 @@ namespace FinalComGame {
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && tile.IsSolid)
+                    if(tile != null && (tile.Type == TileType.Barrier || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile))))
                     {
                         if(ResolveVerticalCollision(tile)){
                             OnLandVerticle();
@@ -188,6 +187,18 @@ namespace FinalComGame {
                     }
                 }
             }
+        }
+
+        public virtual bool IsAbovePlayer(){
+            return Position.Y < Singleton.Instance.Player.Position.Y;
+        }
+
+        public virtual bool IsPlayerAbovePlatform(Tile tile){
+            return Position.Y <= tile.Position.Y;
+        }
+
+        public virtual bool CanDropThroughPlatform(Tile tile){
+            return (IsAbovePlayer() && IsPlayerAbovePlatform(tile)) || Velocity.Y < 0;
         }
 
         public virtual bool CheckContactPlayer(){
