@@ -128,7 +128,7 @@ public class PlayScene : Scene
                 DrawAllObjects();
                 _spriteBatch.End();
 
-                _spriteBatch.Begin(); 
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp); 
                 _spriteBatch.DrawString(Singleton.Instance.GameFont, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
                 _spriteBatch.DrawString(Singleton.Instance.GameFont, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();

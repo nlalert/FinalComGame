@@ -57,6 +57,8 @@ public class ItemTooltip : WorldSpaceUIElement
     {
         if(_displayText == null) return;
 
+        if(!item.InPickupRadius()) return;
+
         // Draw background
         spriteBatch.Draw(
             backgroundTexture,
