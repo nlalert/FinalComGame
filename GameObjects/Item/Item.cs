@@ -20,6 +20,7 @@ public class Item : GameObject, IItemDisplayable
     public string Description;
     public bool IsPickedUp;
 
+    public Rectangle spriteViewport = new Rectangle(0, 0, 32,32);
     public ItemType Type;
     
     // Visual indicator for pickup range
@@ -113,7 +114,7 @@ public class Item : GameObject, IItemDisplayable
             spriteBatch.Draw(
                 _texture,
                 Position,
-                Viewport,
+                spriteViewport,
                 Color.White,
                 0f, 
                 Vector2.Zero,
@@ -140,7 +141,7 @@ public class Item : GameObject, IItemDisplayable
         spriteBatch.Draw(
             _texture,
             destinationRect,
-            Viewport,
+            spriteViewport,
             Color.White,
             0f, 
             Vector2.Zero,

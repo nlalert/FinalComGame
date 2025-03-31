@@ -498,6 +498,9 @@ public class PlayScene : Scene
 
     private void AddItems()
     {
+        Texture2D ItemTexture = _content.Load<Texture2D>("Items");
+        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
+
         Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
         Texture2D sword = _content.Load<Texture2D>("Sword");
         Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
@@ -520,22 +523,25 @@ public class PlayScene : Scene
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
-        _gameObjects.Add(new SpeedBoots(Hermes_Boots, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
+        _gameObjects.Add(new SpeedBoots(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
             Name =  "HealthPotion",
             Description = "Test SpeedBoots Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32, 32),
+            spriteViewport = new Rectangle(32, 32, 32, 32)
         });
 
-        _gameObjects.Add(new CursedGauntlet(Gauntlet, ItemType.Accessory, TileMap.GetTileWorldPositionAt(26, 80)){
+        _gameObjects.Add(new CursedGauntlet(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(26, 80)){
             Name =  "CursedGauntlet",
             Description = "Test CursedGauntlet Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32, 32),
+            spriteViewport = new Rectangle(64, 32, 32, 32)
         });
         
-        _gameObjects.Add(new Potion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
+        _gameObjects.Add(new Potion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
             Name =  "HealthPotion",
             Description = "Test HealthPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32, 32),
+            spriteViewport = new Rectangle(0, 32, 32, 32)
         });
 
         _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
@@ -551,38 +557,42 @@ public class PlayScene : Scene
         });
 
         SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
-        _gameObjects.Add(new Sword(sword, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
+        _gameObjects.Add(new Sword(ItemTexture, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
             Description = "Test Sword Description",
             Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(32, 0, 32, 32),
             SlashSound = SwordSlashSound,
         });
 
-        _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
+        _gameObjects.Add(new Gun(ItemTexture, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
             Description = "Test Gun Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(0, 0, 32, 32),
         });
 
 
         SoundEffect FireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
         SoundEffect FireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
-        _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(40, 90)){
+        _gameObjects.Add(new Staff(ItemTexture, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
             Description = "Test Staff Description",
             MPCost = 10,
             FireBallShootingSound = FireBallShootingSound,
 
-            FireBall = new FireBall(FireBall, ExplosionEffect, FireBallExplosionSound)
+            FireBall = new FireBall(projectileTexture, ExplosionEffect, FireBallExplosionSound)
             {
                 Name = "FireBall",
                 BaseDamageAmount = 30f,
                 Speed = 500f,
                 Radius = 60f,
                 ExplosionDuration = 0.5f,
-                Viewport = new Rectangle(0, 0, 8, 8)
+                Viewport = new Rectangle(0, 0, 8, 8),
+                spriteViewport = new Rectangle(64, 32, 32, 32)
             },
             Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(64, 0, 32, 32),
         });
 
         _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
