@@ -109,7 +109,7 @@ namespace FinalComGame {
         {   
             base.OnCollideNPC(npc, damageAmount);
         }
-        public void OnDead(TileMap tileMap)
+        public override void OnDead()
         {
             DropItem();
             base.OnDead();
@@ -124,7 +124,7 @@ namespace FinalComGame {
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;
-                OnDead(tileMap);
+                OnDead();
             }
         }
 

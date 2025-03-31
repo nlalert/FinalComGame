@@ -253,5 +253,11 @@ namespace FinalComGame
             base.OnSpawn();
         }
 
+        public override void OnDead()
+        {
+            Singleton.Instance.Stage++;
+            Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
+            base.OnDead();
+        }
     }
 }

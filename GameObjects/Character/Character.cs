@@ -131,6 +131,7 @@ namespace FinalComGame {
         /// </summary>
         public virtual void OnDead()
         {
+            IsActive = false;
         }
 
         public void StartInvincibility()
