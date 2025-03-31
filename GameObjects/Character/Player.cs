@@ -89,7 +89,8 @@ namespace FinalComGame
         public SoundEffect JumpSound;
         public SoundEffect DashSound;
         public SoundEffect PunchSound;
-
+        public SoundEffect ChargingSound;
+        private SoundEffectInstance _chargingSoundInstance;
         //Animation
         private Animation HandAnimation;
         private string _currentHandAnimation = "idle";
@@ -1019,11 +1020,10 @@ namespace FinalComGame
                 _isCharging = true;
                 _chargeTime = 0f;
                 // chargeColor = Color.White;
-                
-                // // Play charge start sound if available
-                // if (ChargeSound != null)
-                //     ChargeSound.Play();
-                
+
+                if(_chargingSoundInstance == null)
+                    _chargingSoundInstance = ChargingSound.CreateInstance();
+                _chargingSoundInstance.Volume = 1.0f;
             }
         }
         
@@ -1031,7 +1031,7 @@ namespace FinalComGame
         {
             if (!_isCharging || MP <= 0)
                 return;
-                
+
             // Increment charge time
             _chargeTime += deltaTime;
             
@@ -1039,24 +1039,22 @@ namespace FinalComGame
             if (_chargeTime > MaxChargeTime)
                 _chargeTime = MaxChargeTime;
                 
-            // Update charge color (from white to red as charge increases)
-            // float chargeRatio = chargeTime / maxChargeTime;
-            // chargeColor = new Color(
-            //     1.0f, // Red always max
-            //     1.0f - (chargeRatio * (1.0f - chargeMinColorG)), // Green decreases
-            //     1.0f - (chargeRatio * (1.0f - chargeMinColorG)), // Blue decreases
-            //     1.0f); // Alpha always max
-                
             // Drain MP while charging (more MP for longer charge)
             if (_chargeTime < MaxChargeTime)
-            DrainMP(ChargeMPCost / MaxChargeTime, deltaTime);
+                DrainMP(ChargeMPCost / MaxChargeTime, deltaTime);
+
+            if(_chargeTime > 0.3f && _chargingSoundInstance.State != SoundState.Playing)
+                _chargingSoundInstance.Play();
         }
         
         private void ReleaseChargedShot(List<GameObject> gameObjects)
         {
             if (!_isCharging)
                 return;
-                
+
+            if(_chargingSoundInstance.State == SoundState.Playing)
+                _chargingSoundInstance.Volume *= 0.5f;
+
             // Calculate charge power (linear scaling from min to max)
             float chargeRatio = Math.Min(_chargeTime / MaxChargeTime, 1.0f);
             float chargePower = MinChargePower + chargeRatio * (MaxChargePower - MinChargePower);
