@@ -15,6 +15,7 @@ public class Item : GameObject, IItemDisplayable
 {
     public static Texture2D TooltipBackgroundTexture;
     public static SoundEffect PickUpSound;
+    public SoundEffect UseSound;
     
     // Item properties
     public string Description;
@@ -49,6 +50,7 @@ public class Item : GameObject, IItemDisplayable
     // // Method to be overridden by specific item types
     public virtual void Use(int slot)
     {
+        UseSound?.Play();
         Singleton.Instance.Player.AddUsingItem(slot);
         Console.WriteLine("Using Item");      
     }

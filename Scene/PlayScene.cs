@@ -563,10 +563,40 @@ public class PlayScene : Scene
         Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
         Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
 
+        SoundEffect PotionUseSound = _content.Load<SoundEffect>("PotionUse");
+        _gameObjects.Add(new Potion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
+            Name =  "HealthPotion",
+            Description = "Test HealthPotion Description",
+            Viewport = new Rectangle(0, 0, 32,32),
+            UseSound = PotionUseSound
+        });
+
+        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
+            Name =  "SpeedPotion",
+            Description = "Test SpeedPotion Description",
+            Viewport = new Rectangle(0, 0, 32,32),
+            UseSound = PotionUseSound
+        });
+
+        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
+            Name =  "jumppotion",
+            Description = "Test JumpPotion Description",
+            Viewport = new Rectangle(0, 0, 32,32),
+            UseSound = PotionUseSound
+        });
+
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
             Description = "Test Barrier Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32,32),
+            UseSound = PotionUseSound // Temp
+        });
+
+        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
+            Name =  "1Up",
+            Description = "Test LifeUp Description",
+            Viewport = new Rectangle(0, 0, 32,32),
+            UseSound = PotionUseSound // Temp
         });
 
         _gameObjects.Add(new SpeedBoots(Hermes_Boots, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
@@ -578,24 +608,6 @@ public class PlayScene : Scene
         _gameObjects.Add(new CursedGauntlet(Gauntlet, ItemType.Accessory, TileMap.GetTileWorldPositionAt(26, 80)){
             Name =  "CursedGauntlet",
             Description = "Test CursedGauntlet Description",
-            Viewport = new Rectangle(0, 0, 32,32)
-        });
-        
-        _gameObjects.Add(new Potion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
-            Name =  "HealthPotion",
-            Description = "Test HealthPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32)
-        });
-
-        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
-            Name =  "SpeedPotion",
-            Description = "Test SpeedPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32)
-        });
-        
-        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
-            Name =  "1Up",
-            Description = "Test LifeUp Description",
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
@@ -634,12 +646,6 @@ public class PlayScene : Scene
                 Viewport = new Rectangle(0, 0, 8, 8)
             },
             Viewport = new Rectangle(0, 0, 32,32),
-        });
-
-        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
-            Name =  "jumppotion",
-            Description = "Test JumpPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32)
         });
     }
 

@@ -548,6 +548,12 @@
 /processorParam:Quality=Best
 /build:PlayerPunch.wav
 
+#begin PotionUse.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:PotionUse.wav
+
 #begin Projectile.png
 /importer:TextureImporter
 /processor:TextureProcessor
