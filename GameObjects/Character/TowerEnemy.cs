@@ -21,6 +21,11 @@ namespace FinalComGame
             CanCollideTile = false;
         }
 
+        public override void OnSpawn()
+        {
+            Position -= new Vector2(4,4);
+        }
+
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
 
@@ -108,18 +113,17 @@ namespace FinalComGame
                 switch (animation)
                 {
                     case "shoot":
-                            Animation.ChangeTransitionAnimation(_currentAnimation, "charge_1");
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "charge_1");
                         break;
-
                     case "charge_1":
                     case "charge_2":
-                            Animation.ChangeAnimationAndKeepFrame(_currentAnimation);
+                        Animation.ChangeAnimationAndKeepFrame(_currentAnimation);
                         break;
                     case "idle":
-                            Animation.ChangeAnimationAndKeepFrame(_currentAnimation);
+                        Animation.ChangeAnimationAndKeepFrame(_currentAnimation);
                         break;
                     default:
-                            Animation.ChangeAnimation(_currentAnimation);
+                        Animation.ChangeAnimation(_currentAnimation);
                         break;
                 }    
             }

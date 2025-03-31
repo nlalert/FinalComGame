@@ -337,7 +337,7 @@ public class PlayScene : Scene
     private void CreateEnemies()
     {
         Texture2D _enemyTexture = _content.Load<Texture2D>("Skeleton");
-        Texture2D _DogTexture = _content.Load<Texture2D>("EnemyDog");
+        Texture2D _DogTexture = _content.Load<Texture2D>("HellHound");
         Texture2D _SlimeTexture = _content.Load<Texture2D>("HellSlime");
         Texture2D _DemonTexture = _content.Load<Texture2D>("Demon");
         Texture2D _TowerTexture = _content.Load<Texture2D>("Spitter");
@@ -358,9 +358,9 @@ public class PlayScene : Scene
                     MaxHealth = 50f,
                     BaseAttackDamage = 3f,
 
-                    JumpCooldown = 3.0f,
-                    BaseJumpStrength = 550,
-                    Friction = 0.96f
+                    JumpCooldown = 2.0f,
+                    BaseJumpStrength = 490,
+                    Friction = 0.95f
                 }
             },
 
@@ -368,7 +368,7 @@ public class PlayScene : Scene
                 98,
                 new HellhoundEnemy(_DogTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 32),
+                    Viewport = new Rectangle(0, 0, 32, 32),
                     
                     MaxHealth = 1f,
                     BaseAttackDamage = 8f,
