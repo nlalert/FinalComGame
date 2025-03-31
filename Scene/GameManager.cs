@@ -90,6 +90,8 @@ public class GameManager : Game
         //         break;
         }
 
+        Singleton.Instance.CurrentUI.Update(gameTime);
+
         Singleton.Instance.UpdatePreviousInput();
 
         base.Update(gameTime);
@@ -126,6 +128,9 @@ public class GameManager : Game
         //         _mainScene.Draw(gameTime);
         //         break;
         }
+                
+        Singleton.Instance.CurrentUI.DrawWorldSpaceUI(_spriteBatch);
+        Singleton.Instance.CurrentUI.DrawHUD(_spriteBatch);
 
         // _spriteBatch.End();
 

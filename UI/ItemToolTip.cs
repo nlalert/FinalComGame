@@ -3,8 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame;
-
-public class ItemTooltip : UIElement
+public class ItemTooltip : WorldSpaceUIElement
 {
     private Item item;
     private Texture2D backgroundTexture;
@@ -13,10 +12,12 @@ public class ItemTooltip : UIElement
     private int padding = 10;
     private float fontScale = 0.5f; // Half the original font size
     
-    public ItemTooltip(Item item, Texture2D backgroundTexture) : base(Rectangle.Empty)
+    public ItemTooltip(Item item, Texture2D backgroundTexture) 
+        : base(Rectangle.Empty, new Vector2(item.Position.X, item.Position.Y))
     {
         this.item = item;
         this.backgroundTexture = backgroundTexture;
+        UpdateBounds();
     }
     
     private void UpdateBounds()
@@ -45,16 +46,17 @@ public class ItemTooltip : UIElement
             (int)textSize.Y + padding * 2
         );
     }
-    
     public override void Update(GameTime gameTime)
     {
         // Update position if item moves
         UpdateBounds();
+        base.Update(gameTime);
     }
     
     public override void Draw(SpriteBatch spriteBatch)
     {
-        if(_displayText == null) return;
+        if(_displayText == null || item.IsPickedUp || !item.InPickupRadius()) 
+            return;
 
         // Draw background
         spriteBatch.Draw(

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FinalComGame
 {
-    public class Bar : UIElement
+    public class Bar : HUDElement
     {
         protected Color backgroundColor;
         protected Color foregroundColor;

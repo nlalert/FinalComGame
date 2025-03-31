@@ -16,6 +16,8 @@ namespace FinalComGame
         public float SlamSpeed = 1500f;
         public int JumpsBeforeHighJump = 3;   // Number of normal jumps before high jump
 
+        public HealthBar HealthBar;
+
         public GiantSlime(Texture2D texture, Texture2D particleTexture) : base(texture) 
         { 
             // Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
@@ -250,12 +252,20 @@ namespace FinalComGame
         public override void OnSpawn()
         {
             CurrentState = EnemyState.Chase;
+            HealthBar = new HealthBar(
+                this,
+                new Rectangle((Singleton.SCREEN_WIDTH - 200)/2, Singleton.SCREEN_HEIGHT * 5 / 6, 200, 30),
+                Color.Red,
+                Color.Gray
+            );
+            Singleton.Instance.CurrentUI.AddHUDElement(HealthBar);
             base.OnSpawn();
         }
 
         public override void OnDead()
         {
             Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+            Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
             base.OnDead();
         }
     }

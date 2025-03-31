@@ -19,7 +19,7 @@ namespace FinalComGame
         {
             Singleton.Instance.Player.Health += _healAmount;
             Singleton.Instance.Player.Health = Math.Min(Singleton.Instance.Player.Health, Singleton.Instance.Player.MaxHealth);
-            IsActive = false;
+            RemoveItem();
         }
     }
 }

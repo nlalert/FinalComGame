@@ -19,6 +19,7 @@ class Singleton
     public int Stage;
     public Player Player;
     public Camera Camera;
+    public UI CurrentUI;
 
     public enum GameState
     {

@@ -28,7 +28,7 @@ namespace FinalComGame
 
             }
             else if(_speedBoostTimer < 0){
-                IsActive = false;
+                RemoveItem();
             }
         }
         // // Method to be overridden by specific item types
