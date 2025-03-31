@@ -112,9 +112,13 @@ public class PlayScene : Scene
                 Singleton.Instance.Camera.Follow(Singleton.Instance.Player); // Make camera follow the player
                 break;
             case Singleton.GameState.StageCompleted:
-                if (Singleton.Instance.Stage == 4){
+                Singleton.Instance.Stage++;
+                if (Singleton.Instance.Stage >= 4){
                     Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
-                    break;
+                }
+                else
+                {
+                    Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
                 }
                 break;
             case Singleton.GameState.GameOver:
@@ -125,7 +129,7 @@ public class PlayScene : Scene
                 break;
         }
 
-        // Console.WriteLine("GameObject :" + _numObject);
+        //Console.WriteLine("GameObject :" + _numObject);
 
         base.Update(gameTime);
     }
@@ -195,9 +199,11 @@ public class PlayScene : Scene
 
     private void DrawTileMap()
     {
+        if (Singleton.Instance.Stage == 1){
         _BGTileMap.Draw(_spriteBatch);
         _MGTileMap.Draw(_spriteBatch);
         _FGTileMap.Draw(_spriteBatch);
+        }
         
         //Should be hidden
         _collisionTileMap.Draw(_spriteBatch);
@@ -239,9 +245,12 @@ public class PlayScene : Scene
         _gameObjects.Clear();
 
         Singleton.Instance.Random = new Random();
-        _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
-        _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
-        _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
+        if (Singleton.Instance.Stage == 1)
+        {
+            _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
+            _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
+            _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
+        }
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
 
         Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.TILE_SIZE,  _collisionTileMap.MapHeight * Singleton.TILE_SIZE); // Map size
@@ -276,6 +285,8 @@ public class PlayScene : Scene
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
     
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
+        SoundEffect playerDashSound = _content.Load<SoundEffect>("Dash");
+        SoundEffect playerPunchSound = _content.Load<SoundEffect>("PlayerPunch");
         
         Singleton.Instance.Player = new Player(playerTexture, playerParticle)
         {
@@ -330,6 +341,8 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             JumpSound = playerJumpSound,
+            DashSound = playerDashSound,
+            PunchSound = playerPunchSound,
             Bullet = new PlayerBullet(_playerTexture)
             {
                 Name = "BulletPlayer",
@@ -347,7 +360,7 @@ public class PlayScene : Scene
         Texture2D _SlimeTexture = _content.Load<Texture2D>("HellSlime");
         Texture2D _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
         Texture2D _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
-        Texture2D _TowerTexture = _content.Load<Texture2D>("EnemyTower");
+        Texture2D _TowerTexture = _content.Load<Texture2D>("Spitter");
         Texture2D _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
         Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
         Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
@@ -400,7 +413,32 @@ public class PlayScene : Scene
                     IgnorePlayerDuration = 3f,
                 }
             },
-            
+            {
+                117,
+                new PlatformEnemy(_PlatformTexture){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 64, 32),
+
+                    MaxHealth = float.MaxValue,
+                }
+            },
+            {
+                118,
+                new TowerEnemy(_TowerTexture){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 16, 16),
+
+                    MaxHealth = 100f,
+
+                    TowerBullet = new TowerBullet(_DemonBulletTexture)
+                    {
+                        Name = "BulletEnemy",
+                        BaseDamageAmount = 20f,
+                        Speed = 250f,
+                        Viewport = new Rectangle(0, 0, 32, 32)
+                    }
+                }
+            },
             {
                 119,
                 new DemonEnemy(_DemonTexture){
@@ -418,32 +456,18 @@ public class PlayScene : Scene
                     }
                 }
             },
-            
             {
-                118,
-                new TowerEnemy(_DemonTexture){
+                137,         
+                new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 32, 32),
+                    Viewport = new Rectangle(0, 0, 64, 48),
 
-                    MaxHealth = 100f,
+                    MaxHealth = 1f,
+                    BaseAttackDamage = 3f,
 
-                    TowerBullet = new TowerBullet(_DemonBulletTexture)
-                    {
-                        Name = "BulletEnemy",
-                        BaseDamageAmount = 20f,
-                        Speed = 250f,
-                        Viewport = new Rectangle(0, 0, 32, 32)
-                    }
-                }
-            },
-            
-            {
-                117,
-                new PlatformEnemy(_PlatformTexture){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 32),
-
-                    MaxHealth = float.MaxValue,
+                    // JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f
                 }
             },
             //DONOT REMOVE This. just add new number please cuz Feen's dont know where and what to assign this number
@@ -461,22 +485,22 @@ public class PlayScene : Scene
             //         Friction = 0.96f
             //     }
             // },
-            // {
-            //     97,         
-            //     new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
-            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = new Rectangle(0, 0, 64, 48),
-
-            //         MaxHealth = 100f,
-            //         BaseAttackDamage = 3f,
-
-            //         // JumpCooldown = 3.0f,
-            //         BaseJumpStrength = 550,
-            //         Friction = 0.96f
-            //     }
-            // },
             {
-                97,         
+                138,         
+                new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 64, 48),
+
+                    MaxHealth = 100f,
+                    BaseAttackDamage = 3f,
+
+                    // JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f
+                }
+            },
+            {
+                199,         
                 new Rhulk(_RhulkTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 22, 64),
@@ -501,9 +525,21 @@ public class PlayScene : Scene
 
     private void SpawnEnemies()
     {
-        // FOR ONLY SPAWNING Enemy in stage that always in stage (not ambush)
-
-        // _enemyPlatform.Spawn(Singleton.Instance.Player.Position, _gameObjects);
+        foreach (var enemySpawnPoint in _collisionTileMap.GetEnemySpawnPoints())
+        {
+            bool isEnemyPositionInAmbushArea = false;
+            foreach (AmbushArea ambushArea in ambushAreas)
+            {
+                if(ambushArea.IsEnemyPositionInAmbushArea(enemySpawnPoint.Key))
+                {
+                    isEnemyPositionInAmbushArea = true;
+                    break;
+                }
+            }
+            if(!isEnemyPositionInAmbushArea)
+                _enemyPrefabs[enemySpawnPoint.Value].Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
+            
+        }
     }
 
     private void AddItems()
@@ -520,11 +556,9 @@ public class PlayScene : Scene
         Texture2D FireBall = _content.Load<Texture2D>("FireBall");
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
-        // Create a pixel texture for the background
-        Texture2D TooltipBackgroundTexture = new Texture2D(_graphicsDevice, 1, 1);
-        TooltipBackgroundTexture.SetData(new[] { Color.White });
         //set for all item
-        Item.TooltipBackgroundTexture = TooltipBackgroundTexture;
+        Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
+        Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
 
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
@@ -562,10 +596,12 @@ public class PlayScene : Scene
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
+        SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
         _gameObjects.Add(new Sword(sword, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
             Description = "Test Sword Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32,32),
+            SlashSound = SwordSlashSound,
         });
 
         _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
@@ -574,12 +610,16 @@ public class PlayScene : Scene
             Viewport = new Rectangle(0, 0, 32,32)
         });
 
+
+        SoundEffect FireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
+        SoundEffect FireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
         _gameObjects.Add(new Staff(Staff, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(40, 90)){
             Name =  "Staff",
             Description = "Test Staff Description",
             MPCost = 10,
+            FireBallShootingSound = FireBallShootingSound,
 
-            FireBall = new FireBall(FireBall, ExplosionEffect)
+            FireBall = new FireBall(FireBall, ExplosionEffect, FireBallExplosionSound)
             {
                 Name = "FireBall",
                 BaseDamageAmount = 30f,
@@ -601,6 +641,7 @@ public class PlayScene : Scene
     protected override void SetupUI()
     {
         HealthBar playerHealth = new HealthBar(
+            Singleton.Instance.Player,
             new Rectangle(20, 40, 200, 30),
             Color.Red,
             Color.Gray

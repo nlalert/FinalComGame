@@ -13,14 +13,7 @@ namespace FinalComGame
         private float _ignorePlayerTimer;
         private bool _isIgnoringPlayer;
         public SkeletonEnemy(Texture2D texture) : base(texture) { 
-            Animation = new Animation(texture, 64, 64, new Vector2(64*8 , 64*3), 6);
-
-            Animation.AddAnimation("idle", new Vector2(0, 0), 8);
-            Animation.AddAnimation("walk", new Vector2(0, 1), 8);
-            Animation.AddAnimation("hurt",new Vector2(0, 7), 1);
-            Animation.AddAnimation("die",new Vector2(0, 2), 6);
-
-            Animation.ChangeAnimation(_currentAnimation);
+            _texture = texture;
         }
 
         public override void Reset()
@@ -33,6 +26,18 @@ namespace FinalComGame
             _patrolCenterPoint = Position;
 
             base.Reset();
+        }
+
+        public override void AddAnimation()
+        {
+            Animation = new Animation(_texture, 64, 64, new Vector2(64*8 , 64*3), 12);
+
+            Animation.AddAnimation("idle", new Vector2(0, 0), 8);
+            Animation.AddAnimation("walk", new Vector2(0, 1), 8);
+            Animation.AddAnimation("hurt",new Vector2(0, 7), 1);
+            Animation.AddAnimation("die",new Vector2(0, 2), 6);
+
+            Animation.ChangeAnimation(_currentAnimation);
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -71,13 +76,13 @@ namespace FinalComGame
                 animation = "walk";
             }
 
-            if (CurrentState == EnemyState.Idle)
+            if (CurrentState == EnemyState.Idle && CurrentState == EnemyState.Cooldown)
             {
-                Animation.SetFPS(6);
+                Animation.SetFPS(12);
             }
             else
             {
-                Animation.SetFPS(12);
+                Animation.SetFPS(24);
             }
 
             if(_currentAnimation != animation)

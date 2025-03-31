@@ -163,6 +163,12 @@
 /processorParam:Quality=Best
 /build:ChillSong.mp3
 
+#begin Dash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Dash.wav
+
 #begin DemonBullet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -294,6 +300,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:FireBall.jpg
+
+#begin FireballExplosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:FireballExplosion.wav
+
+#begin FireballShooting.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:FireballShooting.wav
 
 #begin GameFont.spritefont
 /importer:FontDescriptionImporter
@@ -488,6 +506,12 @@
 /processorParam:TextureFormat=Color
 /build:Pickaxe.png
 
+#begin Pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Pickup.wav
+
 #begin Player.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -500,6 +524,12 @@
 /processorParam:TextureFormat=Color
 /build:Player.png
 
+#begin PlayerPunch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:PlayerPunch.wav
+
 #begin Skeleton.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -511,6 +541,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Skeleton.png
+
+#begin Spitter.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Spitter.png
 
 #begin Staff.jpg
 /importer:TextureImporter
@@ -547,6 +589,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:sword.png
+
+#begin SwordSlash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SwordSlash.wav
 
 #begin Tile32.png
 /importer:TextureImporter

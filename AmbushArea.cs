@@ -9,7 +9,7 @@ namespace FinalComGame
     public class AmbushArea
     {
         private Rectangle _triggerZone;
-        private Dictionary<Vector2, int> _enemySpawnPoints;
+        private Dictionary<Vector2, int> _enemyWorldSpawnPoints;
         private List<BaseEnemy> _spawnedEnemies;
         private bool _isActive;
         private bool _isCleared;
@@ -24,15 +24,20 @@ namespace FinalComGame
             _enemyPrefabs = enemyPrefabs;
             
             // Find enemy spawn points within this area
-            _enemySpawnPoints = new Dictionary<Vector2, int>();
+            _enemyWorldSpawnPoints = new Dictionary<Vector2, int>();
             foreach (var spawnPoint in tileMap.GetEnemySpawnPoints())
             {
                 Vector2 worldPosition = TileMap.GetTileWorldPositionAt(spawnPoint.Key);
                 if (triggerZone.Contains(worldPosition))
                 {
-                    _enemySpawnPoints.Add(worldPosition, spawnPoint.Value);
+                    _enemyWorldSpawnPoints.Add(worldPosition, spawnPoint.Value);
                 }
             }
+        }
+
+        public bool IsEnemyPositionInAmbushArea(Vector2 enemySpawnPoint)
+        {
+            return _enemyWorldSpawnPoints.ContainsKey(TileMap.GetTileWorldPositionAt(enemySpawnPoint));
         }
 
         public void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -65,7 +70,7 @@ namespace FinalComGame
 
             ChangeBarrierCollision(tileMap, true);
 
-            foreach (var enemySpawnPoint in _enemySpawnPoints)
+            foreach (var enemySpawnPoint in _enemyWorldSpawnPoints)
             {
                 _enemyPrefabs[enemySpawnPoint.Value].Spawn(enemySpawnPoint.Key, gameObjects, _spawnedEnemies);
             }

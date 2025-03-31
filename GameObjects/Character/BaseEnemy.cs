@@ -52,7 +52,7 @@ namespace FinalComGame {
             Spawn(position, gameObjects, spawnedEnemies);
         }
 
-        public virtual void Spawn(Vector2 position, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
+        public virtual BaseEnemy Spawn(Vector2 position, List<GameObject> gameObjects)
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = position;
@@ -60,8 +60,19 @@ namespace FinalComGame {
             newEnemy._patrolBoundaryRight = position.X + 100f;
             newEnemy.Reset();
             gameObjects.Add(newEnemy);
-            spawnedEnemies.Add(newEnemy);
+
             newEnemy.OnSpawn();
+
+            return newEnemy;
+        }
+
+        public virtual void Spawn(Vector2 position, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
+        {
+            BaseEnemy newEnemy = Spawn(position, gameObjects);
+            spawnedEnemies.Add(newEnemy);
+        }
+
+        public virtual void AddAnimation(){
         }
 
         public virtual bool CanBeHitByPlayer()
@@ -98,7 +109,7 @@ namespace FinalComGame {
         {   
             base.OnCollideNPC(npc, damageAmount);
         }
-        public void OnDead(TileMap tileMap)
+        public override void OnDead()
         {
             DropItem();
             base.OnDead();
@@ -113,7 +124,7 @@ namespace FinalComGame {
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;
-                OnDead(tileMap);
+                OnDead();
             }
         }
 
@@ -244,6 +255,7 @@ namespace FinalComGame {
             _attackTimer = 0f;
             _attackCooldownTimer = 0f;
 
+            AddAnimation();
             _currentAnimation = "idle";
 
             CurrentState = EnemyState.Idle;

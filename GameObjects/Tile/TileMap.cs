@@ -196,54 +196,108 @@ namespace FinalComGame
         public List<AmbushArea> GetAmbushAreas(Dictionary<int, BaseEnemy> enemyPrefabs)
         {
             var ambushAreas = new List<AmbushArea>();
-            var topLeftTiles = new List<Vector2>();
-
-            // First, find all top-left ambush area tiles
+            var processedTopLefts = new HashSet<Vector2>(); // To avoid duplicate processing
+            
+            // First pass: Identify all top-left and bottom-right tiles and store their positions
+            Dictionary<Vector2, Tile> topLeftTiles = new Dictionary<Vector2, Tile>();
+            Dictionary<Vector2, Tile> bottomRightTiles = new Dictionary<Vector2, Tile>();
+            
             foreach (var tile in tiles)
             {
                 if (tile.Value.Type == TileType.AmbushAreaTopLeft)
                 {
-                    topLeftTiles.Add(tile.Key);
+                    topLeftTiles.Add(tile.Key, tile.Value);
+                }
+                else if (tile.Value.Type == TileType.AmbushAreaBottomRight)
+                {
+                    bottomRightTiles.Add(tile.Key, tile.Value);
                 }
             }
-
-            // For each top-left tile, find corresponding bottom-right tile
-            foreach (Vector2 topLeft in topLeftTiles)
+            
+            // Second pass: Match top-left corners with bottom-right corners
+            foreach (var topLeftPos in topLeftTiles.Keys)
             {
-                Vector2 bottomRight = FindCorrespondingBottomRightTile(topLeft);
-                
-                if (bottomRight != Vector2.Zero)
-                {
-                    // Create rectangle in world coordinates
-                    Rectangle ambushZone = CreateAmbushAreaRectangle(topLeft, bottomRight);
+                if (processedTopLefts.Contains(topLeftPos))
+                    continue;
                     
-                    // Create AmbushArea
-                    AmbushArea ambushArea = new AmbushArea(ambushZone, this, enemyPrefabs);
-                    ambushAreas.Add(ambushArea);
-                }
-            }
-
-            return ambushAreas;
-    
-        }
-
-        private Vector2 FindCorrespondingBottomRightTile(Vector2 topLeft)
-        {
-            // Search for the corresponding bottom-right tile within a reasonable range
-            for (int x = (int)topLeft.X; x < MapWidth; x++) // Limit search range
-            {
-                for (int y = (int)topLeft.Y; y < MapHeight; y++) // Limit search range
+                // Find the closest valid bottom-right corner by checking if it's actually to the bottom-right
+                Vector2 bestBottomRight = Vector2.Zero;
+                float shortestDistance = float.MaxValue;
+                
+                foreach (var bottomRightPos in bottomRightTiles.Keys)
                 {
-                    Vector2 bottomRight = new Vector2(x, y);
-                    Tile tile = GetTileAtGridPosition(bottomRight);
-                    // Check if this tile is a bottom-right ambush area marker
-                    if (tile != null && tile.Type == TileType.AmbushAreaBottomRight)
+                    // Ensure the bottom-right corner is actually to the bottom-right of our top-left
+                    if (bottomRightPos.X <= topLeftPos.X || bottomRightPos.Y <= topLeftPos.Y)
+                        continue;
+
+                    // Calculate the rectangle area formed by these two corners
+                    Rectangle potentialArea = CreateAmbushAreaRectangle(topLeftPos, bottomRightPos);
+                    
+                    // Check if this is a valid ambush area: all corners must be either our specific corners or empty/non-solid
+                    if (!IsValidAmbushArea(potentialArea, topLeftPos, bottomRightPos))
+                        continue;
+   
+                    float distance = Vector2.Distance(topLeftPos, bottomRightPos);
+                    if (distance < shortestDistance)
                     {
-                        return bottomRight;
+                        shortestDistance = distance;
+                        bestBottomRight = bottomRightPos;
                     }
                 }
+                
+                // If we found a valid bottom-right corner, create the ambush area
+                if (bestBottomRight == Vector2.Zero)
+                    continue;
+                
+                Rectangle ambushZone = CreateAmbushAreaRectangle(topLeftPos, bestBottomRight);
+                AmbushArea ambushArea = new AmbushArea(ambushZone, this, enemyPrefabs);
+                ambushAreas.Add(ambushArea);
+                
+                // Mark these tiles as processed to avoid duplicate areas
+                processedTopLefts.Add(topLeftPos);
             }
-            return Vector2.Zero;
+            
+            return ambushAreas;
+        }
+
+        private bool IsValidAmbushArea(Rectangle area, Vector2 topLeftTile, Vector2 bottomRightTile)
+        {
+            // Get grid coordinates of all four corners
+            Vector2 topLeft = GetTileGridPositionAt(new Vector2(area.Left, area.Top));
+            Vector2 topRight = GetTileGridPositionAt(new Vector2(area.Right - 1, area.Top));
+            Vector2 bottomLeft = GetTileGridPositionAt(new Vector2(area.Left, area.Bottom - 1));
+            
+            // Check each corner to ensure we have a valid rectangle
+            // Top-left must be our marker
+            if (topLeft != topLeftTile)
+                return false;
+                
+            // Bottom-right must be our marker
+            if (bottomRightTile != GetTileGridPositionAt(new Vector2(area.Right - 1, area.Bottom - 1)))
+                return false;
+            
+            // Check that top-right and bottom-left aren't ambush markers
+            Tile topRightTile = GetTileAtGridPosition(topRight);
+            if (topRightTile != null && (topRightTile.Type == TileType.AmbushAreaTopLeft || topRightTile.Type == TileType.AmbushAreaBottomRight))
+                return false;
+                
+            Tile bottomLeftTile = GetTileAtGridPosition(bottomLeft);
+            if (bottomLeftTile != null && (bottomLeftTile.Type == TileType.AmbushAreaTopLeft || bottomLeftTile.Type == TileType.AmbushAreaBottomRight))
+                return false;
+            
+            // Check interior tiles - shouldn't contain other ambush area markers
+            for (int x = (int)topLeft.X + 1; x < (int)bottomRightTile.X; x++)
+            {
+                for (int y = (int)topLeft.Y + 1; y < (int)bottomRightTile.Y; y++)
+                {
+                    Tile tile = GetTileAtGridPosition(new Vector2(x, y));
+                    if (tile != null && (tile.Type == TileType.AmbushAreaTopLeft || tile.Type == TileType.AmbushAreaBottomRight))
+                        return false;
+                }
+            }
+            
+            // All checks passed
+            return true;
         }
 
         private Rectangle CreateAmbushAreaRectangle(Vector2 topLeftGridPosition, Vector2 bottomRightGridPosition)
@@ -251,10 +305,14 @@ namespace FinalComGame
             // Convert grid positions to world positions
             Vector2 topLeftWorld = GetTileWorldPositionAt(topLeftGridPosition);
             Vector2 bottomRightWorld = GetTileWorldPositionAt(bottomRightGridPosition);
+            
+            // Add tile size to bottom right to include the full tile
+            bottomRightWorld.X += Singleton.TILE_SIZE;
+            bottomRightWorld.Y += Singleton.TILE_SIZE;
 
             // Calculate width and height
-            int width = (int)(bottomRightWorld.X - topLeftWorld.X + Singleton.TILE_SIZE);
-            int height = (int)(bottomRightWorld.Y - topLeftWorld.Y + Singleton.TILE_SIZE);
+            int width = (int)(bottomRightWorld.X - topLeftWorld.X);
+            int height = (int)(bottomRightWorld.Y - topLeftWorld.Y);
 
             return new Rectangle(
                 (int)topLeftWorld.X, 

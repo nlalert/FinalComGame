@@ -87,6 +87,8 @@ namespace FinalComGame
 
         //SFX
         public SoundEffect JumpSound;
+        public SoundEffect DashSound;
+        public SoundEffect PunchSound;
 
         //Animation
         private Animation HandAnimation;
@@ -816,6 +818,15 @@ namespace FinalComGame
                 _attackTimer = AttackDuration;
                 _attackCooldownTimer = AttackCooldown;
 
+                if(_isFist)
+                {
+                    PunchSound.Play();
+                }
+                else
+                {
+                    (ItemSlot[0] as Sword).SlashSound.Play();
+                }
+
                 UpdateAttackHitbox();
             }
         }
@@ -857,6 +868,7 @@ namespace FinalComGame
                 Velocity.Y = 0;
                 Velocity.X = DashSpeed * Direction;
                 UseMP(DashMP);
+                DashSound.Play();
             }
         }
 
@@ -970,33 +982,26 @@ namespace FinalComGame
             }
         }
 
+
         private void Shoot(List<GameObject> gameObjects)
         {
-            // Create and configure the bullet
-            Vector2 direction;
-            Projectile newBullet;
-
-            if(ItemSlot[1] is Staff)
-            {
-                UseMP((ItemSlot[1] as Staff).MPCost);
-                newBullet = (ItemSlot[1] as Staff).FireBall.Clone() as FireBall;
-                direction = new Vector2(Direction , (float) Math.Sin(MathHelper.ToRadians(-45)));
-                newBullet.DamageAmount = (newBullet as FireBall).BaseDamageAmount;
-            }
-            else
-            {
-                direction = new Vector2(Direction, 0);
-                newBullet = Bullet.Clone() as PlayerBullet;
-                newBullet.DamageAmount = Bullet.DamageAmount; // Increase damage
-            }
-
+            IShootable rangeWeapon = ItemSlot[1] as IShootable;
+            
+            if (rangeWeapon == null || !rangeWeapon.CanShoot())
+                return;
+            
+            // Get position offset based on player state
             Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 2) : new Vector2(0, 10); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
             
-            (ItemSlot[1] as RangeWeapon).DecreaseAmmo();
-            newBullet.Shoot(bulletPosition, direction);
-
-            gameObjects.Add(newBullet);
+            // Create and configure the projectile using the weapon
+            Projectile newProjectile = rangeWeapon.CreateProjectile(bulletPosition, Direction);
+            
+            // Handle the effects of shooting
+            rangeWeapon.OnShoot();
+            
+            // Add projectile to game world
+            gameObjects.Add(newProjectile);
             Animation.Reset();
         }
 
@@ -1181,14 +1186,14 @@ namespace FinalComGame
             }
         }
 
-        private void UseMP(float MPAmount)
+        public void UseMP(float MPAmount)
         {
             _MPRegenTime = 0;
             MP -= MPAmount;
             ClampMP();
         }
 
-        private void DrainMP(float MPAmount, float deltaTime)
+        public void DrainMP(float MPAmount, float deltaTime)
         {
             // Consume MP while gliding
             _MPRegenTime = 0;

@@ -13,7 +13,6 @@ namespace FinalComGame
         private Texture2D highlightTexture;
         private bool isSelected;
         private float scale;
-        private Vector2 itemOffset;
 
         public ItemSlot(int slotNumber, Rectangle bounds, Texture2D slotTexture, Texture2D highlightTexture, float scale = 0.8f) 
             : base(bounds)
@@ -27,7 +26,6 @@ namespace FinalComGame
             // Calculate the offset to center the item in the slot
             float offsetX = bounds.Width * (1 - scale) / 2;
             float offsetY = bounds.Height * (1 - scale) / 2;
-            this.itemOffset = new Vector2(offsetX, offsetY);
         }
 
         public Item GetItem()

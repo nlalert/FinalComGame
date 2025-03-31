@@ -35,7 +35,7 @@ namespace FinalComGame
             shootTimer += deltaTime;
             UpdateHorizontalMovement(deltaTime,gameObjects,tileMap);
             UpdateVerticalMovement(deltaTime,gameObjects,tileMap);
-
+            UpdateInvincibilityTimer(deltaTime);
             if (Singleton.Instance.Player != null)
             {
                 switch (CurrentState)

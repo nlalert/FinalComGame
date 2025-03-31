@@ -8,21 +8,28 @@ public class ItemTooltip : UIElement
 {
     private Item item;
     private Texture2D backgroundTexture;
-    private Color backgroundColor = new Color(0, 0, 0, 180); // Semi-transparent black
     private Color textColor = Color.White;
-    private int padding = 5;
+    private string _displayText;
+    private int padding = 10;
+    private float fontScale = 0.5f; // Half the original font size
     
     public ItemTooltip(Item item, Texture2D backgroundTexture) : base(Rectangle.Empty)
     {
         this.item = item;
-
         this.backgroundTexture = backgroundTexture;
     }
     
     private void UpdateBounds()
     {
-        // Measure the text
-        Vector2 textSize = Singleton.Instance.GameFont.MeasureString(item.Description);
+        // Split the display text into title and content
+        string itemName = item.Name;
+        string itemDetails = "\n\n" + item.Description + "\n" + item.GetDisplayProperties() + "\n\nPress " + Singleton.Instance.Player.Interact + " to pick up";
+        
+        // Build full display text for size measurement
+        _displayText = itemName + itemDetails;
+        
+        // Measure the text with scaling applied
+        Vector2 textSize = Singleton.Instance.GameFont.MeasureString(_displayText) * fontScale;
         
         // Calculate tooltip position (centered above the item)
         Vector2 position = new Vector2(
@@ -47,19 +54,57 @@ public class ItemTooltip : UIElement
     
     public override void Draw(SpriteBatch spriteBatch)
     {
+        if(_displayText == null) return;
+
         // Draw background
         spriteBatch.Draw(
             backgroundTexture,
             bounds,
-            backgroundColor
+            Color.White
         );
         
-        // Draw text
+        // Split the display text into title and content
+        string itemName = item.Name;
+        string itemDetails = "\n" + item.Description + "\n" + item.GetDisplayProperties() + "\n\nPress " + Singleton.Instance.Player.Interact + " to pick up";
+        
+        // Measure the item name and full content
+        Vector2 nameSize = Singleton.Instance.GameFont.MeasureString(itemName) * fontScale;
+        
+        // Calculate positions
+        Vector2 namePosition = new Vector2(
+            bounds.X + bounds.Width / 2 - nameSize.X / 2, // Center horizontally
+            bounds.Y + padding // Keep at top
+        );
+        
+        Vector2 detailsPosition = new Vector2(
+            bounds.X + padding, // Left align
+            bounds.Y + padding + nameSize.Y // Position below the title
+        );
+        
+        // Draw item name (centered)
         spriteBatch.DrawString(
             Singleton.Instance.GameFont,
-            item.Description,
-            new Vector2(bounds.X + padding, bounds.Y + padding),
-            textColor
+            itemName,
+            namePosition,
+            textColor,
+            0f,
+            Vector2.Zero,
+            fontScale,
+            SpriteEffects.None,
+            0f
+        );
+        
+        // Draw item details (left-aligned)
+        spriteBatch.DrawString(
+            Singleton.Instance.GameFont,
+            itemDetails,
+            detailsPosition,
+            textColor,
+            0f,
+            Vector2.Zero,
+            fontScale,
+            SpriteEffects.None,
+            0f
         );
     }
 }

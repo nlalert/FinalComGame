@@ -319,5 +319,11 @@ namespace FinalComGame
             gameObjects.Add(newObject1);
             gameObjects.Add(newObject2);
         }
+
+        public override void OnDead()
+        {
+            Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+            base.OnDead();
+        }
     }
 }
