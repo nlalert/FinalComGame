@@ -21,9 +21,9 @@ public class ParallaxBackground
         _layers.Add(layer);
     }
 
-    public void AddLayer(Texture2D texture, float scrollSpeed, bool isLooping = true, float scale = 1.0f)
+    public void AddLayer(Texture2D texture, float scrollSpeed, float scale = 1.0f)
     {
-        _layers.Add(new ParallaxLayer(texture, scrollSpeed, isLooping, scale));
+        _layers.Add(new ParallaxLayer(texture, scrollSpeed, scale));
     }
 
     public void Update(GameTime gameTime)
@@ -42,47 +42,37 @@ public class ParallaxBackground
     {
         foreach (var layer in _layers)
         {
-            // Calculate how many times to draw the texture to fill the screen
-            int horizontalCount = (int)Math.Ceiling(_viewport.Width / (layer.SourceRectangle.Width * layer.Scale)) + 2;
-            int verticalCount = (int)Math.Ceiling(_viewport.Height / (layer.SourceRectangle.Height * layer.Scale)) + 2;
+            // Calculate the scale to fit vertically while maintaining aspect ratio
+            float verticalScale = (float)_viewport.Height / layer.SourceRectangle.Height;
+            float actualScale = layer.Scale * verticalScale;
+            
+            // Calculate the width after scaling
+            float scaledWidth = layer.SourceRectangle.Width * actualScale;
+            
+            // Calculate how many copies needed to fill the screen horizontally
+            int horizontalCount = (int)Math.Ceiling(_viewport.Width / scaledWidth) + 2;
 
-            // Only draw multiple copies if this layer is set to loop
-            if (!layer.IsLooping)
+            // Draw the layer multiple times horizontally to create a seamless effect
+            for (int x = 0; x < horizontalCount; x++)
             {
-                horizontalCount = 1;
-                verticalCount = 1;
-            }
+                // Calculate position for this tile
+                Vector2 drawPosition = new Vector2(
+                    layer.Position.X + x * scaledWidth,
+                    layer.Position.Y
+                );
 
-            // Draw the layer multiple times to create a seamless effect
-            for (int y = 0; y < verticalCount; y++)
-            {
-                for (int x = 0; x < horizontalCount; x++)
-                {
-                    // Calculate position for this tile
-                    Vector2 drawPosition = new Vector2(
-                        layer.Position.X + x * layer.SourceRectangle.Width * layer.Scale,
-                        layer.Position.Y + y * layer.SourceRectangle.Height * layer.Scale
-                    );
-
-                    // If we're using non-looping layers, just draw at the specified position
-                    if (!layer.IsLooping)
-                    {
-                        drawPosition = layer.Position;
-                    }
-
-                    // Draw the texture
-                    spriteBatch.Draw(
-                        layer.Texture,
-                        drawPosition,
-                        layer.SourceRectangle,
-                        Color.White,
-                        0f,
-                        Vector2.Zero,
-                        layer.Scale,
-                        SpriteEffects.None,
-                        0f
-                    );
-                }
+                // Draw the texture
+                spriteBatch.Draw(
+                    layer.Texture,
+                    drawPosition,
+                    layer.SourceRectangle,
+                    Color.White,
+                    0f,
+                    Vector2.Zero,
+                    actualScale,
+                    SpriteEffects.None,
+                    0f
+                );
             }
         }
     }
