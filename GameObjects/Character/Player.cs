@@ -1127,7 +1127,7 @@ namespace FinalComGame
                 Health -= damageAmount;
             }
 
-            Singleton.Instance.Camera.ShakeScreen(damageAmount * 1.75f / MaxHealth, 0.3f);
+            Singleton.Instance.Camera.ShakeScreen(damageAmount / Health, 0.3f);
 
             StartInvincibility();
             Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
