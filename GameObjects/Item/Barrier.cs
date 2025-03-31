@@ -21,7 +21,7 @@ namespace FinalComGame
             Use(slot);
         }
 
-        public override void ActiveAbility(float deltaTime, int slot)
+        public override void ActiveAbility(float deltaTime, int slot,List<GameObject> gameObjects)
         {
             Singleton.Instance.Player.AbsorptionHealth = _damageAbsorptionAmount;
             RemoveItem();

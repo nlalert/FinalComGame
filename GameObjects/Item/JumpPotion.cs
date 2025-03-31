@@ -19,7 +19,7 @@ namespace FinalComGame
             _jumpBoostTimer = 0;
         }
 
-        public override void ActiveAbility(float deltaTime, int slot)
+        public override void ActiveAbility(float deltaTime, int slot,List<GameObject> gameObjects)
         {
             if(_jumpBoostTimer > 0)
             {

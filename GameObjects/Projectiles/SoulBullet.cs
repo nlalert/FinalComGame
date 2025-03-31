@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -6,17 +5,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
 {
-    public class PlayerBullet : Projectile
+    public class SoulBullet : Projectile
     {
-        public PlayerBullet(Texture2D texture) : base(texture)
+        public SoulBullet(Texture2D texture) : base(texture)
         {
             CanCollideTile = true;
+            CanHitPlayer= false;
         }
-
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(_texture, Position, Color.White);
+        }
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-            Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
                 if(IsTouching(enemy))
@@ -40,25 +41,7 @@ namespace FinalComGame
             }
 
             // Check collision with tiles
-            if(CanCollideTile){
-                int radius = 5;
-                for (int i = -radius; i <= radius; i++)
-                {
-                    for (int j = -radius; j <= radius; j++)
-                    {
-                        Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
-                        Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                        if(tile != null && tile.IsSolid)
-                        {
-                            if (IsTouching(tile))
-                            {
-                                IsActive = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+            base.Update(gameTime, gameObjects, tileMap);
         }
     }
 }

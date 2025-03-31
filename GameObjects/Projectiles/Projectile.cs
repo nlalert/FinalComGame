@@ -11,9 +11,11 @@ namespace FinalComGame
         public float DamageAmount;
         public float Speed;
         public bool CanCollideTile;
+        public bool CanHitPlayer = true;
         protected Vector2 StartPosition;
         protected Vector2 _direction;
         public Rectangle spriteViewport;
+        
 
         public Projectile(Texture2D texture, float damage = 15f, float speed = 300f ) : base(texture)
         {
@@ -33,14 +35,12 @@ namespace FinalComGame
         {
             Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if(IsTouching(Singleton.Instance.Player))
+            if(IsTouching(Singleton.Instance.Player) && CanHitPlayer == true)
             {
                 OnProjectileHit(Singleton.Instance.Player);
                 Singleton.Instance.Player.OnHitByProjectile(this,DamageAmount);
                 // s.Reset();//TODO ???? why does it need reset idk
                 IsActive = false;
-                // Singleton.Instance.Life--;
-                // Singleton.Instance.CurrentGameState = Singleton.GameState.StartNewLife;
             }
             
             // Check collision with tiles

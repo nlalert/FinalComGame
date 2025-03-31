@@ -36,10 +36,10 @@ namespace FinalComGame
             return new Rectangle((int)Singleton.Instance.Player.Position.X + offsetX, (int)Singleton.Instance.Player.Position.Y, _attackWidth, _attackHeight);
         }
 
-        public override void ActiveAbility(float deltaTime, int slot)
+        public override void ActiveAbility(float deltaTime, int slot,List<GameObject> gameObjects)
         {
             Singleton.Instance.Player.ChangeToSwordAttack(AttackDamage);
-            base.ActiveAbility(deltaTime, slot);
+            base.ActiveAbility(deltaTime, slot, gameObjects);
         }
 
         public override string GetDisplayProperties()
