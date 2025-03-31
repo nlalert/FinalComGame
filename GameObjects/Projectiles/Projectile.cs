@@ -12,6 +12,9 @@ namespace FinalComGame
         public float Speed;
         public bool CanCollideTile;
         protected Vector2 StartPosition;
+        protected Vector2 _direction;
+        public Rectangle spriteViewport;
+
         public Projectile(Texture2D texture, float damage = 15f, float speed = 300f ) : base(texture)
         {
             DamageAmount = damage;
@@ -23,6 +26,7 @@ namespace FinalComGame
             Position = position;
             Velocity = direction * Speed;
             StartPosition = position;
+            _direction = direction;
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -65,7 +69,19 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Position, Viewport, Color.White);
+            SpriteEffects spriteEffect = _direction.X >= 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+            spriteBatch.Draw(
+                _texture, 
+                new Vector2(Position.X - spriteViewport.Width/2, Position.Y - spriteViewport.Height/2), 
+                spriteViewport, 
+                Color.White,
+                0f, 
+                Vector2.Zero,
+                Scale,
+                spriteEffect, 
+                0f
+            );
             base.Draw(spriteBatch);
             //DrawDebug(spriteBatch);
         }

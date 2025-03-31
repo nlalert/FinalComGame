@@ -258,6 +258,7 @@ public class PlayScene : Scene
         // Load sprite sheets
         Texture2D playerTexture = _content.Load<Texture2D>("Char");
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
+        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
     
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         
@@ -314,12 +315,13 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             JumpSound = playerJumpSound,
-            Bullet = new PlayerBullet(_playerTexture)
+
+            Bullet = new PlayerBullet(projectileTexture)
             {
                 Name = "BulletPlayer",
                 BaseDamageAmount = 15f,
                 Speed = 500f,
-                Viewport = new Rectangle(0, 0, 15, 10)
+                Viewport = new Rectangle(0, 0, 9, 5)
             },
         };
     }
@@ -336,11 +338,13 @@ public class PlayScene : Scene
         Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
         Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
 
+        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
+
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
             {
-                97,         
+                99,         
                 new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
@@ -393,12 +397,13 @@ public class PlayScene : Scene
 
                     MaxHealth = 100f,
 
-                    DemonBullet = new DemonBullet(_DemonBulletTexture)
+                    DemonBullet = new DemonBullet(projectileTexture)
                     {
                         Name = "BulletEnemy",
                         BaseDamageAmount = 15f,
-                        Speed = 150f,
-                        Viewport = new Rectangle(0, 0, 32, 32)
+                        Speed = 200f,
+                        Viewport = new Rectangle(0, 0, 8, 8),
+                        spriteViewport = new Rectangle(0, 16, 16, 16)
                     }
                 }
             },
@@ -409,14 +414,15 @@ public class PlayScene : Scene
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
 
-                    MaxHealth = 100f,
+                    MaxHealth = 150f,
 
-                    TowerBullet = new TowerBullet(_DemonBulletTexture)
+                    TowerBullet = new TowerBullet(projectileTexture)
                     {
                         Name = "BulletEnemy",
                         BaseDamageAmount = 20f,
-                        Speed = 250f,
-                        Viewport = new Rectangle(0, 0, 32, 32)
+                        Speed = 300f,
+                        Viewport = new Rectangle(0, 0, 12, 12),
+                        spriteViewport = new Rectangle(16, 16, 16, 16)
                     }
                 }
             },
@@ -482,7 +488,7 @@ public class PlayScene : Scene
         Texture2D Staff = _content.Load<Texture2D>("Staff");
         Texture2D Bunny = _content.Load<Texture2D>("Bunny");
         Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
-        Texture2D FireBall = _content.Load<Texture2D>("FireBall");
+        Texture2D FireBall = _content.Load<Texture2D>("Projectile");
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
         // Create a pixel texture for the background
