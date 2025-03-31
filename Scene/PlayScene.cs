@@ -239,7 +239,7 @@ public class PlayScene : Scene
         _gameObjects.Add(Singleton.Instance.Player);
 
         InitializeAmbushAreas();
-        SpawnEnemies();
+        // SpawnEnemies();
         AddItems();
         SetupUI();
         
