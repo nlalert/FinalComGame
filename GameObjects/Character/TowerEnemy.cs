@@ -16,7 +16,7 @@ namespace FinalComGame
         public TowerEnemy(Texture2D texture) : base(texture)
         {
             _texture = texture;
-            DetectionRange = 250f;
+            DetectionRange = 350f;
             AttackRange = 900f;
             CanCollideTile = false;
         }
@@ -88,7 +88,6 @@ namespace FinalComGame
 
                 else
                     animation = "charge_1";
-
             }
    
 
@@ -171,6 +170,7 @@ namespace FinalComGame
         {
             Vector2 center = new Vector2(Animation.GetCurrentFrame().Width / 2, Animation.GetCurrentFrame().Height / 2);
             Vector2 direction = Singleton.Instance.Player.Position - Position;
+            Color color = IsInvincible() ? Color.Red : Color.White;
             
             float rotation = 0.0f;
             if (CurrentState == EnemyState.Chase) {
@@ -200,7 +200,7 @@ namespace FinalComGame
                     Animation.GetTexture(),
                     GetDrawingPosition() + center,
                     Animation.GetCurrentFrame(),
-                    Color.White,
+                    color,
                     rotation, 
                     center,
                     Scale,

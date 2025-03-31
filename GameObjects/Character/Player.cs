@@ -248,7 +248,7 @@ namespace FinalComGame
 
         private void RegenerateMP(float deltaTime)
         {
-            if(_MPRegenTime < MPRegenCooldown)
+            if(_MPRegenTime < MPRegenCooldown && !_isCharging)
                 _MPRegenTime += deltaTime;
 
             else if(_MPRegenTime >= MPRegenCooldown){
