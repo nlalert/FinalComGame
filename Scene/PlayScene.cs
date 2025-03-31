@@ -226,11 +226,7 @@ public class PlayScene : Scene
         _parallaxBackground = new ParallaxBackground(_parallaxFGtexture, _parallaxMGtexture, _parallaxBGtexture, StageManager.GetPlayerWorldSpawnPosition());
 
         CreatePlayer();
-        _gameObjects.Add(Singleton.Instance.Player);
-
         CreateEnemies();
-        AddItems();
-        SetupUI();
 
         foreach (GameObject s in _gameObjects)
         {
@@ -643,6 +639,8 @@ public class PlayScene : Scene
 
     protected override void SetupUI()
     {
+        _ui.ClearAllUI();
+
         HealthBar playerHealth = new HealthBar(
             Singleton.Instance.Player,
             new Rectangle(20, 40, 200, 30),
