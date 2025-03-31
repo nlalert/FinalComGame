@@ -255,8 +255,7 @@ namespace FinalComGame
 
         public override void OnDead()
         {
-            Singleton.Instance.Stage++;
-            Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
+            Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
             base.OnDead();
         }
     }

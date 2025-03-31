@@ -91,9 +91,13 @@ public class PlayScene : Scene
                 Singleton.Instance.Camera.Follow(Singleton.Instance.Player); // Make camera follow the player
                 break;
             case Singleton.GameState.StageCompleted:
-                if (Singleton.Instance.Stage == 4){
+                Singleton.Instance.Stage++;
+                if (Singleton.Instance.Stage >= 4){
                     Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
-                    break;
+                }
+                else
+                {
+                    Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
                 }
                 break;
             case Singleton.GameState.GameOver:
