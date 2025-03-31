@@ -16,6 +16,14 @@ public class PlayScene : Scene
 
     private Texture2D _playerTexture;
     private Texture2D _textureAtlas;
+    private Texture2D _DemonTexture;
+    private Texture2D _DemonBulletTexture;
+    private Texture2D _TowerTexture;
+    private Texture2D _PlatformTexture;
+    private Texture2D _GiantSlimeTexture;
+    private Texture2D _CerberusTexture;
+    private Texture2D _RhulkTexture;
+    private Texture2D _LaserTexture;
 
 
     private Texture2D _parallaxFGtexture;
@@ -47,6 +55,19 @@ public class PlayScene : Scene
         base.LoadContent(spriteBatch);
         
         _playerTexture = _content.Load<Texture2D>("Char_test");
+        // _enemyTexture = _content.Load<Texture2D>("EnemyRed");
+        // _DogTexture = _content.Load<Texture2D>("EnemyDog");
+        // _SlimeTexture = _content.Load<Texture2D>("HellSlime");
+        _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
+        _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
+        _TowerTexture = _content.Load<Texture2D>("EnemyTower");
+        _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
+        _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
+        _CerberusTexture = _content.Load<Texture2D>("Cerberus");
+        _RhulkTexture = _content.Load<Texture2D>("EnemyRhulk");
+        _LaserTexture = _content.Load<Texture2D>("Laserbeam");
+
+
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
         _parallaxFGtexture = _content.Load<Texture2D>("Level_1_Parallax_fg");
@@ -128,14 +149,12 @@ public class PlayScene : Scene
                 DrawAllObjects();
                 _spriteBatch.End();
 
-                _spriteBatch.Begin(); 
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp); 
                 _spriteBatch.DrawString(Singleton.Instance.GameFont, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
                 _spriteBatch.DrawString(Singleton.Instance.GameFont, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
         }
-
-        DrawUI();
 
         _graphics.BeginDraw();
     }
@@ -207,11 +226,7 @@ public class PlayScene : Scene
         _parallaxBackground = new ParallaxBackground(_parallaxFGtexture, _parallaxMGtexture, _parallaxBGtexture, StageManager.GetPlayerWorldSpawnPosition());
 
         CreatePlayer();
-        _gameObjects.Add(Singleton.Instance.Player);
-
         CreateEnemies();
-        AddItems();
-        SetupUI();
 
         foreach (GameObject s in _gameObjects)
         {
@@ -241,7 +256,7 @@ public class PlayScene : Scene
         _gameObjects.Add(Singleton.Instance.Player);
 
         InitializeAmbushAreas();
-        SpawnEnemies();
+        // SpawnEnemies();
         AddItems();
         SetupUI();
         
@@ -267,6 +282,8 @@ public class PlayScene : Scene
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         SoundEffect playerDashSound = _content.Load<SoundEffect>("Dash");
         SoundEffect playerPunchSound = _content.Load<SoundEffect>("PlayerPunch");
+        SoundEffect playerChargeBulletSound = _content.Load<SoundEffect>("ChargingBullet");
+        SoundEffect playerBulletShotSound = _content.Load<SoundEffect>("BulletShot");
         
         Singleton.Instance.Player = new Player(playerTexture, playerParticle)
         {
@@ -323,6 +340,8 @@ public class PlayScene : Scene
             JumpSound = playerJumpSound,
             DashSound = playerDashSound,
             PunchSound = playerPunchSound,
+            ChargingSound = playerChargeBulletSound,
+            BulletShotSound = playerBulletShotSound,
 
             Bullet = new PlayerBullet(projectileTexture)
             {
@@ -347,6 +366,8 @@ public class PlayScene : Scene
 
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
 
+        SoundEffect hitSound = _content.Load<SoundEffect>("HitEnemy");
+
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
@@ -358,9 +379,11 @@ public class PlayScene : Scene
                     MaxHealth = 50f,
                     BaseAttackDamage = 3f,
 
-                    JumpCooldown = 2.0f,
+                    JumpCooldown = 3.0f,
                     BaseJumpStrength = 490,
-                    Friction = 0.95f
+                    Friction = 0.96f,
+
+                    HitSound = hitSound
                 }
             },
 
@@ -378,6 +401,8 @@ public class PlayScene : Scene
                     ChargeTime = 2.0f,
                     ChaseDuration = 5f,
                     DashDuration = 1.0f,
+
+                    HitSound = hitSound
                 }
             },
 
@@ -393,6 +418,8 @@ public class PlayScene : Scene
                     LimitIdlePatrol = 100,
 
                     IgnorePlayerDuration = 3f,
+
+                    HitSound = hitSound
                 }
             },
             {
@@ -402,6 +429,8 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 64, 32),
 
                     MaxHealth = float.MaxValue,
+
+                    HitSound = hitSound // Temp
                 }
             },
             {
@@ -411,6 +440,8 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 24, 24),
 
                     MaxHealth = 150f,
+
+                    HitSound = hitSound,
 
                     TowerBullet = new TowerBullet(projectileTexture)
                     {
@@ -429,6 +460,8 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 16, 32),
 
                     MaxHealth = 100f,
+
+                    HitSound = hitSound,
 
                     DemonBullet = new DemonBullet(projectileTexture)
                     {
@@ -451,9 +484,28 @@ public class PlayScene : Scene
 
                     // JumpCooldown = 3.0f,
                     BaseJumpStrength = 550,
-                    Friction = 0.96f
+                    Friction = 0.96f,
+
+                    HitSound = hitSound
                 }
             },
+            //DONOT REMOVE This. just add new number please cuz Feen's dont know where and what to assign this number
+            // {
+            //     97,         
+            //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
+            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            //         Viewport = new Rectangle(0, 0, 64, 48),
+
+            //         MaxHealth = 1f,
+            //         BaseAttackDamage = 3f,
+
+            //         // JumpCooldown = 3.0f,
+            //         BaseJumpStrength = 550,
+            //         Friction = 0.96f,
+
+                    // HitSound = hitSound
+            //     }
+            // },
             {
                 138,         
                 new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
@@ -465,14 +517,34 @@ public class PlayScene : Scene
 
                     // JumpCooldown = 3.0f,
                     BaseJumpStrength = 550,
-                    Friction = 0.96f
+                    Friction = 0.96f,
+
+                    HitSound = hitSound
                 }
             },
-            // {
-            //     199,         
-            //     new ตัว Final Boss{
-            //      }
-            // },
+            {
+                199,         
+                new Rhulk(_RhulkTexture){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 22, 64),
+
+                    MaxHealth = 100f,
+                    BaseAttackDamage = 3f,
+
+                    // JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f,
+
+                    HitSound = hitSound,
+                    
+                    Laserproj = new DemonLaser(_LaserTexture)
+                    {
+                        Name = "BulletEnemy",
+                        BaseDamageAmount = 20f,
+                        Viewport = new Rectangle(0, 0, 10, 200),
+                    },
+                }
+            },
         };
 
     }
@@ -517,10 +589,41 @@ public class PlayScene : Scene
         Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
         Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
 
+        SoundEffect PotionUseSound = _content.Load<SoundEffect>("PotionUse");
+        _gameObjects.Add(new Potion(projectileTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
+            Name =  "HealthPotion",
+            Description = "Test HealthPotion Description",
+            Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(0, 32, 32, 32),
+            UseSound = PotionUseSound
+        });
+
+        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
+            Name =  "SpeedPotion",
+            Description = "Test SpeedPotion Description",
+            Viewport = new Rectangle(0, 0, 32,32),
+            UseSound = PotionUseSound
+        });
+
+        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
+            Name =  "jumppotion",
+            Description = "Test JumpPotion Description",
+            Viewport = new Rectangle(0, 0, 32,32),
+            UseSound = PotionUseSound
+        });
+
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
             Description = "Test Barrier Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32,32),
+            UseSound = PotionUseSound // Temp
+        });
+
+        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
+            Name =  "1Up",
+            Description = "Test LifeUp Description",
+            Viewport = new Rectangle(0, 0, 32,32),
+            UseSound = PotionUseSound // Temp
         });
 
         _gameObjects.Add(new SpeedBoots(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
@@ -535,25 +638,6 @@ public class PlayScene : Scene
             Description = "Test CursedGauntlet Description",
             Viewport = new Rectangle(0, 0, 32, 32),
             spriteViewport = new Rectangle(64, 32, 32, 32)
-        });
-        
-        _gameObjects.Add(new Potion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
-            Name =  "HealthPotion",
-            Description = "Test HealthPotion Description",
-            Viewport = new Rectangle(0, 0, 32, 32),
-            spriteViewport = new Rectangle(0, 32, 32, 32)
-        });
-
-        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
-            Name =  "SpeedPotion",
-            Description = "Test SpeedPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32)
-        });
-        
-        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
-            Name =  "1Up",
-            Description = "Test LifeUp Description",
-            Viewport = new Rectangle(0, 0, 32,32)
         });
 
         SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
@@ -570,6 +654,7 @@ public class PlayScene : Scene
             Description = "Test Gun Description",
             Viewport = new Rectangle(0, 0, 32,32),
             spriteViewport = new Rectangle(0, 0, 32, 32),
+            ShootSound = GunshotSound,
         });
 
 
@@ -579,7 +664,7 @@ public class PlayScene : Scene
             Name =  "Staff",
             Description = "Test Staff Description",
             MPCost = 10,
-            FireBallShootingSound = FireBallShootingSound,
+            ShootSound = FireBallShootingSound,
 
             FireBall = new FireBall(projectileTexture, ExplosionEffect, FireBallExplosionSound)
             {
@@ -594,16 +679,12 @@ public class PlayScene : Scene
             Viewport = new Rectangle(0, 0, 32,32),
             spriteViewport = new Rectangle(64, 0, 32, 32),
         });
-
-        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
-            Name =  "jumppotion",
-            Description = "Test JumpPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32)
-        });
     }
 
     protected override void SetupUI()
     {
+        _ui.ClearAllUI();
+
         HealthBar playerHealth = new HealthBar(
             Singleton.Instance.Player,
             new Rectangle(20, 40, 200, 30),
@@ -645,11 +726,11 @@ public class PlayScene : Scene
             slot
         );
 
-        _ui.AddElement(playerHealth);
-        _ui.AddElement(playerMP);
-        _ui.AddElement(MeleeWeaponSlot);
-        _ui.AddElement(RangeWeaponSlot);
-        _ui.AddElement(ItemSlot1);
-        _ui.AddElement(ItemSlot2);
+        _ui.AddHUDElement(playerHealth);
+        _ui.AddHUDElement(playerMP);
+        _ui.AddHUDElement(MeleeWeaponSlot);
+        _ui.AddHUDElement(RangeWeaponSlot);
+        _ui.AddHUDElement(ItemSlot1);
+        _ui.AddHUDElement(ItemSlot2);
     }
 }

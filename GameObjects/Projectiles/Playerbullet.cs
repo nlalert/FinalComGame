@@ -33,6 +33,7 @@ namespace FinalComGame
                 {
                     if(bullet is not PlayerBullet)
                     {
+                        if(bullet is not DemonLaser)
                         IsActive = false;
                     }
                 } 

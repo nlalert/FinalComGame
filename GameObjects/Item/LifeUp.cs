@@ -21,7 +21,7 @@ namespace FinalComGame
         public override void ActiveAbility(float deltaTime, int slot)
         {
             Singleton.Instance.Player.Life++;
-            IsActive = false;
+            RemoveItem();
         }
     }
 }

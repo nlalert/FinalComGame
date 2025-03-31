@@ -15,6 +15,7 @@ public class Item : GameObject, IItemDisplayable
 {
     public static Texture2D TooltipBackgroundTexture;
     public static SoundEffect PickUpSound;
+    public SoundEffect UseSound;
     
     // Item properties
     public string Description;
@@ -44,11 +45,13 @@ public class Item : GameObject, IItemDisplayable
         
         // Create tooltip
         tooltip = new ItemTooltip(this, TooltipBackgroundTexture);
+        Singleton.Instance.CurrentUI.AddWorldSpaceElement(tooltip);
     }
     
     // // Method to be overridden by specific item types
     public virtual void Use(int slot)
     {
+        UseSound?.Play();
         Singleton.Instance.Player.AddUsingItem(slot);
         Console.WriteLine("Using Item");      
     }
@@ -71,6 +74,12 @@ public class Item : GameObject, IItemDisplayable
         IsPickedUp = false;
         Position = position;
         originalPosition = position;
+    }
+
+    public virtual void RemoveItem()
+    {
+        IsActive = false;
+        Singleton.Instance.CurrentUI.RemoveWorldSpaceElement(tooltip);
     }
 
     public virtual string GetDisplayProperties()
@@ -100,10 +109,7 @@ public class Item : GameObject, IItemDisplayable
         // {
         //     tooltipFadeIn = Math.Max(0f, tooltipFadeIn - TOOLTIP_FADE_SPEED * deltaTime);
         // }
-        
-        // Update tooltip
-        tooltip.Update(gameTime);
-        
+           
         base.Update(gameTime, gameObjects, tileMap);
     }
     
@@ -122,9 +128,6 @@ public class Item : GameObject, IItemDisplayable
                 SpriteEffects.None, 
                 0f
             );
-
-            if(InPickupRadius())
-                tooltip.Draw(spriteBatch); 
         }
     }
 

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FinalComGame
 {
-    public class ItemSlot : UIElement
+    public class ItemSlot : HUDElement
     {
         private int slotNumber;
         private Item item;

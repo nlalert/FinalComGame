@@ -5,33 +5,31 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
 {
-    public class Cerberus : BaseEnemy
+    public class Rhulk : BaseEnemy
     {
         private float _actionTimer = 0;     // Timer for aim/charge states
         private bool _isEnraged = false;    // Enrage phase flag
         public float Friction ;
-        public float FloatDuration = 0.5f;   // Time floating above the player
-        public float SlamChargeDuration = 0.5f;  // Charging before slam
-        public float SlamSpeed = 1500f;
-        public int JumpsBeforeHighJump = 3;   // Number of normal jumps before high jump
-
+        private Vector2 _spawnPoint;
         private float _chargeTime = 2.0f;
         private bool _isDashing;
         private float _dashTimer = 0f;
         private float _dashDuration = 2f;
-        private bool _isSummoned = false;
-        public float _actionTimeOffset = 1f;
-        
+        private float _beamchargingTime = 2.0f;
+        private float _beamingTime = 20.0f; 
+        private float _rotationAngle = 0f;
         private Vector2 _dashAim;
         private Vector2 _dashStart;
         
         private Vector2 _barrierstart;
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
+        public DemonLaser Laserproj;
 
         public HealthBar HealthBar;
 
-        public Cerberus(Texture2D texture, Texture2D particleTexture) : base(texture) 
+
+        public Rhulk(Texture2D texture) : base(texture)
         { 
             // Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
             // Animation.AddAnimation("Chase", new Vector2(0, 0), 8);
@@ -56,29 +54,22 @@ namespace FinalComGame
             }
 
             UpdateInvincibilityTimer(deltaTime);
-
-            if(!_isEnraged && Health <= MaxHealth * 0.5f){
-                Split(gameObjects);
-            }
-
-            if (!_isEnraged && Health <= MaxHealth * 0.2f) 
-            {
-                _isEnraged = true;
-            }
-
             switch (CurrentState)
             {
                 case EnemyState.Chase:
                     AI_Chase(deltaTime, gameObjects, tileMap);
-                    break;
-                case EnemyState.Jump:
-                    AI_Jump(deltaTime, gameObjects, tileMap);
                     break;
                 case EnemyState.Charging:
                     AI_Charging(deltaTime,gameObjects, tileMap);
                     break;
                 case EnemyState.Dash:
                     AI_Dash(deltaTime,gameObjects, tileMap);
+                    break;
+                case EnemyState.Floating:
+                    AI_Floating(deltaTime,gameObjects, tileMap);
+                    break;
+                case EnemyState.Attack:
+                    AI_Attack(deltaTime,gameObjects, tileMap);
                     break;
             }
 
@@ -91,10 +82,10 @@ namespace FinalComGame
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
 
-            _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1) * _actionTimeOffset;
+            _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
             if(Math.Abs((Singleton.Instance.Player.Position - this.Position).X) >20f)
                 Direction = Math.Sign( (Singleton.Instance.Player.Position - this.Position).X);
-            Velocity.X = 60f * Direction;
+            Velocity.X = 30f * Direction;
             Velocity.X *= Friction;
 
 
@@ -102,37 +93,19 @@ namespace FinalComGame
             {
                 // random attack pattern
                 if(Singleton.Instance.Random.NextDouble() > 0.5f){
-                // if(false){
+                    // start charging
                     CurrentState = EnemyState.Charging;
                     _actionTimer = _chargeTime;
                     _dashAim = Singleton.Instance.Player.GetPlayerCenter(); // Lock on to player's position
-                }
-                else{
-                    Console.WriteLine("Going to High Jump");
-                    CurrentState = EnemyState.Jump;  // Jump High
-                    _actionTimer = 1f;
-                    _dashAim = Singleton.Instance.Player.GetPlayerCenter(); // Lock on to player's position
+                }else{
+                    CurrentState = EnemyState.Floating;
+                    _actionTimer = _beamchargingTime;
+                    CanCollideTile = false;
+                    //Teleport to Spawn Pos shoot lazer
                 }
             }
         }
 
-        private void AI_Jump(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        {
-            ApplyGravity(deltaTime);
-            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
-            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-            _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
-            if (!_isJumping)
-            {
-                _isJumping = true;
-                Console.WriteLine(" going to AIM");
-                int horizontalDir = Math.Sign(Singleton.Instance.Player.Position.X - Position.X);
-                Velocity = new Vector2(0, -JumpStrength * 1.8f); // Jump higher
-                CurrentState = EnemyState.Charging;
-                CanCollideTile = false;// ignore all tile
-                _actionTimer = 2.0f;
-            }
-        }
         private void AI_Charging(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             if(!_isJumping)
@@ -150,8 +123,6 @@ namespace FinalComGame
             if (_actionTimer <= 0 )
             {
                 //going to dash
-                //Console.WriteLine("Hellhound dashes!");
-                CanCollideTile = false;
                 CurrentState = EnemyState.Dash;
                 _dashStart = this.Position;
                 _isDashing = true;
@@ -178,7 +149,6 @@ namespace FinalComGame
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             
-
             if (_isDashing)
             {
                 _dashTimer -= deltaTime;
@@ -187,26 +157,58 @@ namespace FinalComGame
                     //Console.WriteLine("Hellhound finished dashing, switching to chase mode.");
                     _isDashing = false;
                     CurrentState = EnemyState.Chase;
-                    _actionTimer =5f;
+                    _actionTimer =3f;
                     CanCollideTile = true;
                     _isJumping = false;
                 }
             }
         }
-        // private void OLDAI_SlamCharge(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
-        // {
-        //     ApplyGravity(deltaTime);
-        //     UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
-        //     UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-        //     Console.WriteLine("Slamming");
-        //     _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
-        //     CanCollideTile = true;
-        //     if(_actionTimer>0){
-        //         Velocity = new Vector2(0, SlamSpeed);
-        //     }
-        //     _jumpCounter = 0;
-        // }
-        
+        private void AI_Floating(float deltaTime,List<GameObject> gameObjects, TileMap tileMap){
+            //aka charging beammmm
+            //going to middle of arena
+            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+            _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
+            if(_actionTimer >0){
+                float distance = Vector2.Distance(Position, _spawnPoint);
+                if (distance <= 10f)
+                {
+                    Velocity = Vector2.Zero; // Stop movement when close enough
+                    return; // Exit this block, no further movement updates
+                }
+                // Speed based on distance (closer = slower, farther = faster)
+                float minSpeed = 50f;  // Minimum speed when very close
+                float maxSpeed = 600f;  // Maximum speed when far away
+                float speed = MathHelper.Clamp(distance * 3f, minSpeed, maxSpeed);
+                Vector2 direction = _spawnPoint - Position;
+                direction.Normalize(); // Convert to unit vector
+                Velocity = direction * speed;
+            }else{
+                CurrentState = EnemyState.Attack;
+                _actionTimer = _beamingTime;
+                //Spawn Projectiles
+                Console.WriteLine("Spawn Laser");
+                int numLines = 4; // Number of lines
+                float angleOffset = MathHelper.TwoPi / numLines;
+                for (int i = 0; i < numLines; i++){
+                    DemonLaser laser = Laserproj.Clone() as DemonLaser;
+                    laser.Shoot(Position, new Vector2(_rotationAngle+ (i * angleOffset),400f) );
+                    gameObjects.Add(laser);
+                }
+            }
+        }
+        private void AI_Attack(float deltaTime,List<GameObject> gameObjects, TileMap tileMap){
+            UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
+            UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
+            _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
+            if(_actionTimer>0){
+                //doing Attack
+            }else{
+                CurrentState = EnemyState.Chase;
+                CanCollideTile = true;
+                _actionTimer =3f;
+            }
+        }
         //MATH STUFF
         private bool Ccw(Vector2 A, Vector2 B, Vector2 C)
         {
@@ -263,17 +265,35 @@ namespace FinalComGame
 
         protected override void DrawDebug(SpriteBatch spriteBatch)
         {
-            Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
-            string displayText = $"State: {CurrentState}\n{Direction}\n HP {Health} \nAT:{_actionTimer}";
-            spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition , Color.White);
+            // Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
+            // string displayText = $"State: {CurrentState}\n{Direction}\n HP {Health} \nAT:{_actionTimer}";
+            // spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition , Color.White);
             if(CurrentState == EnemyState.Charging || CurrentState == EnemyState.Dash){
                 DrawLine(spriteBatch, _dashAim, Position, Color.Green);
                 // Draw 90-degree line at the Aim position
                 DrawLine(spriteBatch,_barrierEnd,_barrierEnd1, Color.Blue);
-
+            }
+            else if(CurrentState == EnemyState.Floating || CurrentState == EnemyState.Attack){
+                // spriteBatch.DrawString(Singleton.Instance.GameFont, "StartPos", textPosition , Color.White);
+                // DrawRotatingLines(spriteBatch);
             }
         }
+        private void DrawRotatingLines(SpriteBatch spriteBatch)
+        {
+            int numLines = 5; // Number of lines
+            float radius = 600f; // Length of each line
+            float angleOffset = MathHelper.TwoPi / numLines; // 360 degrees / numLines
+            Vector2 centerPos = this.Position + new Vector2(this.Rectangle.Width/2,this.Rectangle.Height/2);
+            for (int i = 0; i < numLines; i++)
+            {
+                float angle = _rotationAngle + (i * angleOffset);
+                Vector2 direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * radius;
+                Vector2 endPosition = centerPos + direction;
 
+                DrawLine(spriteBatch, centerPos, endPosition, Color.Red);
+            }
+
+        }
         private void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color)
         {
             // Calculate the length and direction of the line
@@ -293,9 +313,9 @@ namespace FinalComGame
         {
             Velocity.Y += Singleton.GRAVITY * deltaTime * (_isEnraged ? 1.2f : 1.0f);
         }
-
         public override void OnSpawn()
         {
+            _spawnPoint = this.Position;
             _actionTimer = 3f;
             CurrentState = EnemyState.Chase;
             HealthBar = new HealthBar(
@@ -307,28 +327,6 @@ namespace FinalComGame
             Singleton.Instance.CurrentUI.AddHUDElement(HealthBar);
             base.OnSpawn();
         }
-        
-        private void Split(List<GameObject> gameObjects){
-            if(_isSummoned)
-                return;
-            this._isSummoned =true;
-
-            this._actionTimeOffset = 0.95f;
-            GameObject newObject1 = (GameObject)this.Clone(); // Cloning the current object
-            this._actionTimeOffset = 0.90f;
-            GameObject newObject2 = (GameObject)this.Clone(); // Cloning the current object
-            this._actionTimeOffset = 0.85f;
-
-            newObject1.Position = new Vector2(this.Position.X + 150, this.Position.Y-100);
-            newObject2.Position = new Vector2(this.Position.X - 150, this.Position.Y-100); 
-
-            newObject1.Name = "Split Object"; // Give the new object a unique name if necessary
-            newObject2.Name = "Split Object"; // Give the new object a unique name if necessary
-            // Add the new object to the list of game objects
-            gameObjects.Add(newObject1);
-            gameObjects.Add(newObject2);
-        }
-
         public override void OnDead()
         {
             Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;

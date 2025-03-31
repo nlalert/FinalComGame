@@ -8,7 +8,6 @@ namespace FinalComGame;
 
 public class Staff : RangeWeapon
 {
-    public SoundEffect FireBallShootingSound;
     public FireBall FireBall;
     public float MPCost;
 
@@ -23,7 +22,7 @@ public class Staff : RangeWeapon
         FireBall newFireball = FireBall.Clone() as FireBall;
         newFireball.DamageAmount = AttackDamage;
         newFireball.Shoot(position, new Vector2(direction, (float)Math.Sin(MathHelper.ToRadians(-45))));
-        FireBallShootingSound.Play();
+        ShootSound.Play();
         return newFireball;
     }
 
