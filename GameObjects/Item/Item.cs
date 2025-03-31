@@ -41,6 +41,7 @@ public class Item : GameObject, IItemDisplayable
         
         // Create tooltip
         tooltip = new ItemTooltip(this, TooltipBackgroundTexture);
+        Singleton.Instance.CurrentUI.AddWorldSpaceElement(tooltip);
     }
     
     // // Method to be overridden by specific item types
@@ -96,10 +97,7 @@ public class Item : GameObject, IItemDisplayable
         // {
         //     tooltipFadeIn = Math.Max(0f, tooltipFadeIn - TOOLTIP_FADE_SPEED * deltaTime);
         // }
-        
-        // Update tooltip
-        tooltip.Update(gameTime);
-        
+           
         base.Update(gameTime, gameObjects, tileMap);
     }
     
@@ -118,9 +116,6 @@ public class Item : GameObject, IItemDisplayable
                 SpriteEffects.None, 
                 0f
             );
-
-            if(InPickupRadius())
-                tooltip.Draw(spriteBatch); 
         }
     }
 

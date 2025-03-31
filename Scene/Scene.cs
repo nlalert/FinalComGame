@@ -48,6 +48,11 @@ public class Scene
     {
     }   
     
+    protected void DrawWorldSpaceUI()
+    {
+        _ui.DrawWorldSpaceUI(_spriteBatch);
+    }
+    
     protected virtual void Reset()
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;

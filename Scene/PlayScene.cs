@@ -629,11 +629,11 @@ public class PlayScene : Scene
             slot
         );
 
-        _ui.AddElement(playerHealth);
-        _ui.AddElement(playerMP);
-        _ui.AddElement(MeleeWeaponSlot);
-        _ui.AddElement(RangeWeaponSlot);
-        _ui.AddElement(ItemSlot1);
-        _ui.AddElement(ItemSlot2);
+        _ui.AddHUDElement(playerHealth);
+        _ui.AddHUDElement(playerMP);
+        _ui.AddHUDElement(MeleeWeaponSlot);
+        _ui.AddHUDElement(RangeWeaponSlot);
+        _ui.AddHUDElement(ItemSlot1);
+        _ui.AddHUDElement(ItemSlot2);
     }
 }

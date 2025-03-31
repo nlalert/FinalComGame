@@ -128,20 +128,12 @@ public class GameManager : Game
         //         _mainScene.Draw(gameTime);
         //         break;
         }
-
-        DrawUI();
+                
+        Singleton.Instance.CurrentUI.DrawWorldSpaceUI(_spriteBatch);
+        Singleton.Instance.CurrentUI.DrawHUD(_spriteBatch);
 
         // _spriteBatch.End();
 
         base.Draw(gameTime);
-    }
-
-        protected void DrawUI()
-    {
-        _spriteBatch.Begin(); 
-
-        Singleton.Instance.CurrentUI.Draw(_spriteBatch);
-
-        _spriteBatch.End();
     }
 }

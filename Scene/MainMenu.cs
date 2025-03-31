@@ -57,8 +57,8 @@ public class MainMenu : Scene
         );
         _ExitButton.OnClick += ExitGameButton_OnClick;
 
-        _ui.AddElement(_StartButton);
-        _ui.AddElement(_ExitButton);
+        _ui.AddHUDElement(_StartButton);
+        _ui.AddHUDElement(_ExitButton);
     }
 
     private void ExitGameButton_OnClick(object sender, EventArgs e)
