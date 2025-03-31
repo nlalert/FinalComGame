@@ -17,9 +17,12 @@ namespace FinalComGame
         private bool _isDashing;
         private float _dashTimer;
         public float DashDuration;
+        private int _direction = 1;
 
 
-        public HellhoundEnemy(Texture2D texture) : base(texture) { }
+        public HellhoundEnemy(Texture2D texture) : base(texture) { 
+            _texture = texture;
+        }
         public override void Reset()
         {
             //Console.WriteLine("Reset Hellhound");
@@ -32,6 +35,16 @@ namespace FinalComGame
             _patrolCenterPoint = Position;
 
             base.Reset();
+        }
+
+        public override void AddAnimation(){
+            Animation = new Animation(_texture, 80, 64, new Vector2(80*8, 64*3), 24);
+
+            Animation.AddAnimation("idle", new Vector2(0,0), 8);
+            Animation.AddAnimation("charge", new Vector2(0,1), 8);
+            Animation.AddAnimation("dash", new Vector2(0,2), 4);
+
+            Animation.ChangeAnimation("idle");
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -47,21 +60,70 @@ namespace FinalComGame
             switch (CurrentState)
             {
                 case EnemyState.Idle:
+                    if (Velocity.X > 0)
+                        _direction = 1;
+                    else if (Velocity.X < 0)
+                        _direction = -1;
                     AI_IdlePatrol(deltaTime, gameObjects, tileMap);
                     break;
+
                 case EnemyState.Charging:
+                    if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
+                        _direction = 1;
+                    else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
+                        _direction = -1;
                     AI_Charging(deltaTime, gameObjects, tileMap);
                     break;
+
                 case EnemyState.Dash:
                     AI_Dash(deltaTime, gameObjects, tileMap);
                     break;
+
                 case EnemyState.Chase:
+                    if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
+                        _direction = 1;
+                    else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
+                        _direction = -1;
                     AI_ChasingPlayer(deltaTime, gameObjects, tileMap);
                     break;
             }
 
             UpdateAnimation(deltaTime);
             base.Update(gameTime, gameObjects, tileMap);
+        }
+
+        protected override void UpdateAnimation(float deltaTime)
+        {
+            string animation = "idle";
+
+            switch (CurrentState)
+            {
+                case EnemyState.Charging:
+                    animation = "charge";
+                    break;
+
+                case EnemyState.Dash:
+                    animation = "dash";
+                    break;
+                    
+                default:
+                    animation = "idle";
+                    break;
+            }
+
+                
+            if(_currentAnimation != animation && !Animation.IsTransition)
+            {
+                _currentAnimation = animation;
+                switch (animation)
+                {
+                    default:
+                        Animation.ChangeAnimation(_currentAnimation);
+                        break;
+                }    
+            }
+     
+            base.UpdateAnimation(deltaTime);
         }
 
         public override void OnSpawn()
@@ -76,7 +138,21 @@ namespace FinalComGame
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+            SpriteEffects spriteEffect = _direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            Color color = IsInvincible() ? Color.Red : Color.White;
+
+            spriteBatch.Draw(
+                Animation.GetTexture(),
+                GetDrawingPosition(),
+                Animation.GetCurrentFrame(),
+                color,
+                0f, 
+                Vector2.Zero,
+                Scale,
+                spriteEffect, 
+                0f
+            );
+
             DrawDebug(spriteBatch);
         }
         protected override void DrawDebug(SpriteBatch spriteBatch)

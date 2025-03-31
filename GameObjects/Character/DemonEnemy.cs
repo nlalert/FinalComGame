@@ -16,13 +16,14 @@ namespace FinalComGame
         private float verticalOffset; // Randomized offset for smooth hovering
         private float loopOffset =0;
         private float loopSpeed =2f;
+        private int _direction = 1;
 
         public DemonBullet DemonBullet;
 
         public DemonEnemy(Texture2D texture) 
             : base(texture)
         {
-
+            _texture = texture;
             DetectionRange =300f;
             AttackRange = 400f;
             verticalOffset = Singleton.Instance.Random.Next(0, 100); // Randomize hover start
@@ -32,7 +33,13 @@ namespace FinalComGame
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             shootTimer += deltaTime;
+            if (CurrentState == EnemyState.Idle && shootTimer >= shootCooldown * 3/5)
+            {
+                shootTimer = shootCooldown * 3/5;
+            }
+
             UpdateHorizontalMovement(deltaTime,gameObjects,tileMap);
             UpdateVerticalMovement(deltaTime,gameObjects,tileMap);
             UpdateInvincibilityTimer(deltaTime);
@@ -42,16 +49,65 @@ namespace FinalComGame
                 {
                     case EnemyState.Idle:
                         AI_Idle(gameTime,gameObjects,tileMap,deltaTime);
+                        if (Velocity.X > 0)
+                            _direction = 1;
+                        else if (Velocity.X < 0)
+                            _direction = -1;
                         break;
 
                     case EnemyState.Chase:
                         AI_Chase(gameTime,gameObjects,tileMap);
+                        if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
+                            _direction = 1;
+                        else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
+                            _direction = -1;
                         break;
                 }
             }
 
-
+            UpdateAnimation(deltaTime);
             base.Update(gameTime, gameObjects, tileMap);
+        }
+
+        public override void AddAnimation()
+        {
+            Animation = new Animation(_texture, 80 , 64, new Vector2(80*8, 64*3), 24);
+
+            Animation.AddAnimation("idle", new Vector2(0, 0), 16);
+            Animation.AddAnimation("charge", new Vector2(0, 2), 4);
+            Animation.AddAnimation("charge_idle", new Vector2(4, 2), 4);
+
+            Animation.ChangeAnimation("idle");
+            base.AddAnimation();
+        }
+
+        protected override void UpdateAnimation(float deltaTime)
+        {
+            string animation = "idle";
+
+            if (shootTimer > shootCooldown * 3/5)
+                animation = "charge";
+            else
+                animation = "idle";
+
+            if(_currentAnimation != animation && !Animation.IsTransition)
+            {
+                _currentAnimation = animation;
+                switch (animation)
+                {
+                    case "idle":
+                            Animation.ChangeAnimation(_currentAnimation);
+                        break;
+                    case "charge":
+                            Animation.ChangeTransitionAnimation(_currentAnimation, "charge_idle");
+                            break;
+                    default:
+                            Animation.ChangeAnimation(_currentAnimation);
+                        break;
+                }    
+            }
+
+            base.UpdateAnimation(deltaTime);
         }
         private void AI_Idle(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap, float deltaTime){
             float distanceToPlayer = Vector2.Distance(Position, Singleton.Instance.Player.GetPlayerCenter());
@@ -113,13 +169,30 @@ namespace FinalComGame
         {
             Vector2 direction = Vector2.Normalize(Singleton.Instance.Player.Position - Position);
             DemonBullet bullet = DemonBullet.Clone() as DemonBullet;
+
+            Vector2 bulletPosition = new Vector2(Position.X + Viewport.Width / 2, Position.Y + Viewport.Height / 2);
+
             bullet.DamageAmount = bullet.BaseDamageAmount;
-            bullet.Shoot(Position, direction);
+            bullet.Shoot(bulletPosition, direction);
             gameObjects.Add(bullet);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+            SpriteEffects spriteEffect = _direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            Color color = IsInvincible() ? Color.Red : Color.White;
+
+            spriteBatch.Draw(
+                Animation.GetTexture(),
+                GetDrawingPosition(),
+                Animation.GetCurrentFrame(),
+                color,
+                0f, 
+                Vector2.Zero,
+                Scale,
+                spriteEffect, 
+                0f
+            );
+
             DrawDebug(spriteBatch);
         }
         protected override void DrawDebug(SpriteBatch spriteBatch)

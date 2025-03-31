@@ -356,10 +356,9 @@ public class PlayScene : Scene
     private void CreateEnemies()
     {
         Texture2D _enemyTexture = _content.Load<Texture2D>("Skeleton");
-        Texture2D _DogTexture = _content.Load<Texture2D>("EnemyDog");
+        Texture2D _DogTexture = _content.Load<Texture2D>("HellHound");
         Texture2D _SlimeTexture = _content.Load<Texture2D>("HellSlime");
-        Texture2D _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
-        Texture2D _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
+        Texture2D _DemonTexture = _content.Load<Texture2D>("Demon");
         Texture2D _TowerTexture = _content.Load<Texture2D>("Spitter");
         Texture2D _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
         Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
@@ -381,7 +380,7 @@ public class PlayScene : Scene
                     BaseAttackDamage = 3f,
 
                     JumpCooldown = 3.0f,
-                    BaseJumpStrength = 550,
+                    BaseJumpStrength = 490,
                     Friction = 0.96f,
 
                     HitSound = hitSound
@@ -392,7 +391,7 @@ public class PlayScene : Scene
                 98,
                 new HellhoundEnemy(_DogTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 32),
+                    Viewport = new Rectangle(0, 0, 32, 32),
                     
                     MaxHealth = 1f,
                     BaseAttackDamage = 8f,
@@ -438,7 +437,7 @@ public class PlayScene : Scene
                 118,
                 new TowerEnemy(_TowerTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 16, 16),
+                    Viewport = new Rectangle(0, 0, 24, 24),
 
                     MaxHealth = 150f,
 
@@ -458,18 +457,19 @@ public class PlayScene : Scene
                 119,
                 new DemonEnemy(_DemonTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 32, 64),
+                    Viewport = new Rectangle(0, 0, 16, 32),
 
                     MaxHealth = 100f,
 
                     HitSound = hitSound,
 
-                    DemonBullet = new DemonBullet(_DemonBulletTexture)
+                    DemonBullet = new DemonBullet(projectileTexture)
                     {
                         Name = "BulletEnemy",
                         BaseDamageAmount = 15f,
-                        Speed = 150f,
-                        Viewport = new Rectangle(0, 0, 32, 32)
+                        Speed = 200f,
+                        Viewport = new Rectangle(0, 0, 8, 8),
+                        spriteViewport = new Rectangle(0, 16, 16, 16)
                     }
                 }
             },
