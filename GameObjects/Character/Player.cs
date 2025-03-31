@@ -610,7 +610,7 @@ namespace FinalComGame
                 StartDash();
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && _coyoteTimeCounter > 0)
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _coyoteTimeCounter > 0)
             {
 
                 if (!(Singleton.Instance.IsKeyPressed(Crouch) && _isClimbing) && 
