@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame;
@@ -13,6 +14,8 @@ public interface IItemDisplayable
 public class Item : GameObject, IItemDisplayable
 {
     public static Texture2D TooltipBackgroundTexture;
+    public static SoundEffect PickUpSound;
+    
     // Item properties
     public string Description;
     public bool IsPickedUp;
@@ -21,7 +24,6 @@ public class Item : GameObject, IItemDisplayable
     
     // Visual indicator for pickup range
     public float pickupRadius = 40f;
-
     protected Vector2 originalPosition;
     
     // Tooltip related properties
@@ -59,6 +61,7 @@ public class Item : GameObject, IItemDisplayable
     public virtual void OnPickup(int slot)
     {
         Singleton.Instance.Player.ItemSlot[slot] = this;
+        PickUpSound.Play();
         IsPickedUp = true;
     }
     

@@ -16,6 +16,14 @@ public class PlayScene : Scene
 
     private Texture2D _playerTexture;
     private Texture2D _textureAtlas;
+    private Texture2D _DemonTexture;
+    private Texture2D _DemonBulletTexture;
+    private Texture2D _TowerTexture;
+    private Texture2D _PlatformTexture;
+    private Texture2D _GiantSlimeTexture;
+    private Texture2D _CerberusTexture;
+    private Texture2D _RhulkTexture;
+    private Texture2D _LaserTexture;
 
 
     private Texture2D _parallaxFGtexture;
@@ -47,6 +55,19 @@ public class PlayScene : Scene
         base.LoadContent(spriteBatch);
         
         _playerTexture = _content.Load<Texture2D>("Char_test");
+        // _enemyTexture = _content.Load<Texture2D>("EnemyRed");
+        // _DogTexture = _content.Load<Texture2D>("EnemyDog");
+        // _SlimeTexture = _content.Load<Texture2D>("HellSlime");
+        _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
+        _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
+        _TowerTexture = _content.Load<Texture2D>("EnemyTower");
+        _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
+        _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
+        _CerberusTexture = _content.Load<Texture2D>("Cerberus");
+        _RhulkTexture = _content.Load<Texture2D>("EnemyRhulk");
+        _LaserTexture = _content.Load<Texture2D>("Laserbeam");
+
+
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
         _parallaxFGtexture = _content.Load<Texture2D>("Level_1_Parallax_fg");
@@ -260,6 +281,7 @@ public class PlayScene : Scene
         // Load sprite sheets
         Texture2D playerTexture = _content.Load<Texture2D>("Char");
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
+        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
     
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         SoundEffect playerDashSound = _content.Load<SoundEffect>("Dash");
@@ -320,12 +342,13 @@ public class PlayScene : Scene
             JumpSound = playerJumpSound,
             DashSound = playerDashSound,
             PunchSound = playerPunchSound,
-            Bullet = new PlayerBullet(_playerTexture)
+
+            Bullet = new PlayerBullet(projectileTexture)
             {
                 Name = "BulletPlayer",
                 BaseDamageAmount = 15f,
                 Speed = 500f,
-                Viewport = new Rectangle(0, 0, 15, 10)
+                Viewport = new Rectangle(0, 0, 9, 5)
             },
         };
     }
@@ -341,6 +364,8 @@ public class PlayScene : Scene
         Texture2D _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
         Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
         Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
+
+        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
 
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
@@ -405,14 +430,15 @@ public class PlayScene : Scene
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 16, 16),
 
-                    MaxHealth = 100f,
+                    MaxHealth = 150f,
 
-                    TowerBullet = new TowerBullet(_DemonBulletTexture)
+                    TowerBullet = new TowerBullet(projectileTexture)
                     {
                         Name = "BulletEnemy",
                         BaseDamageAmount = 20f,
-                        Speed = 250f,
-                        Viewport = new Rectangle(0, 0, 32, 32)
+                        Speed = 300f,
+                        Viewport = new Rectangle(0, 0, 12, 12),
+                        spriteViewport = new Rectangle(16, 16, 16, 16)
                     }
                 }
             },
@@ -447,6 +473,21 @@ public class PlayScene : Scene
                     Friction = 0.96f
                 }
             },
+            //DONOT REMOVE This. just add new number please cuz Feen's dont know where and what to assign this number
+            // {
+            //     97,         
+            //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
+            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+            //         Viewport = new Rectangle(0, 0, 64, 48),
+
+            //         MaxHealth = 1f,
+            //         BaseAttackDamage = 3f,
+
+            //         // JumpCooldown = 3.0f,
+            //         BaseJumpStrength = 550,
+            //         Friction = 0.96f
+            //     }
+            // },
             {
                 138,         
                 new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
@@ -461,11 +502,26 @@ public class PlayScene : Scene
                     Friction = 0.96f
                 }
             },
-            // {
-            //     199,         
-            //     new ตัว Final Boss{
-            //      }
-            // },
+            {
+                199,         
+                new Rhulk(_RhulkTexture){
+                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Viewport = new Rectangle(0, 0, 22, 64),
+
+                    MaxHealth = 100f,
+                    BaseAttackDamage = 3f,
+
+                    // JumpCooldown = 3.0f,
+                    BaseJumpStrength = 550,
+                    Friction = 0.96f,
+                    Laserproj = new DemonLaser(_LaserTexture)
+                    {
+                        Name = "BulletEnemy",
+                        BaseDamageAmount = 20f,
+                        Viewport = new Rectangle(0, 0, 10, 200),
+                    },
+                }
+            },
         };
 
     }
@@ -500,13 +556,12 @@ public class PlayScene : Scene
         Texture2D Staff = _content.Load<Texture2D>("Staff");
         Texture2D Bunny = _content.Load<Texture2D>("Bunny");
         Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
-        Texture2D FireBall = _content.Load<Texture2D>("FireBall");
+        Texture2D FireBall = _content.Load<Texture2D>("Projectile");
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
-        // Create a pixel texture for the background
-        Texture2D TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
         //set for all item
-        Item.TooltipBackgroundTexture = TooltipBackgroundTexture;
+        Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
+        Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
 
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",

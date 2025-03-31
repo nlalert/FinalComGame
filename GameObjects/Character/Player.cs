@@ -267,10 +267,11 @@ namespace FinalComGame
             SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             Vector2 offset = new Vector2(0 , 0);
-
+            Vector2 handOffset = new Vector2(0 , 0);
             if (_isCrouching)
             {
                 offset = new Vector2(0 , 8);
+                handOffset = new Vector2(0 , 2);
             }
 
             if (_isClimbing && _overlappedTile == TileType.Ladder)
@@ -301,9 +302,9 @@ namespace FinalComGame
             {
                 spriteBatch.Draw(
                     HandAnimation.GetTexture(),
-                    GetDrawingPosition(),
+                    GetDrawingPosition() - handOffset,
                     HandAnimation.GetCurrentFrame(),
-                    Color.White,
+                    color,
                     0f, 
                     Vector2.Zero,
                     Scale,
@@ -991,12 +992,16 @@ namespace FinalComGame
                 return;
             
             // Get position offset based on player state
-            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 2) : new Vector2(0, 10); 
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 6) : new Vector2(0, 16); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
             
             // Create and configure the projectile using the weapon
             Projectile newProjectile = rangeWeapon.CreateProjectile(bulletPosition, Direction);
-            
+            if (rangeWeapon == ItemSlot[1] as Gun)
+                newProjectile.spriteViewport = new Rectangle(48, 0, 16, 16);
+            else if (rangeWeapon == ItemSlot[1] as Staff)
+                newProjectile.spriteViewport = new Rectangle(32, 16, 16, 16);
+
             // Handle the effects of shooting
             rangeWeapon.OnShoot();
             
@@ -1061,11 +1066,16 @@ namespace FinalComGame
             PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
             newBullet.DamageAmount *= chargePower; // Increase damage
 
-            Vector2 bulletPosition; 
-            if (!_isCrouching) bulletPosition = Position + new Vector2(0, 10);
-            else bulletPosition = Position + new Vector2(0, 2);
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 6) : new Vector2(0, 16); 
+            Vector2 bulletPosition = Position + bulletPositionOffset;
 
             newBullet.Shoot(bulletPosition, direction);
+            if (chargeRatio == 1.0)
+                newBullet.spriteViewport = new Rectangle(32, 0, 16, 16);
+            else if (chargeRatio >= 0.5)
+                newBullet.spriteViewport = new Rectangle(16, 0, 16, 16);
+            else
+                newBullet.spriteViewport = new Rectangle(0, 0, 16, 16);
             
             gameObjects.Add(newBullet);
             

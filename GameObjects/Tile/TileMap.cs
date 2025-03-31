@@ -123,7 +123,7 @@ namespace FinalComGame
                 14 or 74 => TileType.AmbushBarrier,
                 34 => TileType.AmbushAreaTopLeft,
                 54 => TileType.AmbushAreaBottomRight,
-                97 or 98 or 99 or 117 or 118 or 119 or 137 or 138 or 139 => TileType.EnemySpawn,
+                97 or 98 or 99 or 117 or 118 or 119 or 137 or 138 or 139 or 199 => TileType.EnemySpawn,
 
                 _ => TileType.None
             };
