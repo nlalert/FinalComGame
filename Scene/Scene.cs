@@ -35,7 +35,7 @@ public class Scene
         _spriteBatch = spriteBatch;
     }
 
-    protected virtual void SetupUI()
+    protected virtual void SetupHUD()
     {
     }
 

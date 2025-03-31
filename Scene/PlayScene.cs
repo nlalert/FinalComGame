@@ -267,7 +267,7 @@ public class PlayScene : Scene
         InitializeAmbushAreas();
         // SpawnEnemies();
         AddItems();
-        SetupUI();
+        SetupHUD();
         
         foreach (GameObject s in _gameObjects)
         {
@@ -709,9 +709,9 @@ public class PlayScene : Scene
         });
     }
 
-    protected override void SetupUI()
+    protected override void SetupHUD()
     {
-        _ui.ClearAllUI();
+        _ui.ClearHUD();
 
         HealthBar playerHealth = new HealthBar(
             Singleton.Instance.Player,

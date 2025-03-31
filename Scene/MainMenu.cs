@@ -26,13 +26,13 @@ public class MainMenu : Scene
         Console.WriteLine("Loading Content");
         _spriteBatch = spriteBatch;
 
-        SetupUI();
+        SetupHUD();
 
         // Reset();
         Console.WriteLine("Content Loaded");
     }
 
-    protected override void SetupUI()
+    protected override void SetupHUD()
     {
         Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
         int startButtonWidth = Singleton.SCREEN_WIDTH / 2;

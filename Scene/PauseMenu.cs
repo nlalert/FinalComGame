@@ -102,10 +102,10 @@ public class PauseMenu : Scene
         for (int i = 0; i < data.Length; i++) data[i] = Color.White;
         _rectTexture.SetData(data);
 
-        SetupUI();
+        SetupHUD();
     }
 
-    protected override void SetupUI()
+    protected override void SetupHUD()
     {
         Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
         int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
