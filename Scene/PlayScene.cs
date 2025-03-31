@@ -609,10 +609,12 @@ public class PlayScene : Scene
             SlashSound = SwordSlashSound,
         });
 
+        SoundEffect GunshotSound = _content.Load<SoundEffect>("Gunshot");
         _gameObjects.Add(new Gun(Gun, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
             Description = "Test Gun Description",
-            Viewport = new Rectangle(0, 0, 32,32)
+            Viewport = new Rectangle(0, 0, 32,32),
+            ShootSound = GunshotSound,
         });
 
 
@@ -622,7 +624,7 @@ public class PlayScene : Scene
             Name =  "Staff",
             Description = "Test Staff Description",
             MPCost = 10,
-            FireBallShootingSound = FireBallShootingSound,
+            ShootSound = FireBallShootingSound,
 
             FireBall = new FireBall(FireBall, ExplosionEffect, FireBallExplosionSound)
             {

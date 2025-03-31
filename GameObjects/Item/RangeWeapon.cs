@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 
@@ -15,6 +16,7 @@ public interface IShootable
 
 public class RangeWeapon : Item, IShootable
 {
+    public SoundEffect ShootSound;
     public float AttackDamage;
     protected int _ammoAmount;
 
@@ -31,6 +33,7 @@ public class RangeWeapon : Item, IShootable
         Projectile bullet = Singleton.Instance.Player.Bullet.Clone() as PlayerBullet;
         bullet.DamageAmount = AttackDamage;
         bullet.Shoot(position, new Vector2(direction, 0));
+        ShootSound.Play();
         return bullet;
     }
 

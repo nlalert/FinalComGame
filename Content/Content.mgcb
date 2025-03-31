@@ -386,6 +386,12 @@
 /processorParam:TextureFormat=Color
 /build:Gun.png
 
+#begin Gunshot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Gunshot.wav
+
 #begin HealthPotionTemp.png
 /importer:TextureImporter
 /processor:TextureProcessor
