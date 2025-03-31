@@ -482,6 +482,12 @@
 /processorParam:TextureFormat=Color
 /build:Pickaxe.png
 
+#begin Pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Pickup.wav
+
 #begin Player.png
 /importer:TextureImporter
 /processor:TextureProcessor

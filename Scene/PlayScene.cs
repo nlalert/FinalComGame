@@ -505,10 +505,9 @@ public class PlayScene : Scene
         Texture2D FireBall = _content.Load<Texture2D>("FireBall");
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
-        // Create a pixel texture for the background
-        Texture2D TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
         //set for all item
-        Item.TooltipBackgroundTexture = TooltipBackgroundTexture;
+        Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
+        Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
 
         _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
