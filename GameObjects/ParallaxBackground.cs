@@ -3,81 +3,87 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FinalComGame
+namespace FinalComGame;
+
+public class ParallaxBackground
 {
-    public class ParallaxBackground : GameObject
+    private List<ParallaxLayer> _layers;
+    private Viewport _viewport;
+
+    public ParallaxBackground(Viewport viewport)
     {
-        private Texture2D _fgTexture, _mgTexture, _bgTexture;
-        private Vector2 _fgPosition, _mgPosition, _bgPosition, _startPosition;
+        _layers = new List<ParallaxLayer>();
+        _viewport = viewport;
+    }
 
-        public ParallaxBackground(Texture2D fgTexture,Texture2D mgTexture,Texture2D bgTexture, Vector2 Position)
-        {
-            _fgTexture = fgTexture;
-            _mgTexture = mgTexture;
-            _bgTexture = bgTexture;
-            _startPosition = Position;
+    public void AddLayer(ParallaxLayer layer)
+    {
+        _layers.Add(layer);
+    }
 
-            base.Scale = new Vector2(Math.Max(Singleton.SCREEN_WIDTH / _bgTexture.Width, Singleton.SCREEN_HEIGHT / _bgTexture.Height));
-            
-        }
+    public void AddLayer(Texture2D texture, float scrollSpeed, bool isLooping = true, float scale = 1.0f)
+    {
+        _layers.Add(new ParallaxLayer(texture, scrollSpeed, isLooping, scale));
+    }
 
-        public override void Reset(){
-            _fgPosition = new Vector2 (_startPosition.X - _fgTexture.Width/2, _startPosition.Y - _fgTexture.Height/2);
-            _mgPosition = new Vector2 (_startPosition.X - _mgTexture.Width/2, _startPosition.Y - _mgTexture.Height/2);
-            _bgPosition = new Vector2 (_startPosition.X - _bgTexture.Width/2, _startPosition.Y - _bgTexture.Height/2);
-        }
+    public void Update(GameTime gameTime)
+    {
+        // Get camera movement since last frame
+        Vector2 cameraMovement = Singleton.Instance.Camera.GetMovement();
         
-        public void Update(){
-            _fgPosition = new Vector2 (_startPosition.X - _fgTexture.Width * Scale.X / 2, _startPosition.Y - _fgTexture.Height  * Scale.Y / 2) 
-            + new Vector2 ((Singleton.Instance.Player.Position.X - _startPosition.X) * 1/4, 
-            Singleton.Instance.Player.Position.Y - _startPosition.Y);
-             
-            _mgPosition = new Vector2 (_startPosition.X - _mgTexture.Width * Scale.X / 2, _startPosition.Y - _mgTexture.Height * Scale.Y / 2) 
-            + new Vector2 ((Singleton.Instance.Player.Position.X - _startPosition.X) * 1/2,
-            Singleton.Instance.Player.Position.Y - _startPosition.Y);
-
-            _bgPosition = new Vector2 (_startPosition.X - _bgTexture.Width * Scale.X / 2, _startPosition.Y - _bgTexture.Height * Scale.Y / 2)
-            + new Vector2 (Singleton.Instance.Player.Position.X - _startPosition.X,
-            Singleton.Instance.Player.Position.Y - _startPosition.Y);
+        // Update each layer
+        foreach (var layer in _layers)
+        {
+            layer.Update(cameraMovement);
         }
+    }
 
-        public override void Draw(SpriteBatch spriteBatch){
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        foreach (var layer in _layers)
+        {
+            // Calculate how many times to draw the texture to fill the screen
+            int horizontalCount = (int)Math.Ceiling(_viewport.Width / (layer.SourceRectangle.Width * layer.Scale)) + 2;
+            int verticalCount = (int)Math.Ceiling(_viewport.Height / (layer.SourceRectangle.Height * layer.Scale)) + 2;
 
-            spriteBatch.Draw(
-                _bgTexture,
-                _bgPosition,
-                new Rectangle(0, 0, _bgTexture.Width, _bgTexture.Height),
-                Color.White,
-                0f,
-                Vector2.Zero,
-                base.Scale,
-                SpriteEffects.None, 
-                0f
-            );
+            // Only draw multiple copies if this layer is set to loop
+            if (!layer.IsLooping)
+            {
+                horizontalCount = 1;
+                verticalCount = 1;
+            }
 
-            spriteBatch.Draw(
-                _mgTexture,
-                _mgPosition,
-                new Rectangle(0, 0, _mgTexture.Width, _mgTexture.Height),
-                Color.White,
-                0f,
-                Vector2.Zero,
-                base.Scale,
-                SpriteEffects.None, 
-                0f
-            );
+            // Draw the layer multiple times to create a seamless effect
+            for (int y = 0; y < verticalCount; y++)
+            {
+                for (int x = 0; x < horizontalCount; x++)
+                {
+                    // Calculate position for this tile
+                    Vector2 drawPosition = new Vector2(
+                        layer.Position.X + x * layer.SourceRectangle.Width * layer.Scale,
+                        layer.Position.Y + y * layer.SourceRectangle.Height * layer.Scale
+                    );
 
-            spriteBatch.Draw(
-                _fgTexture,
-                _fgPosition,
-                new Rectangle(0, 0, _fgTexture.Width, _fgTexture.Height),
-                Color.White,
-                0f,
-                Vector2.Zero,
-                base.Scale,
-                SpriteEffects.None, 
-                0f
-            );
+                    // If we're using non-looping layers, just draw at the specified position
+                    if (!layer.IsLooping)
+                    {
+                        drawPosition = layer.Position;
+                    }
+
+                    // Draw the texture
+                    spriteBatch.Draw(
+                        layer.Texture,
+                        drawPosition,
+                        layer.SourceRectangle,
+                        Color.White,
+                        0f,
+                        Vector2.Zero,
+                        layer.Scale,
+                        SpriteEffects.None,
+                        0f
+                    );
+                }
+            }
         }
     }
 }

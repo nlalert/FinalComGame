@@ -27,10 +27,10 @@ public class PlayScene : Scene
     private Texture2D _SoulMinion;
     private Texture2D _MinionSoulBullet;
 
-    private Texture2D _parallaxFGtexture;
-    private Texture2D _parallaxMGtexture;
-    private Texture2D _parallaxBGtexture;
     private ParallaxBackground _parallaxBackground;
+    private Texture2D _backgroundLayer1;
+    private Texture2D _backgroundLayer2;
+    private Texture2D _backgroundLayer3;
 
     private TileMap _collisionTileMap;
     private TileMap _FGTileMap;
@@ -70,11 +70,19 @@ public class PlayScene : Scene
         _SoulMinion = _content.Load<Texture2D>("SoulMinion");
         _MinionSoulBullet = _content.Load<Texture2D>("MinionSoulBullet");
 
-
         _textureAtlas = _content.Load<Texture2D>("Tileset");
-        _parallaxFGtexture = _content.Load<Texture2D>("Level_1_Parallax_fg");
-        _parallaxMGtexture = _content.Load<Texture2D>("Level_1_Parallax_mg");
-        _parallaxBGtexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
+
+        // Load your background textures
+        _backgroundLayer1 = _content.Load<Texture2D>("Level_1_Parallax_bg");  // Farthest layer (sky)
+        _backgroundLayer2 = _content.Load<Texture2D>("Level_1_Parallax_mg");  // Middle layer
+        _backgroundLayer3 = _content.Load<Texture2D>("Level_1_Parallax_fg");  // Closest layer
+
+        // Create parallax background
+        _parallaxBackground = new ParallaxBackground(_graphicsDevice.Viewport);
+
+        _parallaxBackground.AddLayer(_backgroundLayer1, 0.1f); // Sky/clouds move very slowly
+        _parallaxBackground.AddLayer(_backgroundLayer2, 0.3f); // Mountains move at medium speed
+        _parallaxBackground.AddLayer(_backgroundLayer3, 0.6f); // Trees move faster (closer to player)
 
         _song = _content.Load<Song>("ChillSong");
     }
@@ -105,13 +113,13 @@ public class PlayScene : Scene
                 {
                     Singleton.Instance.CurrentGameState = Singleton.GameState.Pause;
                 }
-                _parallaxBackground.Update();
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
                 UpdateAmbushAreas(gameTime);
                 RemoveInactiveObjects();
 
                 Singleton.Instance.Camera.Follow(Singleton.Instance.Player); // Make camera follow the player
+                _parallaxBackground.Update(gameTime);
                 break;
             case Singleton.GameState.StageCompleted:
                 Singleton.Instance.Stage++;
@@ -143,10 +151,13 @@ public class PlayScene : Scene
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
-                // Draw the Game World (Apply Camera)
+                // Draw background layers (no camera transform for parallax background)
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                _parallaxBackground.Draw(_spriteBatch);
+                _spriteBatch.End();
 
+                // Draw the Game World (Apply Camera)
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Singleton.Instance.Camera.GetTransformation()); // Apply camera matrix
-                // _parallaxBackground.Draw(_spriteBatch);
                 DrawTileMap();
                 DrawAllObjects();
                 _spriteBatch.End();
@@ -225,8 +236,6 @@ public class PlayScene : Scene
         Singleton.Instance.Random = new Random();
         Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
 
-        _parallaxBackground = new ParallaxBackground(_parallaxFGtexture, _parallaxMGtexture, _parallaxBGtexture, StageManager.GetPlayerWorldSpawnPosition());
-
         CreatePlayer();
         CreateEnemies();
 
@@ -251,8 +260,6 @@ public class PlayScene : Scene
 
         Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.TILE_SIZE,  _collisionTileMap.MapHeight * Singleton.TILE_SIZE); // Map size
         Singleton.Instance.Camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
-
-        _parallaxBackground = new ParallaxBackground(_parallaxFGtexture, _parallaxMGtexture, _parallaxBGtexture, StageManager.GetPlayerWorldSpawnPosition());
 
         Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
