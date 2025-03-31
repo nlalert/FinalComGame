@@ -572,17 +572,6 @@ public class PlayScene : Scene
     {
         Texture2D ItemTexture = _content.Load<Texture2D>("Items");
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
-
-        Texture2D testItem = _content.Load<Texture2D>("Pickaxe");
-        Texture2D sword = _content.Load<Texture2D>("Sword");
-        Texture2D HealthPotionTemp = _content.Load<Texture2D>("HealthPotionTemp");
-        Texture2D Hermes_Boots = _content.Load<Texture2D>("Hermes_Boots");
-        Texture2D LifeUP = _content.Load<Texture2D>("1Up");
-        Texture2D Gun = _content.Load<Texture2D>("Items");
-        Texture2D Staff = _content.Load<Texture2D>("Staff");
-        Texture2D Bunny = _content.Load<Texture2D>("Bunny");
-        Texture2D Gauntlet = _content.Load<Texture2D>("Gauntlet");
-        Texture2D FireBall = _content.Load<Texture2D>("Projectile");
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
 
         //set for all item
@@ -590,44 +579,48 @@ public class PlayScene : Scene
         Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
 
         SoundEffect PotionUseSound = _content.Load<SoundEffect>("PotionUse");
-        _gameObjects.Add(new Potion(projectileTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
+        _gameObjects.Add(new Potion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
             Name =  "HealthPotion",
             Description = "Test HealthPotion Description",
             Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(0, 32, 32, 32),
+            spriteViewport = new Rectangle(64, 64, 32, 32),
             UseSound = PotionUseSound
         });
 
-        _gameObjects.Add(new SpeedPotion(HealthPotionTemp, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
+        _gameObjects.Add(new SpeedPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
             Name =  "SpeedPotion",
             Description = "Test SpeedPotion Description",
             Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(0, 96, 32, 32),
             UseSound = PotionUseSound
         });
 
-        _gameObjects.Add(new JumpPotion(Bunny, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
+        _gameObjects.Add(new JumpPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
             Name =  "jumppotion",
             Description = "Test JumpPotion Description",
             Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(32, 64, 32, 32),
             UseSound = PotionUseSound
         });
 
-        _gameObjects.Add(new Barrier(testItem, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
+        _gameObjects.Add(new Barrier(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
             Description = "Test Barrier Description",
             Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(0, 64, 32, 32),
             UseSound = PotionUseSound // Temp
         });
 
-        _gameObjects.Add(new LifeUp(LifeUP, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
+        _gameObjects.Add(new LifeUp(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "1Up",
             Description = "Test LifeUp Description",
             Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(32, 96, 32, 32),
             UseSound = PotionUseSound // Temp
         });
 
         _gameObjects.Add(new SpeedBoots(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
-            Name =  "HealthPotion",
+            Name =  "SpeedBoots",
             Description = "Test SpeedBoots Description",
             Viewport = new Rectangle(0, 0, 32, 32),
             spriteViewport = new Rectangle(32, 32, 32, 32)
@@ -649,6 +642,7 @@ public class PlayScene : Scene
             SlashSound = SwordSlashSound,
         });
 
+        SoundEffect GunshotSound = _content.Load<SoundEffect>("Gunshot");
         _gameObjects.Add(new Gun(ItemTexture, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
             Description = "Test Gun Description",
@@ -673,7 +667,7 @@ public class PlayScene : Scene
                 Speed = 500f,
                 Radius = 60f,
                 ExplosionDuration = 0.5f,
-                Viewport = new Rectangle(0, 0, 8, 8),
+                Viewport = new Rectangle(0, 0, 12, 12),
                 spriteViewport = new Rectangle(64, 32, 32, 32)
             },
             Viewport = new Rectangle(0, 0, 32,32),
