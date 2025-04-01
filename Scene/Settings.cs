@@ -9,6 +9,8 @@ namespace FinalComGame;
 
 public class Settings : Scene
 {
+    private TextUI _settingsTitle; // can change to ImageUI later
+    private SlideBarUI _masterVolumeSlider;
     private Button _musicSlideChip;
     private Button _sfxSlideChip;
     private Button _backButton;
@@ -250,7 +252,33 @@ public class Settings : Scene
 
     protected override void SetupHUD()
     {
-        Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
+        int TextWidth = Singleton.SCREEN_WIDTH / 2;
+        int TextHeight = 80;
+        // Static text
+        _settingsTitle = new TextUI(
+            new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 7, TextWidth, TextHeight),
+            "Settings",  
+            Color.White, 
+            TextUI.TextAlignment.Center
+        );
+
+        // Create a volume slider
+        int SliderWidth = Singleton.SCREEN_WIDTH / 2;
+        int SliderHeight = 30;
+        Texture2D SliderBar = _content.Load<Texture2D>("ItemSlot");//TEMP
+        Texture2D SliderHandle =   _content.Load<Texture2D>("sliderHandle"); // 32x32
+        _masterVolumeSlider = new SlideBarUI(
+            new Rectangle((Singleton.SCREEN_WIDTH - SliderWidth) / 2 , (Singleton.SCREEN_HEIGHT - SliderHeight) * 2 / 7, SliderWidth, SliderHeight),
+            "Master Volume",
+            SliderBar,
+            SliderHandle,
+            0,    // min value
+            100,  // max value
+            50,   // start value
+            "{0}%" // value format
+        );
+
+        Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later 
         int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
         int ButtonHeight = 80;
         _backButton = new Button(
@@ -262,6 +290,8 @@ public class Settings : Scene
         );
         _backButton.OnClick += BackButton_OnClick;
 
+        _ui.AddHUDElement(_settingsTitle);
+        _ui.AddHUDElement(_masterVolumeSlider);
         _ui.AddHUDElement(_backButton);
 
         // _musicSlideChip = new Button(_texture)
