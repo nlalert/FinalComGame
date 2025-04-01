@@ -16,7 +16,6 @@ namespace FinalComGame
         private float verticalOffset; // Randomized offset for smooth hovering
         private float loopOffset =0;
         private float loopSpeed =2f;
-        private int _direction = 1;
 
         public DemonBullet DemonBullet;
 
@@ -50,17 +49,17 @@ namespace FinalComGame
                     case EnemyState.Idle:
                         AI_Idle(gameTime,gameObjects,tileMap,deltaTime);
                         if (Velocity.X > 0)
-                            _direction = 1;
+                            Direction = 1;
                         else if (Velocity.X < 0)
-                            _direction = -1;
+                            Direction = -1;
                         break;
 
                     case EnemyState.Chase:
                         AI_Chase(gameTime,gameObjects,tileMap);
                         if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
-                            _direction = 1;
+                            Direction = 1;
                         else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
-                            _direction = -1;
+                            Direction = -1;
                         break;
                 }
             }
@@ -178,7 +177,7 @@ namespace FinalComGame
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            SpriteEffects spriteEffect = _direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             Color color = IsInvincible() ? Color.Red : Color.White;
 
             spriteBatch.Draw(
