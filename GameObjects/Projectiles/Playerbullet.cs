@@ -22,17 +22,15 @@ namespace FinalComGame
                 {
                     OnProjectileHit(enemy);
                     enemy.OnHitByProjectile(this, DamageAmount);
-                        
                     IsActive = false;
                 }
             }
             foreach (var bullet in gameObjects.OfType<Projectile>())
             {
-                if(IsTouching(bullet))
+                if(bullet != this && bullet is not PlayerBullet && IsTouching(bullet))
                 {
-                    if(bullet is not PlayerBullet)
+                    if(bullet is not DemonLaser && bullet is not SoulMinion)
                     {
-                        if(bullet is not DemonLaser && bullet is not SoulMinion)
                         IsActive = false;
                     }
                 } 

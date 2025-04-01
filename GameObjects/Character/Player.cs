@@ -961,9 +961,9 @@ namespace FinalComGame
             
             // Set sprite viewport based on weapon type
             if (rangeWeapon is Gun)
-                newProjectile.spriteViewport = new Rectangle(48, 0, 16, 16);
+                newProjectile.Viewport = new Rectangle(50, 5, 11, 5);
             else if (rangeWeapon is Staff)
-                newProjectile.spriteViewport = new Rectangle(32, 16, 16, 16);
+                newProjectile.Viewport = new Rectangle(35, 17, 10, 13);
 
             // Handle the effects of shooting
             rangeWeapon.OnShoot();
@@ -1031,11 +1031,11 @@ namespace FinalComGame
 
             newBullet.Shoot(bulletPosition, direction);
             if (chargeRatio == 1.0)
-                newBullet.spriteViewport = new Rectangle(32, 0, 16, 16);
+                newBullet.Viewport = new Rectangle(32, 3, 13, 9);
             else if (chargeRatio >= 0.5)
-                newBullet.spriteViewport = new Rectangle(16, 0, 16, 16);
+                newBullet.Viewport = new Rectangle(17, 4, 12, 7);
             else
-                newBullet.spriteViewport = new Rectangle(0, 0, 16, 16);
+                newBullet.Viewport = new Rectangle(1, 5, 12, 5);
             
             gameObjects.Add(newBullet);
             

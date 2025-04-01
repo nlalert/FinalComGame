@@ -14,7 +14,6 @@ namespace FinalComGame
         public bool CanHitPlayer = true;
         protected Vector2 StartPosition;
         protected Vector2 _direction;
-        public Rectangle spriteViewport;
         
 
         public Projectile(Texture2D texture, float damage = 15f, float speed = 300f ) : base(texture)
@@ -73,8 +72,8 @@ namespace FinalComGame
 
             spriteBatch.Draw(
                 _texture, 
-                new Vector2(Position.X - spriteViewport.Width/2, Position.Y - spriteViewport.Height/2), 
-                spriteViewport, 
+                new Vector2(Position.X - Viewport.Width/2, Position.Y - Viewport.Height/2), 
+                Viewport, 
                 Color.White,
                 0f, 
                 Vector2.Zero,

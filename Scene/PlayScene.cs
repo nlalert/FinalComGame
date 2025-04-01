@@ -370,7 +370,7 @@ public class PlayScene : Scene
                 Name = "BulletPlayer",
                 BaseDamageAmount = 15f,
                 Speed = 500f,
-                Viewport = new Rectangle(0, 0, 9, 5)
+                Viewport = new Rectangle(1, 5, 12, 5)
             },
             _hookHeadTexture = _HookHeadTexture,
             _ropeTexture = _RopeTexture
@@ -472,8 +472,7 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 20f,
                         Speed = 300f,
-                        Viewport = new Rectangle(0, 0, 12, 12),
-                        spriteViewport = new Rectangle(16, 16, 16, 16)
+                        Viewport = new Rectangle(16, 16, 16, 16)
                     }
                 }
             },
@@ -492,8 +491,7 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 15f,
                         Speed = 200f,
-                        Viewport = new Rectangle(0, 0, 8, 8),
-                        spriteViewport = new Rectangle(0, 16, 16, 16)
+                        Viewport = new Rectangle(4, 7, 8, 9)
                     }
                 }
             },
@@ -693,8 +691,7 @@ public class PlayScene : Scene
                 Speed = 500f,
                 Radius = 60f,
                 ExplosionDuration = 0.5f,
-                Viewport = new Rectangle(0, 0, 12, 12),
-                spriteViewport = new Rectangle(64, 32, 32, 32)
+                Viewport = new Rectangle(35, 17, 10, 13)
             },
             Viewport = new Rectangle(0, 0, 32,32),
             spriteViewport = new Rectangle(64, 0, 32, 32),
