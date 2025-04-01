@@ -21,7 +21,6 @@ public class Item : GameObject, IItemDisplayable
     public string Description;
     public bool IsPickedUp;
 
-    public Rectangle spriteViewport = new Rectangle(0, 0, 32,32);
     public ItemType Type;
 
     public float MPCost = 0;
@@ -61,14 +60,14 @@ public class Item : GameObject, IItemDisplayable
     public virtual void ActiveAbility(float deltaTime, int slot,List<GameObject> gameObject)
     {    
     }
-    // Called when item is picked up
+
     public virtual void OnPickup(int slot)
     {
-        Singleton.Instance.Player.ItemSlot[slot] = this;
+        Singleton.Instance.Player.Inventory.AddItem(this, slot);
         PickUpSound.Play();
         IsPickedUp = true;
     }
-    
+
     // Called when item is dropped
     public virtual void OnDrop(Vector2 position)
     {
@@ -121,7 +120,7 @@ public class Item : GameObject, IItemDisplayable
             spriteBatch.Draw(
                 _texture,
                 Position,
-                spriteViewport,
+                Viewport,
                 Color.White,
                 0f, 
                 Vector2.Zero,
@@ -145,7 +144,7 @@ public class Item : GameObject, IItemDisplayable
         spriteBatch.Draw(
             _texture,
             destinationRect,
-            spriteViewport,
+            Viewport,
             Color.White,
             0f, 
             Vector2.Zero,

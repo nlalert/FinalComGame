@@ -25,11 +25,8 @@ namespace FinalComGame
         public int Life;
         public float AbsorptionHealth;
 
-        public Item[] ItemSlot;
-        //slot 0 for melee item
-        //slot 1 for range item
-        //slot 2-3 for items
-        private List<Item> usingConsumableItem;
+        // Inventory system
+        public Inventory Inventory { get; private set; }
 
         public SoulParticle _particle;
 
@@ -97,6 +94,7 @@ namespace FinalComGame
         public SoundEffect ChargingSound;
         public SoundEffect BulletShotSound;
         private SoundEffectInstance _chargingSoundInstance;
+        
         //Animation
         private Animation HandAnimation;
         private string _currentHandAnimation = "idle";
@@ -104,6 +102,8 @@ namespace FinalComGame
 
         public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
         {
+            // Create inventory instance
+            Inventory = new Inventory();
 
             Animation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*18), 24);
 
@@ -175,14 +175,12 @@ namespace FinalComGame
 
             paticleTexture.SetData([new Color(193, 255, 219)]);
             _particle = new SoulParticle(10, Position, paticleTexture);
-
-            ItemSlot = new Item[4];
         }
 
         public override void Reset()
         {
-            ItemSlot = new Item[4];
-            usingConsumableItem = new List<Item>();
+            // Reset inventory
+            Inventory.Reset();
 
             Direction = 1; // Reset direction to right
 
@@ -195,7 +193,6 @@ namespace FinalComGame
             ResetJumpStrength();
 
             _overlappedTile = TileType.None;
-
 
             _isClimbing = false;
             _isCrouching = false;
@@ -227,8 +224,11 @@ namespace FinalComGame
 
             HandleInput(deltaTime, gameObjects, tileMap);
             RegenerateMP(deltaTime);
-            ActiveItemPassiveAbility(deltaTime,gameObjects);
-            UpdateUsingItem(deltaTime,gameObjects);
+            
+            // Update inventory items
+            Inventory.UpdateActiveItemPassives(deltaTime, gameObjects);
+            Inventory.UpdateActiveConsumables(deltaTime, gameObjects);
+            
             UpdateInvincibilityTimer(deltaTime);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
@@ -250,8 +250,6 @@ namespace FinalComGame
             if (!_isDashing) Velocity.X = 0;
 
             ResetJumpStrength();
-
-            //Console.WriteLine(AttackDamage);
             
             base.Update(gameTime, gameObjects, tileMap);
             _particle.Update(Position);    
@@ -618,9 +616,9 @@ namespace FinalComGame
                 }
                 else
                 {
-                    if (ItemSlot[1] is Staff && MP >= ItemSlot[1].MPCost)
+                    if (Inventory.GetItem(Inventory.RANGE_SLOT) is Staff && MP >= Inventory.GetItem(Inventory.RANGE_SLOT).MPCost)
                        _currentWeapon = "staff";
-                    else if (ItemSlot[1] is Gun)
+                    else if (Inventory.GetItem(Inventory.RANGE_SLOT) is Gun)
                         _currentWeapon = "gun";
                     else
                         _currentWeapon = "none";
@@ -649,11 +647,9 @@ namespace FinalComGame
 
             if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _coyoteTimeCounter > 0)
             {
-
                 if (!(Singleton.Instance.IsKeyPressed(Crouch) && _isClimbing) && 
                 !(Singleton.Instance.IsKeyPressed(Crouch) && _isOnPlatform))
                 {
-
                     _isClimbing = false;
                     if (_isCrouching) {
                         Position.Y -= 16;
@@ -666,7 +662,6 @@ namespace FinalComGame
                 }
 
                 _isClimbing = false;
-
             }
             else
                 _jumpBufferCounter -= deltaTime; // Decrease over time
@@ -731,7 +726,6 @@ namespace FinalComGame
                     Direction = -1;
                 else if(_overlappedTile == TileType.Ladder_Right)
                     Direction = 1;
-
             }
 
             if (_isClimbing)
@@ -742,29 +736,28 @@ namespace FinalComGame
                 {
                     Velocity.Y = -ClimbSpeed;
                 }
-
                 else if (Singleton.Instance.IsKeyPressed(Crouch))
                 {
                     Velocity.Y = ClimbSpeed;
                 }
-
                 else Velocity.Y = 0;
-                
                 
                 if (_overlappedTile == TileType.None)
                     _isClimbing = false;
-
             }
+            
             if(Singleton.Instance.IsKeyJustPressed(Grapple)){
                 FireGrapplingHook(gameObjects);
             }
+            
             if (Singleton.Instance.IsKeyJustPressed(Interact))
-                CheckInteraction(gameObjects);
+                Inventory.CheckForItemPickup(gameObjects);
 
             if (Singleton.Instance.IsKeyJustPressed(Item1))
-                UseItem(2);
+                Inventory.UseItem(Inventory.ITEM_SLOT_1);
+                
             if (Singleton.Instance.IsKeyJustPressed(Item2))
-                UseItem(3);
+                Inventory.UseItem(Inventory.ITEM_SLOT_2);
         }
 
         private void FireGrapplingHook(List<GameObject> gameObjects)
@@ -794,32 +787,6 @@ namespace FinalComGame
             return Velocity.Y == 0 || _isClimbing ;
         }
 
-        private void ActiveItemPassiveAbility(float deltaTime,List<GameObject> gameObjects)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                if (ItemSlot[i] == null || ItemSlot[i].Type == ItemType.Consumable) continue;
-
-                ItemSlot[i].ActiveAbility(deltaTime,i,gameObjects);
-                
-            }
-        }
-
-        private void UpdateUsingItem(float deltaTime,List<GameObject> gameObjects)
-        {
-            for (int i = usingConsumableItem.Count - 1; i >= 0; i--)
-            {
-                if(!usingConsumableItem[i].IsActive)
-                {
-                    usingConsumableItem.RemoveAt(i);
-                }
-                else
-                {
-                    usingConsumableItem[i].ActiveAbility(deltaTime, i, gameObjects);
-                }
-            }
-        }
-
         public void BoostSpeed(float speedModifier)
         {
             if(_isDashing) 
@@ -830,55 +797,6 @@ namespace FinalComGame
         public void BoostJump(float jumpStrengthModifier)
         {
             JumpStrength *= jumpStrengthModifier;
-        }
-
-        private void UseItem(int itemSlotIndex)
-        {
-            if(ItemSlot[itemSlotIndex] == null || ItemSlot[itemSlotIndex].Type != ItemType.Consumable) return;
-
-            ItemSlot[itemSlotIndex].Use(itemSlotIndex);
-        }
-
-        private void CheckInteraction(List<GameObject> gameObjects)
-        {
-            foreach (var item in gameObjects.OfType<Item>())
-            {
-                if (item.InPickupRadius() && !item.IsPickedUp)
-                {
-                    if(item.Type == ItemType.MeleeWeapon)
-                    {
-                        ItemSlot[0]?.OnDrop(Position);
-                        item.OnPickup(0);
-                        break;
-                        // You could add a pickup sound or effect here
-                    }
-                    else if(item.Type == ItemType.RangeWeapon)
-                    {
-                        ItemSlot[1]?.OnDrop(Position);
-                        item.OnPickup(1);
-                        break;
-                        // You could add a pickup sound or effect here
-                    }
-                    else if(item.Type != ItemType.MeleeWeapon && item.Type != ItemType.RangeWeapon && ItemSlot[2] == null)
-                    {
-                        item.OnPickup(2);
-                        break;
-                        // You could add a pickup sound or effect here
-                    }
-                    else if(item.Type != ItemType.MeleeWeapon && item.Type != ItemType.RangeWeapon && ItemSlot[3] == null)
-                    {
-                        item.OnPickup(3);
-                        break;
-                        // You could add a pickup sound or effect here
-                    }
-                    else
-                    {
-                        // Both slots are full
-                        Console.WriteLine("Inventory full, cannot pick up " + item.Name);
-                        // Maybe show a UI message to the player
-                    }
-                }
-            }
         }
 
         private void StartAttack()
@@ -896,7 +814,7 @@ namespace FinalComGame
                 }
                 else
                 {
-                    (ItemSlot[0] as Sword).SlashSound.Play();
+                    Inventory.GetSword().SlashSound.Play();
                 }
 
                 UpdateAttackHitbox();
@@ -907,9 +825,9 @@ namespace FinalComGame
         {
             if (_isAttacking)
             {
-                if(ItemSlot[0] != null)
+                if(Inventory.HasMeleeWeapon())
                 {
-                    AttackHitbox = (ItemSlot[0] as Sword).GetAttackHitbox();
+                    AttackHitbox = Inventory.GetSword().GetAttackHitbox();
                 }
                 else
                 {
@@ -919,7 +837,7 @@ namespace FinalComGame
                 }
             }
         }
-        
+
         private void CheckAttackHit(List<GameObject> gameObjects)
         {
             if (!_isAttacking) return;
@@ -1057,7 +975,7 @@ namespace FinalComGame
 
         private void Shoot(List<GameObject> gameObjects)
         {
-            IShootable rangeWeapon = ItemSlot[1] as IShootable;
+            IShootable rangeWeapon = Inventory.GetRangeWeapon();
             
             if (rangeWeapon == null || !rangeWeapon.CanShoot())
                 return;
@@ -1068,10 +986,12 @@ namespace FinalComGame
             
             // Create and configure the projectile using the weapon
             Projectile newProjectile = rangeWeapon.CreateProjectile(bulletPosition, Direction);
-            if (rangeWeapon == ItemSlot[1] as Gun)
-                newProjectile.spriteViewport = new Rectangle(48, 0, 16, 16);
-            else if (rangeWeapon == ItemSlot[1] as Staff)
-                newProjectile.spriteViewport = new Rectangle(32, 16, 16, 16);
+            
+            // Set sprite viewport based on weapon type
+            if (rangeWeapon is Gun)
+                newProjectile.Viewport = new Rectangle(50, 5, 11, 5);
+            else if (rangeWeapon is Staff)
+                newProjectile.Viewport = new Rectangle(35, 17, 10, 13);
 
             // Handle the effects of shooting
             rangeWeapon.OnShoot();
@@ -1139,11 +1059,11 @@ namespace FinalComGame
 
             newBullet.Shoot(bulletPosition, direction);
             if (chargeRatio == 1.0)
-                newBullet.spriteViewport = new Rectangle(32, 0, 16, 16);
+                newBullet.Viewport = new Rectangle(32, 3, 13, 9);
             else if (chargeRatio >= 0.5)
-                newBullet.spriteViewport = new Rectangle(16, 0, 16, 16);
+                newBullet.Viewport = new Rectangle(17, 4, 12, 7);
             else
-                newBullet.spriteViewport = new Rectangle(0, 0, 16, 16);
+                newBullet.Viewport = new Rectangle(1, 5, 12, 5);
             
             gameObjects.Add(newBullet);
             
@@ -1317,15 +1237,14 @@ namespace FinalComGame
 
         public void RemoveItem(int slot)
         {
-            ItemSlot[slot].IsActive = false;
-            ItemSlot[slot] = null;
+            Inventory.RemoveItem(slot);
         }
 
         public void AddUsingItem(int slot)
         {
-            usingConsumableItem.Add(ItemSlot[slot]);
-            ItemSlot[slot] = null;
+            Inventory.AddActiveConsumable(slot);
         }
+        
         private void UpdateGrapplingHook(float deltaTime){
             if (_grapplingHook != null && _grapplingHook.Hooked)
             {

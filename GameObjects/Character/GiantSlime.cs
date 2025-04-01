@@ -15,6 +15,7 @@ namespace FinalComGame
         public float SlamChargeDuration = 0.5f;  // Charging before slam
         public float SlamSpeed = 1500f;
         public int JumpsBeforeHighJump = 3;   // Number of normal jumps before high jump
+        private bool _CanCollideVerticlel;
 
         public HealthBar HealthBar;
 
@@ -22,6 +23,7 @@ namespace FinalComGame
         { 
             _texture = texture;
             CanCollideTile = true;
+            _CanCollideVerticlel = true;
         }
 
         public override void AddAnimation(){
@@ -163,7 +165,7 @@ namespace FinalComGame
                     int horizontalDir = Math.Sign(Singleton.Instance.Player.Position.X - Position.X);
                     Velocity = new Vector2(horizontalDir * JumpStrength * 0.6f, -JumpStrength * 1.8f); // Jump higher
                     CurrentState = EnemyState.Charging;
-                    CanCollideTile = false;// ignore all tile
+                    CanCollideTile = true;// ignore all tile
                     _actionTimer = 3.0f;
                 }
                 else
@@ -193,11 +195,14 @@ namespace FinalComGame
                 //go back to jump
                 CurrentState = EnemyState.Chase;
                 CanCollideTile = true;
+                _CanCollideVerticlel =true;
                 _actionTimer =1f;
                 _jumpCounter = 0;
             } else if(_actionTimer <=2 || (Position.Y <= Singleton.Instance.Player.GetPlayerCenter().Y -100 && this.Velocity.Y > 0)){
                 if(_actionTimer >2)
                     _actionTimer = 2;
+                CanCollideTile =true;
+                _CanCollideVerticlel =false;
                 Vector2 _AimTarget = Singleton.Instance.Player.GetPlayerCenter() + new Vector2(-this.Rectangle.Width/2,-100);
                 float distance = Vector2.Distance(Position, _AimTarget);
                 if (distance <= 10f)
@@ -223,13 +228,14 @@ namespace FinalComGame
 
         private void AI_SlamCharge(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
+            CanCollideTile =true;
             ApplyGravity(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             Console.WriteLine("Slamming");
             _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
             if(Position.Y + _texture.Height> Singleton.Instance.Player.GetPlayerCenter().Y){
-                CanCollideTile = true;
+                _CanCollideVerticlel =true;
             }
             if(_actionTimer>0){
                 Velocity = new Vector2(0, SlamSpeed);
@@ -305,7 +311,7 @@ namespace FinalComGame
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             Vector2 aim  = Singleton.Instance.Player.GetPlayerCenter() + new Vector2(-this.Rectangle.Width/2,-100);
-            string displayText = $"State: {CurrentState}\nJumps: {_jumpCounter}/{JumpsBeforeHighJump}\nHP: {Health}/{MaxHealth}\nEnraged: {_isEnraged}";
+            string displayText = $"State: {CurrentState}\nJumps: {CanCollideTile}\nVert: {_CanCollideVerticlel}";
             spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition, Color.White);
             spriteBatch.DrawString(Singleton.Instance.GameFont, "AIM POS", aim, Color.White);
             
@@ -334,5 +340,54 @@ namespace FinalComGame
             Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
             base.OnDead();
         }
+        protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Position.X += Velocity.X * deltaTime;
+            if(!CanCollideTile) 
+                return;
+
+            int radius = 5;
+            for (int i = -radius; i <= radius; i++)
+            {
+                for (int j = -radius; j <= radius; j++)
+                {
+                    Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
+                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                    if(tile != null && (tile.Type == TileType.Barrier ) && tile.Type != TileType.Platform)
+                    {
+                        if(ResolveHorizontalCollision(tile)){
+                            OnCollisionHorizon();
+                        }
+                    }
+                }
+            }
+        }
+        protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Position.Y += Velocity.Y * deltaTime;
+            if(!CanCollideTile) 
+                return;
+            int radius = 5;
+            for (int i = -radius; i <= radius; i++)
+            {
+                for (int j = -radius; j <= radius; j++)
+                {
+                    Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
+                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                    if(tile != null && (tile.Type == TileType.Barrier || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile)))  && tile.Type != TileType.Platform)
+                    {
+                        if(_CanCollideVerticlel){
+                            float VeloY = Velocity.Y;
+                            if(ResolveVerticalCollision(tile)){
+                                Console.WriteLine(VeloY);
+                                if(!(VeloY <0))//jump up and hit wall will not do anything
+                                    OnLandVerticle();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

@@ -370,7 +370,7 @@ public class PlayScene : Scene
                 Name = "BulletPlayer",
                 BaseDamageAmount = 15f,
                 Speed = 500f,
-                Viewport = new Rectangle(0, 0, 9, 5)
+                Viewport = new Rectangle(1, 5, 12, 5)
             },
             _hookHeadTexture = _HookHeadTexture,
             _ropeTexture = _RopeTexture
@@ -473,8 +473,7 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 20f,
                         Speed = 300f,
-                        Viewport = new Rectangle(0, 0, 12, 12),
-                        spriteViewport = new Rectangle(16, 16, 16, 16)
+                        Viewport = new Rectangle(16, 16, 16, 16)
                     }
                 }
             },
@@ -493,8 +492,7 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 15f,
                         Speed = 200f,
-                        Viewport = new Rectangle(0, 0, 8, 8),
-                        spriteViewport = new Rectangle(0, 16, 16, 16)
+                        Viewport = new Rectangle(4, 19, 8, 9)
                     }
                 }
             },
@@ -608,63 +606,55 @@ public class PlayScene : Scene
         _gameObjects.Add(new Potion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
             Name =  "HealthPotion",
             Description = "Test HealthPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(64, 64, 32, 32),
+            Viewport = new Rectangle(64, 64, 32, 32),
             UseSound = PotionUseSound
         });
 
         _gameObjects.Add(new SpeedPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
             Name =  "SpeedPotion",
             Description = "Test SpeedPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(0, 96, 32, 32),
+            Viewport = new Rectangle(0, 96, 32, 32),
             UseSound = PotionUseSound
         });
 
         _gameObjects.Add(new JumpPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
             Name =  "jumppotion",
             Description = "Test JumpPotion Description",
-            Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(32, 64, 32, 32),
+            Viewport = new Rectangle(32, 64, 32, 32),
             UseSound = PotionUseSound
         });
 
         _gameObjects.Add(new Barrier(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
             Description = "Test Barrier Description",
-            Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(0, 64, 32, 32),
+            Viewport = new Rectangle(0, 64, 32, 32),
             UseSound = PotionUseSound // Temp
         });
 
         _gameObjects.Add(new LifeUp(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "1Up",
             Description = "Test LifeUp Description",
-            Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(32, 96, 32, 32),
+            Viewport = new Rectangle(32, 96, 32, 32),
             UseSound = PotionUseSound // Temp
         });
 
         _gameObjects.Add(new SpeedBoots(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
             Name =  "SpeedBoots",
             Description = "Test SpeedBoots Description",
-            Viewport = new Rectangle(0, 0, 32, 32),
-            spriteViewport = new Rectangle(32, 32, 32, 32)
+            Viewport = new Rectangle(32, 32, 32, 32)
         });
 
         _gameObjects.Add(new CursedGauntlet(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(26, 80)){
             Name =  "CursedGauntlet",
             Description = "Test CursedGauntlet Description",
-            Viewport = new Rectangle(0, 0, 32, 32),
-            spriteViewport = new Rectangle(64, 32, 32, 32)
+            Viewport = new Rectangle(64, 32, 32, 32)
         });
 
         SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
         _gameObjects.Add(new Sword(ItemTexture, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
             Description = "Test Sword Description",
-            Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(32, 0, 32, 32),
+            Viewport = new Rectangle(32, 0, 32, 32),
             SlashSound = SwordSlashSound,
         });
 
@@ -672,8 +662,7 @@ public class PlayScene : Scene
         _gameObjects.Add(new Gun(ItemTexture, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
             Description = "Test Gun Description",
-            Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(0, 0, 32, 32),
+            Viewport = new Rectangle(0, 0, 32, 32),
             ShootSound = GunshotSound,
         });
 
@@ -693,11 +682,9 @@ public class PlayScene : Scene
                 Speed = 500f,
                 Radius = 60f,
                 ExplosionDuration = 0.5f,
-                Viewport = new Rectangle(0, 0, 12, 12),
-                spriteViewport = new Rectangle(64, 32, 32, 32)
+                Viewport = new Rectangle(35, 17, 10, 13)
             },
-            Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(64, 0, 32, 32),
+            Viewport = new Rectangle(64, 0, 32, 32),
         });
 
         _gameObjects.Add(new SoulStaff(ItemTexture,ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
@@ -716,8 +703,7 @@ public class PlayScene : Scene
                     Viewport = new Rectangle(0, 0, 10, 10),
                 }
             },
-            Viewport = new Rectangle(0, 0, 32,32),
-            spriteViewport = new Rectangle(0, 32, 32, 32),
+            Viewport = new Rectangle(0, 32, 32, 32),
         });
     }
 
