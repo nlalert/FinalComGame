@@ -21,6 +21,9 @@ class Singleton
     public Camera Camera;
     public UI CurrentUI;
 
+    public float MusicVolume = 1.0f;
+    public float SFXVolume = 1.0f;
+
     public enum GameState
     {
         MainMenu,
