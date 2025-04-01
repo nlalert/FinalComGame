@@ -7,16 +7,11 @@ using System.Collections.Generic;
 
 namespace FinalComGame;
 
-public class PauseMenu : Scene
+public class Settings : Scene
 {
-    private Button _resumeButton;
-    private Button _restartButton;
-    private Button _settingsButton;
-    private Button _mainmenuButton;
-    private Button _backButton;
-
     private Button _musicSlideChip;
     private Button _sfxSlideChip;
+    private Button _backButton;
 
     private int _pauseTitleHeight;
     private int _resumeButtonHeight;
@@ -37,7 +32,6 @@ public class PauseMenu : Scene
 
     private int _slideBarMaxValue;
     private int buttonGap;
-
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         base.Initialize(graphicsDevice, graphicsDeviceManager, content);
@@ -88,116 +82,12 @@ public class PauseMenu : Scene
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
-
         SetupHUD();
-    }
-
-    protected override void SetupHUD()
-    {
-        Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
-        int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
-        int ButtonHeight = 80;
-
-        _resumeButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
-            "Resume Button",
-            Color.Wheat
-        );
-        _resumeButton.OnClick += ResumeButton_OnClick;
-
-        _restartButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
-            "_restartButton Button",
-            Color.Wheat
-        );
-        _restartButton.OnClick += RestartButton_OnClick;
-
-        _settingsButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
-            "_settingsButton Button",
-            Color.Wheat
-        );
-        _settingsButton.OnClick += SettingButton_OnClick;
-
-        _mainmenuButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
-            "_mainmenuButton Button",
-            Color.Wheat
-        );
-        _mainmenuButton.OnClick += MainMenuButton_OnClick;
-
-        _backButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
-            "_backButton Button",
-            Color.Wheat
-        );
-        _backButton.OnClick += BackButton_OnClick;
-
-        _ui.AddHUDElement(_resumeButton);
-        _ui.AddHUDElement(_restartButton);
-        _ui.AddHUDElement(_settingsButton);
-        _ui.AddHUDElement(_mainmenuButton);
-        _ui.AddHUDElement(_backButton);
-
-        // _musicSlideChip = new Button(_texture)
-        // {
-        //     Name = "MusicSlideChip",
-        //     Viewport = ViewportManager.Get("Slide_Chip0"),
-        //     Position = new Vector2((Singleton.SCREEN_WIDTH - ViewportManager.Get("Slide_Chip0").Width) / 2 + (int)(Singleton.Instance.MusicVolume*_slideBarMaxValue) - (_slideBarMaxValue/2),
-        //             _musicSlideChipHeight),
-        //     IsActive = true
-        // };
-
-        // _sfxSlideChip = new Button(_texture)
-        // {
-        //     Name = "SFXSlideChip",
-        //     Viewport = ViewportManager.Get("Slide_Chip0"),
-        //     Position = new Vector2((Singleton.SCREEN_WIDTH - ViewportManager.Get("Slide_Chip0").Width) / 2 + (int)(Singleton.Instance.SFXVolume*_slideBarMaxValue) - (_slideBarMaxValue/2),
-        //             _sfxSlideChipHeight),
-        //     IsActive = true
-        // };
-
-    }
-
-    private void BackButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
-    }
-
-    private void MainMenuButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;
-    }
-
-    private void SettingButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Settings;
-    }
-
-    private void RestartButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
-    }
-
-    private void ResumeButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        PauseSong();
         // if (!_settings)
         // {
 
@@ -357,4 +247,45 @@ public class PauseMenu : Scene
         //     _sfxSlideChip.Draw(_spriteBatch);
         // }
     // }
+
+    protected override void SetupHUD()
+    {
+        Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
+        int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
+        int ButtonHeight = 80;
+        _backButton = new Button(
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
+            Button,
+            Button,
+            "_backButton Button",
+            Color.Wheat
+        );
+        _backButton.OnClick += BackButton_OnClick;
+
+        _ui.AddHUDElement(_backButton);
+
+        // _musicSlideChip = new Button(_texture)
+        // {
+        //     Name = "MusicSlideChip",
+        //     Viewport = ViewportManager.Get("Slide_Chip0"),
+        //     Position = new Vector2((Singleton.SCREEN_WIDTH - ViewportManager.Get("Slide_Chip0").Width) / 2 + (int)(Singleton.Instance.MusicVolume*_slideBarMaxValue) - (_slideBarMaxValue/2),
+        //             _musicSlideChipHeight),
+        //     IsActive = true
+        // };
+
+        // _sfxSlideChip = new Button(_texture)
+        // {
+        //     Name = "SFXSlideChip",
+        //     Viewport = ViewportManager.Get("Slide_Chip0"),
+        //     Position = new Vector2((Singleton.SCREEN_WIDTH - ViewportManager.Get("Slide_Chip0").Width) / 2 + (int)(Singleton.Instance.SFXVolume*_slideBarMaxValue) - (_slideBarMaxValue/2),
+        //             _sfxSlideChipHeight),
+        //     IsActive = true
+        // };
+
+    }
+
+    private void BackButton_OnClick(object sender, EventArgs e)
+    {
+        Singleton.Instance.CurrentGameState = Singleton.GameState.Pause; // Temp
+    }
 }

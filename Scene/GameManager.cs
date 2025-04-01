@@ -19,6 +19,7 @@ public class GameManager : Game
     private PlayScene _playScene;
     private MainMenu _mainMenu;
     private PauseMenu _pauseMenu;
+    private Settings _settings;
 
     public GameManager()
     {
@@ -35,7 +36,6 @@ public class GameManager : Game
 
     protected override void LoadContent()
     {
-        
         Singleton.Instance.GameFont = Content.Load<SpriteFont>("GameFont");
 
         _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -51,13 +51,16 @@ public class GameManager : Game
         _pauseMenu = new PauseMenu();
         _pauseMenu.Initialize(GraphicsDevice, _graphics, Content);
         _pauseMenu.LoadContent(_spriteBatch);
+
+        _settings = new Settings();
+        _settings.Initialize(GraphicsDevice, _graphics, Content);
+        _settings.LoadContent(_spriteBatch);
     }
 
     protected override void Update(GameTime gameTime)
     {
         Singleton.Instance.UpdateCurrentInput();
 
-        //assume game state as playing
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.MainMenu:
@@ -68,26 +71,15 @@ public class GameManager : Game
                 // _playScene.Update(gameTime);
                 _pauseMenu.Update(gameTime);
                 break;
+            case Singleton.GameState.Settings:
+                _settings.Update(gameTime);
+                break;
             case Singleton.GameState.Exit:
                 Exit();
                 break;
             default:
                 _playScene.Update(gameTime);
                 break;
-        //     case Singleton.GameState.MainMenu:
-        //         _mainScene.Update(gameTime);
-        //         _mainMenu.Update(gameTime);
-        //         break;
-        //     case Singleton.GameState.Pause:
-        //         _mainScene.Update(gameTime);
-        //         _pauseMenu.Update(gameTime);
-        //         break;
-        //     case Singleton.GameState.Exit:
-        //         Exit();
-        //         break;
-        //     default:
-        //         _mainScene.Update(gameTime);
-        //         break;
         }
 
         Singleton.Instance.CurrentUI.Update(gameTime);
@@ -101,9 +93,6 @@ public class GameManager : Game
     {
         GraphicsDevice.Clear(Color.Black);
 
-        // _spriteBatch.Begin();
-
-       
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.MainMenu:
@@ -114,26 +103,16 @@ public class GameManager : Game
                 // _playScene.Draw(gameTime);
                 _pauseMenu.Draw(gameTime);
                 break;
+            case Singleton.GameState.Settings:
+                _settings.Draw(gameTime);
+                break;
             default:
                 _playScene.Draw(gameTime);
                 break;
-        //     case Singleton.GameState.MainMenu:
-        //         _mainMenu.Draw(gameTime);
-        //         break;
-        //     case Singleton.GameState.Pause:
-        //         _mainScene.Draw(gameTime);
-        //         _pauseMenu.Draw(gameTime);
-        //         break;
-        //     default:
-        //         _mainScene.Draw(gameTime);
-        //         break;
         }
                 
         Singleton.Instance.CurrentUI.DrawWorldSpaceUI(_spriteBatch);
         Singleton.Instance.CurrentUI.DrawHUD(_spriteBatch);
-
-        // _spriteBatch.End();
-
         base.Draw(gameTime);
     }
 }

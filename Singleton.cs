@@ -28,6 +28,7 @@ class Singleton
         InitializingStage,
         Playing,
         Pause,
+        Settings,
         StageCompleted,
         GameOver,
         GameWon,
@@ -91,7 +92,7 @@ class Singleton
     {
         return CurrentKey.IsKeyUp(key);
     }
-    
+
     // Enum for mouse buttons
     public enum MouseButton
     {
