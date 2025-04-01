@@ -131,6 +131,6 @@ public class Settings : Scene
 
     private void BackButton_OnClick(object sender, EventArgs e)
     {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Pause; // Temp
+        Singleton.Instance.CurrentGameState = Singleton.GameState.Pause;
     }
 }
