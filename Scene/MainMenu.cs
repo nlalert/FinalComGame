@@ -28,6 +28,8 @@ namespace FinalComGame
 
         private float _scaleX;
         private float _scaleY;
+        private float scaleOtOmg;
+        private float scaleOtOfg;
         public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
         {
             base.Initialize(graphicsDevice, graphicsDeviceManager, content);
@@ -61,6 +63,8 @@ namespace FinalComGame
             _fgPosition.X -= _fgSpeed * deltaTime * 100;
             _scaleX = (float)Singleton.SCREEN_WIDTH / _bgTexture.Width;
             _scaleY = (float)Singleton.SCREEN_HEIGHT / _bgTexture.Height;
+            scaleOtOmg = (float)Singleton.SCREEN_HEIGHT / _mgTexture.Height;
+            scaleOtOfg = (float)Singleton.SCREEN_HEIGHT / _fgTexture.Height;
 
             // Wrap background when it moves out of view
             if (_bgPosition.X <= -_bgTexture.Width) _bgPosition.X = 0;
@@ -83,8 +87,9 @@ namespace FinalComGame
             // Draw parallax layers
             // DrawParallaxLayer(_spriteBatch, _bgTexture, _bgPosition);
             _spriteBatch.Draw(_bgTexture, _bgPosition, null, Color.White, 0f, Vector2.Zero, new Vector2(_scaleX, _scaleY), SpriteEffects.None, 0f);
-            DrawParallaxLayer(_spriteBatch, _mgTexture, _mgPosition);
-            DrawParallaxLayer(_spriteBatch, _fgTexture, _fgPosition);
+            DrawParallaxLayer(_spriteBatch, _mgTexture, _mgPosition,new Vector2(scaleOtOmg,scaleOtOmg));
+            // DrawParallaxLayer(_spriteBatch, _mgTexture, _mgPosition,new Vector2(1,1));
+            DrawParallaxLayer(_spriteBatch, _fgTexture, _fgPosition,new Vector2(scaleOtOfg,scaleOtOfg));
 
             _spriteBatch.End();
 
@@ -94,12 +99,12 @@ namespace FinalComGame
             _spriteBatch.End();
         }
 
-        private void DrawParallaxLayer(SpriteBatch spriteBatch, Texture2D texture, Vector2 position)
+        private void DrawParallaxLayer(SpriteBatch spriteBatch, Texture2D texture, Vector2 position,Vector2 Scale)
         {
-            spriteBatch.Draw(texture, position, Color.White);
-            spriteBatch.Draw(texture, new Vector2(position.X + texture.Width, position.Y), Color.White);
-            spriteBatch.Draw(texture, new Vector2(position.X + texture.Width*2, position.Y), Color.White);
-            spriteBatch.Draw(texture, new Vector2(position.X + texture.Width*3, position.Y), Color.White);
+            spriteBatch.Draw(texture, position,null, Color.White,0f,Vector2.Zero,Scale,SpriteEffects.None,0f);
+            spriteBatch.Draw(texture, new Vector2(position.X + texture.Width, position.Y),null, Color.White,0f,Vector2.Zero,Scale,SpriteEffects.None,0f);
+            spriteBatch.Draw(texture, new Vector2(position.X + texture.Width*2, position.Y),null, Color.White,0f,Vector2.Zero,Scale,SpriteEffects.None,0f);
+            spriteBatch.Draw(texture, new Vector2(position.X + texture.Width*3, position.Y),null, Color.White,0f,Vector2.Zero,Scale,SpriteEffects.None,0f);
         }
 
         protected override void SetupHUD()
