@@ -16,7 +16,7 @@ namespace FinalComGame
         protected Vector2 _direction;
         
 
-        public Projectile(Texture2D texture, float damage = 15f, float speed = 300f ) : base(texture)
+        public Projectile(Texture2D texture, float damage = 0f, float speed = 300f ) : base(texture)
         {
             DamageAmount = damage;
             Speed = speed;
@@ -38,7 +38,7 @@ namespace FinalComGame
             if(IsTouching(Singleton.Instance.Player) && CanHitPlayer == true)
             {
                 OnProjectileHit(Singleton.Instance.Player);
-                Singleton.Instance.Player.OnHitByProjectile(this,DamageAmount);
+                Singleton.Instance.Player.OnHitByProjectile(this,DamageAmount, false);
                 // s.Reset();//TODO ???? why does it need reset idk
                 IsActive = false;
             }

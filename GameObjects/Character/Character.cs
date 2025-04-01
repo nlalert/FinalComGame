@@ -113,15 +113,15 @@ namespace FinalComGame {
         /// <summary>
         /// Calls this when enemy get hit by any projectiles
         /// </summary>
-        public virtual void OnHitByProjectile(GameObject projectile, float damageAmount){
+        public virtual void OnHitByProjectile(GameObject projectile, float damageAmount, bool isHeavyAttack){
         }
 
         /// <summary>
         /// This call when Character recive damage
         /// </summary>
-        public virtual void OnHit(float damageAmount)
+        public virtual void OnHit(float damageAmount, bool IsHeavyAttack)
         {
-            StartInvincibility();
+            StartInvincibility(IsHeavyAttack);
         }
         /// <summary>
         /// Do anything special when spawn
@@ -137,9 +137,12 @@ namespace FinalComGame {
             IsActive = false;
         }
 
-        public void StartInvincibility()
+        public void StartInvincibility(bool IsHeavyAttack)
         {
-            _invincibilityTimer = _invincibilityDuration; // Activate i-frames
+            if (IsHeavyAttack)
+                _invincibilityTimer = _invincibilityDuration * 10;
+            else
+                _invincibilityTimer = _invincibilityDuration; // Activate i-frames
         }
 
         public void ResetJumpStrength()

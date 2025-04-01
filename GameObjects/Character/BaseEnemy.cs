@@ -46,6 +46,7 @@ namespace FinalComGame {
         public BaseEnemy(Texture2D texture) : base(texture){
             _idleAnimation = new Animation(texture, 16, 32, new Vector2(1,1), 24); // 24 fps\
             Animation = _idleAnimation;
+            _invincibilityDuration = 0.05f;
         }
         
         // Spawn method with optional spawn effects
@@ -86,19 +87,19 @@ namespace FinalComGame {
                 CurrentState != EnemyState.Dying &&
                 IsInvincible();
         }
-        public override void OnHitByProjectile(GameObject projectile,float damageAmount)
+        public override void OnHitByProjectile(GameObject projectile,float damageAmount, bool isHeavyAttack)
         {
             //we have 0 projectiles
-            OnHit(damageAmount);
+            OnHit(damageAmount, isHeavyAttack);
         }
-        public override void OnHit(float damageAmount)
+        public override void OnHit(float damageAmount, bool IsHeavyAttack)
         {
             if (CanBeHitByPlayer()) 
                 return; // If i-frames are active, ignore damage
             // Generic hit handling
             Health -= damageAmount;
             HitSound?.Play();
-            StartInvincibility();
+            StartInvincibility(IsHeavyAttack);
             //Console.WriteLine("Damage " + damageAmount + " CurHP" + Health);
         }
 
@@ -212,11 +213,11 @@ namespace FinalComGame {
             else
                 return false;
         }
-        public virtual void CheckHit(Rectangle attackHitbox, float damageAmount)
+        public virtual void CheckHit(Rectangle attackHitbox, float damageAmount, bool isHeavyAttack)
         {
             if(IsTouching(attackHitbox))
             {
-                OnHit(damageAmount);
+                OnHit(damageAmount, isHeavyAttack);
             }
         }
         public virtual void DropItem()

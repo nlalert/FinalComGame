@@ -20,7 +20,7 @@ namespace FinalComGame
                 if(IsTouching(enemy))
                 {
                     OnProjectileHit(enemy);
-                    enemy.OnHitByProjectile(this, BaseDamageAmount);
+                    enemy.OnHitByProjectile(this, BaseDamageAmount, false);
                         
                     IsActive = false;
                 }

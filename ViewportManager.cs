@@ -38,10 +38,10 @@ public class ViewportManager
         {"FireBall", new Rectangle(35, 17, 10, 13)},
         {"Fire_Staff", new Rectangle(64, 0, 32, 32)},
         {"Soul_Minion", new Rectangle(0, 0, 12, 12)},
-        {"Soul_Bullet", new Rectangle(0, 0, 10, 10)},
+        {"Soul_Bullet", new Rectangle(4, 51, 8, 9)},
         {"Soul_Staff", new Rectangle(0, 32, 32, 32)},
         {"Grenade", new Rectangle(64, 96, 32, 32)},
-        {"Grenade_Projectile", new Rectangle(35, 17, 10, 13)},
+        {"Grenade_Projectile", new Rectangle(52, 17, 9, 13)}
     };
     
     public static Rectangle Get(string name){

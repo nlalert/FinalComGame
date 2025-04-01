@@ -58,7 +58,7 @@ namespace FinalComGame
                 {
                     if (!_damagedObjects.Contains(enemy) && IsInExplosionRadius(enemy))
                     {
-                        enemy.OnHitByProjectile(this, Damage);
+                        enemy.OnHitByProjectile(this, Damage, true);
                         _damagedObjects.Add(enemy);
                     }
                 }
@@ -67,7 +67,7 @@ namespace FinalComGame
                 if (!_damagedObjects.Contains(Singleton.Instance.Player) && 
                     IsInExplosionRadius(Singleton.Instance.Player))
                 {
-                    Singleton.Instance.Player.OnHitByProjectile(this, Damage);
+                    Singleton.Instance.Player.OnHitByProjectile(this, Damage, true);
                     _damagedObjects.Add(Singleton.Instance.Player);
                 }
             }
