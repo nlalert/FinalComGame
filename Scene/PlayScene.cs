@@ -717,7 +717,7 @@ public class PlayScene : Scene
                 // Grenade properties
                 Name = "GrenadeProjectile",
                 BaseDamageAmount = 30f,
-                Speed = 600f,
+                Speed = 450f,
                 Radius = 80f,
                 ExplosionDuration = 0.5f,
                 DetonateDelayDuration = 3.0f,
