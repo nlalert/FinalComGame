@@ -424,7 +424,7 @@ public class PlayScene : Scene
                     LimitIdlePatrol = 100,
                     
                     ChargeTime = 2.0f,
-                    ChaseDuration = 5f,
+                    ChaseDuration = 3.0f,
                     DashDuration = 1.0f,
 
                     HitSound = hitSound
@@ -538,7 +538,7 @@ public class PlayScene : Scene
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 48),
 
-                    MaxHealth = 100f,
+                    MaxHealth = 1000,
                     BaseAttackDamage = 3f,
 
                     // JumpCooldown = 3.0f,

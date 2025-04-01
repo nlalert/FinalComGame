@@ -18,6 +18,7 @@ namespace FinalComGame
         private float _dashTimer;
         public float DashDuration;
         private int _direction = 1;
+        
 
 
         public HellhoundEnemy(Texture2D texture) : base(texture) { 
@@ -217,11 +218,13 @@ namespace FinalComGame
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             if (_isDashing)
             {
+                IsIgnorePlatform = true;
                 _dashTimer -= deltaTime;
                 if (_dashTimer <=0 )
                 {
                     //Console.WriteLine("Hellhound finished dashing, switching to chase mode.");
                     _isDashing = false;
+                    IsIgnorePlatform = false;
                     CurrentState = EnemyState.Chase;
                     _chaseTimer = ChaseDuration;
                 }
