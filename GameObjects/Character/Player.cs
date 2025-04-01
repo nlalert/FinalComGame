@@ -225,7 +225,7 @@ namespace FinalComGame
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            HandleInput(deltaTime, gameObjects);
+            HandleInput(deltaTime, gameObjects, tileMap);
             RegenerateMP(deltaTime);
             ActiveItemPassiveAbility(deltaTime,gameObjects);
             UpdateUsingItem(deltaTime,gameObjects);
@@ -561,7 +561,7 @@ namespace FinalComGame
             HandAnimation.Update(deltaTime);
         }
 
-        private void HandleInput(float deltaTime, List<GameObject> gameObjects)
+        private void HandleInput(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
@@ -690,12 +690,21 @@ namespace FinalComGame
                 WalkSpeed = CrouchSpeed;
                 _isCrouching = true;
             }
-            else if(!_isDashing)
+            else if (_isCrouching && !_isDashing)
             {
-                if (_isCrouching) Position.Y -= 16;
-                Viewport.Height = 32;
-                WalkSpeed = 200;
-                _isCrouching = false;
+                // Only stand up if there's enough room
+                if (CanStandUp(tileMap))
+                {
+                    Position.Y -= 16;
+                    Viewport.Height = 32;
+                    WalkSpeed = 200;
+                    _isCrouching = false;
+                }
+                // If we can't stand up, force the player to remain crouched
+                else
+                {
+                    _isCrouching = true;
+                }
             }
 
             if (Singleton.Instance.IsKeyPressed(Crouch) && Singleton.Instance.IsKeyJustPressed(Jump) && _isOnPlatform){
@@ -1342,6 +1351,43 @@ namespace FinalComGame
                 }
             }
         }
-
+        
+        private bool CanStandUp(TileMap tileMap)
+        {
+            // Create a temporary hitbox to check if standing would cause collision
+            Rectangle standingHitbox = new Rectangle(
+                (int)Position.X,
+                (int)Position.Y - 16, // Where the head would be if standing
+                Viewport.Width,
+                32); // Full height when standing
+                
+            // Check for collisions with solid tiles
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 0; j++) // Only check above the player
+                {
+                    Vector2 tilePos = new Vector2(
+                        Position.X + i * Singleton.TILE_SIZE,
+                        Position.Y - 16 + j * Singleton.TILE_SIZE);
+                        
+                    Tile tile = tileMap.GetTileAtWorldPostion(tilePos);
+                    if (tile != null && tile.IsSolid && tile.Type != TileType.Platform)
+                    {
+                        Rectangle tileRect = new Rectangle(
+                            (int)tile.Position.X,
+                            (int)tile.Position.Y,
+                            Singleton.TILE_SIZE,
+                            Singleton.TILE_SIZE);
+                            
+                        if (standingHitbox.Intersects(tileRect))
+                        {
+                            return false; // Collision detected, can't stand up
+                        }
+                    }
+                }
+            }
+            
+            return true; // No collision, can stand up
+        }
     }
 }
