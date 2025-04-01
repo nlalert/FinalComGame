@@ -30,7 +30,7 @@ namespace FinalComGame {
         public int AttackHeight;
         
         //Jump
-        protected bool _isJumping;
+        public bool _isJumping;
         public float BaseJumpStrength;
         public float JumpStrength;
 

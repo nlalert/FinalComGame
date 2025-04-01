@@ -26,6 +26,8 @@ public class PlayScene : Scene
     private Texture2D _LaserTexture;
     private Texture2D _SoulMinion;
     private Texture2D _MinionSoulBullet;
+    private Texture2D _HookHeadTexture;
+    private Texture2D _RopeTexture; 
 
     private ParallaxBackground _parallaxBackground;
     private Texture2D _backgroundLayer1;
@@ -69,6 +71,9 @@ public class PlayScene : Scene
         _LaserTexture = _content.Load<Texture2D>("Laserbeam");
         _SoulMinion = _content.Load<Texture2D>("SoulMinion");
         _MinionSoulBullet = _content.Load<Texture2D>("MinionSoulBullet");
+        _HookHeadTexture = _content.Load<Texture2D>("HookHead");
+        _RopeTexture = _content.Load<Texture2D>("Rope");
+
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
 
@@ -79,7 +84,7 @@ public class PlayScene : Scene
     {
         //Update
         _numObject = _gameObjects.Count;
-        if(Singleton.Instance.IsKeyPressed(Keys.R))
+        if(Singleton.Instance.IsKeyPressed(Keys.Tab))
             this.ResetGame();
         switch (Singleton.Instance.CurrentGameState)
         {
@@ -352,6 +357,7 @@ public class PlayScene : Scene
             Interact = Keys.F,
             Item1 = Keys.D1,
             Item2 = Keys.D2,
+            Grapple = Keys.R,
             JumpSound = playerJumpSound,
             DashSound = playerDashSound,
             PunchSound = playerPunchSound,
@@ -365,6 +371,8 @@ public class PlayScene : Scene
                 Speed = 500f,
                 Viewport = new Rectangle(0, 0, 9, 5)
             },
+            _hookHeadTexture = _HookHeadTexture,
+            _ropeTexture = _RopeTexture
         };
     }
 

@@ -13,7 +13,12 @@ namespace FinalComGame
     public class Player : Character
     {
         public PlayerBullet Bullet;
-        public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb, Interact, Item1, Item2;
+        public GrapplingHook _grapplingHook;
+        public Texture2D _hookHeadTexture;
+        public Texture2D _ropeTexture;
+        public bool _isGrappling;
+
+        public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb, Interact, Item1, Item2, Grapple;
         
         public float MaxMP;
         public float MP;
@@ -222,11 +227,12 @@ namespace FinalComGame
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
 
-            if (!_isClimbing && !_isDashing) 
+            if (!_isClimbing && !_isDashing && !_isGrappling) 
                 ApplyGravity(deltaTime);
                 
             UpdateDash(deltaTime);
             UpdateGlide();
+            UpdateGrapplingHook(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             UpdateTileInteraction(tileMap);
@@ -531,7 +537,7 @@ namespace FinalComGame
         {
             if (Singleton.Instance.IsKeyPressed(Left))
             {
-                if (!_isDashing && !_isAttacking) 
+                if (!_isDashing && !_isAttacking && !_isGrappling) 
                 {
                     if (_isClimbing && _overlappedTile == TileType.Ladder)
                         Direction = 1;
@@ -544,7 +550,7 @@ namespace FinalComGame
             }
             if (Singleton.Instance.IsKeyPressed(Right))
             {
-                if (!_isDashing && !_isAttacking)  
+                if (!_isDashing && !_isAttacking && !_isGrappling)  
                 {
                     if (_isClimbing && _overlappedTile == TileType.Ladder)
                         Direction = -1;
@@ -711,7 +717,22 @@ namespace FinalComGame
                     _isClimbing = false;
 
             }
-            
+            if(Singleton.Instance.IsKeyJustPressed(Grapple) && _grapplingHook == null){
+                Console.WriteLine("shooting grapple");
+                Vector2 AimDirection = new Vector2(5f* this.Direction , -5f );
+                //it actully dont need hookHeadTexture but I lazy to remove so just leave it here so it not bugged
+                // i try...
+                // - Feen
+                _grapplingHook = new GrapplingHook(_hookHeadTexture){
+                    Name = "BulletEnemy",
+                    BaseDamageAmount = 0f,
+                    Speed = 50f,
+                    Viewport = new Rectangle(0, 0, 16, 16),
+                    RopeTexture = _ropeTexture,
+                }; // Load a grappling hook texture
+                _grapplingHook.Shoot(Position, AimDirection); // Aim towards mouse or direction
+                gameObjects.Add(_grapplingHook);
+            }
             if (Singleton.Instance.IsKeyJustPressed(Interact))
                 CheckInteraction(gameObjects);
 
@@ -1259,5 +1280,31 @@ namespace FinalComGame
             usingConsumableItem.Add(ItemSlot[slot]);
             ItemSlot[slot] = null;
         }
+        private void UpdateGrapplingHook(float deltaTime){
+            if (_grapplingHook != null && _grapplingHook.Hooked)
+            {
+                _isGrappling = true;
+                _isJumping = true;
+                Vector2 direction = _grapplingHook.HookedPosition - Position;
+                float distance = direction.Length();
+                direction.Normalize();
+                float pullSpeed = Math.Max(100f*distance,10000f);
+
+                if (distance > 10f) // Move towards hook
+                {
+                    direction.Normalize();
+                    Velocity = direction * pullSpeed * (float)deltaTime; // Pull speed
+                }
+                else
+                {
+                    // Reached the hook point
+                    _isGrappling = false;
+                    _grapplingHook.IsActive = false; // Destroy hook after pulling
+                    _grapplingHook = null; 
+                    _isJumping = false;
+                }
+            }
+        }
+
     }
 }

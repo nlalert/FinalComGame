@@ -8,6 +8,7 @@ namespace FinalComGame
 {
     public class PlayerBullet : Projectile
     {
+        private float lifetime = 0.5f;
         public PlayerBullet(Texture2D texture) : base(texture)
         {
             CanCollideTile = true;
@@ -16,7 +17,7 @@ namespace FinalComGame
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+            lifetime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
                 if(IsTouching(enemy))
