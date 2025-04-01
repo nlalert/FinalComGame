@@ -491,7 +491,7 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 15f,
                         Speed = 200f,
-                        Viewport = new Rectangle(4, 7, 8, 9)
+                        Viewport = new Rectangle(4, 19, 8, 9)
                     }
                 }
             },
