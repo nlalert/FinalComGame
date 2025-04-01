@@ -21,9 +21,9 @@ public class ParallaxBackground
         _layers.Add(layer);
     }
 
-    public void AddLayer(Texture2D texture, float scrollSpeed, float scale = 1.0f)
+    public void AddLayer(Texture2D texture, float scrollSpeed, float scale = 1.0f, Vector2 offset = new Vector2())
     {
-        _layers.Add(new ParallaxLayer(texture, scrollSpeed, scale));
+        _layers.Add(new ParallaxLayer(texture, scrollSpeed, scale, offset));
     }
 
     public void Update(GameTime gameTime)
