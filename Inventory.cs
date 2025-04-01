@@ -45,12 +45,6 @@ public class Inventory
         return GetItem(slotIndex) == null;
     }
     
-    // Check if the inventory has an empty item slot (slots 2-3)
-    public bool HasEmptyItemSlot()
-    {
-        return IsSlotEmpty(ITEM_SLOT_1) || IsSlotEmpty(ITEM_SLOT_2);
-    }
-    
     // Get the first empty item slot (2-3), or -1 if none available
     public int GetFirstEmptyItemSlot()
     {
@@ -208,24 +202,6 @@ public class Inventory
         }
     }
     
-    // Helper methods for weapon management
-    
-    public void SetMeleeWeapon(Item weapon)
-    {
-        if (weapon == null || weapon.Type == ItemType.MeleeWeapon)
-        {
-            _itemSlots[MELEE_SLOT] = weapon;
-        }
-    }
-    
-    public void SetRangeWeapon(Item weapon)
-    {
-        if (weapon == null || weapon.Type == ItemType.RangeWeapon)
-        {
-            _itemSlots[RANGE_SLOT] = weapon;
-        }
-    }
-    
     public Sword GetSword()
     {
         return _itemSlots[MELEE_SLOT] as Sword;
@@ -244,11 +220,5 @@ public class Inventory
     public IShootable GetRangeWeapon()
     {
         return _itemSlots[RANGE_SLOT] as IShootable;
-    }
-    
-    // For integrating with existing Player class
-    public Item[] GetAllItems()
-    {
-        return _itemSlots;
     }
 }
