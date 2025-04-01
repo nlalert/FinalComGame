@@ -385,7 +385,8 @@ public class PlayScene : Scene
         Texture2D _DemonTexture = _content.Load<Texture2D>("Demon");
         Texture2D _TowerTexture = _content.Load<Texture2D>("Spitter");
         Texture2D _PlatformTexture = _content.Load<Texture2D>("Crab");
-        Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
+
+        Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("LargeSlime");
         Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
 
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
@@ -423,7 +424,7 @@ public class PlayScene : Scene
                     LimitIdlePatrol = 100,
                     
                     ChargeTime = 2.0f,
-                    ChaseDuration = 5f,
+                    ChaseDuration = 3.0f,
                     DashDuration = 1.0f,
 
                     HitSound = hitSound
@@ -501,8 +502,9 @@ public class PlayScene : Scene
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 48),
 
-                    MaxHealth = 1f,
+                    MaxHealth = 1000f,
                     BaseAttackDamage = 3f,
+                    IsIgnorePlatform = true,
 
                     // JumpCooldown = 3.0f,
                     BaseJumpStrength = 550,
@@ -534,7 +536,7 @@ public class PlayScene : Scene
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
                     Viewport = new Rectangle(0, 0, 64, 48),
 
-                    MaxHealth = 100f,
+                    MaxHealth = 1000,
                     BaseAttackDamage = 3f,
 
                     // JumpCooldown = 3.0f,
@@ -595,9 +597,7 @@ public class PlayScene : Scene
         Texture2D ItemTexture = _content.Load<Texture2D>("Items");
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
         Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
-        Texture2D SoulStaff = _content.Load<Texture2D>("SoulStaff");
         
-
         //set for all item
         Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
         Item.PickUpSound = _content.Load<SoundEffect>("PickUp");

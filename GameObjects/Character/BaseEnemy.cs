@@ -39,6 +39,8 @@ namespace FinalComGame {
 
         // Spawn and Death Tracking
         public bool CanCollideTile;
+        public bool IsIgnorePlatform = false;
+
         public bool IsDead() => CurrentState == EnemyState.Dead;
         
         public BaseEnemy(Texture2D texture) : base(texture){
@@ -198,7 +200,7 @@ namespace FinalComGame {
         }
 
         public virtual bool CanDropThroughPlatform(Tile tile){
-            return (IsAbovePlayer() && IsPlayerAbovePlatform(tile)) || Velocity.Y < 0;
+            return (IsAbovePlayer() && IsPlayerAbovePlatform(tile)) || Velocity.Y < 0 || IsIgnorePlatform;
         }
 
         public virtual bool CheckContactPlayer(){

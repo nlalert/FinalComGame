@@ -85,7 +85,7 @@ namespace FinalComGame
         private bool _isFist;
         private bool _isSoulBullet;
 
-        private bool _isUsingWeapon;
+        private string _currentWeapon;
 
         //SFX
         public SoundEffect JumpSound;
@@ -116,18 +116,16 @@ namespace FinalComGame
             Animation.AddAnimation("run_charge_1", new Vector2(8,1), 8);
             Animation.AddAnimation("run_charge_2", new Vector2(8,2), 8);
 
-            Animation.AddAnimation("melee", new Vector2(0,2), 8);
-
             Animation.AddAnimation("jump", new Vector2(0,3), 4);
             Animation.AddAnimation("jump_charge_1", new Vector2(0,4), 4);
             Animation.AddAnimation("jump_charge_2", new Vector2(0,5), 4);
 
-            Animation.AddAnimation("fall", new Vector2(5,3), 4);
-            Animation.AddAnimation("fall_charge_1", new Vector2(5,4), 4);
-            Animation.AddAnimation("fall_charge_2", new Vector2(5,5), 4);    
+            Animation.AddAnimation("fall", new Vector2(4,3), 4);
+            Animation.AddAnimation("fall_charge_1", new Vector2(4,4), 4);
+            Animation.AddAnimation("fall_charge_2", new Vector2(4,5), 4);    
 
-            Animation.AddAnimation("glide", new Vector2(10,3), 4);
-            Animation.AddAnimation("glide_charge", new Vector2(10,4), 4);
+            Animation.AddAnimation("glide", new Vector2(8,3), 4);
+            Animation.AddAnimation("glide_charge", new Vector2(12,3), 4);
 
             Animation.AddAnimation("dash", new Vector2(0,6), 4);
             Animation.AddAnimation("dash_charge", new Vector2(5,6), 4);
@@ -140,18 +138,23 @@ namespace FinalComGame
             Animation.AddAnimation("crawl_charge_1", new Vector2(4,9), 8);
             Animation.AddAnimation("crawl_charge_2", new Vector2(4,10), 8);
 
+            Animation.AddAnimation("roll", new Vector2(8,8), 8);
+            Animation.AddAnimation("roll_charge_1", new Vector2(8,5), 8);
+            Animation.AddAnimation("roll_charge_2", new Vector2(8,6), 8);
+
             Animation.AddAnimation("climb_idle_1", new Vector2(0,12), 16);
             Animation.AddAnimation("climb_up_1", new Vector2(0,13), 8);
             Animation.AddAnimation("climb_down_1", new Vector2(8,13), 4);
 
             //TODO : Add sword attack animation
-            Animation.AddAnimation("sword", new Vector2(8,8), 8);
+            Animation.AddAnimation("melee", new Vector2(0,2), 8);
+            Animation.AddAnimation("sword", new Vector2(8,4), 8);
 
             Animation.ChangeAnimation(_currentAnimation);
 
             HandAnimation = new Animation(texture, 80, 64, new Vector2(80*16 , 64*18), 24);
 
-            HandAnimation.AddAnimation("idle", new Vector2(4,3), 1);
+            HandAnimation.AddAnimation("idle", new Vector2(12,9), 1);
 
             HandAnimation.AddAnimation("charge_1", new Vector2(3,14), 1);
             HandAnimation.AddAnimation("charge_1_to_2", new Vector2(12,14), 4);
@@ -164,6 +167,9 @@ namespace FinalComGame
 
             HandAnimation.AddAnimation("gun_1", new Vector2(0,16), 8);
             HandAnimation.AddAnimation("gun_2", new Vector2(8,16), 8);
+
+            HandAnimation.AddAnimation("staff_1", new Vector2(0,17), 8);
+            HandAnimation.AddAnimation("staff_2", new Vector2(8,17), 8);
 
             HandAnimation.ChangeAnimation(_currentHandAnimation);
 
@@ -336,12 +342,24 @@ namespace FinalComGame
             }
 
             else if (_isDashing){
-                if (HandAnimation._currentAnimation == "idle" || 
-                    HandAnimation._currentAnimation == "charge_1" || 
-                    HandAnimation._currentAnimation == "fire_1")
-                    animation = "dash";
+                if (!_isCrouching){
+                    if (HandAnimation._currentAnimation == "idle" || 
+                        HandAnimation._currentAnimation == "charge_1" || 
+                        HandAnimation._currentAnimation == "fire_1")
+                        animation = "dash";
+                    else
+                        animation = "dash_charge"; 
+                }
                 else
-                    animation = "dash_charge";
+                {
+                    if (HandAnimation._currentAnimation == "idle")
+                        animation = "roll";
+                    else if (HandAnimation._currentAnimation == "charge_1" || 
+                            HandAnimation._currentAnimation == "fire_1")
+                        animation = "roll_charge_1";
+                    else
+                        animation = "roll_charge_2";
+                }
             }
 
             else if (_isGliding && !_isJumping)
@@ -463,8 +481,12 @@ namespace FinalComGame
 
             else if (_isGliding && !_isJumping)
             {
-                if(Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon)
-                    handAnimation = "gun_2";
+                if(Singleton.Instance.IsKeyJustPressed(Fire) && _currentWeapon != "none"){
+                    if(_currentWeapon == "gun")
+                        handAnimation = "gun_2";
+                    else
+                        handAnimation = "staff_2";
+                }
                     
                 else if (_lastChargeTime != 0)
                 {
@@ -482,8 +504,12 @@ namespace FinalComGame
 
             else
             {
-                if(Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon)
-                    handAnimation = "gun_1";
+                if(Singleton.Instance.IsKeyJustPressed(Fire) && _currentWeapon != "none"){
+                    if(_currentWeapon == "gun")
+                        handAnimation = "gun_1";
+                    else
+                        handAnimation = "staff_1";
+                }
 
                 else if (_lastChargeTime != 0)
                 {
@@ -519,6 +545,8 @@ namespace FinalComGame
                     case "fire_2" :
                     case "gun_1" :
                     case "gun_2" :
+                    case "staff_1" :
+                    case "staff_2" :
                         HandAnimation.ChangeTransitionAnimation(_currentHandAnimation, "idle");
                         _currentHandAnimation = "idle";
                         break;
@@ -580,23 +608,23 @@ namespace FinalComGame
             // Handle Fire button (charge shot)
             if (Singleton.Instance.IsKeyJustPressed(Fire) && !_isClimbing && !_isAttacking)
             {
-                if(_isSoulBullet){
+                if(_isSoulBullet)
+                {
                     // Start charging
-                    _isUsingWeapon = false;
+                    _currentWeapon = "none";
                     StartCharging();
                 }
-                else{
-                    if ((Inventory.GetItem(Inventory.RANGE_SLOT) is Staff && MP >= 0) || 
-                        Inventory.GetItem(Inventory.RANGE_SLOT) is Gun)
-                    {
-                        _isUsingWeapon = true;
-                        Shoot(gameObjects);
-                    }
+                else
+                {
+                    if (Inventory.GetItem(Inventory.RANGE_SLOT) is Staff && MP >= Inventory.GetItem(Inventory.RANGE_SLOT).MPCost)
+                       _currentWeapon = "staff";
+                    else if (Inventory.GetItem(Inventory.RANGE_SLOT) is Gun)
+                        _currentWeapon = "gun";
                     else
-                    {
-                        _isUsingWeapon = false;
-                    }
+                        _currentWeapon = "none";
+                    Shoot(gameObjects);
                 }
+
             }
             else if (Singleton.Instance.IsKeyPressed(Fire) && !_isClimbing && !_isAttacking)
             {
@@ -650,14 +678,14 @@ namespace FinalComGame
                 _isGliding = false;
             }
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && !_isJumping && !_isClimbing && Velocity.Y == 0)
+            if (Singleton.Instance.IsKeyPressed(Crouch) && !_isJumping && !_isClimbing && Velocity.Y == 0 && !_isDashing)
             {
                 if (!_isCrouching) Position.Y += 16;
                 Viewport.Height = 16;
                 WalkSpeed = CrouchSpeed;
                 _isCrouching = true;
             }
-            else if (_isCrouching)
+            else if (_isCrouching && !_isDashing)
             {
                 // Only stand up if there's enough room
                 if (CanStandUp(tileMap))
@@ -756,7 +784,7 @@ namespace FinalComGame
         protected override bool IsOnGround()
         {
             //TODO apex of jump is grounded?
-            return Velocity.Y == 0 || _isClimbing;
+            return Velocity.Y == 0 || _isClimbing ;
         }
 
         public void BoostSpeed(float speedModifier)

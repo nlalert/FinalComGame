@@ -22,6 +22,8 @@ public class Item : GameObject, IItemDisplayable
     public bool IsPickedUp;
 
     public ItemType Type;
+
+    public float MPCost = 0;
     
     // Visual indicator for pickup range
     public float pickupRadius = 40f;

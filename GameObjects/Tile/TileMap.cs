@@ -114,15 +114,15 @@ namespace FinalComGame
             return tileID switch
             {
                 17 => TileType.Barrier,
-                37 => TileType.Platform,
+                19 => TileType.Platform,
                 57 => TileType.Ladder,
+                37 => TileType.Ladder_Top,
                 58 => TileType.Ladder_Left,
                 59 => TileType.Ladder_Right,
                 77 or 78 or 79 => TileType.Ladder_Platform,
-                18 => TileType.Ladder_Top,
-                14 or 74 => TileType.AmbushBarrier,
-                34 => TileType.AmbushAreaTopLeft,
-                54 => TileType.AmbushAreaBottomRight,
+                18 => TileType.AmbushBarrier,
+                39 => TileType.AmbushAreaTopLeft,
+                38 => TileType.AmbushAreaBottomRight,
                 97 or 98 or 99 or 117 or 118 or 119 or 137 or 138 or 139 or 199 => TileType.EnemySpawn,
 
                 _ => TileType.None
@@ -133,7 +133,7 @@ namespace FinalComGame
         {
             return tileID switch
             {
-                17 or 37 => true,
+                17 or 19 => true,
                 _ => false
             };
         }
