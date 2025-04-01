@@ -717,21 +717,8 @@ namespace FinalComGame
                     _isClimbing = false;
 
             }
-            if(Singleton.Instance.IsKeyJustPressed(Grapple) && _grapplingHook == null){
-                Console.WriteLine("shooting grapple");
-                Vector2 AimDirection = new Vector2(5f* this.Direction , -5f );
-                //it actully dont need hookHeadTexture but I lazy to remove so just leave it here so it not bugged
-                // i try...
-                // - Feen
-                _grapplingHook = new GrapplingHook(_hookHeadTexture){
-                    Name = "BulletEnemy",
-                    BaseDamageAmount = 0f,
-                    Speed = 50f,
-                    Viewport = new Rectangle(0, 0, 16, 16),
-                    RopeTexture = _ropeTexture,
-                }; // Load a grappling hook texture
-                _grapplingHook.Shoot(Position, AimDirection); // Aim towards mouse or direction
-                gameObjects.Add(_grapplingHook);
+            if(Singleton.Instance.IsKeyJustPressed(Grapple)){
+                FireGrapplingHook(gameObjects);
             }
             if (Singleton.Instance.IsKeyJustPressed(Interact))
                 CheckInteraction(gameObjects);
@@ -740,6 +727,27 @@ namespace FinalComGame
                 UseItem(2);
             if (Singleton.Instance.IsKeyJustPressed(Item2))
                 UseItem(3);
+        }
+
+        private void FireGrapplingHook(List<GameObject> gameObjects)
+        {
+            if(_grapplingHook != null)
+                return;
+
+            Console.WriteLine("shooting grapple");
+            Vector2 AimDirection = new Vector2(5f* this.Direction , -5f );
+            //it actully dont need hookHeadTexture but I lazy to remove so just leave it here so it not bugged
+            // i try...
+            // - Feen
+            _grapplingHook = new GrapplingHook(_hookHeadTexture){
+                Name = "GrapplingHook",
+                BaseDamageAmount = 0f,
+                Speed = 50f,
+                Viewport = new Rectangle(0, 0, 16, 16),
+                RopeTexture = _ropeTexture,
+            }; // Load a grappling hook texture
+            _grapplingHook.Shoot(Position, AimDirection); // Aim towards mouse or direction
+            gameObjects.Add(_grapplingHook);
         }
 
         protected override bool IsOnGround()
