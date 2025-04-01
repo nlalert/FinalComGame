@@ -91,6 +91,110 @@ class Singleton
     {
         return CurrentKey.IsKeyUp(key);
     }
+    
+    // Enum for mouse buttons
+    public enum MouseButton
+    {
+        Left,
+        Right,
+        Middle
+    }
 
+    // Checks if a mouse button is being held down
+    public bool IsMouseButtonPressed(MouseButton button)
+    {
+        switch (button)
+        {
+            case MouseButton.Left:
+                return CurrentMouseState.LeftButton == ButtonState.Pressed;
+            case MouseButton.Right:
+                return CurrentMouseState.RightButton == ButtonState.Pressed;
+            case MouseButton.Middle:
+                return CurrentMouseState.MiddleButton == ButtonState.Pressed;
+            default:
+                return false;
+        }
+    }
+
+    // Checks if a mouse button was JUST pressed (prevents holding issues)
+    public bool IsMouseButtonJustPressed(MouseButton button)
+    {
+        switch (button)
+        {
+            case MouseButton.Left:
+                return CurrentMouseState.LeftButton == ButtonState.Pressed && 
+                    PreviousMouseState.LeftButton == ButtonState.Released;
+            case MouseButton.Right:
+                return CurrentMouseState.RightButton == ButtonState.Pressed && 
+                    PreviousMouseState.RightButton == ButtonState.Released;
+            case MouseButton.Middle:
+                return CurrentMouseState.MiddleButton == ButtonState.Pressed && 
+                    PreviousMouseState.MiddleButton == ButtonState.Released;
+            default:
+                return false;
+        }
+    }
+
+    // Checks if a mouse button was JUST released
+    public bool IsMouseButtonJustReleased(MouseButton button)
+    {
+        switch (button)
+        {
+            case MouseButton.Left:
+                return CurrentMouseState.LeftButton == ButtonState.Released && 
+                    PreviousMouseState.LeftButton == ButtonState.Pressed;
+            case MouseButton.Right:
+                return CurrentMouseState.RightButton == ButtonState.Released && 
+                    PreviousMouseState.RightButton == ButtonState.Pressed;
+            case MouseButton.Middle:
+                return CurrentMouseState.MiddleButton == ButtonState.Released && 
+                    PreviousMouseState.MiddleButton == ButtonState.Pressed;
+            default:
+                return false;
+        }
+    }
+
+    // Checks if a mouse button is released
+    public bool IsMouseButtonReleased(MouseButton button)
+    {
+        switch (button)
+        {
+            case MouseButton.Left:
+                return CurrentMouseState.LeftButton == ButtonState.Released;
+            case MouseButton.Right:
+                return CurrentMouseState.RightButton == ButtonState.Released;
+            case MouseButton.Middle:
+                return CurrentMouseState.MiddleButton == ButtonState.Released;
+            default:
+                return false;
+        }
+    }
+
+    // Gets the current mouse position
+    public Point GetMousePosition()
+    {
+        return CurrentMouseState.Position;
+    }
+
+    // Gets the mouse position delta since last frame
+    public Point GetMousePositionDelta()
+    {
+        return new Point(
+            CurrentMouseState.Position.X - PreviousMouseState.Position.X,
+            CurrentMouseState.Position.Y - PreviousMouseState.Position.Y
+        );
+    }
+
+    // Gets the mouse scroll wheel value
+    public int GetScrollWheelValue()
+    {
+        return CurrentMouseState.ScrollWheelValue;
+    }
+
+    // Gets the mouse scroll wheel delta since last frame
+    public int GetScrollWheelDelta()
+    {
+        return CurrentMouseState.ScrollWheelValue - PreviousMouseState.ScrollWheelValue;
+    }
 }
 

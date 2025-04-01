@@ -43,6 +43,7 @@ namespace FinalComGame
             return isSelected;
         }
 
+        //mark
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -66,21 +67,21 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             // Draw the slot background
-            spriteBatch.Draw(slotTexture, bounds, Color.White);
+            spriteBatch.Draw(slotTexture, _bounds, Color.White);
 
             // Draw the highlight if selected
             if (isSelected)
             {
-                spriteBatch.Draw(highlightTexture, bounds, Color.White);
+                spriteBatch.Draw(highlightTexture, _bounds, Color.White);
             }
-            else if (isHovered)
+            else if (_isHovered)
             {
                 // Draw a hover effect
-                spriteBatch.Draw(highlightTexture, bounds, new Color(255, 255, 255, 128));
+                spriteBatch.Draw(highlightTexture, _bounds, new Color(255, 255, 255, 128));
             }
             if (item != null && item.IsPickedUp)
             {
-                item.DrawInSlot(spriteBatch, bounds, scale);
+                item.DrawInSlot(spriteBatch, _bounds, scale);
             }
         }
     }

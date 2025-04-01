@@ -30,25 +30,24 @@ namespace FinalComGame
                 bounds.Y + (bounds.Height - textSize.Y) / 2
             );
         }
-        
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            MouseState mouseState = Singleton.Instance.CurrentMouseState;
             // Check for click (pressed and then released)
-            if (wasPressed && isHovered && mouseState.LeftButton == ButtonState.Released)
+            if (wasPressed && _isHovered && Singleton.Instance.CurrentMouseState.LeftButton == ButtonState.Released)
             {
                 OnClick?.Invoke(this, EventArgs.Empty);
             }
             
-            wasPressed = isPressed;
+            wasPressed = _isPressed;
         }
         
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D currentTexture = isHovered ? hoverTexture : texture;
-            spriteBatch.Draw(currentTexture, bounds, Color.White);
+            Texture2D currentTexture = _isHovered ? hoverTexture : texture;
+            spriteBatch.Draw(currentTexture, _bounds, Color.White);
             spriteBatch.DrawString(Singleton.Instance.GameFont, text, textPosition, textColor);
         }
     }

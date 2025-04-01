@@ -72,18 +72,6 @@ public class PlayScene : Scene
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
 
-        // Load your background textures
-        _backgroundLayer1 = _content.Load<Texture2D>("Level_1_Parallax_bg");  // Farthest layer (sky)
-        _backgroundLayer2 = _content.Load<Texture2D>("Level_1_Parallax_mg");  // Middle layer
-        _backgroundLayer3 = _content.Load<Texture2D>("Level_1_Parallax_fg");  // Closest layer
-
-        // Create parallax background
-        _parallaxBackground = new ParallaxBackground(_graphicsDevice.Viewport);
-
-        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f, 1.0f, Vector2.Zero); // Sky/clouds move very slowly
-        _parallaxBackground.AddLayer(_backgroundLayer2, 0.1f, 1.5f, new Vector2(-50,-300)); // Mountains move at medium speed
-        _parallaxBackground.AddLayer(_backgroundLayer3, 0.2f, 2.0f, new Vector2(-100,-800)); // Trees move faster (closer to player)
-
         _song = _content.Load<Song>("ChillSong");
     }
 
@@ -108,6 +96,7 @@ public class PlayScene : Scene
                 Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
                 break;
             case Singleton.GameState.Playing:
+                ResumeSong();
                 PlaySong();
                 if(Singleton.Instance.IsKeyJustPressed(Keys.Escape))
                 {
@@ -210,7 +199,7 @@ public class PlayScene : Scene
 
     private void DrawTileMap()
     {
-        if (Singleton.Instance.Stage == 1){
+        if (Singleton.Instance.Stage == 1){//remove later
             _BGTileMap.Draw(_spriteBatch);
             _MGTileMap.Draw(_spriteBatch);
             _FGTileMap.Draw(_spriteBatch);
@@ -250,7 +239,7 @@ public class PlayScene : Scene
         _gameObjects.Clear();
 
         Singleton.Instance.Random = new Random();
-        if (Singleton.Instance.Stage == 1)
+        if (Singleton.Instance.Stage == 1)//remove later
         {
             _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
             _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
@@ -258,12 +247,14 @@ public class PlayScene : Scene
         }
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
 
+
         Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.TILE_SIZE,  _collisionTileMap.MapHeight * Singleton.TILE_SIZE); // Map size
         Singleton.Instance.Camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
 
         Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
 
+        SetUpParallaxBackground();
         InitializeAmbushAreas();
         // SpawnEnemies();
         AddItems();
@@ -274,7 +265,22 @@ public class PlayScene : Scene
             s.Reset();
         }
     }
-    
+
+    private void SetUpParallaxBackground()
+    {
+        // Load background textures
+        _backgroundLayer1 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_bg");  // Farthest layer
+        _backgroundLayer2 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_mg");  // Middle layer
+        _backgroundLayer3 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_fg");  // Closest layer
+
+        // Create parallax background
+        _parallaxBackground = new ParallaxBackground(_graphicsDevice.Viewport);
+
+        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f, 1.0f, Vector2.Zero); // Sky/clouds move very slowly
+        _parallaxBackground.AddLayer(_backgroundLayer2, 0.1f, 1.5f, new Vector2(-50,-300)); // Mountains move at medium speed
+        _parallaxBackground.AddLayer(_backgroundLayer3, 0.2f, 2.0f, new Vector2(-100,-800)); // Trees move faster (closer to player)
+    }
+
     // In your PlayScene or main game class
     public void InitializeAmbushAreas()
     {

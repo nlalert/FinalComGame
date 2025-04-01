@@ -6,21 +6,22 @@ using Microsoft.Xna.Framework.Input;
 namespace FinalComGame;
 
 // Abstract base class for all UI elements
-public abstract class UIElement
+public class UIElement
 {
-    protected Rectangle bounds;
-    protected bool isHovered;
-    protected bool isPressed;
+    protected Rectangle _bounds;
+    protected bool _isHovered;
+    protected bool _isPressed;
     
     public UIElement(Rectangle bounds)
     {
-        this.bounds = bounds;
+        this._bounds = bounds;
     }
     
     public virtual void Update(GameTime gameTime)
     {
-        // Base update code - to be overridden by subclasses
     }
     
-    public abstract void Draw(SpriteBatch spriteBatch);
+    public virtual void Draw(SpriteBatch spriteBatch)
+    {
+    }
 }

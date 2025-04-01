@@ -164,6 +164,8 @@ namespace FinalComGame
 
             paticleTexture.SetData([new Color(193, 255, 219)]);
             _particle = new SoulParticle(10, Position, paticleTexture);
+
+            ItemSlot = new Item[4];
         }
 
         public override void Reset()
