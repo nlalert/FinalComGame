@@ -20,6 +20,7 @@ public class GameManager : Game
     private MainMenu _mainMenu;
     private PauseMenu _pauseMenu;
     private Settings _settings;
+    private GameOverScene _gameOverScene;
 
     public GameManager()
     {
@@ -55,6 +56,10 @@ public class GameManager : Game
         _settings = new Settings();
         _settings.Initialize(GraphicsDevice, _graphics, Content);
         _settings.LoadContent(_spriteBatch);
+
+        _gameOverScene = new GameOverScene();
+        _gameOverScene.Initialize(GraphicsDevice, _graphics, Content);
+        _gameOverScene.LoadContent(_spriteBatch);
     }
 
     protected override void Update(GameTime gameTime)
@@ -73,6 +78,9 @@ public class GameManager : Game
                 break;
             case Singleton.GameState.Settings:
                 _settings.Update(gameTime);
+                break;
+            case Singleton.GameState.GameOver:
+                _gameOverScene.Update(gameTime);
                 break;
             case Singleton.GameState.Exit:
                 Exit();
@@ -105,6 +113,9 @@ public class GameManager : Game
                 break;
             case Singleton.GameState.Settings:
                 _settings.Draw(gameTime);
+                break;
+            case Singleton.GameState.GameOver:
+                _gameOverScene.Draw(gameTime);
                 break;
             default:
                 _playScene.Draw(gameTime);

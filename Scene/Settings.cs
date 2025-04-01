@@ -87,7 +87,7 @@ public class Settings : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
-            "_backButton Button",
+            "Back to Pause Menu",
             Color.Wheat
         );
         _backButton.OnClick += BackButton_OnClick;

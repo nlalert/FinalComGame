@@ -7,13 +7,12 @@ using System.Collections.Generic;
 
 namespace FinalComGame;
 
-public class PauseMenu : Scene
+public class GameOverScene : Scene
 {
-    private TextUI _pauseTitle; // can change to ImageUI later
-    private Button _resumeButton;
+    private TextUI _gameOverTitle; // can change to ImageUI later
     private Button _restartButton;
-    private Button _settingsButton;
     private Button _mainmenuButton;
+    private Button _exitButton;
 
     private int buttonGap;
 
@@ -37,9 +36,9 @@ public class PauseMenu : Scene
         int TextWidth = Singleton.SCREEN_WIDTH / 2;
         int TextHeight = 80;
         // Static text
-        _pauseTitle = new TextUI(
-            new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 6, TextWidth, TextHeight),
-            "Pause",  
+        _gameOverTitle = new TextUI(
+            new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 5, TextWidth, TextHeight),
+            "GAME OVER",  
             Color.White, 
             TextUI.TextAlignment.Center
         );
@@ -48,35 +47,17 @@ public class PauseMenu : Scene
         int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
         int ButtonHeight = 80;
 
-        _resumeButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
-            "Resume",
-            Color.Wheat
-        );
-        _resumeButton.OnClick += ResumeButton_OnClick;
-
         _restartButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 6, ButtonWidth, ButtonHeight),
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 5, ButtonWidth, ButtonHeight),
             Button,
             Button,
-            "Restart Game",
+            "Restart",
             Color.Wheat
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
-        _settingsButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
-            "Settings",
-            Color.Wheat
-        );
-        _settingsButton.OnClick += SettingButton_OnClick;
-
         _mainmenuButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 5, ButtonWidth, ButtonHeight),
             Button,
             Button,
             "Back to Main Menu",
@@ -84,11 +65,19 @@ public class PauseMenu : Scene
         );
         _mainmenuButton.OnClick += MainMenuButton_OnClick;
 
-        _ui.AddHUDElement(_pauseTitle);
-        _ui.AddHUDElement(_resumeButton);
+        _exitButton = new Button(
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2, (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 5, ButtonWidth, ButtonHeight),
+            Button,
+            Button,
+            "Exit to Desktop",
+            Color.Wheat
+        );
+        _exitButton.OnClick += ExitGameButton_OnClick;
+
+        _ui.AddHUDElement(_gameOverTitle);
         _ui.AddHUDElement(_restartButton);
-        _ui.AddHUDElement(_settingsButton);
         _ui.AddHUDElement(_mainmenuButton);
+        _ui.AddHUDElement(_exitButton);
     }
 
     private void MainMenuButton_OnClick(object sender, EventArgs e)
@@ -96,19 +85,14 @@ public class PauseMenu : Scene
         Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;
     }
 
-    private void SettingButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Settings;
-    }
-
     private void RestartButton_OnClick(object sender, EventArgs e)
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
     }
 
-    private void ResumeButton_OnClick(object sender, EventArgs e)
+    private void ExitGameButton_OnClick(object sender, EventArgs e)
     {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
+        Singleton.Instance.CurrentGameState = Singleton.GameState.Exit;
     }
 
     public override void Update(GameTime gameTime)
