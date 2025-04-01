@@ -11,8 +11,8 @@ namespace FinalComGame
     public class MainMenu : Scene
     {
         private ImageUI _Title;
-        private UiButton _StartButton;
-        private UiButton _ExitButton;
+        private Button _startButton;
+        private Button _exitButton;
 
         private Texture2D _bgTexture;
         private Texture2D _mgTexture;
@@ -70,9 +70,6 @@ namespace FinalComGame
             if (_bgPosition.X <= -_bgTexture.Width) _bgPosition.X = 0;
             if (_mgPosition.X <= -_mgTexture.Width) _mgPosition.X = 0;
             if (_fgPosition.X <= -_fgTexture.Width) _fgPosition.X = 0;
-
-            _StartButton.Update();
-            _ExitButton.Update();
         }
 
         public override void Draw(GameTime gameTime)
@@ -123,31 +120,30 @@ namespace FinalComGame
             Texture2D ExitButtonTexture = _content.Load<Texture2D>("StaticExitButton");
             Texture2D ExitHoverButtonTexture = _content.Load<Texture2D>("HoverExitButton");
 
-            int startButtonWidth = Singleton.SCREEN_WIDTH / 2;
-            int startButtonHeight = 100;
-            _StartButton = new UiButton(
-                new Rectangle((Singleton.SCREEN_WIDTH - startButtonWidth) / 2, (Singleton.SCREEN_HEIGHT - startButtonHeight) * 2 / 4, startButtonWidth, startButtonHeight),
+            int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
+            int ButtonHeight = 100;
+            _startButton = new Button(
+                new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 4, ButtonWidth, ButtonHeight),
                 StartButtonTexture,
                 StartHoverButtonTexture,
                 "",
                 Color.Wheat
             );
-            _StartButton.OnClick += StartGameButton_OnClick;
 
-            int exitButtonWidth = Singleton.SCREEN_WIDTH / 2;
-            int exitButtonHeight = 100;
-            _ExitButton = new UiButton(
-                new Rectangle((Singleton.SCREEN_WIDTH - exitButtonWidth) / 2, (Singleton.SCREEN_HEIGHT - exitButtonHeight) * 3 / 4, exitButtonWidth, exitButtonHeight),
+            _startButton.OnClick += StartGameButton_OnClick;
+
+            _exitButton = new Button(
+                new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 4, ButtonWidth, ButtonHeight),
                 ExitButtonTexture,
                 ExitHoverButtonTexture,
                 "",
                 Color.Wheat
             );
-            _ExitButton.OnClick += ExitGameButton_OnClick;
+            _exitButton.OnClick += ExitGameButton_OnClick;
 
             _ui.AddHUDElement(_Title);
-            _ui.AddHUDElement(_StartButton);
-            _ui.AddHUDElement(_ExitButton);
+            _ui.AddHUDElement(_startButton);
+            _ui.AddHUDElement(_exitButton);
         }
 
         private void ExitGameButton_OnClick(object sender, EventArgs e)
