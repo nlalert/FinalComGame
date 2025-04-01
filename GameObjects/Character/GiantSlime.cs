@@ -228,7 +228,9 @@ namespace FinalComGame
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             Console.WriteLine("Slamming");
             _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
-            CanCollideTile = true;
+            if(Position.Y + _texture.Height> Singleton.Instance.Player.GetPlayerCenter().Y){
+                CanCollideTile = true;
+            }
             if(_actionTimer>0){
                 Velocity = new Vector2(0, SlamSpeed);
             }
