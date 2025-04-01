@@ -705,6 +705,26 @@ public class PlayScene : Scene
             },
             Viewport = new Rectangle(0, 32, 32, 32),
         });
+
+        _gameObjects.Add(new Grenade(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(1, 90)){
+            Name =  "Grenade",
+            Description = "Test GrenadeTemp Description",
+            Viewport = new Rectangle(64, 96, 32, 32),
+            UseSound = PotionUseSound, // Temp
+
+            GrenadeProjectile = new GrenadeProjectile(projectileTexture, ExplosionEffect, FireBallExplosionSound)
+            {
+                // Grenade properties
+                Name = "GrenadeProjectile",
+                BaseDamageAmount = 30f,
+                Speed = 500f,
+                Radius = 60f,
+                ExplosionDuration = 0.5f,
+                DetonateDelayDuration = 5.0f,
+
+                Viewport = new Rectangle(35, 17, 10, 13)
+            }
+        });
     }
 
     protected override void SetupHUD()
