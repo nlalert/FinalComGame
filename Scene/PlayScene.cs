@@ -96,6 +96,7 @@ public class PlayScene : Scene
                 Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
                 break;
             case Singleton.GameState.Playing:
+                ResumeSong();
                 PlaySong();
                 if(Singleton.Instance.IsKeyJustPressed(Keys.Escape))
                 {

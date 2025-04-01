@@ -33,6 +33,12 @@ public class MainMenu : Scene
         Console.WriteLine("Content Loaded");
     }
 
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+        StopSong();
+    }
+
     protected override void SetupHUD()
     {
         Texture2D Title = _content.Load<Texture2D>("Gun"); //Change Later TEMP

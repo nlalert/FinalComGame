@@ -207,8 +207,10 @@ public class PauseMenu : Scene
         Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
     }
 
-    // public void Update(GameTime gameTime)
-    // {
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+        PauseSong();
         // if (!_settings)
         // {
 
@@ -319,7 +321,7 @@ public class PauseMenu : Scene
         //     }
 
         // }
-    // }
+    }
 
     // public void Draw(GameTime gameTime)
     // {

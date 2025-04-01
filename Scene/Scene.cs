@@ -60,7 +60,7 @@ public class Scene
 
     protected void StopSong()
     {
-        if (MediaPlayer.State == MediaState.Playing)
+        if (MediaPlayer.State != MediaState.Stopped)
         {
             MediaPlayer.Stop();
         }
@@ -71,6 +71,22 @@ public class Scene
         if (MediaPlayer.State != MediaState.Playing)
         {
             MediaPlayer.Play(_song);
+        }
+    }
+
+    protected void ResumeSong()
+    {
+        if (MediaPlayer.State == MediaState.Paused)
+        {
+            MediaPlayer.Resume();
+        }
+    }
+
+    protected void PauseSong()
+    {
+        if (MediaPlayer.State == MediaState.Playing)
+        {
+            MediaPlayer.Pause();
         }
     }
 
