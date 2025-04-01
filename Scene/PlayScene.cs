@@ -369,7 +369,7 @@ public class PlayScene : Scene
         Texture2D _SlimeTexture = _content.Load<Texture2D>("HellSlime");
         Texture2D _DemonTexture = _content.Load<Texture2D>("Demon");
         Texture2D _TowerTexture = _content.Load<Texture2D>("Spitter");
-        Texture2D _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
+        Texture2D _PlatformTexture = _content.Load<Texture2D>("Crab");
         Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
         Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
 
@@ -435,7 +435,7 @@ public class PlayScene : Scene
                 117,
                 new PlatformEnemy(_PlatformTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 32),
+                    Viewport = new Rectangle(0, 0, 48, 32),
 
                     MaxHealth = float.MaxValue,
 
