@@ -140,6 +140,7 @@ public class PlayScene : Scene
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
+            case Singleton.GameState.Pause:
                 // Draw background layers (no camera transform for parallax background)
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 _parallaxBackground.Draw(_spriteBatch);

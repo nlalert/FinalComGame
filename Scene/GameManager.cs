@@ -100,7 +100,7 @@ public class GameManager : Game
                 _mainMenu.Draw(gameTime);
                 break;
             case Singleton.GameState.Pause:
-                // _playScene.Draw(gameTime);
+                _playScene.Draw(gameTime);
                 _pauseMenu.Draw(gameTime);
                 break;
             case Singleton.GameState.Settings:
