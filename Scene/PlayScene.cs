@@ -80,7 +80,7 @@ public class PlayScene : Scene
         // Create parallax background
         _parallaxBackground = new ParallaxBackground(_graphicsDevice.Viewport);
 
-        _parallaxBackground.AddLayer(_backgroundLayer1, 0.1f); // Sky/clouds move very slowly
+        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f); // Sky/clouds move very slowly
         _parallaxBackground.AddLayer(_backgroundLayer2, 0.3f); // Mountains move at medium speed
         _parallaxBackground.AddLayer(_backgroundLayer3, 0.6f); // Trees move faster (closer to player)
 
@@ -211,9 +211,9 @@ public class PlayScene : Scene
     private void DrawTileMap()
     {
         if (Singleton.Instance.Stage == 1){
-        _BGTileMap.Draw(_spriteBatch);
-        _MGTileMap.Draw(_spriteBatch);
-        _FGTileMap.Draw(_spriteBatch);
+            _BGTileMap.Draw(_spriteBatch);
+            _MGTileMap.Draw(_spriteBatch);
+            _FGTileMap.Draw(_spriteBatch);
         }
         
         //Should be hidden
