@@ -80,9 +80,9 @@ public class PlayScene : Scene
         // Create parallax background
         _parallaxBackground = new ParallaxBackground(_graphicsDevice.Viewport);
 
-        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f); // Sky/clouds move very slowly
-        _parallaxBackground.AddLayer(_backgroundLayer2, 0.3f); // Mountains move at medium speed
-        _parallaxBackground.AddLayer(_backgroundLayer3, 0.6f); // Trees move faster (closer to player)
+        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f, 1.0f, Vector2.Zero); // Sky/clouds move very slowly
+        _parallaxBackground.AddLayer(_backgroundLayer2, 0.1f, 1.5f, new Vector2(-50,-300)); // Mountains move at medium speed
+        _parallaxBackground.AddLayer(_backgroundLayer3, 0.2f, 2.0f, new Vector2(-100,-800)); // Trees move faster (closer to player)
 
         _song = _content.Load<Song>("ChillSong");
     }
@@ -217,7 +217,7 @@ public class PlayScene : Scene
         }
         
         //Should be hidden
-        _collisionTileMap.Draw(_spriteBatch);
+        //_collisionTileMap.Draw(_spriteBatch);
     }
 
     private void DrawAllObjects()
