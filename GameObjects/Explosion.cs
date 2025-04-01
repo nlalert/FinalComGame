@@ -79,7 +79,7 @@ namespace FinalComGame
             }
         }
 
-        private bool IsInExplosionRadius(GameObject gameObject)
+        private bool IsInExplosionRadius(GameObject g)
         {
             // Calculate center points
             Vector2 explosionCenter = new Vector2(
@@ -88,8 +88,8 @@ namespace FinalComGame
             );
             
             Vector2 objectCenter = new Vector2(
-                gameObject.Position.X + gameObject.Viewport.Width / 2,
-                gameObject.Position.Y + gameObject.Viewport.Height / 2
+                g.Position.X + g.Viewport.Width / 2,
+                g.Position.Y + g.Viewport.Height / 2
             );
             
             // Calculate distance between centers

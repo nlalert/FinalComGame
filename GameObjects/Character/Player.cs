@@ -774,7 +774,7 @@ namespace FinalComGame
                 Name = "GrapplingHook",
                 BaseDamageAmount = 0f,
                 Speed = 50f,
-                Viewport = new Rectangle(0, 0, 16, 16),
+                Viewport = ViewportManager.Get("Grappling_Hook"),
                 RopeTexture = _ropeTexture,
             }; // Load a grappling hook texture
             _grapplingHook.Shoot(Position, AimDirection); // Aim towards mouse or direction
@@ -989,9 +989,9 @@ namespace FinalComGame
             
             // Set sprite viewport based on weapon type
             if (rangeWeapon is Gun)
-                newProjectile.Viewport = new Rectangle(50, 5, 11, 5);
+                newProjectile.Viewport = ViewportManager.Get("Gun_Bullet");
             else if (rangeWeapon is Staff)
-                newProjectile.Viewport = new Rectangle(35, 17, 10, 13);
+                newProjectile.Viewport = ViewportManager.Get("Staff_Bullet");
 
             // Handle the effects of shooting
             rangeWeapon.OnShoot();
@@ -1059,11 +1059,11 @@ namespace FinalComGame
 
             newBullet.Shoot(bulletPosition, direction);
             if (chargeRatio == 1.0)
-                newBullet.Viewport = new Rectangle(32, 3, 13, 9);
+                newBullet.Viewport = ViewportManager.Get("Charge_Bullet_2");
             else if (chargeRatio >= 0.5)
-                newBullet.Viewport = new Rectangle(17, 4, 12, 7);
+                newBullet.Viewport = ViewportManager.Get("Charge_Bullet_1");
             else
-                newBullet.Viewport = new Rectangle(1, 5, 12, 5);
+                newBullet.Viewport = ViewportManager.Get("Charge_Bullet_0");
             
             gameObjects.Add(newBullet);
             
