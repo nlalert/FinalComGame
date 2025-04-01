@@ -53,14 +53,19 @@ namespace FinalComGame
 
             Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
             Texture2D HoverButton = _content.Load<Texture2D>("Gun"); // Add the hover texture for buttons
+            
+            Texture2D StartButtonTexture = _content.Load<Texture2D>("StaticStartButton");
+            Texture2D StartHoverButtonTexture = _content.Load<Texture2D>("HoverStartButton");
+            Texture2D ExitButtonTexture = _content.Load<Texture2D>("StaticExitButton");
+            Texture2D ExitHoverButtonTexture = _content.Load<Texture2D>("HoverExitButton");
 
             int startButtonWidth = Singleton.SCREEN_WIDTH / 2;
             int startButtonHeight = 100;
             _StartButton = new UiButton(
                 new Rectangle((Singleton.SCREEN_WIDTH - startButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - startButtonHeight) * 2 / 4, startButtonWidth, startButtonHeight),
-                Button,
-                HoverButton,
-                "Start Button",
+                StartButtonTexture,
+                StartHoverButtonTexture,
+                "",
                 Color.Wheat
             );
             _StartButton.OnClick += StartGameButton_OnClick;
@@ -69,9 +74,9 @@ namespace FinalComGame
             int exitButtonHeight = 100;
             _ExitButton = new UiButton(
                 new Rectangle((Singleton.SCREEN_WIDTH - exitButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - exitButtonHeight) * 3 / 4, exitButtonWidth, exitButtonHeight),
-                Button,
-                HoverButton,
-                "Exit Button",
+                ExitButtonTexture,
+                ExitHoverButtonTexture,
+                "",
                 Color.Wheat
             );
             _ExitButton.OnClick += ExitGameButton_OnClick;
