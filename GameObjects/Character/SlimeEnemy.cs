@@ -142,7 +142,20 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+            Color color = IsInvincible() ? Color.Red : Color.White;
+
+            spriteBatch.Draw(
+                Animation.GetTexture(),
+                GetDrawingPosition(),
+                Animation.GetCurrentFrame(),
+                color,
+                0f, 
+                Vector2.Zero,
+                Scale,
+                SpriteEffects.None, 
+                0f
+            );
+
             DrawDebug(spriteBatch);
         }
         protected override void DrawDebug(SpriteBatch spriteBatch)

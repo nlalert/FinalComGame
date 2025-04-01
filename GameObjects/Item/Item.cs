@@ -23,6 +23,8 @@ public class Item : GameObject, IItemDisplayable
 
     public Rectangle spriteViewport = new Rectangle(0, 0, 32,32);
     public ItemType Type;
+
+    public float MPCost = 0;
     
     // Visual indicator for pickup range
     public float pickupRadius = 40f;

@@ -20,16 +20,66 @@ namespace FinalComGame
 
         public GiantSlime(Texture2D texture, Texture2D particleTexture) : base(texture) 
         { 
-            // Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
-            // Animation.AddAnimation("Chase", new Vector2(0, 0), 8);
-            // Animation.AddAnimation("charge", new Vector2(0, 1), 6);
-            // Animation.AddAnimation("jump", new Vector2(0, 2), 5);
-            // Animation.AddAnimation("float", new Vector2(0, 3), 1);
-            // Animation.AddAnimation("land", new Vector2(0, 4), 5);
-            // Animation.AddAnimation("die", new Vector2(0, 5), 7);
-            // Animation.ChangeAnimation(_currentAnimation);
-
+            _texture = texture;
             CanCollideTile = true;
+        }
+
+        public override void AddAnimation(){
+            Animation = new Animation(_texture, 96, 80, new Vector2(96*6 , 80*5), 24);;
+
+            Animation.AddAnimation("idle", new Vector2(0, 0), 4);
+            Animation.AddAnimation("charge", new Vector2(0, 1), 3);
+            Animation.AddAnimation("jump", new Vector2(0, 2), 5);
+            Animation.AddAnimation("float", new Vector2(5, 2), 1);
+            Animation.AddAnimation("land", new Vector2(0, 3), 6);
+            Animation.AddAnimation("fly", new Vector2(0, 4), 6);
+
+            Animation.ChangeAnimation("idle");
+        }
+
+        protected override void UpdateAnimation(float deltaTime)
+        {
+            string animation = "idle";
+
+            if (_jumpCounter < JumpsBeforeHighJump)
+            {
+                if (_actionTimer < 0.75 && Velocity.Y == 0){
+                    animation = "charge"; 
+                }
+                else if(Velocity.Y != 0){
+                    animation = "jump";
+                }
+                else if (_actionTimer >= 1)
+                    animation = "land"; ; 
+            }
+            else
+            {
+                animation = "fly";                
+            }
+
+            if(_currentAnimation != animation)
+            {
+                _currentAnimation = animation;
+                switch (animation)
+                {
+                    case "jump" :
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "float");
+                        break;
+                    case "land" :
+                        Animation.ChangeTransitionAnimation(_currentAnimation, "idle");
+                        break;
+                    case "charge": 
+                    case "die":
+                        Animation.ChangeAnimation(_currentAnimation);
+                        Animation.IsLooping = false;
+                        break;
+                    default:
+                        Animation.ChangeAnimation(_currentAnimation);
+                        break;
+                }    
+            }
+            
+            base.UpdateAnimation(deltaTime);
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -65,6 +115,7 @@ namespace FinalComGame
                     break;
             }
 
+            UpdateAnimation(deltaTime);
             base.Update(gameTime, gameObjects, tileMap);
         }
 
@@ -231,7 +282,20 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+            Color color = IsInvincible() ? Color.Red : Color.White;
+
+            spriteBatch.Draw(
+                Animation.GetTexture(),
+                GetDrawingPosition(),
+                Animation.GetCurrentFrame(),
+                color,
+                0f, 
+                Vector2.Zero,
+                Scale,
+                SpriteEffects.None, 
+                0f
+            );
+            
             DrawDebug(spriteBatch);
         }
 

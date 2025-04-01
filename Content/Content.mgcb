@@ -506,6 +506,18 @@
 /processorParam:TextureFormat=Color
 /build:ItemSlot.png
 
+#begin LargeSlime.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:LargeSlime.png
+
 #begin Laserbeam.png
 /importer:TextureImporter
 /processor:TextureProcessor
