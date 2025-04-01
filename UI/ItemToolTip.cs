@@ -39,7 +39,7 @@ public class ItemTooltip : WorldSpaceUIElement
         );
         
         // Set bounds with padding
-        bounds = new Rectangle(
+        _bounds = new Rectangle(
             (int)position.X - padding,
             (int)position.Y - padding,
             (int)textSize.X + padding * 2,
@@ -61,7 +61,7 @@ public class ItemTooltip : WorldSpaceUIElement
         // Draw background
         spriteBatch.Draw(
             backgroundTexture,
-            bounds,
+            _bounds,
             Color.White
         );
         
@@ -74,13 +74,13 @@ public class ItemTooltip : WorldSpaceUIElement
         
         // Calculate positions
         Vector2 namePosition = new Vector2(
-            bounds.X + bounds.Width / 2 - nameSize.X / 2, // Center horizontally
-            bounds.Y + padding // Keep at top
+            _bounds.X + _bounds.Width / 2 - nameSize.X / 2, // Center horizontally
+            _bounds.Y + padding // Keep at top
         );
         
         Vector2 detailsPosition = new Vector2(
-            bounds.X + padding, // Left align
-            bounds.Y + padding + nameSize.Y // Position below the title
+            _bounds.X + padding, // Left align
+            _bounds.Y + padding + nameSize.Y // Position below the title
         );
         
         // Draw item name (centered)

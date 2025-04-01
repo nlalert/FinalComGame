@@ -34,15 +34,15 @@ namespace FinalComGame
             dotTexture.SetData(new[] { Color.White });
 
             // Draw background
-            spriteBatch.Draw(dotTexture, bounds, backgroundColor);
+            spriteBatch.Draw(dotTexture, _bounds, backgroundColor);
 
             // Calculate bar width
             float percentage = GetPercentage();
             Rectangle healthRect = new Rectangle(
-                bounds.X, 
-                bounds.Y, 
-                (int)(bounds.Width * percentage), 
-                bounds.Height);
+                _bounds.X, 
+                _bounds.Y, 
+                (int)(_bounds.Width * percentage), 
+                _bounds.Height);
 
             // Draw the bar
             spriteBatch.Draw(dotTexture, healthRect, foregroundColor);
@@ -53,25 +53,25 @@ namespace FinalComGame
                 // Top border
                 spriteBatch.Draw(
                     dotTexture, 
-                    new Rectangle(bounds.X, bounds.Y, bounds.Width, borderThickness), 
+                    new Rectangle(_bounds.X, _bounds.Y, _bounds.Width, borderThickness), 
                     borderColor);
                 
                 // Bottom border
                 spriteBatch.Draw(
                     dotTexture, 
-                    new Rectangle(bounds.X, bounds.Y + bounds.Height - borderThickness, bounds.Width, borderThickness), 
+                    new Rectangle(_bounds.X, _bounds.Y + _bounds.Height - borderThickness, _bounds.Width, borderThickness), 
                     borderColor);
                 
                 // Left border
                 spriteBatch.Draw(
                     dotTexture, 
-                    new Rectangle(bounds.X, bounds.Y, borderThickness, bounds.Height), 
+                    new Rectangle(_bounds.X, _bounds.Y, borderThickness, _bounds.Height), 
                     borderColor);
                 
                 // Right border
                 spriteBatch.Draw(
                     dotTexture, 
-                    new Rectangle(bounds.X + bounds.Width - borderThickness, bounds.Y, borderThickness, bounds.Height), 
+                    new Rectangle(_bounds.X + _bounds.Width - borderThickness, _bounds.Y, borderThickness, _bounds.Height), 
                     borderColor);
             }
         }

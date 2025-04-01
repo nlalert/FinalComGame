@@ -13,15 +13,15 @@ public abstract class HUDElement : UIElement
     public override void Update(GameTime gameTime)
     {
         // Screen-space mouse position check
-        isHovered = bounds.Contains(Singleton.Instance.GetMousePosition());
+        _isHovered = _bounds.Contains(Singleton.Instance.GetMousePosition());
         
-        if (isHovered)
+        if (_isHovered)
         {
-            isPressed = Singleton.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed;
+            _isPressed = Singleton.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed;
         }
         else
         {
-            isPressed = false;
+            _isPressed = false;
         }
     }
 }
