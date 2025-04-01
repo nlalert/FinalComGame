@@ -10,7 +10,7 @@ namespace FinalComGame
     public class GrenadeProjectile : Projectile
     {
         public Explosion BaseExplosion;
-        
+    
         public float ExplosionDuration;
         public float DetonateDelayDuration;
         public float DetonateTimer;
@@ -26,6 +26,9 @@ namespace FinalComGame
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             DetonateTimer -= deltaTime;
+
+            Rotation += Velocity.X * 0.001f;
+
             if (DetonateTimer <= 0)
             {
                 StartExplosion(gameObjects);
@@ -96,6 +99,7 @@ namespace FinalComGame
                 }
             }
         }
+
         protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             float previousVelocityY = Velocity.Y; 

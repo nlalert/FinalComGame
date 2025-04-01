@@ -14,18 +14,9 @@ public class PlayScene : Scene
     List<GameObject> _gameObjects;
     int _numObject;
 
-    private Texture2D _playerTexture;
     private Texture2D _textureAtlas;
-    private Texture2D _DemonTexture;
-    private Texture2D _DemonBulletTexture;
-    private Texture2D _TowerTexture;
-    private Texture2D _PlatformTexture;
-    private Texture2D _GiantSlimeTexture;
-    private Texture2D _CerberusTexture;
     private Texture2D _RhulkTexture;
     private Texture2D _LaserTexture;
-    private Texture2D _SoulMinion;
-    private Texture2D _MinionSoulBullet;
     private Texture2D _HookHeadTexture;
     private Texture2D _RopeTexture; 
 
@@ -57,23 +48,10 @@ public class PlayScene : Scene
     {
         base.LoadContent(spriteBatch);
         
-        _playerTexture = _content.Load<Texture2D>("Char_test");
-        // _enemyTexture = _content.Load<Texture2D>("EnemyRed");
-        // _DogTexture = _content.Load<Texture2D>("EnemyDog");
-        // _SlimeTexture = _content.Load<Texture2D>("HellSlime");
-        _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
-        _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
-        _TowerTexture = _content.Load<Texture2D>("EnemyTower");
-        _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
-        _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
-        _CerberusTexture = _content.Load<Texture2D>("Cerberus");
         _RhulkTexture = _content.Load<Texture2D>("EnemyRhulk");
         _LaserTexture = _content.Load<Texture2D>("Laserbeam");
-        _SoulMinion = _content.Load<Texture2D>("SoulMinion");
-        _MinionSoulBullet = _content.Load<Texture2D>("MinionSoulBullet");
         _HookHeadTexture = _content.Load<Texture2D>("HookHead");
         _RopeTexture = _content.Load<Texture2D>("Rope");
-
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
 
@@ -678,7 +656,7 @@ public class PlayScene : Scene
             FireBall = new FireBall(projectileTexture, ExplosionEffect, FireBallExplosionSound)
             {
                 Name = "FireBall",
-                BaseDamageAmount = 30f,
+                BaseDamageAmount = 20f,
                 Speed = 500f,
                 Radius = 60f,
                 ExplosionDuration = 0.5f,
@@ -691,16 +669,16 @@ public class PlayScene : Scene
             Name =  "Staff",
             Description = "Summon Your best Minion!",
             MPCost = 10,
-            soulMinion = new SoulMinion(_SoulMinion)
+            soulMinion = new SoulMinion(projectileTexture)
             {
                 Name = "Soul Minion",
                 BaseDamageAmount = 0f,
                 Viewport = new Rectangle(0, 0, 12, 12),
-                soulBullet = new SoulBullet(_MinionSoulBullet){
+                soulBullet = new SoulBullet(projectileTexture){
                     Name = "Soul Bullet",
-                    BaseDamageAmount = 15f,
+                    BaseDamageAmount = 5f,
                     Speed = 150f,
-                    Viewport = new Rectangle(0, 0, 10, 10),
+                    Viewport = new Rectangle(4, 51, 8, 9),
                 }
             },
             Viewport = new Rectangle(0, 32, 32, 32),
@@ -721,8 +699,7 @@ public class PlayScene : Scene
                 Radius = 80f,
                 ExplosionDuration = 0.5f,
                 DetonateDelayDuration = 3.0f,
-
-                Viewport = new Rectangle(35, 17, 10, 13)
+                Viewport = new Rectangle(52, 17, 9, 13)
             }
         });
     }

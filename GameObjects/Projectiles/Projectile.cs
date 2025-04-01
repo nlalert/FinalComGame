@@ -28,6 +28,7 @@ namespace FinalComGame
             Velocity = direction * Speed;
             StartPosition = position;
             _direction = direction;
+            AddAnimation();
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -65,6 +66,13 @@ namespace FinalComGame
 
             base.Update(gameTime, gameObjects, tileMap);
         }
+        public virtual void AddAnimation(){
+        }
+
+        protected virtual void UpdateAnimation(float deltaTime)
+        {
+            Animation?.Update(deltaTime);
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -72,11 +80,11 @@ namespace FinalComGame
 
             spriteBatch.Draw(
                 _texture, 
-                new Vector2(Position.X - Viewport.Width/2, Position.Y - Viewport.Height/2), 
+                new Vector2(Position.X + Viewport.Width/2, Position.Y + Viewport.Height/2), 
                 Viewport, 
                 Color.White,
-                0f, 
-                Vector2.Zero,
+                Rotation, 
+                new Vector2(Viewport.Width/2, Viewport.Height/2),
                 Scale,
                 spriteEffect, 
                 0f
