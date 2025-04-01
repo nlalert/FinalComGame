@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 namespace FinalComGame;
 
 // Abstract base class for all UI elements
-public abstract class UIElement
+public class UIElement
 {
     protected Rectangle bounds;
     protected bool isHovered;
@@ -19,8 +19,9 @@ public abstract class UIElement
     
     public virtual void Update(GameTime gameTime)
     {
-        // Base update code - to be overridden by subclasses
     }
     
-    public abstract void Draw(SpriteBatch spriteBatch);
+    public virtual void Draw(SpriteBatch spriteBatch)
+    {
+    }
 }
