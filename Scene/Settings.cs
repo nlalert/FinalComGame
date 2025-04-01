@@ -22,37 +22,6 @@ public class Settings : Scene
         
         // a gap between each button
         buttonGap = 5;
-
-        // // Calculating Y position of other buttons
-        // for (int i = 0; i < 4; i++){
-        //     switch (i)
-        //     {
-        //         case 1:
-        //             _restartButtonHeight = _resumeButtonHeight + (buttonGap + ViewportManager.Get("Pause_Button").Height)*i;
-        //             break;
-        //         case 2:
-        //             _settingsButtonHeight = _resumeButtonHeight + (buttonGap + ViewportManager.Get("Pause_Button").Height)*i;                
-        //             break;
-        //         case 3:
-        //             _mainmenuButtonHeight = _resumeButtonHeight + (buttonGap + ViewportManager.Get("Pause_Button").Height)*i;
-        //             break;    
-        //         default:
-        //             break;
-        //     }
-        // }
-
-        // _musicLabelHeight = (Singleton.SCREEN_HEIGHT / 2) - (Singleton.CHIP_SIZE / 2) - (ViewportManager.Get("Big_Box0").Height/4) - 
-        // (ViewportManager.Get("Slide_Bar").Height/2) - buttonGap;
-        // _sfxLabelHeight = (Singleton.SCREEN_HEIGHT / 2) - (Singleton.CHIP_SIZE / 2) + (ViewportManager.Get("Big_Box0").Height/12) - 
-        // (ViewportManager.Get("Slide_Bar").Height/2) - buttonGap;
-
-        // _musicSlideBarHeight = (Singleton.SCREEN_HEIGHT / 2) - (ViewportManager.Get("Slide_Bar").Height / 2) - (ViewportManager.Get("Big_Box0").Height/4) + buttonGap;
-        // _sfxSlideBarHeight = (Singleton.SCREEN_HEIGHT / 2) - (ViewportManager.Get("Slide_Bar").Height / 2) + (ViewportManager.Get("Big_Box0").Height/12) + buttonGap;
-
-        // _musicSlideChipHeight = (Singleton.SCREEN_HEIGHT / 2) - (Singleton.CHIP_SIZE / 2) - (ViewportManager.Get("Big_Box0").Height/4) + buttonGap;
-        // _sfxSlideChipHeight = (Singleton.SCREEN_HEIGHT / 2) - (Singleton.CHIP_SIZE / 2) + (ViewportManager.Get("Big_Box0").Height/12) + buttonGap;
-
-        // _backButtonHeight = (Singleton.SCREEN_HEIGHT / 2) - (ViewportManager.Get("Small_Button").Height / 2) + (ViewportManager.Get("Big_Box0").Height*2/5);
     }
 
     public override void LoadContent(SpriteBatch spriteBatch)
