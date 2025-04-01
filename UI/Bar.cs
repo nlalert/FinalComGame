@@ -27,11 +27,6 @@ namespace FinalComGame
             return 0;
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
         public override void Draw(SpriteBatch spriteBatch)
         {
             // 1x1 pixel texture 

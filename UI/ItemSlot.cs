@@ -43,6 +43,7 @@ namespace FinalComGame
             return isSelected;
         }
 
+        //mark
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);

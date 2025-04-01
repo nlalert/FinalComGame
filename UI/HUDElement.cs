@@ -1,4 +1,5 @@
 // HUD elements - screen space, fixed position
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -12,13 +13,11 @@ public abstract class HUDElement : UIElement
     public override void Update(GameTime gameTime)
     {
         // Screen-space mouse position check
-        MouseState mouseState = Singleton.Instance.CurrentMouseState;
-        Point mousePoint = new Point(mouseState.X, mouseState.Y);
-        isHovered = bounds.Contains(mousePoint);
+        isHovered = bounds.Contains(Singleton.Instance.GetMousePosition());
         
         if (isHovered)
         {
-            isPressed = mouseState.LeftButton == ButtonState.Pressed;
+            isPressed = Singleton.Instance.CurrentMouseState.LeftButton == ButtonState.Pressed;
         }
         else
         {
