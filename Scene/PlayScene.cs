@@ -324,7 +324,7 @@ public class PlayScene : Scene
             MPRegenCooldown = 0.6f, // 0.5 seconds before starting MP regenaration
             MPRegenRate = 30f, // MP regenaration per second
 
-            Viewport = new Rectangle(0, 0, 16, 32),
+            Viewport = ViewportManager.Get("Player"),
             Left = Keys.Left,
             Right = Keys.Right,
             Crouch = Keys.Down,
@@ -346,9 +346,9 @@ public class PlayScene : Scene
             Bullet = new PlayerBullet(projectileTexture)
             {
                 Name = "BulletPlayer",
-                BaseDamageAmount = 15f,
+                BaseDamageAmount = 10f,
                 Speed = 500f,
-                Viewport = new Rectangle(1, 5, 12, 5)
+                Viewport = ViewportManager.Get("Charge_Bullet_0")
             },
             _hookHeadTexture = _HookHeadTexture,
             _ropeTexture = _RopeTexture
@@ -378,7 +378,7 @@ public class PlayScene : Scene
                 97,         
                 new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 16, 16),
+                    Viewport = ViewportManager.Get("Slime"),
                     MaxHealth = 50f,
                     BaseAttackDamage = 3f,
 
@@ -394,7 +394,7 @@ public class PlayScene : Scene
                 98,
                 new HellhoundEnemy(_DogTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 32, 32),
+                    Viewport = ViewportManager.Get("Hellhound"),
                     
                     MaxHealth = 1f,
                     BaseAttackDamage = 8f,
@@ -413,7 +413,7 @@ public class PlayScene : Scene
                 99,         
                 new SkeletonEnemy(_enemyTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 16, 32),
+                    Viewport = ViewportManager.Get("Skeleton"),
 
                     MaxHealth = 80f,
                     BaseAttackDamage = 5f,
@@ -429,7 +429,7 @@ public class PlayScene : Scene
                 117,
                 new PlatformEnemy(_PlatformTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 48, 32),
+                    Viewport = ViewportManager.Get("PlatformEnemy"),
 
                     MaxHealth = float.MaxValue,
 
@@ -440,7 +440,7 @@ public class PlayScene : Scene
                 118,
                 new TowerEnemy(_TowerTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 24, 24),
+                    Viewport = ViewportManager.Get("TowerEnemy"),
 
                     MaxHealth = 150f,
 
@@ -451,7 +451,7 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 20f,
                         Speed = 300f,
-                        Viewport = new Rectangle(16, 16, 16, 16)
+                        Viewport = ViewportManager.Get("TowerEnemy_Bullet")
                     }
                 }
             },
@@ -459,7 +459,7 @@ public class PlayScene : Scene
                 119,
                 new DemonEnemy(_DemonTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 16, 32),
+                    Viewport = ViewportManager.Get("Demon"),
 
                     MaxHealth = 100f,
 
@@ -468,9 +468,9 @@ public class PlayScene : Scene
                     DemonBullet = new DemonBullet(projectileTexture)
                     {
                         Name = "BulletEnemy",
-                        BaseDamageAmount = 15f,
+                        BaseDamageAmount = 10f,
                         Speed = 200f,
-                        Viewport = new Rectangle(4, 19, 8, 9)
+                        Viewport = ViewportManager.Get("Demon_Bullet")
                     }
                 }
             },
@@ -478,7 +478,7 @@ public class PlayScene : Scene
                 137,         
                 new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 48),
+                    Viewport = ViewportManager.Get("GiantSlime"),
 
                     MaxHealth = 1000f,
                     BaseAttackDamage = 3f,
@@ -496,7 +496,7 @@ public class PlayScene : Scene
             //     97,         
             //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
             //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = new Rectangle(0, 0, 64, 48),
+            //         Viewport = ViewportManager.Get("GiantSlime"),
 
             //         MaxHealth = 1f,
             //         BaseAttackDamage = 3f,
@@ -512,7 +512,7 @@ public class PlayScene : Scene
                 138,         
                 new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 48),
+                    Viewport = ViewportManager.Get("Cerberus"),
 
                     MaxHealth = 1000,
                     BaseAttackDamage = 3f,
@@ -528,7 +528,7 @@ public class PlayScene : Scene
                 199,         
                 new Rhulk(_RhulkTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 22, 64),
+                    Viewport = ViewportManager.Get("Rhulk"),
 
                     MaxHealth = 100f,
                     BaseAttackDamage = 3f,
@@ -543,7 +543,7 @@ public class PlayScene : Scene
                     {
                         Name = "BulletEnemy",
                         BaseDamageAmount = 20f,
-                        Viewport = new Rectangle(0, 0, 10, 200),
+                        Viewport = ViewportManager.Get("Rhulk_Laser")
                     },
                 }
             },
@@ -584,55 +584,56 @@ public class PlayScene : Scene
         _gameObjects.Add(new Potion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
             Name =  "HealthPotion",
             Description = "Test HealthPotion Description",
-            Viewport = new Rectangle(64, 64, 32, 32),
+            Viewport = ViewportManager.Get("Potion_Health"),
             UseSound = PotionUseSound
         });
 
         _gameObjects.Add(new SpeedPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
             Name =  "SpeedPotion",
             Description = "Test SpeedPotion Description",
-            Viewport = new Rectangle(0, 96, 32, 32),
+            Viewport = ViewportManager.Get("Potion_Speed"),
             UseSound = PotionUseSound
         });
 
         _gameObjects.Add(new JumpPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
             Name =  "jumppotion",
             Description = "Test JumpPotion Description",
-            Viewport = new Rectangle(32, 64, 32, 32),
+            Viewport = ViewportManager.Get("Potion_Jump"),
             UseSound = PotionUseSound
         });
 
         _gameObjects.Add(new Barrier(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
             Name =  "barrier",
             Description = "Test Barrier Description",
-            Viewport = new Rectangle(0, 64, 32, 32),
+            Viewport = ViewportManager.Get("Barrier"),
             UseSound = PotionUseSound // Temp
         });
 
         _gameObjects.Add(new LifeUp(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "1Up",
             Description = "Test LifeUp Description",
-            Viewport = new Rectangle(32, 96, 32, 32),
+            Viewport = ViewportManager.Get("LifeUp"),
             UseSound = PotionUseSound // Temp
         });
 
         _gameObjects.Add(new SpeedBoots(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
             Name =  "SpeedBoots",
             Description = "Test SpeedBoots Description",
-            Viewport = new Rectangle(32, 32, 32, 32)
+            Viewport = ViewportManager.Get("Speed_Boots")
         });
 
         _gameObjects.Add(new CursedGauntlet(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(26, 80)){
             Name =  "CursedGauntlet",
             Description = "Test CursedGauntlet Description",
-            Viewport = new Rectangle(64, 32, 32, 32)
+            Viewport = ViewportManager.Get("CursedGauntlet")
+
         });
 
         SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
         _gameObjects.Add(new Sword(ItemTexture, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
             Name =  "Sword",
             Description = "Test Sword Description",
-            Viewport = new Rectangle(32, 0, 32, 32),
+            Viewport = ViewportManager.Get("Sword"),
             SlashSound = SwordSlashSound,
         });
 
@@ -640,7 +641,7 @@ public class PlayScene : Scene
         _gameObjects.Add(new Gun(ItemTexture, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
             Name =  "Gun",
             Description = "Test Gun Description",
-            Viewport = new Rectangle(0, 0, 32, 32),
+            Viewport = ViewportManager.Get("Gun"),
             ShootSound = GunshotSound,
         });
 
@@ -656,13 +657,13 @@ public class PlayScene : Scene
             FireBall = new FireBall(projectileTexture, ExplosionEffect, FireBallExplosionSound)
             {
                 Name = "FireBall",
-                BaseDamageAmount = 20f,
+                BaseDamageAmount = 15f,
                 Speed = 500f,
                 Radius = 60f,
                 ExplosionDuration = 0.5f,
-                Viewport = new Rectangle(35, 17, 10, 13)
+                Viewport = ViewportManager.Get("FireBall")
             },
-            Viewport = new Rectangle(64, 0, 32, 32),
+            Viewport = ViewportManager.Get("Fire_Staff")
         });
 
         _gameObjects.Add(new SoulStaff(ItemTexture,ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
@@ -673,21 +674,21 @@ public class PlayScene : Scene
             {
                 Name = "Soul Minion",
                 BaseDamageAmount = 0f,
-                Viewport = new Rectangle(0, 0, 12, 12),
+                Viewport = ViewportManager.Get("Soul_Minion"),
                 soulBullet = new SoulBullet(projectileTexture){
                     Name = "Soul Bullet",
                     BaseDamageAmount = 5f,
                     Speed = 150f,
-                    Viewport = new Rectangle(4, 51, 8, 9),
+                    Viewport = ViewportManager.Get("Soul_Bullet")
                 }
             },
-            Viewport = new Rectangle(0, 32, 32, 32),
+            Viewport = ViewportManager.Get("Soul_Staff")
         });
 
         _gameObjects.Add(new Grenade(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(1, 90)){
             Name =  "Grenade",
             Description = "Test GrenadeTemp Description",
-            Viewport = new Rectangle(64, 96, 32, 32),
+            Viewport = ViewportManager.Get("Grenade"),
             UseSound = PotionUseSound, // Temp
 
             GrenadeProjectile = new GrenadeProjectile(projectileTexture, ExplosionEffect, FireBallExplosionSound)
@@ -699,7 +700,8 @@ public class PlayScene : Scene
                 Radius = 80f,
                 ExplosionDuration = 0.5f,
                 DetonateDelayDuration = 3.0f,
-                Viewport = new Rectangle(52, 17, 9, 13)
+
+                Viewport = ViewportManager.Get("Grenade_Projectile")
             }
         });
     }
