@@ -83,7 +83,7 @@ namespace FinalComGame
         private bool _isFist;
         private bool _isSoulBullet;
 
-        private bool _isUsingWeapon;
+        private string _currentWeapon;
 
         //SFX
         public SoundEffect JumpSound;
@@ -159,6 +159,9 @@ namespace FinalComGame
 
             HandAnimation.AddAnimation("gun_1", new Vector2(0,16), 8);
             HandAnimation.AddAnimation("gun_2", new Vector2(8,16), 8);
+
+            HandAnimation.AddAnimation("staff_1", new Vector2(0,17), 8);
+            HandAnimation.AddAnimation("staff_2", new Vector2(8,17), 8);
 
             HandAnimation.ChangeAnimation(_currentHandAnimation);
 
@@ -459,8 +462,12 @@ namespace FinalComGame
 
             else if (_isGliding && !_isJumping)
             {
-                if(Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon)
-                    handAnimation = "gun_2";
+                if(Singleton.Instance.IsKeyJustPressed(Fire) && _currentWeapon != "none"){
+                    if(_currentWeapon == "gun")
+                        handAnimation = "gun_2";
+                    else
+                        handAnimation = "staff_2";
+                }
                     
                 else if (_lastChargeTime != 0)
                 {
@@ -478,8 +485,12 @@ namespace FinalComGame
 
             else
             {
-                if(Singleton.Instance.IsKeyJustPressed(Fire) && _isUsingWeapon)
-                    handAnimation = "gun_1";
+                if(Singleton.Instance.IsKeyJustPressed(Fire) && _currentWeapon != "none"){
+                    if(_currentWeapon == "gun")
+                        handAnimation = "gun_1";
+                    else
+                        handAnimation = "staff_1";
+                }
 
                 else if (_lastChargeTime != 0)
                 {
@@ -515,6 +526,8 @@ namespace FinalComGame
                     case "fire_2" :
                     case "gun_1" :
                     case "gun_2" :
+                    case "staff_1" :
+                    case "staff_2" :
                         HandAnimation.ChangeTransitionAnimation(_currentHandAnimation, "idle");
                         _currentHandAnimation = "idle";
                         break;
@@ -576,22 +589,23 @@ namespace FinalComGame
             // Handle Fire button (charge shot)
             if (Singleton.Instance.IsKeyJustPressed(Fire) && !_isClimbing && !_isAttacking)
             {
-                if(_isSoulBullet){
+                if(_isSoulBullet)
+                {
                     // Start charging
-                    _isUsingWeapon = false;
+                    _currentWeapon = "none";
                     StartCharging();
                 }
-                else{
-                    if ((ItemSlot[1] is Staff && MP >= 0) || ItemSlot[1] is Gun)
-                    {
-                        _isUsingWeapon = true;
-                        Shoot(gameObjects);
-                    }
+                else
+                {
+                    if (ItemSlot[1] is Staff && MP >= 10)
+                       _currentWeapon = "staff";
+                    else if (ItemSlot[1] is Gun)
+                        _currentWeapon = "gun";
                     else
-                    {
-                        _isUsingWeapon = false;
-                    }
+                        _currentWeapon = "none";
+                    Shoot(gameObjects);
                 }
+
             }
             else if (Singleton.Instance.IsKeyPressed(Fire) && !_isClimbing && !_isAttacking)
             {
