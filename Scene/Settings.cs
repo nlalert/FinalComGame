@@ -14,41 +14,12 @@ public class Settings : Scene
     private TextUI _settingsTitle; // can change to ImageUI later
     private SlideBarUI _musicVolumeSlider;
     private SlideBarUI _soundEffectVolumeSlider;
-    private Button _musicSlideChip;
-    private Button _sfxSlideChip;
     private Button _backButton;
-
-    private int _pauseTitleHeight;
-    private int _resumeButtonHeight;
-    private int _settingsButtonHeight;
-    private int _restartButtonHeight;
-    private int _mainmenuButtonHeight;
-
-    private int _musicLabelHeight;
-    private int _musicSlideBarHeight;
-    private int _musicSlideChipHeight;
-    private int _sfxLabelHeight;
-    private int _sfxSlideBarHeight;
-    private int _sfxSlideChipHeight;
-    private int _backButtonHeight;
-
-    private float _musicSlideChipPosition;
-    private float _sfxSlideChipPosition;
-
-    private int _slideBarMaxValue;
     private int buttonGap;
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         base.Initialize(graphicsDevice, graphicsDeviceManager, content);
-
-        _slideBarMaxValue = 320;
-
-        // Y positon of the pause sign
-        _pauseTitleHeight = 70;
-
-        // Y positon of the resume button
-        _resumeButtonHeight = 180;
-
+        
         // a gap between each button
         buttonGap = 5;
 
