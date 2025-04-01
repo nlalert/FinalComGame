@@ -21,6 +21,9 @@ class Singleton
     public Camera Camera;
     public UI CurrentUI;
 
+    public float MusicVolume = 1.0f;
+    public float SFXVolume = 1.0f;
+
     public enum GameState
     {
         MainMenu,
@@ -28,6 +31,7 @@ class Singleton
         InitializingStage,
         Playing,
         Pause,
+        Settings,
         StageCompleted,
         GameOver,
         GameWon,
@@ -91,7 +95,7 @@ class Singleton
     {
         return CurrentKey.IsKeyUp(key);
     }
-    
+
     // Enum for mouse buttons
     public enum MouseButton
     {

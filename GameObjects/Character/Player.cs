@@ -562,7 +562,7 @@ namespace FinalComGame
                 }
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Attack)){
+            if (Singleton.Instance.IsKeyJustPressed(Attack) && !_isClimbing){
                 _isCharging = false;
                 _chargeTime = 0;
                 StartAttack();

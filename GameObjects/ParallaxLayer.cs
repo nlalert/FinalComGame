@@ -11,11 +11,11 @@ public class ParallaxLayer
     public Rectangle SourceRectangle;
     public float Scale;
 
-    public ParallaxLayer(Texture2D texture, float scrollSpeed, float scale = 1.0f)
+    public ParallaxLayer(Texture2D texture, float scrollSpeed, float scale = 1.0f, Vector2 offset = new Vector2())
     {
         Texture = texture;
         ScrollSpeed = scrollSpeed;
-        Position = Vector2.Zero;
+        Position = Vector2.Zero + offset;
         SourceRectangle = new Rectangle(0, 0, texture.Width, texture.Height);
         Scale = scale;
     }

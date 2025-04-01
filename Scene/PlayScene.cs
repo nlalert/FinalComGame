@@ -145,6 +145,7 @@ public class PlayScene : Scene
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.Playing:
+            case Singleton.GameState.Pause:
                 // Draw background layers (no camera transform for parallax background)
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 _parallaxBackground.Draw(_spriteBatch);
@@ -211,7 +212,7 @@ public class PlayScene : Scene
         }
         
         //Should be hidden
-        _collisionTileMap.Draw(_spriteBatch);
+        //_collisionTileMap.Draw(_spriteBatch);
     }
 
     private void DrawAllObjects()
@@ -281,9 +282,9 @@ public class PlayScene : Scene
         // Create parallax background
         _parallaxBackground = new ParallaxBackground(_graphicsDevice.Viewport);
 
-        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f); // not move
-        _parallaxBackground.AddLayer(_backgroundLayer2, 0.3f); // medium speed
-        _parallaxBackground.AddLayer(_backgroundLayer3, 0.6f); // (closer to player)
+        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f, 1.0f, Vector2.Zero); // Sky/clouds move very slowly
+        _parallaxBackground.AddLayer(_backgroundLayer2, 0.1f, 1.5f, new Vector2(-50,-300)); // Mountains move at medium speed
+        _parallaxBackground.AddLayer(_backgroundLayer3, 0.2f, 2.0f, new Vector2(-100,-800)); // Trees move faster (closer to player)
     }
 
     // In your PlayScene or main game class
@@ -383,7 +384,7 @@ public class PlayScene : Scene
         Texture2D _SlimeTexture = _content.Load<Texture2D>("HellSlime");
         Texture2D _DemonTexture = _content.Load<Texture2D>("Demon");
         Texture2D _TowerTexture = _content.Load<Texture2D>("Spitter");
-        Texture2D _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
+        Texture2D _PlatformTexture = _content.Load<Texture2D>("Crab");
         Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
         Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
 
@@ -449,7 +450,7 @@ public class PlayScene : Scene
                 117,
                 new PlatformEnemy(_PlatformTexture){
                     Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = new Rectangle(0, 0, 64, 32),
+                    Viewport = new Rectangle(0, 0, 48, 32),
 
                     MaxHealth = float.MaxValue,
 
@@ -699,7 +700,7 @@ public class PlayScene : Scene
             spriteViewport = new Rectangle(64, 0, 32, 32),
         });
 
-        _gameObjects.Add(new SoulStaff(SoulStaff,ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
+        _gameObjects.Add(new SoulStaff(ItemTexture,ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
             Name =  "Staff",
             Description = "Summon Your best Minion!",
             MPCost = 10,
@@ -716,6 +717,7 @@ public class PlayScene : Scene
                 }
             },
             Viewport = new Rectangle(0, 0, 32,32),
+            spriteViewport = new Rectangle(0, 32, 32, 32),
         });
     }
 

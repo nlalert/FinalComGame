@@ -12,9 +12,7 @@ namespace FinalComGame;
 public class MainMenu : Scene
 {
     private ImageUI _Title;
-    private Button _BackButton;
     private Button _StartButton;
-    private Button _ScoreBoardButton;
     private Button _ExitButton;
 
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
