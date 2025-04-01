@@ -17,8 +17,6 @@ namespace FinalComGame
         private bool _isDashing;
         private float _dashTimer;
         public float DashDuration;
-        private int _direction = 1;
-
 
         public HellhoundEnemy(Texture2D texture) : base(texture) { 
             _texture = texture;
@@ -61,17 +59,17 @@ namespace FinalComGame
             {
                 case EnemyState.Idle:
                     if (Velocity.X > 0)
-                        _direction = 1;
+                        Direction = 1;
                     else if (Velocity.X < 0)
-                        _direction = -1;
+                        Direction = -1;
                     AI_IdlePatrol(deltaTime, gameObjects, tileMap);
                     break;
 
                 case EnemyState.Charging:
                     if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
-                        _direction = 1;
+                        Direction = 1;
                     else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
-                        _direction = -1;
+                        Direction = -1;
                     AI_Charging(deltaTime, gameObjects, tileMap);
                     break;
 
@@ -81,9 +79,9 @@ namespace FinalComGame
 
                 case EnemyState.Chase:
                     if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
-                        _direction = 1;
+                        Direction = 1;
                     else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
-                        _direction = -1;
+                        Direction = -1;
                     AI_ChasingPlayer(deltaTime, gameObjects, tileMap);
                     break;
             }
@@ -138,7 +136,7 @@ namespace FinalComGame
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            SpriteEffects spriteEffect = _direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             Color color = IsInvincible() ? Color.Red : Color.White;
 
             spriteBatch.Draw(
