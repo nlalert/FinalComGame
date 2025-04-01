@@ -28,9 +28,8 @@ namespace FinalComGame
         private Vector2 _barrierstart;
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
-
-        private int _direction = 1;
         public HealthBar HealthBar;
+
 
         public Cerberus(Texture2D texture, Texture2D particleTexture) : base(texture) 
         { 
@@ -78,30 +77,26 @@ namespace FinalComGame
             {
                 case EnemyState.Chase:
                     if (Velocity.X > 0)
-                        _direction = 1;
+                        Direction = 1;
                     else if (Velocity.X < 0)
-                        _direction = -1;
+                        Direction = -1;
                     AI_Chase(deltaTime, gameObjects, tileMap);
                     break;
                 case EnemyState.Jump:
-                    if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
-                        _direction = 1;
-                    else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
-                        _direction = -1;
                     AI_Jump(deltaTime, gameObjects, tileMap);
                     break;
                 case EnemyState.Charging:
                     if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
-                        _direction = 1;
+                        Direction = 1;
                     else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
-                        _direction = -1;
+                        Direction = -1;
                     AI_Charging(deltaTime,gameObjects, tileMap);
                     break;
                 case EnemyState.Dash:
                     if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
-                        _direction = 1;
+                        Direction = 1;
                     else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
-                        _direction = -1;
+                        Direction = -1;
                     AI_Dash(deltaTime,gameObjects, tileMap);
                     break;
             }
@@ -164,9 +159,9 @@ namespace FinalComGame
 
             _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1) * _actionTimeOffset;
             if(Math.Abs((Singleton.Instance.Player.Position - this.Position).X) >20f)
-                Direction = Math.Sign( (Singleton.Instance.Player.Position - this.Position).X);
+                base.Direction = Math.Sign( (Singleton.Instance.Player.Position - this.Position).X);
 
-            Velocity.X = 200f * Direction;
+            Velocity.X = 200f * base.Direction;
             Velocity.X *= Friction;
 
             if (_actionTimer <= 0)
@@ -328,7 +323,7 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            SpriteEffects spriteEffect = _direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects spriteEffect = base.Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             Color color = IsInvincible() ? Color.Red : Color.White;
 
             spriteBatch.Draw(
@@ -350,7 +345,7 @@ namespace FinalComGame
         protected override void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
-            string displayText = $"State: {CurrentState}\n{Direction}\n HP {Health} \nAT:{_actionTimer}";
+            string displayText = $"State: {CurrentState}\n{base.Direction}\n HP {Health} \nAT:{_actionTimer}";
             spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition , Color.White);
             if(CurrentState == EnemyState.Charging || CurrentState == EnemyState.Dash){
                 DrawLine(spriteBatch, _dashAim, Position, Color.Green);
