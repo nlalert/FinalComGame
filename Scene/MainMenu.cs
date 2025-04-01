@@ -11,6 +11,7 @@ namespace FinalComGame;
 
 public class MainMenu : Scene
 {
+    private ImageUI _Title;
     private Button _BackButton;
     private Button _StartButton;
     private Button _ScoreBoardButton;
@@ -34,11 +35,20 @@ public class MainMenu : Scene
 
     protected override void SetupHUD()
     {
+        Texture2D Title = _content.Load<Texture2D>("Gun"); //Change Later TEMP
+        int titleWidth = Singleton.SCREEN_WIDTH / 2;
+        int titleHeight = 100;
+        _Title = new ImageUI(
+            Title,
+            new Rectangle((Singleton.SCREEN_WIDTH - titleWidth) / 2 , (Singleton.SCREEN_HEIGHT - titleHeight) / 4, titleWidth, titleHeight),
+            new Rectangle(0, 0, 32, 32)
+        );
+
         Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
         int startButtonWidth = Singleton.SCREEN_WIDTH / 2;
         int startButtonHeight = 100;
         _StartButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - startButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - startButtonHeight) / 3, startButtonWidth, startButtonHeight),
+            new Rectangle((Singleton.SCREEN_WIDTH - startButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - startButtonHeight) * 2 / 4, startButtonWidth, startButtonHeight),
             Button,
             Button,
             "Start Button",
@@ -49,7 +59,7 @@ public class MainMenu : Scene
         int exitButtonWidth = Singleton.SCREEN_WIDTH / 2;
         int exitButtonHeight = 100;
         _ExitButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - exitButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - exitButtonHeight) * 2 / 3, exitButtonWidth, exitButtonHeight),
+            new Rectangle((Singleton.SCREEN_WIDTH - exitButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - exitButtonHeight) * 3 / 4, exitButtonWidth, exitButtonHeight),
             Button,
             Button,
             "Exit Button",
@@ -57,6 +67,7 @@ public class MainMenu : Scene
         );
         _ExitButton.OnClick += ExitGameButton_OnClick;
 
+        _ui.AddHUDElement(_Title);
         _ui.AddHUDElement(_StartButton);
         _ui.AddHUDElement(_ExitButton);
     }
