@@ -14,10 +14,9 @@ namespace FinalComGame
         public float ExplosionDuration;
         public float DetonateDelayDuration;
         public float DetonateTimer;
-        public GrenadeProjectile(Texture2D texture, Texture2D explosionTexture, SoundEffect explosionSound) : base(texture)
+        public GrenadeProjectile(Texture2D texture) : base(texture)
         {
             CanCollideTile = true;
-            BaseExplosion = new Explosion(explosionTexture, explosionSound);
             DetonateTimer = 0f;
         }
 

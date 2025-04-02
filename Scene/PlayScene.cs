@@ -625,14 +625,18 @@ public class PlayScene : Scene
                 MPCost = 10,
                 ShootSound = FireBallShootingSound,
 
-                FireBall = new FireBall(projectileTexture, projectileTexture, FireBallExplosionSound)
+                FireBall = new FireBall(projectileTexture)
                 {
                     Name = "FireBall",
                     BaseDamageAmount = 30f,
                     Speed = 500f,
                     Radius = 60f,
                     ExplosionDuration = 0.5f,
-                    Viewport = ViewportManager.Get("FireBall")
+                    Viewport = ViewportManager.Get("FireBall"),
+                    BaseExplosion = new Explosion(projectileTexture, FireBallExplosionSound)
+                    {
+                        Viewport = ViewportManager.Get("Explosion")
+                    }
                 },
                 Viewport = ViewportManager.Get("Fire_Staff")
             });
@@ -664,7 +668,7 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Grenade"),
                 UseSound = PotionUseSound, // Temp
 
-                GrenadeProjectile = new GrenadeProjectile(projectileTexture, projectileTexture, FireBallExplosionSound)
+                GrenadeProjectile = new GrenadeProjectile(projectileTexture)
                 {
                     // Grenade properties
                     Name = "GrenadeProjectile",
@@ -673,8 +677,11 @@ public class PlayScene : Scene
                     Radius = 80f,
                     ExplosionDuration = 0.5f,
                     DetonateDelayDuration = 3.0f,
-
-                    Viewport = ViewportManager.Get("Grenade_Projectile")
+                    Viewport = ViewportManager.Get("Grenade_Projectile"),
+                    BaseExplosion = new Explosion(projectileTexture, FireBallExplosionSound)
+                    {
+                        Viewport = ViewportManager.Get("Explosion")
+                    }
                 }
             });
     }
@@ -729,26 +736,26 @@ public class PlayScene : Scene
         Texture2D slot = _content.Load<Texture2D>("ItemSlot");
 
         ItemSlot MeleeWeaponSlot = new ItemSlot(
-            0, // first slot
+            Inventory.MELEE_SLOT,
             new Rectangle(250, 30, 50, 50),
             slot,
             slot
         );
 
         ItemSlot RangeWeaponSlot = new ItemSlot(
-            1, // first slot
+            Inventory.RANGE_SLOT,
             new Rectangle(350, 30, 50, 50),
             slot,
             slot
         );
         ItemSlot ItemSlot1 = new ItemSlot(
-            2, // first slot
+            Inventory.ITEM_SLOT_1,
             new Rectangle(550, 30, 50, 50),
             slot,
             slot
         );
         ItemSlot ItemSlot2 = new ItemSlot(
-            3, //second slot
+            Inventory.ITEM_SLOT_2,
             new Rectangle(650, 30, 50, 50),
             slot,
             slot
