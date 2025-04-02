@@ -220,6 +220,12 @@ namespace FinalComGame
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
+            if (Health <= 0)
+            {
+                OnDead(gameObjects);
+                return;
+            }
+
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             HandleInput(deltaTime, gameObjects, tileMap);
@@ -1102,10 +1108,6 @@ namespace FinalComGame
 
             StartInvincibility();
             Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
-            if (Health <= 0)
-            {
-                OnDead();
-            }
         }
 
         public override void OnCollideNPC(Character npc, float damageAmount)
@@ -1115,7 +1117,7 @@ namespace FinalComGame
             base.OnCollideNPC(npc, damageAmount);
         }
 
-        public override void OnDead()
+        public override void OnDead(List<GameObject> gameObjects)
         {
             Life--;
             

@@ -110,10 +110,10 @@ namespace FinalComGame {
         {   
             base.OnCollideNPC(npc, damageAmount);
         }
-        public override void OnDead()
+        public override void OnDead(List<GameObject> gameObjects)
         {
-            DropItem();
-            base.OnDead();
+            DropItem(gameObjects);
+            base.OnDead(gameObjects);
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
@@ -125,7 +125,7 @@ namespace FinalComGame {
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;
-                OnDead();
+                OnDead(gameObjects);
             }
         }
 
@@ -219,9 +219,14 @@ namespace FinalComGame {
                 OnHit(damageAmount);
             }
         }
-        public virtual void DropItem()
+        public virtual void DropItem(List<GameObject> gameObjects)
         {
+            Dictionary<int, float> randomChance = new Dictionary<int, float>{
+                {0,1},
+            };
+            ItemManager.RandomSpawnItem(randomChance, Position, gameObjects);
         }
+
         public virtual void OnCollisionHorizon(){
 
         }
