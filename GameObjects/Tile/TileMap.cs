@@ -23,6 +23,7 @@ namespace FinalComGame
             this.numTilesPerRow = numTilesPerRow;
             Tiles = new Dictionary<Vector2, Tile>();
             _enemySpawnPoints = new Dictionary<Vector2, int>();
+            _itemSpawnPoints = new Dictionary<Vector2, int>();
 
             LoadMap(mapPath);
         }
@@ -65,6 +66,10 @@ namespace FinalComGame
                             {
                                 // Store enemy spawn point with its type
                                 _enemySpawnPoints.Add(new Vector2(x, y), tileID);
+                            }
+                            else if(type == TileType.ItemSpawn)
+                            {
+                                _itemSpawnPoints.Add(new Vector2(x, y), tileID);
                             }
 
                             Tile tile = new Tile(textureAtlas)
@@ -125,6 +130,8 @@ namespace FinalComGame
                 39 => TileType.AmbushAreaTopLeft,
                 38 => TileType.AmbushAreaBottomRight,
                 97 or 98 or 99 or 117 or 118 or 119 or 137 or 138 or 139 or 199 => TileType.EnemySpawn,
+                1000 or 1001 or 1002 or 1003 or 1004 or 1005 or 1006 or 1007 or 1008 
+                or 1009 or 1010 or 1011 => TileType.ItemSpawn, //TODO :put real item TileID
 
                 _ => TileType.None
             };

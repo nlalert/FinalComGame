@@ -6,14 +6,14 @@ namespace FinalComGame;
 
 public class ItemManager
 {
-    private static Dictionary<string, Item> _itemList = new Dictionary<string, Item>();
+    private static Dictionary<int, Item> _itemPrefabs = new Dictionary<int, Item>();
 
-    public static void AddGameItem(string itemName, Item item){
-        _itemList.TryAdd(itemName, item);
+    public static void AddGameItem(int itemID, Item item){
+        _itemPrefabs.TryAdd(itemID, item);
     }
 
-    public static void SpawnItem(string itemName, Vector2 spawnPosition, List<GameObject> gameObjects){
-        Item newItem = _itemList[itemName].Clone() as Item;
+    public static void SpawnItem(int itemID, Vector2 spawnPosition, List<GameObject> gameObjects){
+        Item newItem = _itemPrefabs[itemID].Clone() as Item;
         newItem.Position = spawnPosition;
         newItem.OnSpawn();
         gameObjects.Add(newItem);

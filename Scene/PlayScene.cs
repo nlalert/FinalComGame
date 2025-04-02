@@ -258,6 +258,7 @@ public class PlayScene : Scene
         SetUpParallaxBackground();
         InitializeAmbushAreas();
         // SpawnEnemies();
+        SpawnItems();
         AddItems();
         SetupHUD();
         
@@ -584,7 +585,8 @@ public class PlayScene : Scene
         SoundEffect FireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
         SoundEffect FireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
 
-        ItemManager.AddGameItem("Potion_Health",
+        //TODO : Change these to real ITEM ID
+        ItemManager.AddGameItem(1000,
             new Potion(ItemTexture, ItemType.Consumable){
                 Name =  "HealthPotion",
                 Description = "Test HealthPotion Description",
@@ -592,7 +594,7 @@ public class PlayScene : Scene
                 UseSound = PotionUseSound
             });
 
-        ItemManager.AddGameItem("Potion_Speed",
+        ItemManager.AddGameItem(1001,
             new SpeedPotion(ItemTexture, ItemType.Consumable){
                 Name =  "SpeedPotion",
                 Description = "Test SpeedPotion Description",
@@ -600,7 +602,7 @@ public class PlayScene : Scene
                 UseSound = PotionUseSound
             });
 
-        ItemManager.AddGameItem("Potion_Jump",
+        ItemManager.AddGameItem(1002,
             new JumpPotion(ItemTexture, ItemType.Consumable){
                 Name =  "jumppotion",
                 Description = "Test JumpPotion Description",
@@ -608,7 +610,7 @@ public class PlayScene : Scene
                 UseSound = PotionUseSound
             });
 
-        ItemManager.AddGameItem("Barrier",
+        ItemManager.AddGameItem(1003,
             new Barrier(ItemTexture, ItemType.Consumable){
                 Name =  "barrier",
                 Description = "Test Barrier Description",
@@ -616,7 +618,7 @@ public class PlayScene : Scene
                 UseSound = PotionUseSound // Temp
             });
 
-        ItemManager.AddGameItem("LifeUp",
+        ItemManager.AddGameItem(1004,
             new LifeUp(ItemTexture, ItemType.Consumable){
                 Name =  "1Up",
                 Description = "Test LifeUp Description",
@@ -624,21 +626,21 @@ public class PlayScene : Scene
                 UseSound = PotionUseSound // Temp
             });
 
-        ItemManager.AddGameItem("Speed_Boots",
+        ItemManager.AddGameItem(1005,
             new SpeedBoots(ItemTexture, ItemType.Accessory){
                 Name =  "SpeedBoots",
                 Description = "Test SpeedBoots Description",
                 Viewport = ViewportManager.Get("Speed_Boots")
             });
 
-        ItemManager.AddGameItem("CursedGauntlet",
+        ItemManager.AddGameItem(1006,
             new CursedGauntlet(ItemTexture, ItemType.Accessory){
                 Name =  "CursedGauntlet",
                 Description = "Test CursedGauntlet Description",
                 Viewport = ViewportManager.Get("CursedGauntlet")
             });
 
-        ItemManager.AddGameItem("Sword",
+        ItemManager.AddGameItem(1007,
             new Sword(ItemTexture, ItemType.MeleeWeapon){
                 Name =  "Sword",
                 Description = "Test Sword Description",
@@ -646,7 +648,7 @@ public class PlayScene : Scene
                 SlashSound = SwordSlashSound,
             });
 
-        ItemManager.AddGameItem("Gun",
+        ItemManager.AddGameItem(1008,
             new Gun(ItemTexture, ItemType.RangeWeapon){
                 Name =  "Gun",
                 Description = "Test Gun Description",
@@ -654,7 +656,7 @@ public class PlayScene : Scene
                 ShootSound = GunshotSound,
             });
 
-        ItemManager.AddGameItem("Fire_Staff",
+        ItemManager.AddGameItem(1009,
             new Staff(ItemTexture, ItemType.RangeWeapon){
                 Name =  "Staff",
                 Description = "Test Staff Description",
@@ -673,7 +675,7 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Fire_Staff")
             });
 
-        ItemManager.AddGameItem("Soul_Staff",
+        ItemManager.AddGameItem(1010,
             new SoulStaff(ItemTexture,ItemType.Consumable){
                 Name =  "Staff",
                 Description = "Summon Your best Minion!",
@@ -693,7 +695,7 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Soul_Staff")
             });
 
-        ItemManager.AddGameItem("Grenade",
+        ItemManager.AddGameItem(1011,
             new Grenade(ItemTexture, ItemType.Consumable){
                 Name =  "Grenade",
                 Description = "Test GrenadeTemp Description",
@@ -734,20 +736,28 @@ public class PlayScene : Scene
         }
     }
 
+    private void SpawnItems()
+    {
+        foreach (var itemSpawnPoint in _collisionTileMap.GetItemSpawnPoints())
+        {
+            ItemManager.SpawnItem(itemSpawnPoint.Value, TileMap.GetTileWorldPositionAt(itemSpawnPoint.Key), _gameObjects);
+        }
+    }
+
     private void AddItems()
     {
-        ItemManager.SpawnItem("Potion_Health", TileMap.GetTileWorldPositionAt(12, 90), _gameObjects);
-        ItemManager.SpawnItem("Potion_Speed", TileMap.GetTileWorldPositionAt(31, 90), _gameObjects);
-        ItemManager.SpawnItem("Potion_Jump", TileMap.GetTileWorldPositionAt(35, 90), _gameObjects);
-        ItemManager.SpawnItem("Barrier", TileMap.GetTileWorldPositionAt(20, 90), _gameObjects);
-        ItemManager.SpawnItem("LifeUp", TileMap.GetTileWorldPositionAt(16, 90), _gameObjects);
-        ItemManager.SpawnItem("Speed_Boots", TileMap.GetTileWorldPositionAt(24, 90), _gameObjects);
-        ItemManager.SpawnItem("CursedGauntlet", TileMap.GetTileWorldPositionAt(26, 80), _gameObjects);
-        ItemManager.SpawnItem("Sword", TileMap.GetTileWorldPositionAt(4, 90), _gameObjects);
-        ItemManager.SpawnItem("Gun", TileMap.GetTileWorldPositionAt(8, 90), _gameObjects);
-        ItemManager.SpawnItem("Fire_Staff", TileMap.GetTileWorldPositionAt(40, 90), _gameObjects);
-        ItemManager.SpawnItem("Soul_Staff", TileMap.GetTileWorldPositionAt(17, 90), _gameObjects);
-        ItemManager.SpawnItem("Potion_Jump", TileMap.GetTileWorldPositionAt(1, 90), _gameObjects);
+        ItemManager.SpawnItem(1000, TileMap.GetTileWorldPositionAt(12, 90), _gameObjects);
+        ItemManager.SpawnItem(1001, TileMap.GetTileWorldPositionAt(31, 90), _gameObjects);
+        ItemManager.SpawnItem(1002, TileMap.GetTileWorldPositionAt(35, 90), _gameObjects);
+        ItemManager.SpawnItem(1003, TileMap.GetTileWorldPositionAt(20, 90), _gameObjects);
+        ItemManager.SpawnItem(1004, TileMap.GetTileWorldPositionAt(16, 90), _gameObjects);
+        ItemManager.SpawnItem(1005, TileMap.GetTileWorldPositionAt(24, 90), _gameObjects);
+        ItemManager.SpawnItem(1006, TileMap.GetTileWorldPositionAt(26, 80), _gameObjects);
+        ItemManager.SpawnItem(1007, TileMap.GetTileWorldPositionAt(4, 90), _gameObjects);
+        ItemManager.SpawnItem(1008, TileMap.GetTileWorldPositionAt(8, 90), _gameObjects);
+        ItemManager.SpawnItem(1009, TileMap.GetTileWorldPositionAt(40, 90), _gameObjects);
+        ItemManager.SpawnItem(1010, TileMap.GetTileWorldPositionAt(17, 90), _gameObjects);
+        ItemManager.SpawnItem(1011, TileMap.GetTileWorldPositionAt(1, 90), _gameObjects);
     }
 
     protected override void SetupHUD()
