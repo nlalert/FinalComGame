@@ -104,15 +104,15 @@ namespace FinalComGame
             Console.WriteLine("Skeleton rises from the ground!");
         }
 
-        public override void OnDead()
+        public override void OnDead(List<GameObject> gameObjects)
         {
             Console.WriteLine("Skeleton slowly crumbles to dust...");
-            base.OnDead();
+            base.OnDead(gameObjects);
         }
 
-        public override void DropItem()
+        public override void DropItem(List<GameObject> gameObjects)
         {
-            base.DropItem();
+            base.DropItem(gameObjects);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -20,6 +20,8 @@ public class GameManager : Game
     private MainMenu _mainMenu;
     private PauseMenu _pauseMenu;
     private Settings _settings;
+    private GameOverScene _gameOverScene;
+    private GameClearScene _gameClearScene;
 
     public GameManager()
     {
@@ -55,6 +57,14 @@ public class GameManager : Game
         _settings = new Settings();
         _settings.Initialize(GraphicsDevice, _graphics, Content);
         _settings.LoadContent(_spriteBatch);
+
+        _gameOverScene = new GameOverScene();
+        _gameOverScene.Initialize(GraphicsDevice, _graphics, Content);
+        _gameOverScene.LoadContent(_spriteBatch);
+
+        _gameClearScene = new GameClearScene();
+        _gameClearScene.Initialize(GraphicsDevice, _graphics, Content);
+        _gameClearScene.LoadContent(_spriteBatch);
     }
 
     protected override void Update(GameTime gameTime)
@@ -64,15 +74,19 @@ public class GameManager : Game
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.MainMenu:
-                // _mainScene.Update(gameTime);
                 _mainMenu.Update(gameTime);
                 break;
             case Singleton.GameState.Pause:
-                // _playScene.Update(gameTime);
                 _pauseMenu.Update(gameTime);
                 break;
             case Singleton.GameState.Settings:
                 _settings.Update(gameTime);
+                break;
+            case Singleton.GameState.GameOver:
+                _gameOverScene.Update(gameTime);
+                break;
+            case Singleton.GameState.GameWon:
+                _gameClearScene.Update(gameTime);
                 break;
             case Singleton.GameState.Exit:
                 Exit();
@@ -106,6 +120,12 @@ public class GameManager : Game
             case Singleton.GameState.Settings:
                 _settings.Draw(gameTime);
                 break;
+            case Singleton.GameState.GameOver:
+                _gameOverScene.Draw(gameTime);
+                break;
+            case Singleton.GameState.GameWon:
+                _gameClearScene.Draw(gameTime);
+                break;
             default:
                 _playScene.Draw(gameTime);
                 break;
@@ -113,6 +133,7 @@ public class GameManager : Game
                 
         Singleton.Instance.CurrentUI.DrawWorldSpaceUI(_spriteBatch);
         Singleton.Instance.CurrentUI.DrawHUD(_spriteBatch);
+        Singleton.Instance.CurrentUI.DrawPrompts(_spriteBatch);
         base.Draw(gameTime);
     }
 }

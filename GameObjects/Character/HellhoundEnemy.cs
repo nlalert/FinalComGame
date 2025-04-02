@@ -129,10 +129,10 @@ namespace FinalComGame
             //Console.WriteLine("Hellhound emerges from the shadows!");
         }
 
-        public override void OnDead()
+        public override void OnDead(List<GameObject> gameObjects)
         {
             //Console.WriteLine("Hellhound fades into darkness...");
-            base.OnDead();
+            base.OnDead(gameObjects);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {

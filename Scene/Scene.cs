@@ -90,4 +90,33 @@ public class Scene
         }
     }
 
+    protected virtual void ResumeButton_OnClick(object sender, EventArgs e)
+    {
+        Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
+    }
+
+    protected virtual void StartGameButton_OnClick(object sender, EventArgs e)
+    {
+        Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
+    }
+
+    protected virtual void RestartButton_OnClick(object sender, EventArgs e)
+    {
+        Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
+    }
+
+    protected virtual void SettingButton_OnClick(object sender, EventArgs e)
+    {
+        Singleton.Instance.CurrentGameState = Singleton.GameState.Settings;
+    }
+
+    protected virtual void MainMenuButton_OnClick(object sender, EventArgs e)
+    {
+        Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;
+    }
+
+    protected virtual void ExitGameButton_OnClick(object sender, EventArgs e)
+    {
+        Singleton.Instance.CurrentGameState = Singleton.GameState.Exit;
+    }
 }

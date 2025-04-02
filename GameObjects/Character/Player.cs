@@ -220,6 +220,12 @@ namespace FinalComGame
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
+            if (Health <= 0)
+            {
+                OnDead(gameObjects);
+                return;
+            }
+
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             HandleInput(deltaTime, gameObjects, tileMap);
@@ -652,8 +658,8 @@ namespace FinalComGame
                 {
                     _isClimbing = false;
                     if (_isCrouching) {
-                        Position.Y -= 16;
-                        Viewport.Height = 32;
+                        Position.Y -= Singleton.TILE_SIZE;
+                        Viewport.Height = Singleton.TILE_SIZE * 2;
                         WalkSpeed = 200;
                         _isCrouching = false;
                     }
@@ -680,8 +686,8 @@ namespace FinalComGame
 
             if (Singleton.Instance.IsKeyPressed(Crouch) && !_isJumping && !_isClimbing && Velocity.Y == 0 && !_isDashing)
             {
-                if (!_isCrouching) Position.Y += 16;
-                Viewport.Height = 16;
+                if (!_isCrouching) Position.Y += Singleton.TILE_SIZE;
+                Viewport.Height = Singleton.TILE_SIZE;
                 WalkSpeed = CrouchSpeed;
                 _isCrouching = true;
             }
@@ -690,8 +696,8 @@ namespace FinalComGame
                 // Only stand up if there's enough room
                 if (CanStandUp(tileMap))
                 {
-                    Position.Y -= 16;
-                    Viewport.Height = 32;
+                    Position.Y -= Singleton.TILE_SIZE;
+                    Viewport.Height = Singleton.TILE_SIZE * 2;
                     WalkSpeed = 200;
                     _isCrouching = false;
                 }
@@ -767,9 +773,6 @@ namespace FinalComGame
 
             Console.WriteLine("shooting grapple");
             Vector2 AimDirection = new Vector2(5f* this.Direction , -5f );
-            //it actully dont need hookHeadTexture but I lazy to remove so just leave it here so it not bugged
-            // i try...
-            // - Feen
             _grapplingHook = new GrapplingHook(_hookHeadTexture){
                 Name = "GrapplingHook",
                 BaseDamageAmount = 0f,
@@ -777,7 +780,7 @@ namespace FinalComGame
                 Viewport = ViewportManager.Get("Grappling_Hook"),
                 RopeTexture = _ropeTexture,
             }; // Load a grappling hook texture
-            _grapplingHook.Shoot(Position, AimDirection); // Aim towards mouse or direction
+            _grapplingHook.Shoot(Position, AimDirection);
             gameObjects.Add(_grapplingHook);
         }
 
@@ -887,13 +890,6 @@ namespace FinalComGame
                 _isGliding = false;
                 return;
             }
-            
-            // // Generate particles if gliding
-            // if (isGliding)
-            // {
-            //     // You could add special particles here for gliding effect
-            //     _particle.Update(Position);
-            // }
         }
 
         private void UpdateCoyoteTime(float deltaTime)
@@ -981,7 +977,7 @@ namespace FinalComGame
                 return;
             
             // Get position offset based on player state
-            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 6) : new Vector2(0, 16); 
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Singleton.TILE_SIZE, 6) : new Vector2(Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
             
             // Create and configure the projectile using the weapon
@@ -1054,7 +1050,7 @@ namespace FinalComGame
             PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
             newBullet.DamageAmount *= chargePower; // Increase damage
 
-            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 6) : new Vector2(0, 16); 
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Singleton.TILE_SIZE, 6) : new Vector2(Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
 
             newBullet.Shoot(bulletPosition, direction);
@@ -1066,14 +1062,6 @@ namespace FinalComGame
                 newBullet.Viewport = ViewportManager.Get("Charge_Bullet_0");
             
             gameObjects.Add(newBullet);
-            
-            // // Scale bullet size with charge (optional)
-            // float sizeMultiplier = 1.0f + chargeRatio;
-            // newBullet.Rectangle.Width = (int)(newBullet.Rectangle.Width * sizeMultiplier);
-            // newBullet.Rectangle.Height = (int)(newBullet.Rectangle.Height * sizeMultiplier);
-            
-            // Change color based on charge (optional)
-            // newBullet.Color = chargeColor;
 
             BulletShotSound.Play();
             
@@ -1120,10 +1108,6 @@ namespace FinalComGame
 
             StartInvincibility(false);
             Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
-            if (Health <= 0)
-            {
-                OnDead();
-            }
         }
 
         public override void OnCollideNPC(Character npc, float damageAmount)
@@ -1133,7 +1117,7 @@ namespace FinalComGame
             base.OnCollideNPC(npc, damageAmount);
         }
 
-        public override void OnDead()
+        public override void OnDead(List<GameObject> gameObjects)
         {
             Life--;
             
@@ -1160,7 +1144,7 @@ namespace FinalComGame
             base.DrawDebug(spriteBatch);
         }
 
-                // New method to apply gravity depending on glide state
+        // New method to apply gravity depending on glide state
         protected override void ApplyGravity(float deltaTime)
         {
             if (_isGliding)
@@ -1276,9 +1260,9 @@ namespace FinalComGame
             // Create a temporary hitbox to check if standing would cause collision
             Rectangle standingHitbox = new Rectangle(
                 (int)Position.X,
-                (int)Position.Y - 16, // Where the head would be if standing
+                (int)Position.Y - Singleton.TILE_SIZE, // Where the head would be if standing
                 Viewport.Width,
-                32); // Full height when standing
+                Singleton.TILE_SIZE * 2); // Full height when standing
                 
             // Check for collisions with solid tiles
             for (int i = -1; i <= 1; i++)
@@ -1287,7 +1271,7 @@ namespace FinalComGame
                 {
                     Vector2 tilePos = new Vector2(
                         Position.X + i * Singleton.TILE_SIZE,
-                        Position.Y - 16 + j * Singleton.TILE_SIZE);
+                        Position.Y - Singleton.TILE_SIZE + j * Singleton.TILE_SIZE);
                         
                     Tile tile = tileMap.GetTileAtWorldPostion(tilePos);
                     if (tile != null && tile.IsSolid && tile.Type != TileType.Platform)

@@ -12,7 +12,6 @@ namespace FinalComGame {
         public enum EnemyState
         {
             Idle,
-            Patrol,
             Chase,
             Attack,
             Cooldown,
@@ -25,11 +24,9 @@ namespace FinalComGame {
         }
 
         // Enemy Properties
-        public Rectangle Hitbox { get; protected set; }
         public EnemyState CurrentState { get; protected set; }
         
         // Movement Properties
-        protected float ChaseSpeed;
         protected float _patrolBoundaryLeft;
         protected float _patrolBoundaryRight;
 
@@ -41,22 +38,15 @@ namespace FinalComGame {
         public bool CanCollideTile;
         public bool IsIgnorePlatform = false;
 
-        public bool IsDead() => CurrentState == EnemyState.Dead;
-        
+        public Dictionary<int, float> LootTableChance;
+
         public BaseEnemy(Texture2D texture) : base(texture){
-            _idleAnimation = new Animation(texture, 16, 32, new Vector2(1,1), 24); // 24 fps\
+            _idleAnimation = new Animation(texture, Singleton.TILE_SIZE, Singleton.TILE_SIZE * 2, new Vector2(1,1), 24); // 24 fps\
             Animation = _idleAnimation;
             _invincibilityDuration = 0.05f;
         }
         
-        // Spawn method with optional spawn effects
-        public virtual void Spawn(float x, float y, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
-        {
-            Vector2 position = new Vector2(x, y);
-            Spawn(position, gameObjects, spawnedEnemies);
-        }
-
-        public virtual BaseEnemy Spawn(Vector2 position, List<GameObject> gameObjects)
+        public BaseEnemy Spawn(Vector2 position, List<GameObject> gameObjects)
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = position;
@@ -68,12 +58,6 @@ namespace FinalComGame {
             newEnemy.OnSpawn();
 
             return newEnemy;
-        }
-
-        public virtual void Spawn(Vector2 position, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
-        {
-            BaseEnemy newEnemy = Spawn(position, gameObjects);
-            spawnedEnemies.Add(newEnemy);
         }
 
         public virtual void AddAnimation(){
@@ -111,10 +95,10 @@ namespace FinalComGame {
         {   
             base.OnCollideNPC(npc, damageAmount);
         }
-        public override void OnDead()
+        public override void OnDead(List<GameObject> gameObjects)
         {
-            DropItem();
-            base.OnDead();
+            DropItem(gameObjects);
+            base.OnDead(gameObjects);
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
@@ -126,7 +110,7 @@ namespace FinalComGame {
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;
-                OnDead();
+                OnDead(gameObjects);
             }
         }
 
@@ -220,9 +204,11 @@ namespace FinalComGame {
                 OnHit(damageAmount, isHeavyAttack);
             }
         }
-        public virtual void DropItem()
+        public virtual void DropItem(List<GameObject> gameObjects)
         {
+            ItemManager.RandomSpawnItem(LootTableChance, Position, gameObjects);
         }
+
         public virtual void OnCollisionHorizon(){
 
         }
@@ -240,7 +226,7 @@ namespace FinalComGame {
             Vector2 enemyPosition = Position;
             Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
             
-            float step = 16f; // Tile size or step size for checking
+            float step = Singleton.TILE_SIZE; // Tile size or step size for checking
             Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);
             Vector2 checkPosition = enemyPosition;
 

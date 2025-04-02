@@ -132,7 +132,7 @@ namespace FinalComGame {
         /// <summary>
         /// Do anything specail when dead
         /// </summary>
-        public virtual void OnDead()
+        public virtual void OnDead(List<GameObject> gameObjects)
         {
             IsActive = false;
         }

@@ -12,4 +12,5 @@ public enum TileType
     AmbushAreaTopLeft,
     AmbushAreaBottomRight,
     EnemySpawn,
+    ItemSpawn,
 }

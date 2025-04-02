@@ -57,7 +57,7 @@ public class Settings : Scene
         int SliderWidth = Singleton.SCREEN_WIDTH / 2;
         int SliderHeight = 30;
         Texture2D SliderBar = _content.Load<Texture2D>("ItemSlot");//TEMP
-        Texture2D SliderHandle =   _content.Load<Texture2D>("sliderHandle"); // 32x32
+        Texture2D SliderHandle =   _content.Load<Texture2D>("sliderHandle");
         _musicVolumeSlider = new SlideBarUI(
             new Rectangle((Singleton.SCREEN_WIDTH - SliderWidth) / 2 , (Singleton.SCREEN_HEIGHT - SliderHeight) * 2 / 7, SliderWidth, SliderHeight),
             "Music Volume",
@@ -87,7 +87,7 @@ public class Settings : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
             Button,
             Button,
-            "_backButton Button",
+            "Back to Pause Menu",
             Color.Wheat
         );
         _backButton.OnClick += BackButton_OnClick;

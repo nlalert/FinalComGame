@@ -14,8 +14,8 @@ namespace FinalComGame
 
         public SoundEffect SlashSound;
 
-        public Sword(Texture2D texture, ItemType type, Vector2 Position, float attackDamage = 30f, int attackWidth = 32, int attackHeight = 32)
-            : base(texture, Position, type)
+        public Sword(Texture2D texture, ItemType type, float attackDamage = 30f, int attackWidth = Singleton.TILE_SIZE * 2, int attackHeight = Singleton.TILE_SIZE * 2)
+            : base(texture,  type)
         {
             AttackDamage = attackDamage;
             _attackWidth = attackWidth;

@@ -8,8 +8,9 @@ namespace FinalComGame
 {
     public class TileMap
     {
-        public Dictionary<Vector2, Tile> tiles; //Grid Position, tile
-        public Dictionary<Vector2, int> enemySpawnPoints; // Grid position, enemy type ID
+        public Dictionary<Vector2, Tile> Tiles; //Grid Position, tile
+        private Dictionary<Vector2, int> _enemySpawnPoints; // Grid position, enemy type ID
+        private Dictionary<Vector2, int> _itemSpawnPoints; // Grid position, enemy type ID
 
         private Texture2D textureAtlas;
         private int numTilesPerRow;
@@ -20,15 +21,16 @@ namespace FinalComGame
         {
             this.textureAtlas = textureAtlas;
             this.numTilesPerRow = numTilesPerRow;
-            tiles = new Dictionary<Vector2, Tile>();
-            enemySpawnPoints = new Dictionary<Vector2, int>();
+            Tiles = new Dictionary<Vector2, Tile>();
+            _enemySpawnPoints = new Dictionary<Vector2, int>();
+            _itemSpawnPoints = new Dictionary<Vector2, int>();
 
             LoadMap(mapPath);
         }
 
         public void Update(GameTime gameTime, List<GameObject> gameObjects)
         {
-            foreach (var tile in tiles)
+            foreach (var tile in Tiles)
             {
                 tile.Value.Update(gameTime, gameObjects, this);
             }
@@ -37,7 +39,7 @@ namespace FinalComGame
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var tile in tiles)
+            foreach (var tile in Tiles)
             {
                 tile.Value.Draw(spriteBatch);
             }
@@ -63,7 +65,11 @@ namespace FinalComGame
                             if(type == TileType.EnemySpawn)
                             {
                                 // Store enemy spawn point with its type
-                                enemySpawnPoints.Add(new Vector2(x, y), tileID);
+                                _enemySpawnPoints.Add(new Vector2(x, y), tileID);
+                            }
+                            else if(type == TileType.ItemSpawn)
+                            {
+                                _itemSpawnPoints.Add(new Vector2(x, y), tileID);
                             }
 
                             Tile tile = new Tile(textureAtlas)
@@ -74,7 +80,7 @@ namespace FinalComGame
                                 Viewport = GetTileViewport(tileID),
                                 IsSolid = GetTileCollisionType(tileID)
                             };
-                            tiles.Add(new Vector2(x, y), tile);
+                            Tiles.Add(new Vector2(x, y), tile);
                         }
                     }
                     y++;
@@ -124,6 +130,8 @@ namespace FinalComGame
                 39 => TileType.AmbushAreaTopLeft,
                 38 => TileType.AmbushAreaBottomRight,
                 97 or 98 or 99 or 117 or 118 or 119 or 137 or 138 or 139 or 199 => TileType.EnemySpawn,
+                1000 or 1001 or 1002 or 1003 or 1004 or 1005 or 1006 or 1007 or 1008 
+                or 1009 or 1010 or 1011 => TileType.ItemSpawn, //TODO :put real item TileID
 
                 _ => TileType.None
             };
@@ -153,7 +161,7 @@ namespace FinalComGame
 
         public bool IsObstacle(Vector2 position)
         {
-            foreach (var tile in tiles)
+            foreach (var tile in Tiles)
             {
                 if (tile.Value.Type == TileType.Barrier && tile.Value.Rectangle.Contains(position))
                 {
@@ -171,7 +179,7 @@ namespace FinalComGame
 
         public Tile GetTileAtGridPosition(Vector2 tileGridPosition)
         {
-            if(tiles.TryGetValue(tileGridPosition, out Tile value))
+            if(Tiles.TryGetValue(tileGridPosition, out Tile value))
                 return value;
                 
             return null;
@@ -187,13 +195,17 @@ namespace FinalComGame
             return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
         }
 
-        // Fixed version of your GetEnemyLocation method
         public Dictionary<Vector2, int> GetEnemySpawnPoints()
         {
-            return enemySpawnPoints;
+            return _enemySpawnPoints;
         }
 
-        public List<AmbushArea> GetAmbushAreas(Dictionary<int, BaseEnemy> enemyPrefabs)
+        public Dictionary<Vector2, int> GetItemSpawnPoints()
+        {
+            return _itemSpawnPoints;
+        }
+
+        public List<AmbushArea> GetAmbushAreas()
         {
             var ambushAreas = new List<AmbushArea>();
             var processedTopLefts = new HashSet<Vector2>(); // To avoid duplicate processing
@@ -202,7 +214,7 @@ namespace FinalComGame
             Dictionary<Vector2, Tile> topLeftTiles = new Dictionary<Vector2, Tile>();
             Dictionary<Vector2, Tile> bottomRightTiles = new Dictionary<Vector2, Tile>();
             
-            foreach (var tile in tiles)
+            foreach (var tile in Tiles)
             {
                 if (tile.Value.Type == TileType.AmbushAreaTopLeft)
                 {
@@ -250,7 +262,7 @@ namespace FinalComGame
                     continue;
                 
                 Rectangle ambushZone = CreateAmbushAreaRectangle(topLeftPos, bestBottomRight);
-                AmbushArea ambushArea = new AmbushArea(ambushZone, this, enemyPrefabs);
+                AmbushArea ambushArea = new AmbushArea(ambushZone, this);
                 ambushAreas.Add(ambushArea);
                 
                 // Mark these tiles as processed to avoid duplicate areas
