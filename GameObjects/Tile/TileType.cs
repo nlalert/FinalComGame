@@ -9,6 +9,7 @@ public enum TileType
     Ladder_Platform,
     Ladder_Top,
     Finish_Line,
+    Player_SpawnPoint,
     AmbushBarrier,
     AmbushAreaTopLeft,
     AmbushAreaBottomRight,
