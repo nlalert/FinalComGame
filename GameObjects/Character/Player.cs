@@ -594,7 +594,16 @@ namespace FinalComGame
                 }
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Attack) && !_isClimbing){
+            if (Singleton.Instance.IsKeyJustPressed(Attack) && !_isClimbing && CanStandUp(tileMap)){
+
+                if (_isCrouching) 
+                {
+                    Position.Y -= Singleton.TILE_SIZE;
+                    Viewport.Height = Singleton.TILE_SIZE * 2;
+                    WalkSpeed = 200;
+                    _isCrouching = false;
+                }
+
                 _isCharging = false;
                 _chargeTime = 0;
                 StartAttack();
@@ -961,6 +970,11 @@ namespace FinalComGame
                                 tile.IsSolid = false;
                             else
                                 tile.IsSolid = true;
+                        }
+
+                        if (tile.Type == TileType.Finish_Line)
+                        {
+                            if (IsTouching(tile)) Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
                         }
 
                     }

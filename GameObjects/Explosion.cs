@@ -101,7 +101,7 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            float scale = (Radius * 2) / _texture.Width;
+            float scale = Radius * 2 / _texture.Width;
             Vector2 origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
             Vector2 center = new Vector2(Position.X + Viewport.Width / 2, Position.Y + Viewport.Height / 2);
             

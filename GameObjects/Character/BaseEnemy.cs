@@ -116,8 +116,8 @@ namespace FinalComGame {
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Color color = IsInvincible() ? Color.HotPink : Color.White;
-            spriteBatch.Draw(_texture, Position, Viewport, color);
+            Color color = IsInvincible() ? Color.Red : Color.White;
+            //spriteBatch.Draw(_texture, Position, Viewport, color);
 
             if (Animation._animationName.Count > 0){
                 base.Draw(spriteBatch);

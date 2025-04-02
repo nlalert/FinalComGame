@@ -13,7 +13,9 @@ public class ViewportManager
         {"Charge_Bullet_0", new Rectangle(1, 5, 12, 5)},
         {"Charge_Bullet_1", new Rectangle(17, 4, 12, 7)},
         {"Charge_Bullet_2", new Rectangle(32, 3, 13, 9)},
+
         {"Player", new Rectangle(0, 0, 16, 32)},
+
         {"Slime", new Rectangle(0, 0, 16, 16)},
         {"Hellhound", new Rectangle(0, 0, 32, 32)},
         {"Skeleton", new Rectangle(0, 0, 16, 32)},
@@ -22,10 +24,12 @@ public class ViewportManager
         {"TowerEnemy_Bullet", new Rectangle(16, 16, 16, 16)},
         {"Demon", new Rectangle(0, 0, 16, 32)},
         {"Demon_Bullet", new Rectangle(4, 19, 8, 9)},
+
         {"GiantSlime", new Rectangle(0, 0, 64, 48)},
         {"Cerberus", new Rectangle(0, 0, 64, 48)},
-        {"Rhulk", new Rectangle(0, 0, 22, 64)},
+        {"Rhulk", new Rectangle(0, 0, 32, 64)},
         {"Rhulk_Laser", new Rectangle(0, 0, 10, 200)},
+        
         {"Potion_Health", new Rectangle(64, 64, 32, 32)},
         {"Potion_Speed", new Rectangle(0, 96, 32, 32)},
         {"Potion_Jump", new Rectangle(32, 64, 32, 32)},

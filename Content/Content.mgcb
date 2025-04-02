@@ -265,7 +265,7 @@
 /processorParam:TextureFormat=Color
 /build:EnemyRed.png
 
-#begin EnemyRhulk.png
+#begin Rhulk.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -275,7 +275,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:EnemyRhulk.png
+/build:Rhulk.png
 
 #begin EnemySlime.png
 /importer:TextureImporter
@@ -667,6 +667,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Projectile.png
+
+#begin Queue.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Queue.png
 
 #begin Rope.png
 /importer:TextureImporter

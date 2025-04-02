@@ -50,7 +50,8 @@ namespace FinalComGame {
         {
             SpriteEffects spriteEffect = Direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            Color color = IsInvincible() ? Color.HotPink : Color.White;
+            Color color = IsInvincible() ? Color.Red : Color.White;
+            
             spriteBatch.Draw(
                 Animation.GetTexture(),
                 GetDrawingPosition(),

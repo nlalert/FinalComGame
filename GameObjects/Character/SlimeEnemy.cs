@@ -158,6 +158,7 @@ namespace FinalComGame
 
             DrawDebug(spriteBatch);
         }
+        
         protected override void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 20);

@@ -72,7 +72,7 @@ namespace FinalComGame
             newExplosion.Position = Position;
             newExplosion.Radius = Radius;
             newExplosion.Duration = ExplosionDuration;
-            newExplosion.Damage = DamageAmount * 0.8f;
+            newExplosion.Damage = BaseDamageAmount * 0.8f;
             newExplosion.TriggerExplosion();
             gameObjects.Add(newExplosion);
         }

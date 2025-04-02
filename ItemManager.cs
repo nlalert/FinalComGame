@@ -9,18 +9,18 @@ public enum ItemID
 {        
     //TODO : Change Item ID to  real id from tilemap
     None = 0,
-    HealthPotion = 1000,
-    SpeedPotion = 1001,
-    JumpPotion = 1002,
-    Barrier = 1003,
-    LifeUp = 1004,
-    SpeedBoots = 1005,
-    CursedGauntlet = 1006,
-    Sword = 1007,
-    Gun = 1008,
-    Staff = 1009,
-    SoulStaff = 1010,
-    Grenade = 1011
+    HealthPotion = 14,
+    SpeedPotion = 35,
+    JumpPotion = 34,
+    Barrier = 114,
+    LifeUp = 15,
+    SpeedBoots = 94,
+    CursedGauntlet = 95,
+    Sword = 75,
+    Gun = 55,
+    Staff = 74,
+    SoulStaff = 54,
+    Grenade = 115
 }
 
 public class ItemManager
@@ -36,7 +36,7 @@ public class ItemManager
             return;
             
         Item newItem = _itemPrefabs[itemID].Clone() as Item;
-        newItem.Position = spawnPosition;
+        newItem.Position = spawnPosition - new Vector2(Singleton.TILE_SIZE/2,0);
         newItem.OnSpawn();
         gameObjects.Add(newItem);
     }
