@@ -18,4 +18,42 @@ public class ItemManager
         newItem.OnSpawn();
         gameObjects.Add(newItem);
     }
+
+    public static void RandomSpawnItem(Dictionary<int, float> itemDropChances, Vector2 spawnPosition, List<GameObject> gameObjects)
+    {
+        // Check if we have any items to spawn
+        if (itemDropChances == null || itemDropChances.Count == 0)
+            return;
+
+        // Calculate total drop chance
+        float totalChance = 0f;
+        foreach (var chance in itemDropChances.Values)
+        {
+            totalChance += chance;
+        }
+
+        float randomValue = (float)(Singleton.Instance.Random.NextDouble() * totalChance);
+
+        // Determine which item to drop based on the random value
+        float currentThreshold = 0f;
+        int selectedItemID = -1;
+
+        foreach (var kvp in itemDropChances)
+        {
+            currentThreshold += kvp.Value;
+            
+            // If random value is less than current threshold, select this item
+            if (randomValue <= currentThreshold)
+            {
+                selectedItemID = kvp.Key;
+                break;
+            }
+        }
+
+        // If an item was selected and exists in prefabs, spawn it
+        if (selectedItemID != -1 && _itemPrefabs.ContainsKey(selectedItemID))
+        {
+            SpawnItem(selectedItemID, spawnPosition, gameObjects);
+        }
+    }
 }

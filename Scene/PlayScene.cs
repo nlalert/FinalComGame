@@ -389,6 +389,12 @@ public class PlayScene : Scene
 
         SoundEffect hitSound = _content.Load<SoundEffect>("HitEnemy");
 
+        //TODO : Change Item ID to  real id from tilemap
+        Dictionary<int, float> defaultLootTableChance = new Dictionary<int, float>{ 
+            {-1, 0.8f},
+            {1000, 0.2f},
+        };
+
         // Create a dictionary of enemy prefabs
         _enemyPrefabs = new Dictionary<int, BaseEnemy>
         {
@@ -404,7 +410,9 @@ public class PlayScene : Scene
                     BaseJumpStrength = 490,
                     Friction = 0.96f,
 
-                    HitSound = hitSound
+                    HitSound = hitSound,
+
+                    LootTableChance = defaultLootTableChance
                 }
             },
 
@@ -423,7 +431,9 @@ public class PlayScene : Scene
                     ChaseDuration = 3.0f,
                     DashDuration = 1.0f,
 
-                    HitSound = hitSound
+                    HitSound = hitSound,
+
+                    LootTableChance = defaultLootTableChance
                 }
             },
 
@@ -440,7 +450,9 @@ public class PlayScene : Scene
 
                     IgnorePlayerDuration = 3f,
 
-                    HitSound = hitSound
+                    HitSound = hitSound,
+
+                    LootTableChance = defaultLootTableChance
                 }
             },
             {
@@ -451,7 +463,9 @@ public class PlayScene : Scene
 
                     MaxHealth = float.MaxValue,
 
-                    HitSound = hitSound // Temp
+                    HitSound = hitSound,// Temp
+
+                    LootTableChance = defaultLootTableChance 
                 }
             },
             {
@@ -470,7 +484,9 @@ public class PlayScene : Scene
                         BaseDamageAmount = 20f,
                         Speed = 300f,
                         Viewport = ViewportManager.Get("TowerEnemy_Bullet")
-                    }
+                    },
+
+                    LootTableChance = defaultLootTableChance
                 }
             },
             {
@@ -489,7 +505,9 @@ public class PlayScene : Scene
                         BaseDamageAmount = 15f,
                         Speed = 200f,
                         Viewport = ViewportManager.Get("Demon_Bullet")
-                    }
+                    },
+
+                    LootTableChance = defaultLootTableChance
                 }
             },
             {
@@ -562,11 +580,10 @@ public class PlayScene : Scene
                         Name = "BulletEnemy",
                         BaseDamageAmount = 20f,
                         Viewport = ViewportManager.Get("Rhulk_Laser")
-                    },
+                    }
                 }
             },
         };
-
     }
 
     private void CreateItemPrefabs()
