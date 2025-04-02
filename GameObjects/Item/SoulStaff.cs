@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 namespace FinalComGame;
 public class SoulStaff : Item
 {
-    public float MPCost;
     public SoulMinion soulMinion;
     private bool isSoulSummon;
     public SoulStaff(Texture2D texture, ItemType type, Vector2 Position, float jumpModifier = 1.5f, float jumpBoostDuration = 5.0f)

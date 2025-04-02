@@ -58,7 +58,7 @@ namespace FinalComGame
                 {
                     _isCleared = true;
                     ChangeBarrierCollision(tileMap, false);
-                    Console.WriteLine("Ambush Cleared");
+                    Singleton.Instance.CurrentUI.Prompt("Ambush Cleared");
                 }
             }
         }
