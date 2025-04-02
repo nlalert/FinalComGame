@@ -9,7 +9,7 @@ public class ItemManager
     private static Dictionary<string, Item> _itemList = new Dictionary<string, Item>();
 
     public static void AddGameItem(string itemName, Item item){
-        _itemList.Add(itemName, item);
+        _itemList.TryAdd(itemName, item);
     }
 
     public static void SpawnItem(string itemName, Vector2 spawnPosition, List<GameObject> gameObjects){
