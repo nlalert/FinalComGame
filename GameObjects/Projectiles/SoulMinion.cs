@@ -42,7 +42,7 @@ namespace FinalComGame
             // Get player's position
             Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
             // Calculate new orbit position
-            Position = playerPosition + new Vector2(-Viewport.Width/2,-32) + new Vector2(
+            Position = playerPosition + new Vector2(-Viewport.Width/2,-Singleton.TILE_SIZE * 2) + new Vector2(
                 (float)Math.Cos(angle) * orbitRadius,
                 (float)Math.Sin(angle) * orbitRadius
             ); 

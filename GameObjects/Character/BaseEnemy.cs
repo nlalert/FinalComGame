@@ -41,18 +41,11 @@ namespace FinalComGame {
         public Dictionary<int, float> LootTableChance;
 
         public BaseEnemy(Texture2D texture) : base(texture){
-            _idleAnimation = new Animation(texture, 16, 32, new Vector2(1,1), 24); // 24 fps\
+            _idleAnimation = new Animation(texture, Singleton.TILE_SIZE, Singleton.TILE_SIZE * 2, new Vector2(1,1), 24); // 24 fps\
             Animation = _idleAnimation;
         }
         
-        // Spawn method with optional spawn effects
-        public virtual void Spawn(float x, float y, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
-        {
-            Vector2 position = new Vector2(x, y);
-            Spawn(position, gameObjects, spawnedEnemies);
-        }
-
-        public virtual BaseEnemy Spawn(Vector2 position, List<GameObject> gameObjects)
+        public BaseEnemy Spawn(Vector2 position, List<GameObject> gameObjects)
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = position;
@@ -64,12 +57,6 @@ namespace FinalComGame {
             newEnemy.OnSpawn();
 
             return newEnemy;
-        }
-
-        public virtual void Spawn(Vector2 position, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
-        {
-            BaseEnemy newEnemy = Spawn(position, gameObjects);
-            spawnedEnemies.Add(newEnemy);
         }
 
         public virtual void AddAnimation(){
@@ -238,7 +225,7 @@ namespace FinalComGame {
             Vector2 enemyPosition = Position;
             Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
             
-            float step = 16f; // Tile size or step size for checking
+            float step = Singleton.TILE_SIZE; // Tile size or step size for checking
             Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);
             Vector2 checkPosition = enemyPosition;
 

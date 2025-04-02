@@ -205,7 +205,7 @@ namespace FinalComGame
             return _itemSpawnPoints;
         }
 
-        public List<AmbushArea> GetAmbushAreas(Dictionary<int, BaseEnemy> enemyPrefabs)
+        public List<AmbushArea> GetAmbushAreas()
         {
             var ambushAreas = new List<AmbushArea>();
             var processedTopLefts = new HashSet<Vector2>(); // To avoid duplicate processing
@@ -262,7 +262,7 @@ namespace FinalComGame
                     continue;
                 
                 Rectangle ambushZone = CreateAmbushAreaRectangle(topLeftPos, bestBottomRight);
-                AmbushArea ambushArea = new AmbushArea(ambushZone, this, enemyPrefabs);
+                AmbushArea ambushArea = new AmbushArea(ambushZone, this);
                 ambushAreas.Add(ambushArea);
                 
                 // Mark these tiles as processed to avoid duplicate areas

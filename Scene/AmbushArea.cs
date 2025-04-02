@@ -14,14 +14,10 @@ namespace FinalComGame
         private bool _isActive;
         private bool _isCleared;
 
-        // Dictionary to map spawn types to enemy prefabs
-        private Dictionary<int, BaseEnemy> _enemyPrefabs;
-
-        public AmbushArea(Rectangle triggerZone, TileMap tileMap, Dictionary<int, BaseEnemy> enemyPrefabs)
+        public AmbushArea(Rectangle triggerZone, TileMap tileMap)
         {
             _triggerZone = triggerZone;
             _spawnedEnemies = new List<BaseEnemy>();
-            _enemyPrefabs = enemyPrefabs;
             
             // Find enemy spawn points within this area
             _enemyWorldSpawnPoints = new Dictionary<Vector2, int>();
@@ -72,7 +68,8 @@ namespace FinalComGame
 
             foreach (var enemySpawnPoint in _enemyWorldSpawnPoints)
             {
-                _enemyPrefabs[enemySpawnPoint.Value].Spawn(enemySpawnPoint.Key, gameObjects, _spawnedEnemies);
+                BaseEnemy newEnemy = EnemyManager.SpawnEnemy(enemySpawnPoint.Value, enemySpawnPoint.Key, gameObjects);
+                _spawnedEnemies.Add(newEnemy);
             }
         }
 

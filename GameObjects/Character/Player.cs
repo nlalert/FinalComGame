@@ -658,8 +658,8 @@ namespace FinalComGame
                 {
                     _isClimbing = false;
                     if (_isCrouching) {
-                        Position.Y -= 16;
-                        Viewport.Height = 32;
+                        Position.Y -= Singleton.TILE_SIZE;
+                        Viewport.Height = Singleton.TILE_SIZE * 2;
                         WalkSpeed = 200;
                         _isCrouching = false;
                     }
@@ -686,8 +686,8 @@ namespace FinalComGame
 
             if (Singleton.Instance.IsKeyPressed(Crouch) && !_isJumping && !_isClimbing && Velocity.Y == 0 && !_isDashing)
             {
-                if (!_isCrouching) Position.Y += 16;
-                Viewport.Height = 16;
+                if (!_isCrouching) Position.Y += Singleton.TILE_SIZE;
+                Viewport.Height = Singleton.TILE_SIZE;
                 WalkSpeed = CrouchSpeed;
                 _isCrouching = true;
             }
@@ -696,8 +696,8 @@ namespace FinalComGame
                 // Only stand up if there's enough room
                 if (CanStandUp(tileMap))
                 {
-                    Position.Y -= 16;
-                    Viewport.Height = 32;
+                    Position.Y -= Singleton.TILE_SIZE;
+                    Viewport.Height = Singleton.TILE_SIZE * 2;
                     WalkSpeed = 200;
                     _isCrouching = false;
                 }
@@ -977,7 +977,7 @@ namespace FinalComGame
                 return;
             
             // Get position offset based on player state
-            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 6) : new Vector2(0, 16); 
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Singleton.TILE_SIZE, 6) : new Vector2(Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
             
             // Create and configure the projectile using the weapon
@@ -1050,7 +1050,7 @@ namespace FinalComGame
             PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
             newBullet.DamageAmount *= chargePower; // Increase damage
 
-            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(0, 6) : new Vector2(0, 16); 
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Singleton.TILE_SIZE, 6) : new Vector2(Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
 
             newBullet.Shoot(bulletPosition, direction);
@@ -1260,9 +1260,9 @@ namespace FinalComGame
             // Create a temporary hitbox to check if standing would cause collision
             Rectangle standingHitbox = new Rectangle(
                 (int)Position.X,
-                (int)Position.Y - 16, // Where the head would be if standing
+                (int)Position.Y - Singleton.TILE_SIZE, // Where the head would be if standing
                 Viewport.Width,
-                32); // Full height when standing
+                Singleton.TILE_SIZE * 2); // Full height when standing
                 
             // Check for collisions with solid tiles
             for (int i = -1; i <= 1; i++)
@@ -1271,7 +1271,7 @@ namespace FinalComGame
                 {
                     Vector2 tilePos = new Vector2(
                         Position.X + i * Singleton.TILE_SIZE,
-                        Position.Y - 16 + j * Singleton.TILE_SIZE);
+                        Position.Y - Singleton.TILE_SIZE + j * Singleton.TILE_SIZE);
                         
                     Tile tile = tileMap.GetTileAtWorldPostion(tilePos);
                     if (tile != null && tile.IsSolid && tile.Type != TileType.Platform)
