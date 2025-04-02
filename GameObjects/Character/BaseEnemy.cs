@@ -38,7 +38,7 @@ namespace FinalComGame {
         public bool CanCollideTile;
         public bool IsIgnorePlatform = false;
 
-        public Dictionary<int, float> LootTableChance;
+        public Dictionary<ItemID, float> LootTableChance;
 
         public BaseEnemy(Texture2D texture) : base(texture){
             _idleAnimation = new Animation(texture, Singleton.TILE_SIZE, Singleton.TILE_SIZE * 2, new Vector2(1,1), 24); // 24 fps\

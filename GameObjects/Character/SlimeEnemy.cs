@@ -11,7 +11,7 @@ namespace FinalComGame
         private float _jumpTimer;
         public float Friction;
 
-        public SlimeEnemy(Texture2D texture, Texture2D particleTexture) : base(texture) { 
+        public SlimeEnemy(Texture2D texture) : base(texture) { 
             _texture = texture;
             CanCollideTile = true;
         }

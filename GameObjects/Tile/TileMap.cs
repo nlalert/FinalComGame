@@ -9,8 +9,8 @@ namespace FinalComGame
     public class TileMap
     {
         public Dictionary<Vector2, Tile> Tiles; //Grid Position, tile
-        private Dictionary<Vector2, int> _enemySpawnPoints; // Grid position, enemy type ID
-        private Dictionary<Vector2, int> _itemSpawnPoints; // Grid position, enemy type ID
+        private Dictionary<Vector2, EnemyID> _enemySpawnPoints; 
+        private Dictionary<Vector2, ItemID> _itemSpawnPoints;
 
         private Texture2D textureAtlas;
         private int numTilesPerRow;
@@ -22,8 +22,8 @@ namespace FinalComGame
             this.textureAtlas = textureAtlas;
             this.numTilesPerRow = numTilesPerRow;
             Tiles = new Dictionary<Vector2, Tile>();
-            _enemySpawnPoints = new Dictionary<Vector2, int>();
-            _itemSpawnPoints = new Dictionary<Vector2, int>();
+            _enemySpawnPoints = new Dictionary<Vector2, EnemyID>();
+            _itemSpawnPoints = new Dictionary<Vector2, ItemID>();
 
             LoadMap(mapPath);
         }
@@ -64,12 +64,11 @@ namespace FinalComGame
                             TileType type = GetTileType(tileID);
                             if(type == TileType.EnemySpawn)
                             {
-                                // Store enemy spawn point with its type
-                                _enemySpawnPoints.Add(new Vector2(x, y), tileID);
+                                _enemySpawnPoints.Add(new Vector2(x, y), EnemyManager.GetEnemyIDFromTileID(tileID));
                             }
                             else if(type == TileType.ItemSpawn)
                             {
-                                _itemSpawnPoints.Add(new Vector2(x, y), tileID);
+                                _itemSpawnPoints.Add(new Vector2(x, y), ItemManager.GetItemIDFromTileID(tileID));
                             }
 
                             Tile tile = new Tile(textureAtlas)
@@ -117,6 +116,19 @@ namespace FinalComGame
 
         private static TileType GetTileType(int tileID)
         {
+            // Check if it's an enemy spawn point
+            if (Enum.IsDefined(typeof(EnemyID), tileID) && tileID != (int)EnemyID.None)
+            {
+                return TileType.EnemySpawn;
+            }
+            
+            // Check if it's an item spawn point
+            if (Enum.IsDefined(typeof(ItemID), tileID) && tileID != (int)ItemID.None)
+            {
+                return TileType.ItemSpawn;
+            }
+            
+            // Handle the rest with explicit mapping
             return tileID switch
             {
                 17 => TileType.Barrier,
@@ -129,10 +141,6 @@ namespace FinalComGame
                 18 => TileType.AmbushBarrier,
                 39 => TileType.AmbushAreaTopLeft,
                 38 => TileType.AmbushAreaBottomRight,
-                97 or 98 or 99 or 117 or 118 or 119 or 137 or 138 or 139 or 199 => TileType.EnemySpawn,
-                1000 or 1001 or 1002 or 1003 or 1004 or 1005 or 1006 or 1007 or 1008 
-                or 1009 or 1010 or 1011 => TileType.ItemSpawn, //TODO :put real item TileID
-
                 _ => TileType.None
             };
         }
@@ -171,12 +179,6 @@ namespace FinalComGame
             return false;
         }
 
-        public Tile GetTileAtGetTileAtGridPosition(int tileX, int tileY)
-        {
-            Vector2 tileGridPosition = new Vector2(tileX, tileY);
-            return GetTileAtGridPosition(tileGridPosition);
-        }
-
         public Tile GetTileAtGridPosition(Vector2 tileGridPosition)
         {
             if(Tiles.TryGetValue(tileGridPosition, out Tile value))
@@ -189,18 +191,12 @@ namespace FinalComGame
             return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
         }
 
-        public Tile GetTileAtWorldPostion(int x, int y)
-        {
-            Vector2 worldPostion = new Vector2(x, y);
-            return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
-        }
-
-        public Dictionary<Vector2, int> GetEnemySpawnPoints()
+        public Dictionary<Vector2, EnemyID> GetEnemySpawnPoints()
         {
             return _enemySpawnPoints;
         }
 
-        public Dictionary<Vector2, int> GetItemSpawnPoints()
+        public Dictionary<Vector2, ItemID> GetItemSpawnPoints()
         {
             return _itemSpawnPoints;
         }
