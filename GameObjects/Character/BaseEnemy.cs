@@ -12,7 +12,6 @@ namespace FinalComGame {
         public enum EnemyState
         {
             Idle,
-            Patrol,
             Chase,
             Attack,
             Cooldown,
@@ -25,11 +24,9 @@ namespace FinalComGame {
         }
 
         // Enemy Properties
-        public Rectangle Hitbox { get; protected set; }
         public EnemyState CurrentState { get; protected set; }
         
         // Movement Properties
-        protected float ChaseSpeed;
         protected float _patrolBoundaryLeft;
         protected float _patrolBoundaryRight;
 
@@ -41,8 +38,8 @@ namespace FinalComGame {
         public bool CanCollideTile;
         public bool IsIgnorePlatform = false;
 
-        public bool IsDead() => CurrentState == EnemyState.Dead;
-        
+        public Dictionary<int, float> LootTableChance;
+
         public BaseEnemy(Texture2D texture) : base(texture){
             _idleAnimation = new Animation(texture, 16, 32, new Vector2(1,1), 24); // 24 fps\
             Animation = _idleAnimation;
@@ -110,10 +107,10 @@ namespace FinalComGame {
         {   
             base.OnCollideNPC(npc, damageAmount);
         }
-        public override void OnDead()
+        public override void OnDead(List<GameObject> gameObjects)
         {
-            DropItem();
-            base.OnDead();
+            DropItem(gameObjects);
+            base.OnDead(gameObjects);
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
@@ -125,7 +122,7 @@ namespace FinalComGame {
             if (Health <= 0)
             {
                 CurrentState = EnemyState.Dying;
-                OnDead();
+                OnDead(gameObjects);
             }
         }
 
@@ -219,9 +216,11 @@ namespace FinalComGame {
                 OnHit(damageAmount);
             }
         }
-        public virtual void DropItem()
+        public virtual void DropItem(List<GameObject> gameObjects)
         {
+            ItemManager.RandomSpawnItem(LootTableChance, Position, gameObjects);
         }
+
         public virtual void OnCollisionHorizon(){
 
         }

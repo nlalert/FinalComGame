@@ -410,11 +410,11 @@ namespace FinalComGame
             gameObjects.Add(newObject2);
         }
 
-        public override void OnDead()
+        public override void OnDead(List<GameObject> gameObjects)
         {
             Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
             Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
-            base.OnDead();
+            base.OnDead(gameObjects);
         }
     }
 }
