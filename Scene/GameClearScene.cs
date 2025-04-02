@@ -7,11 +7,10 @@ using System.Collections.Generic;
 
 namespace FinalComGame;
 
-public class GameOverScene : Scene
+public class GameClearScene : Scene
 {
-    private TextUI _gameOverTitle; // can change to ImageUI later
+    private TextUI _gameClearTitle; // can change to ImageUI later
     private Button _restartButton;
-    private Button _mainmenuButton;
     private Button _exitButton;
 
     private int buttonGap;
@@ -34,7 +33,7 @@ public class GameOverScene : Scene
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        StopSong();
+        PauseSong();
     }
 
     protected override void SetupHUD()
@@ -42,9 +41,9 @@ public class GameOverScene : Scene
         int TextWidth = Singleton.SCREEN_WIDTH / 2;
         int TextHeight = 80;
         // Static text
-        _gameOverTitle = new TextUI(
+        _gameClearTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 5, TextWidth, TextHeight),
-            "GAME OVER",  
+            "Congratulation!",  
             Color.White, 
             TextUI.TextAlignment.Center
         );
@@ -62,15 +61,6 @@ public class GameOverScene : Scene
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
-        _mainmenuButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 5, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
-            "Back to Main Menu",
-            Color.Wheat
-        );
-        _mainmenuButton.OnClick += MainMenuButton_OnClick;
-
         _exitButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2, (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 5, ButtonWidth, ButtonHeight),
             Button,
@@ -80,9 +70,8 @@ public class GameOverScene : Scene
         );
         _exitButton.OnClick += ExitGameButton_OnClick;
 
-        _ui.AddHUDElement(_gameOverTitle);
+        _ui.AddHUDElement(_gameClearTitle);
         _ui.AddHUDElement(_restartButton);
-        _ui.AddHUDElement(_mainmenuButton);
         _ui.AddHUDElement(_exitButton);
     }
 }

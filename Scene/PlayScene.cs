@@ -125,12 +125,6 @@ public class PlayScene : Scene
                     Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
                 }
                 break;
-            case Singleton.GameState.GameOver:
-                if (MediaPlayer.State == MediaState.Playing)
-                {
-                    MediaPlayer.Stop();
-                }
-                break;
         }
 
         //Console.WriteLine("GameObject :" + _numObject);
