@@ -736,135 +736,18 @@ public class PlayScene : Scene
 
     private void AddItems()
     {
-        // ItemManager.AddGameItem("Potion_Health",
-        //     new Potion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
-        //         Name =  "HealthPotion",
-        //         Description = "Test HealthPotion Description",
-        //         Viewport = ViewportManager.Get("Potion_Health"),
-        //         UseSound = PotionUseSound
-        //     });
-
-        // ItemManager.AddGameItem("Potion_Speed",
-        //     new SpeedPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
-        //         Name =  "SpeedPotion",
-        //         Description = "Test SpeedPotion Description",
-        //         Viewport = ViewportManager.Get("Potion_Speed"),
-        //         UseSound = PotionUseSound
-        //     });
-
-        // ItemManager.AddGameItem("Potion_Jump",
-        //     new JumpPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
-        //         Name =  "jumppotion",
-        //         Description = "Test JumpPotion Description",
-        //         Viewport = ViewportManager.Get("Potion_Jump"),
-        //         UseSound = PotionUseSound
-        //     });
-
-        // ItemManager.AddGameItem("Barrier",
-        //     new Barrier(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
-        //         Name =  "barrier",
-        //         Description = "Test Barrier Description",
-        //         Viewport = ViewportManager.Get("Barrier"),
-        //         UseSound = PotionUseSound // Temp
-        //     });
-
-        // ItemManager.AddGameItem("LifeUp",
-        //     new LifeUp(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
-        //         Name =  "1Up",
-        //         Description = "Test LifeUp Description",
-        //         Viewport = ViewportManager.Get("LifeUp"),
-        //         UseSound = PotionUseSound // Temp
-        //     });
-
-        // ItemManager.AddGameItem("Speed_Boots",
-        //     new SpeedBoots(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
-        //         Name =  "SpeedBoots",
-        //         Description = "Test SpeedBoots Description",
-        //         Viewport = ViewportManager.Get("Speed_Boots")
-        //     });
-
-        // ItemManager.AddGameItem("CursedGauntlet",
-        //     new CursedGauntlet(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(26, 80)){
-        //         Name =  "CursedGauntlet",
-        //         Description = "Test CursedGauntlet Description",
-        //         Viewport = ViewportManager.Get("CursedGauntlet")
-        //     });
-
-        // ItemManager.AddGameItem("Sword",
-        //     new Sword(ItemTexture, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
-        //         Name =  "Sword",
-        //         Description = "Test Sword Description",
-        //         Viewport = ViewportManager.Get("Sword"),
-        //         SlashSound = SwordSlashSound,
-        //     });
-
-        // ItemManager.AddGameItem("Gun",
-        //     new Gun(ItemTexture, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
-        //         Name =  "Gun",
-        //         Description = "Test Gun Description",
-        //         Viewport = ViewportManager.Get("Gun"),
-        //         ShootSound = GunshotSound,
-        //     });
-
-        // ItemManager.AddGameItem("Fire_Staff",
-        //     new Staff(ItemTexture, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(40, 90)){
-        //         Name =  "Staff",
-        //         Description = "Test Staff Description",
-        //         MPCost = 10,
-        //         ShootSound = FireBallShootingSound,
-
-        //         FireBall = new FireBall(projectileTexture, ExplosionEffect, FireBallExplosionSound)
-        //         {
-        //             Name = "FireBall",
-        //             BaseDamageAmount = 30f,
-        //             Speed = 500f,
-        //             Radius = 60f,
-        //             ExplosionDuration = 0.5f,
-        //             Viewport = ViewportManager.Get("FireBall")
-        //         },
-        //         Viewport = ViewportManager.Get("Fire_Staff")
-        //     });
-
-        // ItemManager.AddGameItem("Soul_Staff",
-        //     new SoulStaff(ItemTexture,ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
-        //         Name =  "Staff",
-        //         Description = "Summon Your best Minion!",
-        //         MPCost = 10,
-        //         soulMinion = new SoulMinion(_SoulMinion)
-        //         {
-        //             Name = "Soul Minion",
-        //             BaseDamageAmount = 0f,
-        //             Viewport = ViewportManager.Get("Soul_Minion"),
-        //             soulBullet = new SoulBullet(_MinionSoulBullet){
-        //                 Name = "Soul Bullet",
-        //                 BaseDamageAmount = 15f,
-        //                 Speed = 150f,
-        //                 Viewport = ViewportManager.Get("Soul_Bullet")
-        //             }
-        //         },
-        //         Viewport = ViewportManager.Get("Soul_Staff")
-        //     });
-
-        // ItemManager.AddGameItem("Grenade",
-        //     new Grenade(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(1, 90)){
-        //         Name =  "Grenade",
-        //         Description = "Test GrenadeTemp Description",
-        //         Viewport = ViewportManager.Get("Grenade"),
-        //         UseSound = PotionUseSound, // Temp
-
-        //         GrenadeProjectile = new GrenadeProjectile(projectileTexture, ExplosionEffect, FireBallExplosionSound)
-        //         {
-        //             // Grenade properties
-        //             Name = "GrenadeProjectile",
-        //             BaseDamageAmount = 30f,
-        //             Speed = 450f,
-        //             Radius = 80f,
-        //             ExplosionDuration = 0.5f,
-        //             DetonateDelayDuration = 3.0f,
-
-        //             Viewport = ViewportManager.Get("Grenade_Projectile")
-        //         }
-        //     });
+        ItemManager.SpawnItem("Potion_Health", TileMap.GetTileWorldPositionAt(12, 90), _gameObjects);
+        ItemManager.SpawnItem("Potion_Speed", TileMap.GetTileWorldPositionAt(31, 90), _gameObjects);
+        ItemManager.SpawnItem("Potion_Jump", TileMap.GetTileWorldPositionAt(35, 90), _gameObjects);
+        ItemManager.SpawnItem("Barrier", TileMap.GetTileWorldPositionAt(20, 90), _gameObjects);
+        ItemManager.SpawnItem("LifeUp", TileMap.GetTileWorldPositionAt(16, 90), _gameObjects);
+        ItemManager.SpawnItem("Speed_Boots", TileMap.GetTileWorldPositionAt(24, 90), _gameObjects);
+        ItemManager.SpawnItem("CursedGauntlet", TileMap.GetTileWorldPositionAt(26, 80), _gameObjects);
+        ItemManager.SpawnItem("Sword", TileMap.GetTileWorldPositionAt(4, 90), _gameObjects);
+        ItemManager.SpawnItem("Gun", TileMap.GetTileWorldPositionAt(8, 90), _gameObjects);
+        ItemManager.SpawnItem("Fire_Staff", TileMap.GetTileWorldPositionAt(40, 90), _gameObjects);
+        ItemManager.SpawnItem("Soul_Staff", TileMap.GetTileWorldPositionAt(17, 90), _gameObjects);
+        ItemManager.SpawnItem("Potion_Jump", TileMap.GetTileWorldPositionAt(1, 90), _gameObjects);
     }
 
     protected override void SetupHUD()

@@ -29,7 +29,7 @@ public class Item : GameObject, IItemDisplayable
     public float pickupRadius = 40f;
     
     // Tooltip related properties
-    private ItemTooltip tooltip;
+    private ItemTooltip _toolTip;
     
     // Constructor
     public Item(Texture2D texture, ItemType type)
@@ -37,10 +37,6 @@ public class Item : GameObject, IItemDisplayable
     {
         IsPickedUp = false;
         Type = type;
-        
-        // Create tooltip
-        tooltip = new ItemTooltip(this, TooltipBackgroundTexture);
-        Singleton.Instance.CurrentUI.AddWorldSpaceElement(tooltip);
     }
     
     // // Method to be overridden by specific item types
@@ -53,6 +49,13 @@ public class Item : GameObject, IItemDisplayable
     
     public virtual void ActiveAbility(float deltaTime, int slot,List<GameObject> gameObject)
     {    
+    }
+
+    public virtual void OnSpawn()
+    {
+        // Create tooltip
+        _toolTip = new ItemTooltip(this, TooltipBackgroundTexture);
+        Singleton.Instance.CurrentUI.AddWorldSpaceElement(_toolTip);
     }
 
     public virtual void OnPickup(int slot)
@@ -72,7 +75,7 @@ public class Item : GameObject, IItemDisplayable
     public virtual void RemoveItem()
     {
         IsActive = false;
-        Singleton.Instance.CurrentUI.RemoveWorldSpaceElement(tooltip);
+        Singleton.Instance.CurrentUI.RemoveWorldSpaceElement(_toolTip);
     }
 
     public virtual string GetDisplayProperties()

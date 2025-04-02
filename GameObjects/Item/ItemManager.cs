@@ -12,10 +12,10 @@ public class ItemManager
         _itemList.Add(itemName, item);
     }
 
-    public static void SpawnItem(string itemName, float x, float y, List<GameObject> gameObjects){
+    public static void SpawnItem(string itemName, Vector2 spawnPosition, List<GameObject> gameObjects){
         Item newItem = _itemList[itemName].Clone() as Item;
-        newItem.Position = new Vector2(x, y);
+        newItem.Position = spawnPosition;
+        newItem.OnSpawn();
         gameObjects.Add(newItem);
     }
-       
 }
