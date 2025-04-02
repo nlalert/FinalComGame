@@ -14,6 +14,7 @@ namespace FinalComGame
         private Button _startButton;
         private Button _exitButton;
 
+        private Texture2D _TitleTexture;
         private Texture2D _bgTexture;
         private Texture2D _mgTexture;
         private Texture2D _fgTexture;
@@ -38,7 +39,7 @@ namespace FinalComGame
         public override void LoadContent(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch;
-
+            _TitleTexture = _content.Load<Texture2D>("Title");
             // Load parallax layers
             _bgTexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
             _mgTexture = _content.Load<Texture2D>("Level_1_Parallax_mg");
@@ -99,6 +100,7 @@ namespace FinalComGame
         private void DrawParallaxLayer(SpriteBatch spriteBatch, Texture2D texture, Vector2 position,Vector2 Scale)
         {
             spriteBatch.Draw(texture, position,null, Color.White,0f,Vector2.Zero,Scale,SpriteEffects.None,0f);
+            spriteBatch.Draw(texture, new Vector2(position.X + texture.Width*-1, position.Y),null, Color.White,0f,Vector2.Zero,Scale,SpriteEffects.None,0f);
             spriteBatch.Draw(texture, new Vector2(position.X + texture.Width, position.Y),null, Color.White,0f,Vector2.Zero,Scale,SpriteEffects.None,0f);
             spriteBatch.Draw(texture, new Vector2(position.X + texture.Width*2, position.Y),null, Color.White,0f,Vector2.Zero,Scale,SpriteEffects.None,0f);
             spriteBatch.Draw(texture, new Vector2(position.X + texture.Width*3, position.Y),null, Color.White,0f,Vector2.Zero,Scale,SpriteEffects.None,0f);
@@ -106,13 +108,13 @@ namespace FinalComGame
 
         protected override void SetupHUD()
         {
-            Texture2D Title = _content.Load<Texture2D>("Gun"); // Change Later TEMP
+            Texture2D Title = _TitleTexture; 
             int titleWidth = Singleton.SCREEN_WIDTH / 2;
             int titleHeight = 100;
             _Title = new ImageUI(
                 Title,
                 new Rectangle((Singleton.SCREEN_WIDTH - titleWidth) / 2, (Singleton.SCREEN_HEIGHT - titleHeight) / 4, titleWidth, titleHeight),
-                new Rectangle(0, 0, 32, 32)
+                new Rectangle(0, 0, 236, 40)
             );
 
             Texture2D StartButtonTexture = _content.Load<Texture2D>("StaticStartButton");
