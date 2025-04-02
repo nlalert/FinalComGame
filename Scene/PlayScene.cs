@@ -41,7 +41,6 @@ public class PlayScene : Scene
 
     private List<AmbushArea> ambushAreas;
 
-    private Dictionary<int, BaseEnemy> _enemyPrefabs;
     public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         base.Initialize(graphicsDevice, graphicsDeviceManager, content);
@@ -256,7 +255,8 @@ public class PlayScene : Scene
 
         SetUpParallaxBackground();
         InitializeAmbushAreas();
-        // SpawnEnemies();
+        SpawnEnemies();
+        SpawnItems();
         AddItems();
         SetupHUD();
         
@@ -284,7 +284,7 @@ public class PlayScene : Scene
     // In your PlayScene or main game class
     public void InitializeAmbushAreas()
     {
-        ambushAreas = _collisionTileMap.GetAmbushAreas(_enemyPrefabs);
+        ambushAreas = _collisionTileMap.GetAmbushAreas();
     }
 
     private void CreatePlayer()
@@ -387,29 +387,31 @@ public class PlayScene : Scene
 
         SoundEffect hitSound = _content.Load<SoundEffect>("HitEnemy");
 
-        // Create a dictionary of enemy prefabs
-        _enemyPrefabs = new Dictionary<int, BaseEnemy>
-        {
-            {
-                97,         
-                new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = ViewportManager.Get("Slime"),
-                    MaxHealth = 50f,
-                    BaseAttackDamage = 3f,
+        //TODO : Change Item ID to  real id from tilemap
+        Dictionary<int, float> defaultLootTableChance = new Dictionary<int, float>{ 
+            {-1, 0.8f},
+            {1000, 0.2f},
+        };
 
-                    JumpCooldown = 3.0f,
-                    BaseJumpStrength = 490,
-                    Friction = 0.96f,
+        EnemyManager.AddGameEnemy(97,
+            new SlimeEnemy(_SlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
+                Name = "Slime",
+                Viewport = ViewportManager.Get("Slime"),
+                MaxHealth = 50f,
+                BaseAttackDamage = 3f,
 
-                    HitSound = hitSound
-                }
-            },
+                JumpCooldown = 3.0f,
+                BaseJumpStrength = 490,
+                Friction = 0.96f,
 
-            {
-                98,
+                HitSound = hitSound,
+
+                LootTableChance = defaultLootTableChance
+            });
+
+        EnemyManager.AddGameEnemy(98,
                 new HellhoundEnemy(_DogTexture){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
+                    Name = "Hellhound",
                     Viewport = ViewportManager.Get("Hellhound"),
                     
                     MaxHealth = 1f,
@@ -421,169 +423,139 @@ public class PlayScene : Scene
                     ChaseDuration = 3.0f,
                     DashDuration = 1.0f,
 
-                    HitSound = hitSound
-                }
-            },
-
-            {
-                99,         
-                new SkeletonEnemy(_enemyTexture){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = ViewportManager.Get("Skeleton"),
-
-                    MaxHealth = 80f,
-                    BaseAttackDamage = 5f,
-
-                    LimitIdlePatrol = 100,
-
-                    IgnorePlayerDuration = 3f,
-
-                    HitSound = hitSound
-                }
-            },
-            {
-                117,
-                new PlatformEnemy(_PlatformTexture){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = ViewportManager.Get("PlatformEnemy"),
-
-                    MaxHealth = float.MaxValue,
-
-                    HitSound = hitSound // Temp
-                }
-            },
-            {
-                118,
-                new TowerEnemy(_TowerTexture){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = ViewportManager.Get("TowerEnemy"),
-
-                    MaxHealth = 150f,
-
                     HitSound = hitSound,
 
-                    TowerBullet = new TowerBullet(projectileTexture)
-                    {
-                        Name = "BulletEnemy",
-                        BaseDamageAmount = 20f,
-                        Speed = 300f,
-                        Viewport = ViewportManager.Get("TowerEnemy_Bullet")
-                    }
+                    LootTableChance = defaultLootTableChance
+                });
+
+        EnemyManager.AddGameEnemy(99,         
+            new SkeletonEnemy(_enemyTexture){
+                Name = "Skeleton",
+                Viewport = ViewportManager.Get("Skeleton"),
+
+                MaxHealth = 80f,
+                BaseAttackDamage = 5f,
+
+                LimitIdlePatrol = 100,
+
+                IgnorePlayerDuration = 3f,
+
+                HitSound = hitSound,
+
+                LootTableChance = defaultLootTableChance
+            });
+
+        EnemyManager.AddGameEnemy(117,
+            new PlatformEnemy(_PlatformTexture){
+                Name = "PlatformEnemy",
+                Viewport = ViewportManager.Get("PlatformEnemy"),
+
+                MaxHealth = float.MaxValue,
+
+                HitSound = hitSound,// Temp
+
+                LootTableChance = defaultLootTableChance 
+            });
+
+        EnemyManager.AddGameEnemy(118,
+            new TowerEnemy(_TowerTexture){
+                Name = "TowerEnemy",
+                Viewport = ViewportManager.Get("TowerEnemy"),
+
+                MaxHealth = 150f,
+
+                HitSound = hitSound,
+
+                TowerBullet = new TowerBullet(projectileTexture)
+                {
+                    Name = "BulletEnemy",
+                    BaseDamageAmount = 20f,
+                    Speed = 300f,
+                    Viewport = ViewportManager.Get("TowerEnemy_Bullet")
+                },
+
+                LootTableChance = defaultLootTableChance
+            });
+
+        EnemyManager.AddGameEnemy(119,
+            new DemonEnemy(_DemonTexture){
+                Name = "Demon",
+                Viewport = ViewportManager.Get("Demon"),
+
+                MaxHealth = 100f,
+
+                HitSound = hitSound,
+
+                DemonBullet = new DemonBullet(projectileTexture)
+                {
+                    Name = "BulletEnemy",
+                    BaseDamageAmount = 15f,
+                    Speed = 200f,
+                    Viewport = ViewportManager.Get("Demon_Bullet")
+                },
+
+                LootTableChance = defaultLootTableChance
+            });
+
+        EnemyManager.AddGameEnemy(137,         
+            new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
+                Name = "GiantSlime",
+                Viewport = ViewportManager.Get("GiantSlime"),
+
+                MaxHealth = 1000f,
+                BaseAttackDamage = 3f,
+                IsIgnorePlatform = true,
+
+                // JumpCooldown = 3.0f,
+                BaseJumpStrength = 550,
+                Friction = 0.96f,
+
+                HitSound = hitSound
+            });
+
+        EnemyManager.AddGameEnemy(138,         
+            new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
+                Name = "Cerberus",
+                Viewport = ViewportManager.Get("Cerberus"),
+
+                MaxHealth = 1000,
+                BaseAttackDamage = 3f,
+
+                // JumpCooldown = 3.0f,
+                BaseJumpStrength = 550,
+                Friction = 0.96f,
+
+                HitSound = hitSound
+            });
+
+        EnemyManager.AddGameEnemy(199,         
+            new Rhulk(_RhulkTexture){
+                Name = "Rhulk",
+                Viewport = ViewportManager.Get("Rhulk"),
+
+                MaxHealth = 100f,
+                BaseAttackDamage = 3f,
+
+                // JumpCooldown = 3.0f,
+                BaseJumpStrength = 550,
+                Friction = 0.96f,
+
+                HitSound = hitSound,
+                
+                Laserproj = new DemonLaser(_LaserTexture)
+                {
+                    Name = "BulletEnemy",
+                    BaseDamageAmount = 20f,
+                    Viewport = ViewportManager.Get("Rhulk_Laser")
                 }
-            },
-            {
-                119,
-                new DemonEnemy(_DemonTexture){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = ViewportManager.Get("Demon"),
-
-                    MaxHealth = 100f,
-
-                    HitSound = hitSound,
-
-                    DemonBullet = new DemonBullet(projectileTexture)
-                    {
-                        Name = "BulletEnemy",
-                        BaseDamageAmount = 15f,
-                        Speed = 200f,
-                        Viewport = ViewportManager.Get("Demon_Bullet")
-                    }
-                }
-            },
-            {
-                137,         
-                new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = ViewportManager.Get("GiantSlime"),
-
-                    MaxHealth = 1000f,
-                    BaseAttackDamage = 3f,
-                    IsIgnorePlatform = true,
-
-                    // JumpCooldown = 3.0f,
-                    BaseJumpStrength = 550,
-                    Friction = 0.96f,
-
-                    HitSound = hitSound
-                }
-            },
-            //DONOT REMOVE This. just add new number please cuz Feen's dont know where and what to assign this number
-            // {
-            //     97,         
-            //     new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
-            //         Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-            //         Viewport = ViewportManager.Get("GiantSlime"),
-
-            //         MaxHealth = 1f,
-            //         BaseAttackDamage = 3f,
-
-            //         // JumpCooldown = 3.0f,
-            //         BaseJumpStrength = 550,
-            //         Friction = 0.96f,
-
-                    // HitSound = hitSound
-            //     }
-            // },
-            {
-                138,         
-                new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = ViewportManager.Get("Cerberus"),
-
-                    MaxHealth = 1000,
-                    BaseAttackDamage = 3f,
-
-                    // JumpCooldown = 3.0f,
-                    BaseJumpStrength = 550,
-                    Friction = 0.96f,
-
-                    HitSound = hitSound
-                }
-            },
-            {
-                199,         
-                new Rhulk(_RhulkTexture){
-                    Name = "Enemy",//I want to name Skeleton but bullet code dectect enemy by name
-                    Viewport = ViewportManager.Get("Rhulk"),
-
-                    MaxHealth = 100f,
-                    BaseAttackDamage = 3f,
-
-                    // JumpCooldown = 3.0f,
-                    BaseJumpStrength = 550,
-                    Friction = 0.96f,
-
-                    HitSound = hitSound,
-                    
-                    Laserproj = new DemonLaser(_LaserTexture)
-                    {
-                        Name = "BulletEnemy",
-                        BaseDamageAmount = 20f,
-                        Viewport = ViewportManager.Get("Rhulk_Laser")
-                    },
-                }
-            },
-        };
+            });
+    }
 
     }
 
     private void SpawnEnemies()
     {
-        foreach (var enemySpawnPoint in _collisionTileMap.GetEnemySpawnPoints())
-        {
-            bool isEnemyPositionInAmbushArea = false;
-            foreach (AmbushArea ambushArea in ambushAreas)
-            {
-                if(ambushArea.IsEnemyPositionInAmbushArea(enemySpawnPoint.Key))
-                {
-                    isEnemyPositionInAmbushArea = true;
-                    break;
-                }
-            }
-            if(!isEnemyPositionInAmbushArea)
-                _enemyPrefabs[enemySpawnPoint.Value].Spawn(TileMap.GetTileWorldPositionAt(enemySpawnPoint.Key), _gameObjects);
-            
-        }
+        EnemyManager.SpawnWorldEnemy(_collisionTileMap.GetEnemySpawnPoints(), ambushAreas, _gameObjects);
     }
 
     private void AddItems()
