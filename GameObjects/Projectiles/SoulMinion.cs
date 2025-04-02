@@ -7,13 +7,7 @@ namespace FinalComGame
 {
     public class SoulMinion : Projectile
     {
-        public SoulBullet soulBullet; 
-        private float spriteTimer; 
-        private int _currentFrame; // Current frame index
-        private const float frameDuration = 0.1f; // 0.5 sec per frame
-        private const int frameWidth = 12; // Each frame is 12x12 pixels
-        private const int frameHeight = 12;
-        private const int totalFrames = 4; // 4 frames in total
+        public SoulBullet soulBullet;
         private float angle; // Angle in radians
         private float orbitSpeed = 1.5f; // Speed of rotation (radians per second)
         private float orbitRadius = 12f; // Radius of the orbi
@@ -21,21 +15,21 @@ namespace FinalComGame
         private float shootTimer = 0f; 
         public SoulMinion(Texture2D texture) : base(texture)
         {
+            _texture = texture;
             CanCollideTile = false;
             CanHitPlayer = false;
-            _currentFrame = 0;
-            spriteTimer = 0f;
         }
+
+        public override void AddAnimation(){
+            Animation = new Animation(_texture, 16, 16, new Vector2(16*4, 16*4), 12);
+            Animation.AddAnimation("idle", new Vector2(0, 2), 4);
+
+            Animation.ChangeAnimation("idle");
+        }
+
         public override void Update(GameTime gameTime, System.Collections.Generic.List<GameObject> gameObjects, TileMap tileMap)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            spriteTimer += deltaTime;
-
-            if (spriteTimer >= frameDuration)
-            {
-                _currentFrame = (_currentFrame + 1) % totalFrames; // Loop through frames
-                spriteTimer = 0f;
-            }
 
             //orbit
             angle += orbitSpeed * deltaTime; // Increase angle over time
@@ -58,17 +52,26 @@ namespace FinalComGame
                     shootTimer = 0; // Reset cooldown
                 }
             }
+
+            base.UpdateAnimation(deltaTime);
             base.Update(gameTime, gameObjects, tileMap);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // spriteBatch.Draw(_texture,Viewport,Color.White);
-            // spriteBatch.Draw(_texture, Position, Color.White);
-            // Rectangle sourceRectangle = new Rectangle(_currentFrame * frameWidth, 0, frameWidth, frameHeight);
-            Rectangle sourceRectangle = new Rectangle(0, _currentFrame * frameHeight, frameWidth, frameHeight);
-            spriteBatch.Draw(_texture, Position, sourceRectangle, Color.White);
-            DrawDebug(spriteBatch);
+            spriteBatch.Draw(
+                Animation.GetTexture(),
+                GetDrawingPosition(),
+                Animation.GetCurrentFrame(),
+                Color.White
+            );
         }
+
+        protected Vector2 GetDrawingPosition()
+        {
+            return  new Vector2( Position.X - (Animation.GetFrameSize().X - Viewport.Width) / 2 
+                                ,Position.Y - (Animation.GetFrameSize().Y - Viewport.Height) / 2);
+        }
+
         private void DrawDebug(SpriteBatch spriteBatch){
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             string displayText = $"StarPos : {Position} \nTexture {_texture}";

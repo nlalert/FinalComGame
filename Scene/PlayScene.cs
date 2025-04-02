@@ -14,18 +14,8 @@ public class PlayScene : Scene
     List<GameObject> _gameObjects;
     int _numObject;
 
-    private Texture2D _playerTexture;
     private Texture2D _textureAtlas;
-    private Texture2D _DemonTexture;
-    private Texture2D _DemonBulletTexture;
-    private Texture2D _TowerTexture;
-    private Texture2D _PlatformTexture;
-    private Texture2D _GiantSlimeTexture;
-    private Texture2D _CerberusTexture;
-    private Texture2D _RhulkTexture;
     private Texture2D _LaserTexture;
-    private Texture2D _SoulMinion;
-    private Texture2D _MinionSoulBullet;
     private Texture2D _HookHeadTexture;
     private Texture2D _RopeTexture; 
 
@@ -55,24 +45,10 @@ public class PlayScene : Scene
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
-        
-        _playerTexture = _content.Load<Texture2D>("Char_test");
-        // _enemyTexture = _content.Load<Texture2D>("EnemyRed");
-        // _DogTexture = _content.Load<Texture2D>("EnemyDog");
-        // _SlimeTexture = _content.Load<Texture2D>("HellSlime");
-        _DemonTexture = _content.Load<Texture2D>("EnemyDemon");
-        _DemonBulletTexture = _content.Load<Texture2D>("EnemyDemon");
-        _TowerTexture = _content.Load<Texture2D>("EnemyTower");
-        _PlatformTexture = _content.Load<Texture2D>("EnemyPlatform");
-        _GiantSlimeTexture = _content.Load<Texture2D>("GiantSlime");
-        _CerberusTexture = _content.Load<Texture2D>("Cerberus");
-        _RhulkTexture = _content.Load<Texture2D>("EnemyRhulk");
+
         _LaserTexture = _content.Load<Texture2D>("Laserbeam");
-        _SoulMinion = _content.Load<Texture2D>("SoulMinion");
-        _MinionSoulBullet = _content.Load<Texture2D>("MinionSoulBullet");
         _HookHeadTexture = _content.Load<Texture2D>("HookHead");
         _RopeTexture = _content.Load<Texture2D>("Rope");
-
 
         _textureAtlas = _content.Load<Texture2D>("Tileset");
 
@@ -198,11 +174,11 @@ public class PlayScene : Scene
 
     private void DrawTileMap()
     {
-        if (Singleton.Instance.Stage == 1){//remove later
-            _BGTileMap.Draw(_spriteBatch);
-            _MGTileMap.Draw(_spriteBatch);
-            _FGTileMap.Draw(_spriteBatch);
-        }
+        //if (Singleton.Instance.Stage == 1){//remove later
+        _BGTileMap.Draw(_spriteBatch);
+        _MGTileMap.Draw(_spriteBatch);
+        _FGTileMap.Draw(_spriteBatch);
+        //}
         
         //Should be hidden
         //_collisionTileMap.Draw(_spriteBatch);
@@ -239,12 +215,12 @@ public class PlayScene : Scene
         _gameObjects.Clear();
 
         Singleton.Instance.Random = new Random();
-        if (Singleton.Instance.Stage == 1)//remove later
-        {
+        //if (Singleton.Instance.Stage == 1)//remove later
+        //{
             _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
             _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
             _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
-        }
+        //}
         _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
 
 
@@ -269,10 +245,14 @@ public class PlayScene : Scene
 
     private void SetUpParallaxBackground()
     {
-        // Load background textures
-        _backgroundLayer1 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_bg");  // Farthest layer
-        _backgroundLayer2 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_mg");  // Middle layer
-        _backgroundLayer3 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_fg");  // Closest layer
+        // // Load background textures
+        // _backgroundLayer1 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_bg");  // Farthest layer
+        // _backgroundLayer2 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_mg");  // Middle layer
+        // _backgroundLayer3 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_fg");  // Closest layer
+
+        _backgroundLayer1 = _content.Load<Texture2D>("Level_1_Parallax_bg");  // Farthest layer
+        _backgroundLayer2 = _content.Load<Texture2D>("Level_1_Parallax_mg");  // Middle layer
+        _backgroundLayer3 = _content.Load<Texture2D>("Level_1_Parallax_fg");  // Closest layer
 
         // Create parallax background
         _parallaxBackground = new ParallaxBackground(_graphicsDevice.Viewport);
@@ -363,7 +343,7 @@ public class PlayScene : Scene
             Bullet = new PlayerBullet(projectileTexture)
             {
                 Name = "BulletPlayer",
-                BaseDamageAmount = 15f,
+                BaseDamageAmount = 10f,
                 Speed = 500f,
                 Viewport = ViewportManager.Get("Charge_Bullet_0")
             },
@@ -383,6 +363,7 @@ public class PlayScene : Scene
 
         Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("LargeSlime");
         Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
+        Texture2D _RhulkTexture = _content.Load<Texture2D>("Rhulk");
 
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
 
@@ -533,7 +514,7 @@ public class PlayScene : Scene
                 Name = "Rhulk",
                 Viewport = ViewportManager.Get("Rhulk"),
 
-                MaxHealth = 100f,
+                MaxHealth = 1000f,
                 BaseAttackDamage = 3f,
 
                 // JumpCooldown = 3.0f,
@@ -559,7 +540,6 @@ public class PlayScene : Scene
 
         Texture2D ItemTexture = _content.Load<Texture2D>("Items");
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
-        Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
         
         SoundEffect PotionUseSound = _content.Load<SoundEffect>("PotionUse");
         SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
@@ -645,7 +625,7 @@ public class PlayScene : Scene
                 MPCost = 10,
                 ShootSound = FireBallShootingSound,
 
-                FireBall = new FireBall(projectileTexture, ExplosionEffect, FireBallExplosionSound)
+                FireBall = new FireBall(projectileTexture, projectileTexture, FireBallExplosionSound)
                 {
                     Name = "FireBall",
                     BaseDamageAmount = 30f,
@@ -662,12 +642,12 @@ public class PlayScene : Scene
                 Name =  "Staff",
                 Description = "Summon Your best Minion!",
                 MPCost = 10,
-                soulMinion = new SoulMinion(_SoulMinion)
+                soulMinion = new SoulMinion(projectileTexture)
                 {
                     Name = "Soul Minion",
                     BaseDamageAmount = 0f,
                     Viewport = ViewportManager.Get("Soul_Minion"),
-                    soulBullet = new SoulBullet(_MinionSoulBullet){
+                    soulBullet = new SoulBullet(projectileTexture){
                         Name = "Soul Bullet",
                         BaseDamageAmount = 15f,
                         Speed = 150f,
@@ -684,7 +664,7 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Grenade"),
                 UseSound = PotionUseSound, // Temp
 
-                GrenadeProjectile = new GrenadeProjectile(projectileTexture, ExplosionEffect, FireBallExplosionSound)
+                GrenadeProjectile = new GrenadeProjectile(projectileTexture, projectileTexture, FireBallExplosionSound)
                 {
                     // Grenade properties
                     Name = "GrenadeProjectile",
@@ -726,7 +706,7 @@ public class PlayScene : Scene
         ItemManager.SpawnItem(ItemID.Gun, TileMap.GetTileWorldPositionAt(8, 90), _gameObjects);
         ItemManager.SpawnItem(ItemID.Staff, TileMap.GetTileWorldPositionAt(40, 90), _gameObjects);
         ItemManager.SpawnItem(ItemID.SoulStaff, TileMap.GetTileWorldPositionAt(17, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.Grenade, TileMap.GetTileWorldPositionAt(1, 90), _gameObjects);
+        ItemManager.SpawnItem(ItemID.Grenade, TileMap.GetTileWorldPositionAt(10, 90), _gameObjects);
     }
 
     protected override void SetupHUD()

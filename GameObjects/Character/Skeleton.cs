@@ -211,18 +211,13 @@ namespace FinalComGame
             base.OnCollisionHorizon();
         }
 
-        public override void OnHit(float damageAmount)
-        {
-            base.OnHit(damageAmount);
-        }
-
         public override void OnCollidePlayer()
         {
             Console.WriteLine("Skeleton hit player");
             //skeleton hurt it self as his bone is fragiles
-            this.OnHit(Health / 10);
-            this.CurrentState = EnemyState.Cooldown;
-            _patrolCenterPoint = this.Position;
+            OnHit(Health / 10, true);
+            CurrentState = EnemyState.Cooldown;
+            _patrolCenterPoint = Position;
             _ignorePlayerTimer = IgnorePlayerDuration;
             _isIgnoringPlayer = true;
             base.OnCollidePlayer();

@@ -31,15 +31,7 @@ namespace FinalComGame
 
         public Rhulk(Texture2D texture) : base(texture)
         { 
-            // Animation = new Animation(texture, 48, 48, new Vector2(48*8 , 48*6), 12);
-            // Animation.AddAnimation("Chase", new Vector2(0, 0), 8);
-            // Animation.AddAnimation("charge", new Vector2(0, 1), 6);
-            // Animation.AddAnimation("jump", new Vector2(0, 2), 5);
-            // Animation.AddAnimation("float", new Vector2(0, 3), 1);
-            // Animation.AddAnimation("land", new Vector2(0, 4), 5);
-            // Animation.AddAnimation("die", new Vector2(0, 5), 7);
-            // Animation.ChangeAnimation(_currentAnimation);
-
+            _texture = texture;
             CanCollideTile = true;
         }
         public override void Reset()
@@ -54,6 +46,15 @@ namespace FinalComGame
             _beamingTime = 20.0f; 
             _rotationAngle = 0f;
             base.Reset();
+        }
+
+        public override void AddAnimation()
+        {
+            Animation = new Animation(_texture, 64, 96, new Vector2(64*6 , 96*3), 12);
+            Animation.AddAnimation("idle", new Vector2(0, 0), 12);
+            Animation.AddAnimation("run", new Vector2(0, 2), 6);
+
+            Animation.ChangeAnimation("idle");
         }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -86,7 +87,31 @@ namespace FinalComGame
                     break;
             }
 
+            UpdateAnimation(deltaTime);
             base.Update(gameTime, gameObjects, tileMap);
+        }
+
+        protected override void UpdateAnimation(float deltaTime)
+        {
+            string animation = "idle";
+
+            if (Velocity.X != 0f)
+            {
+                animation = "run";
+            }
+
+            if(_currentAnimation != animation)
+            {
+                _currentAnimation = animation;
+                switch (animation)
+                {
+                    default:
+                        Animation.ChangeAnimation(_currentAnimation);
+                        break;
+                }    
+            }
+
+            base.UpdateAnimation(deltaTime);
         }
 
         private void AI_Chase(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -273,7 +298,7 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            DrawDebug(spriteBatch);
+            //DrawDebug(spriteBatch);
         }
 
         protected override void DrawDebug(SpriteBatch spriteBatch)

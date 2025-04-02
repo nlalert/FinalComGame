@@ -12,10 +12,7 @@ namespace FinalComGame
             CanCollideTile = true;
             CanHitPlayer= false;
         }
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(_texture, Position, Color.White);
-        }
+
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
@@ -23,7 +20,7 @@ namespace FinalComGame
                 if(IsTouching(enemy))
                 {
                     OnProjectileHit(enemy);
-                    enemy.OnHitByProjectile(this, DamageAmount);
+                    enemy.OnHitByProjectile(this, BaseDamageAmount, false);
                         
                     IsActive = false;
                 }

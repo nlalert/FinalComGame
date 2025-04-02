@@ -36,7 +36,7 @@ namespace FinalComGame
             {
                 Console.WriteLine("HIT PLAYER");
                 OnProjectileHit(Singleton.Instance.Player);
-                Singleton.Instance.Player.OnHitByProjectile(this, DamageAmount);
+                Singleton.Instance.Player.OnHitByProjectile(this, DamageAmount, true);
             }
         }
 

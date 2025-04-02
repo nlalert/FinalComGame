@@ -138,9 +138,11 @@ namespace FinalComGame
                 58 => TileType.Ladder_Left,
                 59 => TileType.Ladder_Right,
                 77 or 78 or 79 => TileType.Ladder_Platform,
+                16 => TileType.Finish_Line,
                 18 => TileType.AmbushBarrier,
                 39 => TileType.AmbushAreaTopLeft,
                 38 => TileType.AmbushAreaBottomRight,
+
                 _ => TileType.None
             };
         }
@@ -149,7 +151,7 @@ namespace FinalComGame
         {
             return tileID switch
             {
-                17 or 19 => true,
+                16 or 17 or 19 => true,
                 _ => false
             };
         }

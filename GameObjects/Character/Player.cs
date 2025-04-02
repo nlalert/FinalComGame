@@ -606,7 +606,16 @@ namespace FinalComGame
                 }
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Attack) && !_isClimbing){
+            if (Singleton.Instance.IsKeyJustPressed(Attack) && !_isClimbing && CanStandUp(tileMap)){
+
+                if (_isCrouching) 
+                {
+                    Position.Y -= Singleton.TILE_SIZE;
+                    Viewport.Height = Singleton.TILE_SIZE * 2;
+                    WalkSpeed = 200;
+                    _isCrouching = false;
+                }
+
                 _isCharging = false;
                 _chargeTime = 0;
                 StartAttack();
@@ -905,7 +914,7 @@ namespace FinalComGame
             if (!_isAttacking) return;
             foreach (var enemy in gameObjects.OfType<BaseEnemy>())
             {
-                enemy.CheckHit(AttackHitbox, AttackDamage);
+                enemy.CheckHit(AttackHitbox, AttackDamage, true);
             }
         }
 
@@ -1022,6 +1031,11 @@ namespace FinalComGame
                                 tile.IsSolid = true;
                         }
 
+                        if (tile.Type == TileType.Finish_Line)
+                        {
+                            if (IsTouching(tile)) Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+                        }
+
                     }
                 }
             }
@@ -1130,12 +1144,12 @@ namespace FinalComGame
             _chargeTime = 0f;
         }
 
-        public override void OnHitByProjectile(GameObject gameObject,float damageAmount)
+        public override void OnHitByProjectile(GameObject gameObject, float damageAmount, bool isHeavyAttack)
         {
-            OnHit(damageAmount);
+            OnHit(damageAmount, false);
         }
         
-        public override void OnHit(float damageAmount)
+        public override void OnHit(float damageAmount, bool IsHeavyAttack)
         {
             if (IsInvincible()) 
                 return; // If i-frames are active, ignore damage
@@ -1165,13 +1179,13 @@ namespace FinalComGame
 
             Singleton.Instance.Camera.ShakeScreen(damageAmount / Health, 0.3f);
 
-            StartInvincibility();
+            StartInvincibility(false);
             Console.WriteLine("Damage " + damageAmount + "CurHP" + Health);
         }
 
         public override void OnCollideNPC(Character npc, float damageAmount)
         {
-            OnHit(damageAmount);
+            OnHit(damageAmount, false);
             //player.takeKnockback(npc.knockback);
             base.OnCollideNPC(npc, damageAmount);
         }
