@@ -256,7 +256,7 @@ public class PlayScene : Scene
 
         SetUpParallaxBackground();
         InitializeAmbushAreas();
-        // SpawnEnemies();
+        SpawnEnemies();
         SpawnItems();
         AddItems();
         SetupHUD();

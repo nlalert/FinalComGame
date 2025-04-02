@@ -45,14 +45,7 @@ namespace FinalComGame {
             Animation = _idleAnimation;
         }
         
-        // Spawn method with optional spawn effects
-        public virtual void Spawn(float x, float y, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
-        {
-            Vector2 position = new Vector2(x, y);
-            Spawn(position, gameObjects, spawnedEnemies);
-        }
-
-        public virtual BaseEnemy Spawn(Vector2 position, List<GameObject> gameObjects)
+        public BaseEnemy Spawn(Vector2 position, List<GameObject> gameObjects)
         {
             BaseEnemy newEnemy = (BaseEnemy)this.Clone(); // self clone 
             newEnemy.Position = position;
@@ -64,12 +57,6 @@ namespace FinalComGame {
             newEnemy.OnSpawn();
 
             return newEnemy;
-        }
-
-        public virtual void Spawn(Vector2 position, List<GameObject> gameObjects, List<BaseEnemy> spawnedEnemies)
-        {
-            BaseEnemy newEnemy = Spawn(position, gameObjects);
-            spawnedEnemies.Add(newEnemy);
         }
 
         public virtual void AddAnimation(){
