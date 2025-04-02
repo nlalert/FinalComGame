@@ -23,10 +23,10 @@ namespace FinalComGame
         }
 
         // // Method to be overridden by specific item types
-        public override void OnDrop(Vector2 position)
+        public override bool OnDrop(Vector2 position)
         {
             Singleton.Instance.Player.ChangeToFistAttack();
-            base.OnDrop(position);
+            return base.OnDrop(position);
         }
 
         public Rectangle GetAttackHitbox()

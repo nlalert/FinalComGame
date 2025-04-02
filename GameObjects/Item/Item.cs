@@ -66,10 +66,11 @@ public class Item : GameObject, IItemDisplayable
     }
 
     // Called when item is dropped
-    public virtual void OnDrop(Vector2 position)
+    public virtual bool OnDrop(Vector2 position)
     {
         IsPickedUp = false;
         Position = position;
+        return true; // drop success
     }
 
     public virtual void RemoveItem()
