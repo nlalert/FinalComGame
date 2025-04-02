@@ -317,7 +317,7 @@ public class PlayScene : Scene
             AttackCooldown = 0.2f,
 
             AttackWidth = 24, 
-            AttackHeight = 32,
+            AttackHeight = Singleton.TILE_SIZE * 2,
 
             BaseJumpStrength = 600f,
 

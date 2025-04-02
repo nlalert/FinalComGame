@@ -87,7 +87,7 @@ public class Camera
     {
         if (_shakeDuration > 0)
         {
-            _shakeDuration -= 0.016f; // Assuming 60 FPS, adjust as needed
+            _shakeDuration -= 0.016f; // Assuming 60 FPS
         }
         else
         {
