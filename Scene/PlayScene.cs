@@ -687,6 +687,7 @@ public class PlayScene : Scene
 
     private void SpawnItems()
     {
+        _ui.ClearWorldSpaceUI();
         foreach (var itemSpawnPoint in _collisionTileMap.GetItemSpawnPoints())
         {
             ItemManager.SpawnItem(itemSpawnPoint.Value, TileMap.GetTileWorldPositionAt(itemSpawnPoint.Key), _gameObjects);

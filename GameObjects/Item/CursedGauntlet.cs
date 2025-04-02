@@ -22,9 +22,9 @@ namespace FinalComGame
             _isActivated = false;
         }
 
-        public override void OnDrop(Vector2 position)
+        public override bool OnDrop(Vector2 position)
         {
-            //Can't Drop Item
+            return false; //can't drop
         }
         
         // // Method to be overridden by specific item types

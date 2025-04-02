@@ -99,6 +99,12 @@ namespace FinalComGame
         private Animation HandAnimation;
         private string _currentHandAnimation = "idle";
 
+        // Add these to your Player class variables
+        private float _item1HoldTime;
+        private float _item2HoldTime;
+        private bool _isHoldingItem1;
+        private bool _isHoldingItem2;
+        private const float DROP_ITEM_THRESHOLD = 0.5f; // Half a second hold to drop
 
         public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
         {
@@ -193,6 +199,9 @@ namespace FinalComGame
             ResetJumpStrength();
 
             _overlappedTile = TileType.None;
+            
+            _isHoldingItem1 = false;
+            _isHoldingItem2 = false;
 
             _isClimbing = false;
             _isCrouching = false;
@@ -202,6 +211,9 @@ namespace FinalComGame
             _isCharging = false;
             _isDashing = false;
             _isJumping = false;
+
+            _item1HoldTime = 0f;
+            _item2HoldTime = 0f;
 
             _coyoteTimeCounter = 0f;
             _jumpBufferCounter = 0f;
@@ -769,10 +781,57 @@ namespace FinalComGame
                 Inventory.CheckForItemPickup(gameObjects);
 
             if (Singleton.Instance.IsKeyJustPressed(Item1))
-                Inventory.UseItem(Inventory.ITEM_SLOT_1);
+            {
+                _isHoldingItem1 = true;
+                _item1HoldTime = 0f;
+            }
+            else if (Singleton.Instance.IsKeyPressed(Item1) && _isHoldingItem1)
+            {
+                _item1HoldTime += deltaTime;
                 
+                // If held longer than threshold, drop the item
+                if (_item1HoldTime >= DROP_ITEM_THRESHOLD)
+                {
+                    Inventory.DropItem(Inventory.ITEM_SLOT_1);
+                    _isHoldingItem1 = false;
+                }
+            }
+            else if (Singleton.Instance.IsKeyJustReleased(Item1))
+            {
+                if (_isHoldingItem1 && _item1HoldTime < DROP_ITEM_THRESHOLD)
+                {
+                    // Normal use if released before threshold
+                    Inventory.UseItem(Inventory.ITEM_SLOT_1);
+                }
+                _isHoldingItem1 = false;
+            }
+
+            // Similarly for Item2
             if (Singleton.Instance.IsKeyJustPressed(Item2))
-                Inventory.UseItem(Inventory.ITEM_SLOT_2);
+            {
+                _isHoldingItem2 = true;
+                _item2HoldTime = 0f;
+            }
+            else if (Singleton.Instance.IsKeyPressed(Item2) && _isHoldingItem2)
+            {
+                _item2HoldTime += deltaTime;
+                
+                // If held longer than threshold, drop the item
+                if (_item2HoldTime >= DROP_ITEM_THRESHOLD)
+                {
+                    Inventory.DropItem(Inventory.ITEM_SLOT_2);
+                    _isHoldingItem2 = false;
+                }
+            }
+            else if (Singleton.Instance.IsKeyJustReleased(Item2))
+            {
+                if (_isHoldingItem2 && _item2HoldTime < DROP_ITEM_THRESHOLD)
+                {
+                    // Normal use if released before threshold
+                    Inventory.UseItem(Inventory.ITEM_SLOT_2);
+                }
+                _isHoldingItem2 = false;
+            }
         }
 
         private void FireGrapplingHook(List<GameObject> gameObjects)

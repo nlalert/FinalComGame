@@ -58,10 +58,10 @@ public class RangeWeapon : Item, IShootable
         }
     }
     
-    public override void OnDrop(Vector2 position)
+    public override bool OnDrop(Vector2 position)
     {
         Singleton.Instance.Player.ChangeToSoulBulletAttack();
-        base.OnDrop(position);
+        return base.OnDrop(position);
     }
 
     public override void ActiveAbility(float deltaTime, int slot,List<GameObject> gameObjects)

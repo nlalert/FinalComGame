@@ -126,7 +126,15 @@ public class Inventory
             _itemSlots[slotIndex].Use(slotIndex);
         }
     }
+
+    public void DropItem(int slotIndex)
+    {
+        Item itemToDrop = GetItem(slotIndex);
     
+        if (itemToDrop != null && itemToDrop.OnDrop(Singleton.Instance.Player.Position))
+            _itemSlots[slotIndex] = null;
+    }
+
     // Add a consumable to the active consumables list and remove from inventory
     public void AddActiveConsumable(int slotIndex)
     {

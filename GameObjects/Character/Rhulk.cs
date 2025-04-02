@@ -34,6 +34,19 @@ namespace FinalComGame
             _texture = texture;
             CanCollideTile = true;
         }
+        public override void Reset()
+        {
+            _actionTimer = 0;     // Timer for aim/charge states
+            _isEnraged = false;    // Enrage phase flag
+            _isDashing =false ;
+            _chargeTime = 2.0f;
+            _dashTimer = 0f;
+            _dashDuration = 2f;
+            _beamchargingTime = 2.0f;
+            _beamingTime = 20.0f; 
+            _rotationAngle = 0f;
+            base.Reset();
+        }
 
         public override void AddAnimation()
         {
