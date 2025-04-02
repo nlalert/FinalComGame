@@ -10,8 +10,8 @@ public class Grenade : Item
 {
     public GrenadeProjectile GrenadeProjectile;
     
-    public Grenade(Texture2D texture, ItemType type, Vector2 Position)
-        : base(texture, Position, type)
+    public Grenade(Texture2D texture, ItemType type)
+        : base(texture, type)
     {
     }
     

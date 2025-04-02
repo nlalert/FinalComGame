@@ -226,6 +226,7 @@ public class PlayScene : Scene
 
         CreatePlayer();
         CreateEnemies();
+        CreateItemPrefabs();
 
         foreach (GameObject s in _gameObjects)
         {
@@ -255,7 +256,7 @@ public class PlayScene : Scene
 
         SetUpParallaxBackground();
         InitializeAmbushAreas();
-        SpawnEnemies();
+        // SpawnEnemies();
         SpawnItems();
         AddItems();
         SetupHUD();
@@ -551,6 +552,152 @@ public class PlayScene : Scene
             });
     }
 
+    private void CreateItemPrefabs()
+    {
+        //set for all item
+        Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
+        Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
+
+        Texture2D ItemTexture = _content.Load<Texture2D>("Items");
+        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
+        Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
+        
+        SoundEffect PotionUseSound = _content.Load<SoundEffect>("PotionUse");
+        SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
+        SoundEffect GunshotSound = _content.Load<SoundEffect>("Gunshot");
+        SoundEffect FireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
+        SoundEffect FireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
+
+        //TODO : Change these to real ITEM ID
+        ItemManager.AddGameItem(1000,
+            new Potion(ItemTexture, ItemType.Consumable){
+                Name =  "HealthPotion",
+                Description = "Test HealthPotion Description",
+                Viewport = ViewportManager.Get("Potion_Health"),
+                UseSound = PotionUseSound
+            });
+
+        ItemManager.AddGameItem(1001,
+            new SpeedPotion(ItemTexture, ItemType.Consumable){
+                Name =  "SpeedPotion",
+                Description = "Test SpeedPotion Description",
+                Viewport = ViewportManager.Get("Potion_Speed"),
+                UseSound = PotionUseSound
+            });
+
+        ItemManager.AddGameItem(1002,
+            new JumpPotion(ItemTexture, ItemType.Consumable){
+                Name =  "jumppotion",
+                Description = "Test JumpPotion Description",
+                Viewport = ViewportManager.Get("Potion_Jump"),
+                UseSound = PotionUseSound
+            });
+
+        ItemManager.AddGameItem(1003,
+            new Barrier(ItemTexture, ItemType.Consumable){
+                Name =  "barrier",
+                Description = "Test Barrier Description",
+                Viewport = ViewportManager.Get("Barrier"),
+                UseSound = PotionUseSound // Temp
+            });
+
+        ItemManager.AddGameItem(1004,
+            new LifeUp(ItemTexture, ItemType.Consumable){
+                Name =  "1Up",
+                Description = "Test LifeUp Description",
+                Viewport = ViewportManager.Get("LifeUp"),
+                UseSound = PotionUseSound // Temp
+            });
+
+        ItemManager.AddGameItem(1005,
+            new SpeedBoots(ItemTexture, ItemType.Accessory){
+                Name =  "SpeedBoots",
+                Description = "Test SpeedBoots Description",
+                Viewport = ViewportManager.Get("Speed_Boots")
+            });
+
+        ItemManager.AddGameItem(1006,
+            new CursedGauntlet(ItemTexture, ItemType.Accessory){
+                Name =  "CursedGauntlet",
+                Description = "Test CursedGauntlet Description",
+                Viewport = ViewportManager.Get("CursedGauntlet")
+            });
+
+        ItemManager.AddGameItem(1007,
+            new Sword(ItemTexture, ItemType.MeleeWeapon){
+                Name =  "Sword",
+                Description = "Test Sword Description",
+                Viewport = ViewportManager.Get("Sword"),
+                SlashSound = SwordSlashSound,
+            });
+
+        ItemManager.AddGameItem(1008,
+            new Gun(ItemTexture, ItemType.RangeWeapon){
+                Name =  "Gun",
+                Description = "Test Gun Description",
+                Viewport = ViewportManager.Get("Gun"),
+                ShootSound = GunshotSound,
+            });
+
+        ItemManager.AddGameItem(1009,
+            new Staff(ItemTexture, ItemType.RangeWeapon){
+                Name =  "Staff",
+                Description = "Test Staff Description",
+                MPCost = 10,
+                ShootSound = FireBallShootingSound,
+
+                FireBall = new FireBall(projectileTexture, ExplosionEffect, FireBallExplosionSound)
+                {
+                    Name = "FireBall",
+                    BaseDamageAmount = 30f,
+                    Speed = 500f,
+                    Radius = 60f,
+                    ExplosionDuration = 0.5f,
+                    Viewport = ViewportManager.Get("FireBall")
+                },
+                Viewport = ViewportManager.Get("Fire_Staff")
+            });
+
+        ItemManager.AddGameItem(1010,
+            new SoulStaff(ItemTexture,ItemType.Consumable){
+                Name =  "Staff",
+                Description = "Summon Your best Minion!",
+                MPCost = 10,
+                soulMinion = new SoulMinion(_SoulMinion)
+                {
+                    Name = "Soul Minion",
+                    BaseDamageAmount = 0f,
+                    Viewport = ViewportManager.Get("Soul_Minion"),
+                    soulBullet = new SoulBullet(_MinionSoulBullet){
+                        Name = "Soul Bullet",
+                        BaseDamageAmount = 15f,
+                        Speed = 150f,
+                        Viewport = ViewportManager.Get("Soul_Bullet")
+                    }
+                },
+                Viewport = ViewportManager.Get("Soul_Staff")
+            });
+
+        ItemManager.AddGameItem(1011,
+            new Grenade(ItemTexture, ItemType.Consumable){
+                Name =  "Grenade",
+                Description = "Test GrenadeTemp Description",
+                Viewport = ViewportManager.Get("Grenade"),
+                UseSound = PotionUseSound, // Temp
+
+                GrenadeProjectile = new GrenadeProjectile(projectileTexture, ExplosionEffect, FireBallExplosionSound)
+                {
+                    // Grenade properties
+                    Name = "GrenadeProjectile",
+                    BaseDamageAmount = 30f,
+                    Speed = 450f,
+                    Radius = 80f,
+                    ExplosionDuration = 0.5f,
+                    DetonateDelayDuration = 3.0f,
+
+                    Viewport = ViewportManager.Get("Grenade_Projectile")
+                }
+            });
     }
 
     private void SpawnEnemies()
@@ -558,140 +705,28 @@ public class PlayScene : Scene
         EnemyManager.SpawnWorldEnemy(_collisionTileMap.GetEnemySpawnPoints(), ambushAreas, _gameObjects);
     }
 
+    private void SpawnItems()
+    {
+        foreach (var itemSpawnPoint in _collisionTileMap.GetItemSpawnPoints())
+        {
+            ItemManager.SpawnItem(itemSpawnPoint.Value, TileMap.GetTileWorldPositionAt(itemSpawnPoint.Key), _gameObjects);
+        }
+    }
+
     private void AddItems()
     {
-        Texture2D ItemTexture = _content.Load<Texture2D>("Items");
-        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
-        Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
-        
-        //set for all item
-        Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
-        Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
-
-        SoundEffect PotionUseSound = _content.Load<SoundEffect>("PotionUse");
-        _gameObjects.Add(new Potion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(12, 90)){
-            Name =  "HealthPotion",
-            Description = "Test HealthPotion Description",
-            Viewport = ViewportManager.Get("Potion_Health"),
-            UseSound = PotionUseSound
-        });
-
-        _gameObjects.Add(new SpeedPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(31, 90)){
-            Name =  "SpeedPotion",
-            Description = "Test SpeedPotion Description",
-            Viewport = ViewportManager.Get("Potion_Speed"),
-            UseSound = PotionUseSound
-        });
-
-        _gameObjects.Add(new JumpPotion(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(35, 90)){
-            Name =  "jumppotion",
-            Description = "Test JumpPotion Description",
-            Viewport = ViewportManager.Get("Potion_Jump"),
-            UseSound = PotionUseSound
-        });
-
-        _gameObjects.Add(new Barrier(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(20, 90)){
-            Name =  "barrier",
-            Description = "Test Barrier Description",
-            Viewport = ViewportManager.Get("Barrier"),
-            UseSound = PotionUseSound // Temp
-        });
-
-        _gameObjects.Add(new LifeUp(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
-            Name =  "1Up",
-            Description = "Test LifeUp Description",
-            Viewport = ViewportManager.Get("LifeUp"),
-            UseSound = PotionUseSound // Temp
-        });
-
-        _gameObjects.Add(new SpeedBoots(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(24, 90)){
-            Name =  "SpeedBoots",
-            Description = "Test SpeedBoots Description",
-            Viewport = ViewportManager.Get("Speed_Boots")
-        });
-
-        _gameObjects.Add(new CursedGauntlet(ItemTexture, ItemType.Accessory, TileMap.GetTileWorldPositionAt(26, 80)){
-            Name =  "CursedGauntlet",
-            Description = "Test CursedGauntlet Description",
-            Viewport = ViewportManager.Get("CursedGauntlet")
-
-        });
-
-        SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
-        _gameObjects.Add(new Sword(ItemTexture, ItemType.MeleeWeapon, TileMap.GetTileWorldPositionAt(4, 90)){
-            Name =  "Sword",
-            Description = "Test Sword Description",
-            Viewport = ViewportManager.Get("Sword"),
-            SlashSound = SwordSlashSound,
-        });
-
-        SoundEffect GunshotSound = _content.Load<SoundEffect>("Gunshot");
-        _gameObjects.Add(new Gun(ItemTexture, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(8, 90)){
-            Name =  "Gun",
-            Description = "Test Gun Description",
-            Viewport = ViewportManager.Get("Gun"),
-            ShootSound = GunshotSound,
-        });
-
-
-        SoundEffect FireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
-        SoundEffect FireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
-        _gameObjects.Add(new Staff(ItemTexture, ItemType.RangeWeapon, TileMap.GetTileWorldPositionAt(40, 90)){
-            Name =  "Staff",
-            Description = "Test Staff Description",
-            MPCost = 10,
-            ShootSound = FireBallShootingSound,
-
-            FireBall = new FireBall(projectileTexture, ExplosionEffect, FireBallExplosionSound)
-            {
-                Name = "FireBall",
-                BaseDamageAmount = 30f,
-                Speed = 500f,
-                Radius = 60f,
-                ExplosionDuration = 0.5f,
-                Viewport = ViewportManager.Get("FireBall")
-            },
-            Viewport = ViewportManager.Get("Fire_Staff")
-        });
-
-        _gameObjects.Add(new SoulStaff(ItemTexture,ItemType.Consumable, TileMap.GetTileWorldPositionAt(16, 90)){
-            Name =  "Staff",
-            Description = "Summon Your best Minion!",
-            MPCost = 10,
-            soulMinion = new SoulMinion(_SoulMinion)
-            {
-                Name = "Soul Minion",
-                BaseDamageAmount = 0f,
-                Viewport = ViewportManager.Get("Soul_Minion"),
-                soulBullet = new SoulBullet(_MinionSoulBullet){
-                    Name = "Soul Bullet",
-                    BaseDamageAmount = 15f,
-                    Speed = 150f,
-                    Viewport = ViewportManager.Get("Soul_Bullet")
-                }
-            },
-            Viewport = ViewportManager.Get("Soul_Staff")
-        });
-
-        _gameObjects.Add(new Grenade(ItemTexture, ItemType.Consumable, TileMap.GetTileWorldPositionAt(1, 90)){
-            Name =  "Grenade",
-            Description = "Test GrenadeTemp Description",
-            Viewport = ViewportManager.Get("Grenade"),
-            UseSound = PotionUseSound, // Temp
-
-            GrenadeProjectile = new GrenadeProjectile(projectileTexture, ExplosionEffect, FireBallExplosionSound)
-            {
-                // Grenade properties
-                Name = "GrenadeProjectile",
-                BaseDamageAmount = 30f,
-                Speed = 450f,
-                Radius = 80f,
-                ExplosionDuration = 0.5f,
-                DetonateDelayDuration = 3.0f,
-
-                Viewport = ViewportManager.Get("Grenade_Projectile")
-            }
-        });
+        ItemManager.SpawnItem(1000, TileMap.GetTileWorldPositionAt(12, 90), _gameObjects);
+        ItemManager.SpawnItem(1001, TileMap.GetTileWorldPositionAt(31, 90), _gameObjects);
+        ItemManager.SpawnItem(1002, TileMap.GetTileWorldPositionAt(35, 90), _gameObjects);
+        ItemManager.SpawnItem(1003, TileMap.GetTileWorldPositionAt(20, 90), _gameObjects);
+        ItemManager.SpawnItem(1004, TileMap.GetTileWorldPositionAt(16, 90), _gameObjects);
+        ItemManager.SpawnItem(1005, TileMap.GetTileWorldPositionAt(24, 90), _gameObjects);
+        ItemManager.SpawnItem(1006, TileMap.GetTileWorldPositionAt(26, 80), _gameObjects);
+        ItemManager.SpawnItem(1007, TileMap.GetTileWorldPositionAt(4, 90), _gameObjects);
+        ItemManager.SpawnItem(1008, TileMap.GetTileWorldPositionAt(8, 90), _gameObjects);
+        ItemManager.SpawnItem(1009, TileMap.GetTileWorldPositionAt(40, 90), _gameObjects);
+        ItemManager.SpawnItem(1010, TileMap.GetTileWorldPositionAt(17, 90), _gameObjects);
+        ItemManager.SpawnItem(1011, TileMap.GetTileWorldPositionAt(1, 90), _gameObjects);
     }
 
     protected override void SetupHUD()

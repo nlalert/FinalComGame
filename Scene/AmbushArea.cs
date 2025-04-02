@@ -78,7 +78,7 @@ namespace FinalComGame
 
         private static void ChangeBarrierCollision(TileMap tileMap, bool IsSolid)
         {
-            foreach (var tile in tileMap.tiles)
+            foreach (var tile in tileMap.Tiles)
             {
                 if(tile.Value.Type == TileType.AmbushBarrier)
                     tile.Value.IsSolid = IsSolid;

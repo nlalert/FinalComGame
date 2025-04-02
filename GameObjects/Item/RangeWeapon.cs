@@ -20,8 +20,8 @@ public class RangeWeapon : Item, IShootable
     public float AttackDamage;
     protected int _ammoAmount;
 
-    public RangeWeapon(Texture2D texture, ItemType type, Vector2 Position, float attackDamage, int ammoAmount)
-        : base(texture, Position, type)
+    public RangeWeapon(Texture2D texture, ItemType type, float attackDamage, int ammoAmount)
+        : base(texture, type)
     {
         AttackDamage = attackDamage;
         _ammoAmount = ammoAmount;

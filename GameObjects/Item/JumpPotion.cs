@@ -11,8 +11,8 @@ namespace FinalComGame
         private float _jumpBoostDuration;
         private float _jumpBoostTimer;
 
-        public JumpPotion(Texture2D texture, ItemType type, Vector2 Position, float jumpModifier = 1.5f, float jumpBoostDuration = 5.0f)
-            : base(texture, Position, type)
+        public JumpPotion(Texture2D texture, ItemType type, float jumpModifier = 1.5f, float jumpBoostDuration = 5.0f)
+            : base(texture, type)
         {
             _jumpStrengthModifier = jumpModifier;
             _jumpBoostDuration = jumpBoostDuration;
