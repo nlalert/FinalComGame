@@ -36,7 +36,21 @@ namespace FinalComGame
             _texture = texture;
             CanCollideTile = true;
         }
-
+        public override void Reset()
+        {
+            _actionTimer = 0;     // Timer for aim/charge states
+            _isEnraged = false;    // Enrage phase flag
+            FloatDuration = 0.5f;   // Time floating above the player
+            SlamChargeDuration = 0.5f;  // Charging before slam
+            SlamSpeed = 1500f;
+            JumpsBeforeHighJump = 3;   // Number of normal jumps before high jump
+            _chargeTime = 2.0f;
+            _dashTimer = 0f;
+            _dashDuration = 2f;
+            _isSummoned = false;
+            _actionTimeOffset = 1f;
+            base.Reset();
+        }
         public override void AddAnimation(){
             Animation = new Animation(_texture, 96, 80, new Vector2(96*8, 80*5), 24);
 

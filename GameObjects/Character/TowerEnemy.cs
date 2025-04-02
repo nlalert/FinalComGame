@@ -20,7 +20,11 @@ namespace FinalComGame
             AttackRange = 900f;
             CanCollideTile = false;
         }
-
+        public override void Reset()
+        {
+            shootCooldown = 5.0f;
+            base.Reset();
+        }
         public override void OnSpawn()
         {
             Position -= new Vector2(4,4);

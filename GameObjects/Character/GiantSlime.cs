@@ -9,6 +9,8 @@ namespace FinalComGame
     {
         private int _jumpCounter = 0;       // Counts jumps before high jump
         private float _actionTimer = 0;     // Timer for aim/charge states
+        private float _timeBeforeJump = 2f;
+        private float _AimDuration =3f;
         private bool _isEnraged = false;    // Enrage phase flag
         public float Friction ;
         public float FloatDuration = 0.5f;   // Time floating above the player
@@ -38,6 +40,20 @@ namespace FinalComGame
 
             Animation.ChangeAnimation("idle");
         }
+        public override void Reset()
+        {
+            _jumpCounter = 0;       // Counts jumps before high jump
+            _actionTimer = 0;     // Timer for aim/charge states
+            _timeBeforeJump = 2f;
+            _AimDuration =3f;
+            _isEnraged = false;    // Enrage phase flag
+            FloatDuration = 0.5f;   // Time floating above the player
+            SlamChargeDuration = 0.5f;  // Charging before slam
+            SlamSpeed = 1500f;
+            JumpsBeforeHighJump = 3;   // Number of normal jumps before high jump
+            base.Reset();
+        }
+
 
         protected override void UpdateAnimation(float deltaTime)
         {
@@ -137,14 +153,14 @@ namespace FinalComGame
                 {
                     Console.WriteLine("Going to High Jump");
                     CurrentState = EnemyState.Jump;  // Jump High
-                    _actionTimer = 1f;
+                    _actionTimer = _timeBeforeJump;
                 }
                 else
                 {
                     Console.WriteLine("Normal Jump");
                     CurrentState = EnemyState.Jump;
                     _jumpCounter++;
-                    _actionTimer = 1f;
+                    _actionTimer = _timeBeforeJump;
                 }
             }
         }
@@ -166,7 +182,7 @@ namespace FinalComGame
                     Velocity = new Vector2(horizontalDir * JumpStrength * 0.6f, -JumpStrength * 1.8f); // Jump higher
                     CurrentState = EnemyState.Charging;
                     CanCollideTile = true;// ignore all tile
-                    _actionTimer = 3.0f;
+                    _actionTimer = _AimDuration;
                 }
                 else
                 {
@@ -196,11 +212,11 @@ namespace FinalComGame
                 CurrentState = EnemyState.Chase;
                 CanCollideTile = true;
                 _CanCollideVerticlel =true;
-                _actionTimer =1f;
+                _actionTimer = _timeBeforeJump;
                 _jumpCounter = 0;
             } else if(_actionTimer <=2 || (Position.Y <= Singleton.Instance.Player.GetPlayerCenter().Y -100 && this.Velocity.Y > 0)){
                 if(_actionTimer >2)
-                    _actionTimer = 2;
+                    _actionTimer = _timeBeforeJump;
                 CanCollideTile =true;
                 _CanCollideVerticlel =false;
                 Vector2 _AimTarget = Singleton.Instance.Player.GetPlayerCenter() + new Vector2(-this.Rectangle.Width/2,-100);

@@ -28,6 +28,17 @@ namespace FinalComGame
             verticalOffset = Singleton.Instance.Random.Next(0, 100); // Randomize hover start
             CanCollideTile = true;
         }
+        public override void Reset()
+        {
+            shootCooldown = 2.5f;
+            hoverSpeed = 50f; // Speed of horizontal movement
+            hoverAmplitude = 75f; // Max height difference for smooth hovering
+            hoverFrequency = 2f; // Speed of hover oscillation
+            preferredHeight = 150f; // Preferred height above player
+            loopOffset =0;
+            loopSpeed =2f;
+            base.Reset();
+        }
 
         public override void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
         {
