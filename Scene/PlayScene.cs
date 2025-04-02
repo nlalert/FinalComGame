@@ -221,13 +221,12 @@ public class PlayScene : Scene
             _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
             _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
         //}
-        _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
-
+        _collisionTileMap = new TileMap(_textureAtlas, GetCurrentStageCollisionPath(), 20);
 
         Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.TILE_SIZE,  _collisionTileMap.MapHeight * Singleton.TILE_SIZE); // Map size
         Singleton.Instance.Camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
 
-        Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
+        Singleton.Instance.Player.Position = _collisionTileMap.GetPlayerSpawnPoint();// get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
 
         SetUpParallaxBackground();
@@ -284,7 +283,6 @@ public class PlayScene : Scene
         Singleton.Instance.Player = new Player(playerTexture, playerParticle)
         {
             Name = "Player",
-            Position = StageManager.GetPlayerWorldSpawnPosition(),// get player location of each stage
             Life = 2,
             WalkSpeed = 200,
             CrouchSpeed = 100,
@@ -767,5 +765,16 @@ public class PlayScene : Scene
         _ui.AddHUDElement(RangeWeaponSlot);
         _ui.AddHUDElement(ItemSlot1);
         _ui.AddHUDElement(ItemSlot2);
+    }
+
+    public static string GetCurrentStageCollisionPath()
+    {
+        if (Singleton.Instance.Stage >= 4)
+        {
+            Console.WriteLine("No more stage : Replaying");
+            Singleton.Instance.Stage = 1;
+        }
+
+        return "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_Collision.csv";
     }
 }

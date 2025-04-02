@@ -11,6 +11,7 @@ namespace FinalComGame
         public Dictionary<Vector2, Tile> Tiles; //Grid Position, tile
         private Dictionary<Vector2, EnemyID> _enemySpawnPoints; 
         private Dictionary<Vector2, ItemID> _itemSpawnPoints;
+        private Vector2 _playerSpawnPoint;
 
         private Texture2D textureAtlas;
         private int numTilesPerRow;
@@ -62,13 +63,17 @@ namespace FinalComGame
                         if (int.TryParse(items[x], out int tileID) && tileID >= 0)
                         {
                             TileType type = GetTileType(tileID);
-                            if(type == TileType.EnemySpawn)
+                            switch (type)
                             {
-                                _enemySpawnPoints.Add(new Vector2(x, y), EnemyManager.GetEnemyIDFromTileID(tileID));
-                            }
-                            else if(type == TileType.ItemSpawn)
-                            {
-                                _itemSpawnPoints.Add(new Vector2(x, y), ItemManager.GetItemIDFromTileID(tileID));
+                                case TileType.EnemySpawn:
+                                    _enemySpawnPoints.Add(new Vector2(x, y), EnemyManager.GetEnemyIDFromTileID(tileID));
+                                    break;
+                                case TileType.ItemSpawn:
+                                    _itemSpawnPoints.Add(new Vector2(x, y), ItemManager.GetItemIDFromTileID(tileID));
+                                    break;
+                                case TileType.PlayerSpawn:
+                                    _playerSpawnPoint = new Vector2(x, y);
+                                    break;
                             }
 
                             Tile tile = new Tile(textureAtlas)
@@ -139,7 +144,7 @@ namespace FinalComGame
                 59 => TileType.Ladder_Right,
                 77 or 78 or 79 => TileType.Ladder_Platform,
                 16 => TileType.Finish_Line,
-                96 => TileType.Player_SpawnPoint,
+                96 => TileType.PlayerSpawn,
                 18 => TileType.AmbushBarrier,
                 39 => TileType.AmbushAreaTopLeft,
                 38 => TileType.AmbushAreaBottomRight,
@@ -202,6 +207,11 @@ namespace FinalComGame
         public Dictionary<Vector2, ItemID> GetItemSpawnPoints()
         {
             return _itemSpawnPoints;
+        }
+
+        public Vector2 GetPlayerSpawnPoint()
+        {
+            return GetTileWorldPositionAt(_playerSpawnPoint);
         }
 
         public List<AmbushArea> GetAmbushAreas()
