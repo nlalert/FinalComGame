@@ -9,7 +9,7 @@ namespace FinalComGame
     public class AmbushArea
     {
         private Rectangle _triggerZone;
-        private Dictionary<Vector2, int> _enemyWorldSpawnPoints;
+        private Dictionary<Vector2, EnemyID> _enemyWorldSpawnPoints;
         private List<BaseEnemy> _spawnedEnemies;
         private bool _isActive;
         private bool _isCleared;
@@ -20,7 +20,7 @@ namespace FinalComGame
             _spawnedEnemies = new List<BaseEnemy>();
             
             // Find enemy spawn points within this area
-            _enemyWorldSpawnPoints = new Dictionary<Vector2, int>();
+            _enemyWorldSpawnPoints = new Dictionary<Vector2, EnemyID>();
             foreach (var spawnPoint in tileMap.GetEnemySpawnPoints())
             {
                 Vector2 worldPosition = TileMap.GetTileWorldPositionAt(spawnPoint.Key);
