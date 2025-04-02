@@ -15,6 +15,7 @@ class Singleton
     public const int SCREEN_WIDTH = 1280;
     public const int TILE_SIZE = 16;
     public const int GRAVITY = 2000;
+    public const int MAX_VISIBLE_PROMPTS = 5;
     public Random Random;
     public int Stage;
     public Player Player;

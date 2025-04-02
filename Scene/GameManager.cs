@@ -133,6 +133,7 @@ public class GameManager : Game
                 
         Singleton.Instance.CurrentUI.DrawWorldSpaceUI(_spriteBatch);
         Singleton.Instance.CurrentUI.DrawHUD(_spriteBatch);
+        Singleton.Instance.CurrentUI.DrawPrompts(_spriteBatch);
         base.Draw(gameTime);
     }
 }
