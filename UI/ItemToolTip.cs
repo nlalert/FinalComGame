@@ -24,7 +24,7 @@ public class ItemTooltip : WorldSpaceUIElement
     {
         // Split the display text into title and content
         string itemName = item.Name;
-        string itemDetails = "\n\n" + item.Description + "\n" + item.GetDisplayProperties() + "\n\nPress " + Singleton.Instance.Player.Interact + " to pick up";
+        string itemDetails = "\n\n" + item.Description + "\n" + item.GetDisplayProperties();
         
         // Build full display text for size measurement
         _displayText = itemName + itemDetails;
@@ -67,7 +67,7 @@ public class ItemTooltip : WorldSpaceUIElement
         
         // Split the display text into title and content
         string itemName = item.Name;
-        string itemDetails = "\n" + item.Description + "\n" + item.GetDisplayProperties() + "\n\nPress " + Singleton.Instance.Player.Interact + " to pick up";
+        string itemDetails = "\n" + item.Description + "\n" + item.GetDisplayProperties();
         
         // Measure the item name and full content
         Vector2 nameSize = Singleton.Instance.GameFont.MeasureString(itemName) * fontScale;

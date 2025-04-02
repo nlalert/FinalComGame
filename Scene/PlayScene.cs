@@ -630,7 +630,7 @@ public class PlayScene : Scene
                     Name = "FireBall",
                     BaseDamageAmount = 30f,
                     Speed = 500f,
-                    Radius = 60f,
+                    Radius = 30f,
                     ExplosionDuration = 0.5f,
                     Viewport = ViewportManager.Get("FireBall"),
                     BaseExplosion = new Explosion(projectileTexture, FireBallExplosionSound)
@@ -674,7 +674,7 @@ public class PlayScene : Scene
                     Name = "GrenadeProjectile",
                     BaseDamageAmount = 30f,
                     Speed = 450f,
-                    Radius = 80f,
+                    Radius = 50f,
                     ExplosionDuration = 0.5f,
                     DetonateDelayDuration = 3.0f,
                     Viewport = ViewportManager.Get("Grenade_Projectile"),
