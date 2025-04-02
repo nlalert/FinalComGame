@@ -30,6 +30,12 @@ public class GameOverScene : Scene
 
         SetupHUD();
     }
+    
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+        PauseSong();
+    }
 
     protected override void SetupHUD()
     {
@@ -78,26 +84,5 @@ public class GameOverScene : Scene
         _ui.AddHUDElement(_restartButton);
         _ui.AddHUDElement(_mainmenuButton);
         _ui.AddHUDElement(_exitButton);
-    }
-
-    private void MainMenuButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;
-    }
-
-    private void RestartButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
-    }
-
-    private void ExitGameButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Exit;
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-        PauseSong();
     }
 }

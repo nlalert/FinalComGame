@@ -145,15 +145,5 @@ namespace FinalComGame
             _ui.AddHUDElement(_startButton);
             _ui.AddHUDElement(_exitButton);
         }
-
-        private void ExitGameButton_OnClick(object sender, EventArgs e)
-        {
-            Singleton.Instance.CurrentGameState = Singleton.GameState.Exit;
-        }
-
-        private void StartGameButton_OnClick(object sender, EventArgs e)
-        {
-            Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
-        }
     }
 }

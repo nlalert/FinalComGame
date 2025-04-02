@@ -32,6 +32,12 @@ public class PauseMenu : Scene
         SetupHUD();
     }
 
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+        PauseSong();
+    }
+    
     protected override void SetupHUD()
     {
         int TextWidth = Singleton.SCREEN_WIDTH / 2;
@@ -89,31 +95,5 @@ public class PauseMenu : Scene
         _ui.AddHUDElement(_restartButton);
         _ui.AddHUDElement(_settingsButton);
         _ui.AddHUDElement(_mainmenuButton);
-    }
-
-    private void MainMenuButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.MainMenu;
-    }
-
-    private void SettingButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Settings;
-    }
-
-    private void RestartButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
-    }
-
-    private void ResumeButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-        PauseSong();
     }
 }
