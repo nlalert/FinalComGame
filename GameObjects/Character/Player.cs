@@ -767,9 +767,6 @@ namespace FinalComGame
 
             Console.WriteLine("shooting grapple");
             Vector2 AimDirection = new Vector2(5f* this.Direction , -5f );
-            //it actully dont need hookHeadTexture but I lazy to remove so just leave it here so it not bugged
-            // i try...
-            // - Feen
             _grapplingHook = new GrapplingHook(_hookHeadTexture){
                 Name = "GrapplingHook",
                 BaseDamageAmount = 0f,
@@ -777,7 +774,7 @@ namespace FinalComGame
                 Viewport = ViewportManager.Get("Grappling_Hook"),
                 RopeTexture = _ropeTexture,
             }; // Load a grappling hook texture
-            _grapplingHook.Shoot(Position, AimDirection); // Aim towards mouse or direction
+            _grapplingHook.Shoot(Position, AimDirection);
             gameObjects.Add(_grapplingHook);
         }
 
@@ -887,13 +884,6 @@ namespace FinalComGame
                 _isGliding = false;
                 return;
             }
-            
-            // // Generate particles if gliding
-            // if (isGliding)
-            // {
-            //     // You could add special particles here for gliding effect
-            //     _particle.Update(Position);
-            // }
         }
 
         private void UpdateCoyoteTime(float deltaTime)
@@ -1066,14 +1056,6 @@ namespace FinalComGame
                 newBullet.Viewport = ViewportManager.Get("Charge_Bullet_0");
             
             gameObjects.Add(newBullet);
-            
-            // // Scale bullet size with charge (optional)
-            // float sizeMultiplier = 1.0f + chargeRatio;
-            // newBullet.Rectangle.Width = (int)(newBullet.Rectangle.Width * sizeMultiplier);
-            // newBullet.Rectangle.Height = (int)(newBullet.Rectangle.Height * sizeMultiplier);
-            
-            // Change color based on charge (optional)
-            // newBullet.Color = chargeColor;
 
             BulletShotSound.Play();
             
@@ -1160,7 +1142,7 @@ namespace FinalComGame
             base.DrawDebug(spriteBatch);
         }
 
-                // New method to apply gravity depending on glide state
+        // New method to apply gravity depending on glide state
         protected override void ApplyGravity(float deltaTime)
         {
             if (_isGliding)
