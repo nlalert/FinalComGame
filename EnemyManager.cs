@@ -68,42 +68,4 @@ public class EnemyManager
             }
         }
     }
-
-    // For backward compatibility - convert from Vector2/int dictionary to Vector2/EnemyID dictionary
-    public static Dictionary<Vector2, EnemyID> ConvertSpawnPoints(Dictionary<Vector2, int> oldSpawnPoints)
-    {
-        Dictionary<Vector2, EnemyID> newSpawnPoints = new Dictionary<Vector2, EnemyID>();
-        
-        foreach (var kvp in oldSpawnPoints)
-        {
-            newSpawnPoints[kvp.Key] = GetEnemyIDFromTileID(kvp.Value);
-        }
-        
-        return newSpawnPoints;
-    }
-
-    // Helper method to get enemy by ID (useful for debugging/editor tools)
-    public static BaseEnemy GetEnemyPrefab(EnemyID enemyID)
-    {
-        if (_enemyPrefabs.TryGetValue(enemyID, out BaseEnemy enemy))
-            return enemy;
-        return null;
-    }
-
-    // Helper method to get all available enemy types
-    public static List<EnemyID> GetAllEnemyTypes()
-    {
-        return new List<EnemyID>(_enemyPrefabs.Keys);
-    }
-
-    // Spawn a random enemy at a position (useful for random encounters or tests)
-    public static BaseEnemy SpawnRandomEnemy(Vector2 spawnPosition, List<GameObject> gameObjects)
-    {
-        if (_enemyPrefabs.Count == 0)
-            return null;
-            
-        List<EnemyID> enemyTypes = new List<EnemyID>(_enemyPrefabs.Keys);
-        int randomIndex = Singleton.Instance.Random.Next(enemyTypes.Count);
-        return SpawnEnemy(enemyTypes[randomIndex], spawnPosition, gameObjects);
-    }
 }

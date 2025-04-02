@@ -113,7 +113,7 @@ namespace FinalComGame
                 _ => "Tile",
             };
         }
-        
+
         private static TileType GetTileType(int tileID)
         {
             // Check if it's an enemy spawn point
@@ -179,12 +179,6 @@ namespace FinalComGame
             return false;
         }
 
-        public Tile GetTileAtGetTileAtGridPosition(int tileX, int tileY)
-        {
-            Vector2 tileGridPosition = new Vector2(tileX, tileY);
-            return GetTileAtGridPosition(tileGridPosition);
-        }
-
         public Tile GetTileAtGridPosition(Vector2 tileGridPosition)
         {
             if(Tiles.TryGetValue(tileGridPosition, out Tile value))
@@ -194,12 +188,6 @@ namespace FinalComGame
         }
         public Tile GetTileAtWorldPostion(Vector2 worldPostion)
         {
-            return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
-        }
-
-        public Tile GetTileAtWorldPostion(int x, int y)
-        {
-            Vector2 worldPostion = new Vector2(x, y);
             return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
         }
 
