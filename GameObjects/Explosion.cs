@@ -101,18 +101,20 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            float scale = Radius * 2 / _texture.Width;
-            Vector2 origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
-            Vector2 center = new Vector2(Position.X + Viewport.Width / 2, Position.Y + Viewport.Height / 2);
+            float diameter = Radius * 2;
+            float scaleX = diameter / Viewport.Width;
+            float scaleY = diameter / Viewport.Height;
+            Vector2 origin = new Vector2(Viewport.Width / 2, Viewport.Height / 2);
             
+            // Draw the explosion
             spriteBatch.Draw(
                 _texture, 
-                center, 
-                null, 
+                Position, 
+                Viewport, 
                 Color.White * _alpha, 
                 0f, 
                 origin, 
-                scale, 
+                new Vector2(scaleX, scaleY), 
                 SpriteEffects.None, 
                 0f
             );

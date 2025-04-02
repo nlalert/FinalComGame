@@ -46,7 +46,7 @@ public class ViewportManager
         {"Soul_Staff", new Rectangle(0, 32, 32, 32)},
         {"Grenade", new Rectangle(64, 96, 32, 32)},
         {"Grenade_Projectile", new Rectangle(52, 17, 9, 13)},
-        {"Explosion", new Rectangle(0, 0, 64, 64)},
+        {"Explosion", new Rectangle(32, 48, 32, 32)},
     };
     
     public static Rectangle Get(string name){
