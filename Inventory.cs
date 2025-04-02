@@ -195,7 +195,7 @@ public class Inventory
                     }
                     else
                     {
-                        Console.WriteLine("Inventory full, cannot pick up " + item.Name);
+                        Singleton.Instance.CurrentUI.Prompt("Inventory is full!");
                     }
                 }
             }
