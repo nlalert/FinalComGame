@@ -540,7 +540,6 @@ public class PlayScene : Scene
 
         Texture2D ItemTexture = _content.Load<Texture2D>("Items");
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
-        Texture2D ExplosionEffect = _content.Load<Texture2D>("Explosion");
         
         SoundEffect PotionUseSound = _content.Load<SoundEffect>("PotionUse");
         SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
@@ -626,7 +625,7 @@ public class PlayScene : Scene
                 MPCost = 10,
                 ShootSound = FireBallShootingSound,
 
-                FireBall = new FireBall(projectileTexture, ExplosionEffect, FireBallExplosionSound)
+                FireBall = new FireBall(projectileTexture, projectileTexture, FireBallExplosionSound)
                 {
                     Name = "FireBall",
                     BaseDamageAmount = 30f,
@@ -665,7 +664,7 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Grenade"),
                 UseSound = PotionUseSound, // Temp
 
-                GrenadeProjectile = new GrenadeProjectile(projectileTexture, ExplosionEffect, FireBallExplosionSound)
+                GrenadeProjectile = new GrenadeProjectile(projectileTexture, projectileTexture, FireBallExplosionSound)
                 {
                     // Grenade properties
                     Name = "GrenadeProjectile",
