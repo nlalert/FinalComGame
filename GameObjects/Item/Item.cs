@@ -27,22 +27,16 @@ public class Item : GameObject, IItemDisplayable
     
     // Visual indicator for pickup range
     public float pickupRadius = 40f;
-    protected Vector2 originalPosition;
     
     // Tooltip related properties
-    private bool isPlayerNearby = false;
     private ItemTooltip tooltip;
-    private const float TOOLTIP_FADE_SPEED = 5f; // Fade speed per second
     
     // Constructor
-    public Item(Texture2D texture, Vector2 Position, ItemType type)
+    public Item(Texture2D texture, ItemType type)
         : base(texture)
     {
         IsPickedUp = false;
         Type = type;
-
-        this.Position = Position;
-        originalPosition = Position;
         
         // Create tooltip
         tooltip = new ItemTooltip(this, TooltipBackgroundTexture);
@@ -73,7 +67,6 @@ public class Item : GameObject, IItemDisplayable
     {
         IsPickedUp = false;
         Position = position;
-        originalPosition = position;
     }
 
     public virtual void RemoveItem()
@@ -95,20 +88,6 @@ public class Item : GameObject, IItemDisplayable
 
         ApplyGravity(deltaTime);
         UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
-        
-        // Check if player is in pickup radius
-        bool wasPlayerNearby = isPlayerNearby;
-        isPlayerNearby = InPickupRadius();
-        
-        // // Update tooltip fade
-        // if (isPlayerNearby)
-        // {
-        //     tooltipFadeIn = Math.Min(1f, tooltipFadeIn + TOOLTIP_FADE_SPEED * deltaTime);
-        // }
-        // else
-        // {
-        //     tooltipFadeIn = Math.Max(0f, tooltipFadeIn - TOOLTIP_FADE_SPEED * deltaTime);
-        // }
            
         base.Update(gameTime, gameObjects, tileMap);
     }
