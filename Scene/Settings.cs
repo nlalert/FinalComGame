@@ -15,14 +15,6 @@ public class Settings : Scene
     private SlideBarUI _musicVolumeSlider;
     private SlideBarUI _soundEffectVolumeSlider;
     private Button _backButton;
-    private int buttonGap;
-    public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
-    {
-        base.Initialize(gameManager, graphicsDevice, graphicsDeviceManager, content);
-        
-        // a gap between each button
-        buttonGap = 5;
-    }
 
     public override void LoadContent(SpriteBatch spriteBatch)
     {
@@ -34,7 +26,7 @@ public class Settings : Scene
     {
         base.Update(gameTime);
         _gameManager.IsMouseVisible = true;
-        
+
         Singleton.Instance.MusicVolume = _musicVolumeSlider.GetValue()/100;
         Singleton.Instance.SFXVolume = _soundEffectVolumeSlider.GetValue()/100;
 
