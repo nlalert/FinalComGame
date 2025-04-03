@@ -244,7 +244,7 @@ namespace FinalComGame
                 Vector2 direction = Position - _dashAim;
                 direction.Normalize();
                 Vector2 perpendicularDirection = new Vector2(-direction.Y, direction.X);
-                _barrierstart = Singleton.Instance.Player.GetPlayerCenter() - direction * 100f;
+                _barrierstart = Singleton.Instance.Player.GetPlayerCenter() - direction * 100f;// push further from player
                 _barrierEnd = _barrierstart - perpendicularDirection * 350;
                 _barrierEnd1 = _barrierstart - perpendicularDirection * -350;
             }
@@ -262,6 +262,9 @@ namespace FinalComGame
             if (_isDashing)
             {
                 _dashTimer -= deltaTime;
+                if(Vector2.Distance(_dashAim,Position)<50f){
+                    CanCollideTile = true;
+                }
                 if (_dashTimer <=0 || IsIntersect(_barrierEnd,_barrierEnd1,_dashStart,Position))
                 {
                     //Console.WriteLine("Hellhound finished dashing, switching to chase mode.");
@@ -298,11 +301,31 @@ namespace FinalComGame
         }
         public override void OnCollisionHorizon()
         {
+            if(CurrentState == EnemyState.Chase){
+                if (!_isJumping){
+                    _isJumping = true;
+                    Velocity.Y = -600f;
+                }
+            }
             base.OnCollisionHorizon();
+            if(CurrentState == EnemyState.Dash && _isDashing){
+                _isDashing = false;
+                CurrentState = EnemyState.Chase;
+                _actionTimer =5f;
+                CanCollideTile = true;
+                _isJumping = false;
+            }
         }
         public override void OnLandVerticle()
         {
             _isJumping = false;
+            if(CurrentState == EnemyState.Dash && _isDashing){
+                _isDashing = false;
+                CurrentState = EnemyState.Chase;
+                _actionTimer =5f;
+                CanCollideTile = true;
+                _isJumping = false;
+            }
         }
 
         // protected override void UpdateAnimation(float deltaTime)
@@ -365,7 +388,6 @@ namespace FinalComGame
                 DrawLine(spriteBatch, _dashAim, Position, Color.Green);
                 // Draw 90-degree line at the Aim position
                 DrawLine(spriteBatch,_barrierEnd,_barrierEnd1, Color.Blue);
-
             }
         }
 
