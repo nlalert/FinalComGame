@@ -9,24 +9,16 @@ namespace FinalComGame
     public class TileMap
     {
         public Dictionary<Vector2, Tile> Tiles; //Grid Position, tile
-        private Dictionary<Vector2, EnemyID> _enemySpawnPoints; 
-        private Dictionary<Vector2, ItemID> _itemSpawnPoints;
-        private Vector2 _playerSpawnPoint;
-
         private Texture2D textureAtlas;
         private int numTilesPerRow;
         public int MapWidth;
         public int MapHeight;
 
-        public TileMap(Texture2D textureAtlas, string mapPath, int numTilesPerRow)
+        public TileMap(Texture2D textureAtlas, int numTilesPerRow)
         {
             this.textureAtlas = textureAtlas;
             this.numTilesPerRow = numTilesPerRow;
             Tiles = new Dictionary<Vector2, Tile>();
-            _enemySpawnPoints = new Dictionary<Vector2, EnemyID>();
-            _itemSpawnPoints = new Dictionary<Vector2, ItemID>();
-
-            LoadMap(mapPath);
         }
 
         public void Update(GameTime gameTime, List<GameObject> gameObjects)
@@ -35,7 +27,6 @@ namespace FinalComGame
             {
                 tile.Value.Update(gameTime, gameObjects, this);
             }
-
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -46,7 +37,7 @@ namespace FinalComGame
             }
         }
 
-        private void LoadMap(string filepath)
+        public void LoadMap(string filepath)
         {
             using (StreamReader reader = new StreamReader(filepath))
             {
@@ -63,24 +54,13 @@ namespace FinalComGame
                         if (int.TryParse(items[x], out int tileID) && tileID >= 0)
                         {
                             TileType type = GetTileType(tileID);
-                            switch (type)
-                            {
-                                case TileType.EnemySpawn:
-                                    _enemySpawnPoints.Add(new Vector2(x, y), EnemyManager.GetEnemyIDFromTileID(tileID));
-                                    break;
-                                case TileType.ItemSpawn:
-                                    _itemSpawnPoints.Add(new Vector2(x, y), ItemManager.GetItemIDFromTileID(tileID));
-                                    break;
-                                case TileType.PlayerSpawn:
-                                    _playerSpawnPoint = new Vector2(x, y);
-                                    break;
-                            }
-
+                            
                             Tile tile = new Tile(textureAtlas)
                             {
                                 Name = "Tile",
+                                ID = tileID,
                                 Type = type,
-                                Position = GetTileWorldPositionAt(x, y), // Convert grid position to pixel position
+                                Position = GetTileWorldPositionAt(x, y),
                                 Viewport = GetTileViewport(tileID),
                                 IsSolid = GetTileCollisionType(tileID)
                             };
@@ -91,6 +71,55 @@ namespace FinalComGame
                 }
                 MapHeight = y;
             }
+        }
+
+        // Methods to get spawn points on demand
+        public Dictionary<Vector2, EnemyID> GetEnemySpawnPoints()
+        {
+            Dictionary<Vector2, EnemyID> enemySpawnPoints = new Dictionary<Vector2, EnemyID>();
+            
+            foreach (var tile in Tiles)
+            {
+                if (tile.Value.Type == TileType.EnemySpawn)
+                {
+                    Vector2 gridPosition = tile.Key;
+                    int tileID = tile.Value.ID;
+                    enemySpawnPoints.Add(gridPosition, EnemyManager.GetEnemyIDFromTileID(tileID));
+                }
+            }
+            
+            return enemySpawnPoints;
+        }
+
+        public Dictionary<Vector2, ItemID> GetItemSpawnPoints()
+        {
+            Dictionary<Vector2, ItemID> itemSpawnPoints = new Dictionary<Vector2, ItemID>();
+            
+            foreach (var tile in Tiles)
+            {
+                if (tile.Value.Type == TileType.ItemSpawn)
+                {
+                    Vector2 gridPosition = tile.Key;
+                    int tileID = tile.Value.ID;
+                    itemSpawnPoints.Add(gridPosition, ItemManager.GetItemIDFromTileID(tileID));
+                }
+            }
+            
+            return itemSpawnPoints;
+        }
+
+        public Vector2 GetPlayerSpawnPoint()
+        {
+            foreach (var tileEntry in Tiles)
+            {
+                if (tileEntry.Value.Type == TileType.PlayerSpawn)
+                {
+                    return GetTileWorldPositionAt(tileEntry.Key);
+                }
+            }
+            
+            // Default spawn if none found
+            return new Vector2(0, 0);
         }
 
         public static Vector2 GetTileWorldPositionAt(int tileGridX, int tileGridY)
@@ -188,21 +217,6 @@ namespace FinalComGame
         public Tile GetTileAtWorldPostion(Vector2 worldPostion)
         {
             return GetTileAtGridPosition(GetTileGridPositionAt(worldPostion));
-        }
-
-        public Dictionary<Vector2, EnemyID> GetEnemySpawnPoints()
-        {
-            return _enemySpawnPoints;
-        }
-
-        public Dictionary<Vector2, ItemID> GetItemSpawnPoints()
-        {
-            return _itemSpawnPoints;
-        }
-
-        public Vector2 GetPlayerSpawnPoint()
-        {
-            return GetTileWorldPositionAt(_playerSpawnPoint);
         }
 
         public List<AmbushArea> GetAmbushAreas()

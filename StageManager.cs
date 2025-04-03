@@ -19,6 +19,16 @@ public class StageManager
     private TileMap _foregroundTileMap;
 
     private List<AmbushArea> _ambushAreas;
+    private Dictionary<Vector2, EnemyID> _enemySpawnPoints; 
+    private Dictionary<Vector2, ItemID> _itemSpawnPoints;
+    private Vector2 _playerSpawnPoint;
+
+    public StageManager()
+    {
+        _ambushAreas = new List<AmbushArea>();
+        _enemySpawnPoints = new Dictionary<Vector2, EnemyID>();
+        _itemSpawnPoints = new Dictionary<Vector2, ItemID>();
+    }
 
     public void UpdateParallaxBackground(GameTime gameTime)
     {
@@ -52,11 +62,21 @@ public class StageManager
 
     public void LoadTileMaps(Texture2D textureAtlas)
     {
-        _backgroundTileMap = new TileMap(textureAtlas, GetCurrentStagePath() + "_BackGround.csv", 20);
-        _middlegroundTileMap = new TileMap(textureAtlas, GetCurrentStagePath() + "_MidGround.csv", 20);
-        _foregroundTileMap = new TileMap(textureAtlas, GetCurrentStagePath() + "_ForeGround.csv", 20);
+        _backgroundTileMap = new TileMap(textureAtlas, 20);
+        _middlegroundTileMap = new TileMap(textureAtlas, 20);
+        _foregroundTileMap = new TileMap(textureAtlas, 20);
         
-        _collisionTileMap = new TileMap(textureAtlas, GetCurrentStagePath() + "_Collision.csv", 20);
+        _collisionTileMap = new TileMap(textureAtlas, 20);
+
+        _backgroundTileMap.LoadMap(GetCurrentStagePath() + "_BackGround.csv");
+        _middlegroundTileMap.LoadMap(GetCurrentStagePath() + "_MidGround.csv");
+        _foregroundTileMap.LoadMap(GetCurrentStagePath() + "_ForeGround.csv");
+        
+        _collisionTileMap.LoadMap(GetCurrentStagePath() + "_Collision.csv");
+
+        _enemySpawnPoints = _collisionTileMap.GetEnemySpawnPoints();
+        _itemSpawnPoints = _collisionTileMap.GetItemSpawnPoints();
+        _playerSpawnPoint = _collisionTileMap.GetPlayerSpawnPoint();
     }
 
     public static string GetCurrentStagePath()
@@ -74,6 +94,11 @@ public class StageManager
         return _collisionTileMap.GetItemSpawnPoints();
     }
 
+    public Vector2 GetPlayerWorldSpawnPoint()
+    {
+        return _collisionTileMap.GetPlayerSpawnPoint();
+    }
+
     public int GetMapWorldWidth()
     {
         return _collisionTileMap.MapWidth * Singleton.TILE_SIZE;
@@ -83,10 +108,6 @@ public class StageManager
         return _collisionTileMap.MapHeight * Singleton.TILE_SIZE;
     }
 
-    public Vector2 GetPlayerWorldSpawnPoint()
-    {
-        return _collisionTileMap.GetPlayerSpawnPoint();
-    }
 
     public void SetUpParallaxBackground(ContentManager content, GraphicsDevice graphicsDevice)
     {
