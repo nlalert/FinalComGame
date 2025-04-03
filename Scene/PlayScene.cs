@@ -18,6 +18,21 @@ public class PlayScene : Scene
     private Texture2D _LaserTexture;
     private Texture2D _HookHeadTexture;
     private Texture2D _RopeTexture; 
+    private Texture2D _whiteTexture; // For SignBoard backgrounds         // TODO : Change to desire texture
+    private Texture2D _playerTexture;
+    private Texture2D _projectileTexture; // Used by many objects
+    private Texture2D _itemTexture; // Used for all items
+    private Texture2D _slotTexture; // For UI/inventory slots
+    private Texture2D _skeletonTexture;
+    private Texture2D _hellhoundTexture;
+    private Texture2D _slimeTexture;
+    private Texture2D _demonTexture;
+    private Texture2D _towerTexture;
+    private Texture2D _platformEnemyTexture;
+    private Texture2D _giantSlimeTexture;
+    private Texture2D _cerberusTexture;
+    private Texture2D _rhulkTexture;
+    private Texture2D _itemSlotTexture;
 
     private ParallaxBackground _parallaxBackground;
     private Texture2D _backgroundLayer1;
@@ -46,15 +61,35 @@ public class PlayScene : Scene
     {
         base.LoadContent(spriteBatch);
 
+        _RopeTexture = _content.Load<Texture2D>("Rope");
+        _textureAtlas = _content.Load<Texture2D>("Tileset");
+        
+        _whiteTexture = new Texture2D(_graphicsDevice, 1, 1);
+        _whiteTexture.SetData(new[] { Color.White });
+        
+        _playerTexture = _content.Load<Texture2D>("Char");
+        _projectileTexture = _content.Load<Texture2D>("Projectile");
         _LaserTexture = _content.Load<Texture2D>("Laserbeam");
         _HookHeadTexture = _content.Load<Texture2D>("HookHead");
-        _RopeTexture = _content.Load<Texture2D>("Rope");
+        _itemTexture = _content.Load<Texture2D>("Items");
+        _slotTexture = _content.Load<Texture2D>("ItemSlot");
+        
+        // Enemy textures
+        _skeletonTexture = _content.Load<Texture2D>("Skeleton");
+        _hellhoundTexture = _content.Load<Texture2D>("HellHound");
+        _slimeTexture = _content.Load<Texture2D>("HellSlime");
+        _demonTexture = _content.Load<Texture2D>("Demon");
+        _towerTexture = _content.Load<Texture2D>("Spitter");
+        _platformEnemyTexture = _content.Load<Texture2D>("Crab");
 
-        _textureAtlas = _content.Load<Texture2D>("Tileset");
+        _giantSlimeTexture = _content.Load<Texture2D>("LargeSlime");
+        _cerberusTexture = _content.Load<Texture2D>("Cerberus");
+        _rhulkTexture = _content.Load<Texture2D>("Rhulk");
 
+        //UI
+        _itemSlotTexture = _content.Load<Texture2D>("ItemSlot");
         _song = _content.Load<Song>("ChillSong");
     }
-
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
@@ -263,15 +298,11 @@ public class PlayScene : Scene
 
     private void AddSignBoard()
     {
-        // TODO : Change to desire texture
-        Texture2D signTexture = new Texture2D(_graphicsDevice, 1, 1);
-        signTexture.SetData(new[] { Color.White });
-
         // TODO : More dynamic stage management sign
         if(Singleton.Instance.Stage == 0)
         {
             SignBoard WalkTutorialSign = new SignBoard(
-                signTexture,
+                _whiteTexture,
                 "Press Left or Right Arrow Key to move around!",
                 TileMap.GetTileWorldPositionAt(10, 30),  // TopLeft Position  // TODO : More dynamic
                 200,                    // Width
@@ -280,7 +311,7 @@ public class PlayScene : Scene
                 Color.Gold
             );
             SignBoard JumpTutorialSign = new SignBoard(
-                signTexture,
+                _whiteTexture,
                 "Press Space Bar Key to Jump! \nLonger you hold Jump Button, Higher the Jump!",
                 TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
                 300,                    // Width
@@ -289,7 +320,7 @@ public class PlayScene : Scene
                 Color.Gold
             );
             SignBoard ClimbTutorialSign = new SignBoard(
-                signTexture,
+                _whiteTexture,
                 "Press UP Arrow Key to climb ladder or vines!",
                 TileMap.GetTileWorldPositionAt(55, 22), // TopLeft Position // TODO : More dynamic
                 220,                    // Width
@@ -306,18 +337,13 @@ public class PlayScene : Scene
 
     private void CreatePlayer()
     {
-        // Load sprite sheets
-        Texture2D playerTexture = _content.Load<Texture2D>("Char");
-        Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
-        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
-    
-        SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
+        SoundEffect _playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         SoundEffect playerDashSound = _content.Load<SoundEffect>("Dash");
         SoundEffect playerPunchSound = _content.Load<SoundEffect>("PlayerPunch");
         SoundEffect playerChargeBulletSound = _content.Load<SoundEffect>("ChargingBullet");
         SoundEffect playerBulletShotSound = _content.Load<SoundEffect>("BulletShot");
         
-        Singleton.Instance.Player = new Player(playerTexture, playerParticle)
+        Singleton.Instance.Player = new Player(_playerTexture, _whiteTexture)
         {
             Name = "Player",
             Life = 2,
@@ -369,13 +395,13 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             Grapple = Keys.R,
-            JumpSound = playerJumpSound,
+            JumpSound = _playerJumpSound,
             DashSound = playerDashSound,
             PunchSound = playerPunchSound,
             ChargingSound = playerChargeBulletSound,
             BulletShotSound = playerBulletShotSound,
 
-            Bullet = new PlayerBullet(projectileTexture)
+            Bullet = new PlayerBullet(_projectileTexture)
             {
                 Name = "BulletPlayer",
                 BaseDamageAmount = 10f,
@@ -389,19 +415,6 @@ public class PlayScene : Scene
 
     private void CreateEnemies()
     {
-        Texture2D _enemyTexture = _content.Load<Texture2D>("Skeleton");
-        Texture2D _DogTexture = _content.Load<Texture2D>("HellHound");
-        Texture2D _SlimeTexture = _content.Load<Texture2D>("HellSlime");
-        Texture2D _DemonTexture = _content.Load<Texture2D>("Demon");
-        Texture2D _TowerTexture = _content.Load<Texture2D>("Spitter");
-        Texture2D _PlatformTexture = _content.Load<Texture2D>("Crab");
-
-        Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("LargeSlime");
-        Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
-        Texture2D _RhulkTexture = _content.Load<Texture2D>("Rhulk");
-
-        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
-
         SoundEffect hitSound = _content.Load<SoundEffect>("HitEnemy");
 
         Dictionary<ItemID, float> defaultLootTableChance = new Dictionary<ItemID, float>{ 
@@ -410,7 +423,7 @@ public class PlayScene : Scene
         };
 
         EnemyManager.AddGameEnemy(EnemyID.Slime,
-            new SlimeEnemy(_SlimeTexture){
+            new SlimeEnemy(_slimeTexture){
                 Name = "Slime",
                 Viewport = ViewportManager.Get("Slime"),
                 MaxHealth = 50f,
@@ -426,7 +439,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Hellhound,
-                new HellhoundEnemy(_DogTexture){
+                new HellhoundEnemy(_hellhoundTexture){
                     Name = "Hellhound",
                     Viewport = ViewportManager.Get("Hellhound"),
                     
@@ -445,7 +458,7 @@ public class PlayScene : Scene
                 });
 
         EnemyManager.AddGameEnemy(EnemyID.Skeleton,         
-            new SkeletonEnemy(_enemyTexture){
+            new SkeletonEnemy(_skeletonTexture){
                 Name = "Skeleton",
                 Viewport = ViewportManager.Get("Skeleton"),
 
@@ -462,7 +475,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.PlatformEnemy,
-            new PlatformEnemy(_PlatformTexture){
+            new PlatformEnemy(_platformEnemyTexture){
                 Name = "PlatformEnemy",
                 Viewport = ViewportManager.Get("PlatformEnemy"),
 
@@ -474,7 +487,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.TowerEnemy,
-            new TowerEnemy(_TowerTexture){
+            new TowerEnemy(_towerTexture){
                 Name = "TowerEnemy",
                 Viewport = ViewportManager.Get("TowerEnemy"),
 
@@ -482,7 +495,7 @@ public class PlayScene : Scene
 
                 HitSound = hitSound,
 
-                TowerBullet = new TowerBullet(projectileTexture)
+                TowerBullet = new TowerBullet(_projectileTexture)
                 {
                     Name = "BulletEnemy",
                     BaseDamageAmount = 20f,
@@ -494,7 +507,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Demon,
-            new DemonEnemy(_DemonTexture){
+            new DemonEnemy(_demonTexture){
                 Name = "Demon",
                 Viewport = ViewportManager.Get("Demon"),
 
@@ -502,7 +515,7 @@ public class PlayScene : Scene
 
                 HitSound = hitSound,
 
-                DemonBullet = new DemonBullet(projectileTexture)
+                DemonBullet = new DemonBullet(_projectileTexture)
                 {
                     Name = "BulletEnemy",
                     BaseDamageAmount = 15f,
@@ -514,7 +527,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.GiantSlime,         
-            new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
+            new GiantSlime(_giantSlimeTexture, _whiteTexture){
                 Name = "GiantSlime",
                 Viewport = ViewportManager.Get("GiantSlime"),
 
@@ -530,7 +543,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Cerberus,         
-            new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
+            new Cerberus(_cerberusTexture, _whiteTexture){
                 Name = "Cerberus",
                 Viewport = ViewportManager.Get("Cerberus"),
 
@@ -545,7 +558,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Rhulk,         
-            new Rhulk(_RhulkTexture){
+            new Rhulk(_rhulkTexture){
                 Name = "Rhulk",
                 Viewport = ViewportManager.Get("Rhulk"),
 
@@ -570,11 +583,8 @@ public class PlayScene : Scene
     private void CreateItemPrefabs()
     {
         //set for all item
-        Item.TooltipBackgroundTexture = _content.Load<Texture2D>("ItemSlot");
+        Item.TooltipBackgroundTexture = _itemSlotTexture;
         Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
-
-        Texture2D ItemTexture = _content.Load<Texture2D>("Items");
-        Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
         
         SoundEffect PotionUseSound = _content.Load<SoundEffect>("PotionUse");
         SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
@@ -584,7 +594,7 @@ public class PlayScene : Scene
 
         //TODO : Change these to real ITEM ID
         ItemManager.AddGameItem(ItemID.HealthPotion,
-            new Potion(ItemTexture, ItemType.Consumable){
+            new Potion(_itemTexture, ItemType.Consumable){
                 Name =  "HealthPotion",
                 Description = "Test HealthPotion Description",
                 Viewport = ViewportManager.Get("Potion_Health"),
@@ -592,7 +602,7 @@ public class PlayScene : Scene
             });
 
         ItemManager.AddGameItem(ItemID.SpeedPotion,
-            new SpeedPotion(ItemTexture, ItemType.Consumable){
+            new SpeedPotion(_itemTexture, ItemType.Consumable){
                 Name =  "SpeedPotion",
                 Description = "Test SpeedPotion Description",
                 Viewport = ViewportManager.Get("Potion_Speed"),
@@ -600,7 +610,7 @@ public class PlayScene : Scene
             });
 
         ItemManager.AddGameItem(ItemID.JumpPotion,
-            new JumpPotion(ItemTexture, ItemType.Consumable){
+            new JumpPotion(_itemTexture, ItemType.Consumable){
                 Name =  "jumppotion",
                 Description = "Test JumpPotion Description",
                 Viewport = ViewportManager.Get("Potion_Jump"),
@@ -608,7 +618,7 @@ public class PlayScene : Scene
             });
 
         ItemManager.AddGameItem(ItemID.Barrier,
-            new Barrier(ItemTexture, ItemType.Consumable){
+            new Barrier(_itemTexture, ItemType.Consumable){
                 Name =  "barrier",
                 Description = "Test Barrier Description",
                 Viewport = ViewportManager.Get("Barrier"),
@@ -616,7 +626,7 @@ public class PlayScene : Scene
             });
 
         ItemManager.AddGameItem(ItemID.LifeUp,
-            new LifeUp(ItemTexture, ItemType.Consumable){
+            new LifeUp(_itemTexture, ItemType.Consumable){
                 Name =  "1Up",
                 Description = "Test LifeUp Description",
                 Viewport = ViewportManager.Get("LifeUp"),
@@ -624,21 +634,21 @@ public class PlayScene : Scene
             });
 
         ItemManager.AddGameItem(ItemID.SpeedBoots,
-            new SpeedBoots(ItemTexture, ItemType.Accessory){
+            new SpeedBoots(_itemTexture, ItemType.Accessory){
                 Name =  "SpeedBoots",
                 Description = "Test SpeedBoots Description",
                 Viewport = ViewportManager.Get("Speed_Boots")
             });
 
         ItemManager.AddGameItem(ItemID.CursedGauntlet,
-            new CursedGauntlet(ItemTexture, ItemType.Accessory){
+            new CursedGauntlet(_itemTexture, ItemType.Accessory){
                 Name =  "CursedGauntlet",
                 Description = "Test CursedGauntlet Description",
                 Viewport = ViewportManager.Get("CursedGauntlet")
             });
 
         ItemManager.AddGameItem(ItemID.Sword,
-            new Sword(ItemTexture, ItemType.MeleeWeapon){
+            new Sword(_itemTexture, ItemType.MeleeWeapon){
                 Name =  "Sword",
                 Description = "Test Sword Description",
                 Viewport = ViewportManager.Get("Sword"),
@@ -646,7 +656,7 @@ public class PlayScene : Scene
             });
 
         ItemManager.AddGameItem(ItemID.Gun,
-            new Gun(ItemTexture, ItemType.RangeWeapon){
+            new Gun(_itemTexture, ItemType.RangeWeapon){
                 Name =  "Gun",
                 Description = "Test Gun Description",
                 Viewport = ViewportManager.Get("Gun"),
@@ -654,13 +664,13 @@ public class PlayScene : Scene
             });
 
         ItemManager.AddGameItem(ItemID.Staff,
-            new Staff(ItemTexture, ItemType.RangeWeapon){
+            new Staff(_itemTexture, ItemType.RangeWeapon){
                 Name =  "Staff",
                 Description = "Test Staff Description",
                 MPCost = 10,
                 ShootSound = FireBallShootingSound,
 
-                FireBall = new FireBall(projectileTexture)
+                FireBall = new FireBall(_projectileTexture)
                 {
                     Name = "FireBall",
                     BaseDamageAmount = 30f,
@@ -668,7 +678,7 @@ public class PlayScene : Scene
                     Radius = 30f,
                     ExplosionDuration = 0.5f,
                     Viewport = ViewportManager.Get("FireBall"),
-                    BaseExplosion = new Explosion(projectileTexture, FireBallExplosionSound)
+                    BaseExplosion = new Explosion(_projectileTexture, FireBallExplosionSound)
                     {
                         Viewport = ViewportManager.Get("Explosion")
                     }
@@ -677,16 +687,16 @@ public class PlayScene : Scene
             });
 
         ItemManager.AddGameItem(ItemID.SoulStaff,
-            new SoulStaff(ItemTexture,ItemType.Consumable){
+            new SoulStaff(_itemTexture,ItemType.Consumable){
                 Name =  "Staff",
                 Description = "Summon Your best Minion!",
                 MPCost = 10,
-                soulMinion = new SoulMinion(projectileTexture)
+                soulMinion = new SoulMinion(_projectileTexture)
                 {
                     Name = "Soul Minion",
                     BaseDamageAmount = 0f,
                     Viewport = ViewportManager.Get("Soul_Minion"),
-                    soulBullet = new SoulBullet(projectileTexture){
+                    soulBullet = new SoulBullet(_projectileTexture){
                         Name = "Soul Bullet",
                         BaseDamageAmount = 15f,
                         Speed = 150f,
@@ -697,13 +707,13 @@ public class PlayScene : Scene
             });
 
         ItemManager.AddGameItem(ItemID.Grenade,
-            new Grenade(ItemTexture, ItemType.Consumable){
+            new Grenade(_itemTexture, ItemType.Consumable){
                 Name =  "Grenade",
                 Description = "Test GrenadeTemp Description",
                 Viewport = ViewportManager.Get("Grenade"),
                 UseSound = PotionUseSound, // Temp
 
-                GrenadeProjectile = new GrenadeProjectile(projectileTexture)
+                GrenadeProjectile = new GrenadeProjectile(_projectileTexture)
                 {
                     // Grenade properties
                     Name = "GrenadeProjectile",
@@ -713,7 +723,7 @@ public class PlayScene : Scene
                     ExplosionDuration = 0.5f,
                     DetonateDelayDuration = 3.0f,
                     Viewport = ViewportManager.Get("Grenade_Projectile"),
-                    BaseExplosion = new Explosion(projectileTexture, FireBallExplosionSound)
+                    BaseExplosion = new Explosion(_projectileTexture, FireBallExplosionSound)
                     {
                         Viewport = ViewportManager.Get("Explosion")
                     }
@@ -780,7 +790,7 @@ public class PlayScene : Scene
             Color.Gray
         );
 
-        Texture2D slot = _content.Load<Texture2D>("ItemSlot");
+        
 
         TextUI MeleeWeaponText = new TextUI(            
             new Rectangle(250, 0, 50, 25),
@@ -791,8 +801,8 @@ public class PlayScene : Scene
         ItemSlot MeleeWeaponSlot = new ItemSlot(
             Inventory.MELEE_SLOT,
             new Rectangle(250, 30, 50, 50),
-            slot,
-            slot
+            _itemSlotTexture,
+            _itemSlotTexture
         );
 
         TextUI RangeWeaponText = new TextUI(            
@@ -804,8 +814,8 @@ public class PlayScene : Scene
         ItemSlot RangeWeaponSlot = new ItemSlot(
             Inventory.RANGE_SLOT,
             new Rectangle(350, 30, 50, 50),
-            slot,
-            slot
+            _itemSlotTexture,
+            _itemSlotTexture
         );
 
         TextUI ItemText1 = new TextUI(            
@@ -817,8 +827,8 @@ public class PlayScene : Scene
         ItemSlot ItemSlot1 = new ItemSlot(
             Inventory.ITEM_SLOT_1,
             new Rectangle(550, 30, 50, 50),
-            slot,
-            slot
+            _itemSlotTexture,
+            _itemSlotTexture
         );
 
         TextUI ItemText2 = new TextUI(            
@@ -830,8 +840,8 @@ public class PlayScene : Scene
         ItemSlot ItemSlot2 = new ItemSlot(
             Inventory.ITEM_SLOT_2,
             new Rectangle(650, 30, 50, 50),
-            slot,
-            slot
+            _itemSlotTexture,
+            _itemSlotTexture
         );
 
         _ui.AddHUDElement(HealthText);
