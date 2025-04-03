@@ -131,8 +131,6 @@ namespace FinalComGame
                 19 => TileType.Platform,
                 57 => TileType.Ladder,
                 37 => TileType.Ladder_Top,
-                58 => TileType.Ladder_Left,
-                59 => TileType.Ladder_Right,
                 77 or 78 or 79 => TileType.Ladder_Platform,
                 16 => TileType.Finish_Line,
                 96 => TileType.PlayerSpawn,
