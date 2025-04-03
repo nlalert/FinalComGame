@@ -552,7 +552,11 @@ public class PlayScene : Scene
             {ItemID.None, 0.8f},
             {ItemID.HealthPotion, 0.2f},
         };
-
+        Dictionary<ItemID, float> slimeLootTableChance = new Dictionary<ItemID, float>{ 
+            {ItemID.None, 0.75f},
+            {ItemID.HealthPotion, 0.2f},
+            {ItemID.JumpPotion, 0.05f},
+        };
         EnemyManager.AddGameEnemy(EnemyID.Slime,
             new SlimeEnemy(_slimeTexture){
                 Name = "Slime",
@@ -566,9 +570,13 @@ public class PlayScene : Scene
 
                 HitSound = _hitSound,
 
-                LootTableChance = defaultLootTableChance
+                LootTableChance = slimeLootTableChance
             });
 
+        Dictionary<ItemID, float> hellHoundLootTableChance = new Dictionary<ItemID, float>{ 
+            {ItemID.None, 0.8f},
+            {ItemID.SpeedPotion, 0.2f},
+        };
         EnemyManager.AddGameEnemy(EnemyID.Hellhound,
                 new HellhoundEnemy(_hellhoundTexture){
                     Name = "Hellhound",
@@ -585,9 +593,14 @@ public class PlayScene : Scene
 
                     HitSound = _hitSound,
 
-                    LootTableChance = defaultLootTableChance
+                    LootTableChance = hellHoundLootTableChance
                 });
-
+        
+        Dictionary<ItemID, float> SkeletonLootTableChance = new Dictionary<ItemID, float>{ 
+            {ItemID.None, 0.75f},
+            {ItemID.Gun, 0.05f},
+            {ItemID.Grenade, 0.2f},
+        };
         EnemyManager.AddGameEnemy(EnemyID.Skeleton,         
             new SkeletonEnemy(_skeletonTexture){
                 Name = "Skeleton",
@@ -602,7 +615,7 @@ public class PlayScene : Scene
 
                 HitSound = _hitSound,
 
-                LootTableChance = defaultLootTableChance
+                LootTableChance = SkeletonLootTableChance
             });
 
         EnemyManager.AddGameEnemy(EnemyID.PlatformEnemy,
@@ -617,6 +630,11 @@ public class PlayScene : Scene
                 LootTableChance = defaultLootTableChance 
             });
 
+        Dictionary<ItemID, float> TowerLootTableChance = new Dictionary<ItemID, float>{ 
+            {ItemID.None, 0.65f},
+            {ItemID.Gun, 0.15f},
+            {ItemID.HealthPotion, 0.2f},
+        };
         EnemyManager.AddGameEnemy(EnemyID.TowerEnemy,
             new TowerEnemy(_towerTexture){
                 Name = "TowerEnemy",
@@ -634,9 +652,15 @@ public class PlayScene : Scene
                     Viewport = ViewportManager.Get("TowerEnemy_Bullet")
                 },
 
-                LootTableChance = defaultLootTableChance
+                LootTableChance = TowerLootTableChance
             });
 
+        Dictionary<ItemID, float> DemonLootTableChance = new Dictionary<ItemID, float>{ 
+            {ItemID.None, 0.4f},
+            {ItemID.LifeUp, 0.05f},
+            {ItemID.JumpPotion, 0.05f},
+            {ItemID.HealthPotion, 0.5f},
+        };
         EnemyManager.AddGameEnemy(EnemyID.Demon,
             new DemonEnemy(_demonTexture){
                 Name = "Demon",
@@ -654,7 +678,7 @@ public class PlayScene : Scene
                     Viewport = ViewportManager.Get("Demon_Bullet")
                 },
 
-                LootTableChance = defaultLootTableChance
+                LootTableChance = DemonLootTableChance
             });
 
         EnemyManager.AddGameEnemy(EnemyID.GiantSlime,         
