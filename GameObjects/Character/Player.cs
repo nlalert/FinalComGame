@@ -1050,7 +1050,7 @@ namespace FinalComGame
                 return;
             
             // Get position offset based on player state
-            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Singleton.TILE_SIZE, 6) : new Vector2(Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Direction * Singleton.TILE_SIZE, 6) : new Vector2(Direction * Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
             
             // Create and configure the projectile using the weapon
@@ -1123,7 +1123,7 @@ namespace FinalComGame
             PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
             newBullet.DamageAmount *= chargePower; // Increase damage
 
-            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Singleton.TILE_SIZE, 6) : new Vector2(Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Direction * Singleton.TILE_SIZE, 6) : new Vector2(Direction * Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
 
             newBullet.Shoot(bulletPosition, direction);
