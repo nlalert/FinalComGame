@@ -75,6 +75,12 @@ public class PlayScene : Scene
     {
         base.LoadContent(spriteBatch);
 
+        LoadTextures();
+        LoadSounds();
+    }
+
+    private void LoadTextures()
+    {
         _RopeTexture = _content.Load<Texture2D>("Rope");
         _textureAtlas = _content.Load<Texture2D>("Tileset");
         
@@ -103,6 +109,11 @@ public class PlayScene : Scene
         //UI
         _itemSlotTexture = _content.Load<Texture2D>("ItemSlot");
 
+    }
+
+    private void LoadSounds()
+    {
+
         // Load sounds
         _jumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         _dashSound = _content.Load<SoundEffect>("Dash");
@@ -119,6 +130,7 @@ public class PlayScene : Scene
 
         _song = _content.Load<Song>("ChillSong");
     }
+
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
