@@ -754,7 +754,7 @@ public class PlayScene : Scene
 
         TextUI RangeWeaponText = new TextUI(            
             new Rectangle(350, 0, 50, 25),
-            () => $"Range ({Singleton.Instance.Player.Attack})",
+            () => $"Range ({Singleton.Instance.Player.Fire})",
             Color.White,
             TextUI.TextAlignment.Center
         );
