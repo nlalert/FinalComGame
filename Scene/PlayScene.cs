@@ -224,6 +224,7 @@ public class PlayScene : Scene
 
         SetUpParallaxBackground();
         InitializeAmbushAreas();
+        AddSignBoard();
         SpawnEnemies();
         SpawnItems();
         AddItems(); // TODO: Remove Later this is only for testing
@@ -233,6 +234,7 @@ public class PlayScene : Scene
             s.Reset();
         }
     }
+
 
     private void SetUpParallaxBackground()
     {
@@ -257,6 +259,49 @@ public class PlayScene : Scene
     public void InitializeAmbushAreas()
     {
         ambushAreas = _collisionTileMap.GetAmbushAreas();
+    }
+
+    private void AddSignBoard()
+    {
+        // TODO : Change to desire texture
+        Texture2D signTexture = new Texture2D(_graphicsDevice, 1, 1);
+        signTexture.SetData(new[] { Color.White });
+
+        // TODO : More dynamic stage management sign
+        if(Singleton.Instance.Stage == 0)
+        {
+            SignBoard WalkTutorialSign = new SignBoard(
+                signTexture,
+                "Press Left or Right Arrow Key to move around!",
+                TileMap.GetTileWorldPositionAt(10, 30),  // TopLeft Position  // TODO : More dynamic
+                200,                    // Width
+                100,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
+            SignBoard JumpTutorialSign = new SignBoard(
+                signTexture,
+                "Press Space Bar Key to Jump! \nLonger you hold Jump Button, Higher the Jump!",
+                TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
+                300,                    // Width
+                100,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
+            SignBoard ClimbTutorialSign = new SignBoard(
+                signTexture,
+                "Press UP Arrow Key to climb ladder or vines!",
+                TileMap.GetTileWorldPositionAt(55, 22), // TopLeft Position // TODO : More dynamic
+                220,                    // Width
+                80,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
+
+            _gameObjects.Add(WalkTutorialSign);
+            _gameObjects.Add(JumpTutorialSign);
+            _gameObjects.Add(ClimbTutorialSign);
+        }
     }
 
     private void CreatePlayer()
@@ -808,17 +853,14 @@ public class PlayScene : Scene
         if(Singleton.Instance.Stage >= 0)
         {
             Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Dash);
-            Singleton.Instance.CurrentUI.Prompt("Dash ability unlocked! Press SHIFT to dash.");
         }
         if(Singleton.Instance.Stage == 0 || Singleton.Instance.Stage >= 2)
         {
             Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Glide);
-            Singleton.Instance.CurrentUI.Prompt("Glide ability unlocked! Hold SPACE while falling to glide.");
         }
         if(Singleton.Instance.Stage >= 3)
         {
             Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Grapple);
-            Singleton.Instance.CurrentUI.Prompt("Grappling Hook unlocked! Press R to shoot.");
         }
     }
 
