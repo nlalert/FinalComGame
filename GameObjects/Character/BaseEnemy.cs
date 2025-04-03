@@ -89,7 +89,7 @@ namespace FinalComGame {
 
         public virtual void OnCollidePlayer()
         {
-            Singleton.Instance.Player.OnCollideNPC(this,this.AttackDamage);
+            Singleton.Instance.Player.OnCollideNPC(this, this.AttackDamage);
         }
 
         public override void OnDead(List<GameObject> gameObjects)
@@ -179,14 +179,9 @@ namespace FinalComGame {
             return (IsAbovePlayer() && IsPlayerAbovePlatform(tile)) || Velocity.Y < 0 || IsIgnorePlatform;
         }
 
-        public virtual bool CheckContactPlayer(){
-            if(this.IsTouching(Singleton.Instance.Player)){
+        public virtual void CheckContactPlayer(){
+            if(IsTouching(Singleton.Instance.Player))
                 OnCollidePlayer();
-                // Console.WriteLine("contact Player");
-                return true;
-            }
-            else
-                return false;
         }
         public virtual void CheckHit(Rectangle attackHitbox, float damageAmount, bool isHeavyAttack)
         {

@@ -63,23 +63,9 @@ namespace FinalComGame
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
 
             Velocity.X = Direction * WalkSpeed;
-
-            MovePlayerAbove();
             
             base.Update(gameTime, gameObjects, tileMap);
             UpdateAnimation(deltaTime);
-        }
-
-        private void MovePlayerAbove()
-        {
-            Position.Y -= Singleton.TILE_SIZE / 2;
-
-            if(IsTouchingBottom(Singleton.Instance.Player))
-            {
-                Singleton.Instance.Player.Velocity.X += Velocity.X;
-            }
-
-            Position.Y += Singleton.TILE_SIZE / 2;
         }
 
         public override void OnSpawn()
@@ -108,6 +94,17 @@ namespace FinalComGame
         {
             Direction *= -1;
             base.OnCollisionHorizon();
+        }
+
+        public override void CheckContactPlayer(){
+            Position.Y -= Singleton.TILE_SIZE / 2;
+
+            if(IsTouchingBottom(Singleton.Instance.Player))
+            {
+                Singleton.Instance.Player.Velocity.X += Velocity.X;
+            }
+
+            Position.Y += Singleton.TILE_SIZE / 2;
         }
     }
 }

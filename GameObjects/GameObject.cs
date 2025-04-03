@@ -231,6 +231,10 @@ public class GameObject : ICloneable
                 }
             }
         }
+        foreach (var platformEnemy in gameObjects.OfType<PlatformEnemy>())
+        {
+            ResolveHorizontalCollision(platformEnemy);
+        }
     }
 
     protected virtual void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
