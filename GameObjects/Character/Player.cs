@@ -256,7 +256,7 @@ namespace FinalComGame
 
             if (!_isClimbing && !_isDashing && !_isGrappling) 
                 ApplyGravity(deltaTime);
-                
+
             UpdateGrapplingHook(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
@@ -666,13 +666,15 @@ namespace FinalComGame
             }
 
             if (Singleton.Instance.IsKeyJustPressed(Dash)){
-                if(_isClimbing){
-                    Direction *= -1;
-                    _isClimbing = false;
+                if (Abilities.IsAbilityUnlocked(AbilityType.Dash))
+                {
+                    if(_isClimbing){
+                        Direction *= -1;
+                        _isClimbing = false;
+                    }
+                    StartDash();
                 }
-                StartDash();
             }
-
             if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _coyoteTimeCounter > 0)
             {
                 if (!(Singleton.Instance.IsKeyPressed(Crouch) && _isClimbing) && 
@@ -699,7 +701,7 @@ namespace FinalComGame
             !_isJumping && !_isClimbing && !_isDashing && !_isAttacking && 
             MP > 0 && _coyoteTimeCounter <= 0)
             {
-                _isGliding = true;
+                _isGliding = Abilities.IsAbilityUnlocked(AbilityType.Glide);
             }
             else
             {
@@ -775,7 +777,10 @@ namespace FinalComGame
             }
             
             if(Singleton.Instance.IsKeyJustPressed(Grapple)){
-                FireGrapplingHook(gameObjects);
+                if (Abilities.IsAbilityUnlocked(AbilityType.Grapple))
+                {
+                    FireGrapplingHook(gameObjects);
+                }
             }
             
             if (Singleton.Instance.IsKeyJustPressed(Interact))
