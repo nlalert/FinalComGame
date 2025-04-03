@@ -336,6 +336,8 @@ namespace FinalComGame
         protected override void ApplyGravity(float deltaTime)
         {
             Velocity.Y += Singleton.GRAVITY * deltaTime * (_isEnraged ? 1.2f : 1.0f);
+
+            ClampMaxFallVelocity();
         }
         public override void OnSpawn()
         {

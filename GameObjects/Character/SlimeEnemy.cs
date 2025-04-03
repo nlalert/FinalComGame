@@ -169,6 +169,7 @@ namespace FinalComGame
         protected override void ApplyGravity(float deltaTime)
         {
             Velocity.Y +=Singleton.GRAVITY/1.75f * deltaTime;
+            ClampMaxFallVelocity();
         }
     }
 }
