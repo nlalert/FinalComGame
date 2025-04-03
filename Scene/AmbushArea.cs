@@ -38,12 +38,12 @@ namespace FinalComGame
             return _enemyWorldSpawnPoints.ContainsKey(TileMap.GetTileWorldPositionAt(enemySpawnPoint));
         }
 
-        public void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
+        public void Update(GameTime gameTime, List<GameObject> gameObjects, StageManager stageManager)
         {
             // Check if player is in the trigger zone
             if (!_isActive && _triggerZone.Contains(Singleton.Instance.Player.Position))
             {
-                ActivateAmbush(gameObjects, tileMap);
+                ActivateAmbush(gameObjects, stageManager);
                 Console.WriteLine("Ambush Activate");
             }
 
@@ -55,18 +55,18 @@ namespace FinalComGame
                 if (_spawnedEnemies.Count == 0)
                 {
                     _isCleared = true;
-                    DisableBarrierCollision();
+                    DisableBarrierCollision(stageManager);
                     Singleton.Instance.CurrentUI.Prompt("Ambush Cleared");
                 }
             }
         }
 
-        private void ActivateAmbush(List<GameObject> gameObjects, TileMap tileMap)
+        private void ActivateAmbush(List<GameObject> gameObjects, StageManager stageManager)
         {
             _isActive = true;
             _isCleared = false;
 
-            EnableBarrierCollision(tileMap);
+            EnableBarrierCollision(stageManager);
 
             foreach (var enemySpawnPoint in _enemyWorldSpawnPoints)
             {
@@ -75,23 +75,38 @@ namespace FinalComGame
             }
         }
 
-        private void EnableBarrierCollision(TileMap tileMap)
+        private void EnableBarrierCollision(StageManager stageManager)
         {
-            foreach (var tile in tileMap.Tiles)
+
+            foreach (var tile in stageManager.CollisionTileMap.Tiles)
             {
                 if(tile.Value.Type == TileType.AmbushBarrier)
                 {
                     _activatedBarrierTiles.Add(tile.Key, tile.Value);
                     tile.Value.IsSolid = true;
+
+                    // Close Door
+                    if (stageManager.ForegroundTileMap.Tiles.TryGetValue(tile.Key, out Tile foregroundTile))
+                    {
+                        foregroundTile.ID++;
+                        foregroundTile.Viewport = stageManager.ForegroundTileMap.GetTileViewport(foregroundTile.ID);
+                    }
                 }
             }
         }
 
-        private void DisableBarrierCollision()
+        private void DisableBarrierCollision(StageManager stageManager)
         {
             foreach (var tile in _activatedBarrierTiles)
             {
                 tile.Value.IsSolid = false;
+
+                // Open Door
+                if (stageManager.ForegroundTileMap.Tiles.TryGetValue(tile.Key, out Tile foregroundTile))
+                {
+                    foregroundTile.ID--;
+                    foregroundTile.Viewport = stageManager.ForegroundTileMap.GetTileViewport(foregroundTile.ID);
+                }
             }
         }
     }

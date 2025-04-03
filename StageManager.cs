@@ -13,10 +13,22 @@ public class StageManager
     private Texture2D _backgroundLayer2;
     private Texture2D _backgroundLayer3;
     
-    private TileMap _collisionTileMap;
-    private TileMap _backgroundTileMap;
-    private TileMap _middlegroundTileMap;
-    private TileMap _foregroundTileMap;
+    public TileMap CollisionTileMap;
+    public TileMap BackgroundTileMap;
+    public TileMap MiddlegroundTileMap;
+    public TileMap ForegroundTileMap;
+
+    private List<AmbushArea> _ambushAreas;
+    private Dictionary<Vector2, EnemyID> _enemySpawnPoints; 
+    private Dictionary<Vector2, ItemID> _itemSpawnPoints;
+    private Vector2 _playerSpawnPoint;
+
+    public StageManager()
+    {
+        _ambushAreas = new List<AmbushArea>();
+        _enemySpawnPoints = new Dictionary<Vector2, EnemyID>();
+        _itemSpawnPoints = new Dictionary<Vector2, ItemID>();
+    }
 
     public void UpdateParallaxBackground(GameTime gameTime)
     {
@@ -25,12 +37,7 @@ public class StageManager
 
     public void UpdateTileMap(GameTime gameTime, List<GameObject> gameObjects)
     {
-        _collisionTileMap.Update(gameTime, gameObjects);
-    }
-
-    public TileMap GetCollisionTileMap()
-    {
-        return _collisionTileMap;
+        CollisionTileMap.Update(gameTime, gameObjects);
     }
 
     public void DrawParallaxBackground(SpriteBatch spriteBatch)
@@ -40,9 +47,9 @@ public class StageManager
 
     public void DrawTileMaps(SpriteBatch spriteBatch)
     {
-        _backgroundTileMap.Draw(spriteBatch);
-        _middlegroundTileMap.Draw(spriteBatch);
-        _foregroundTileMap.Draw(spriteBatch);
+        BackgroundTileMap.Draw(spriteBatch);
+        MiddlegroundTileMap.Draw(spriteBatch);
+        ForegroundTileMap.Draw(spriteBatch);
         
         //Should be hidden
         //_collisionTileMap.Draw(spriteBatch);
@@ -50,11 +57,21 @@ public class StageManager
 
     public void LoadTileMaps(Texture2D textureAtlas)
     {
-        _backgroundTileMap = new TileMap(textureAtlas, GetCurrentStagePath() + "_BackGround.csv", 20);
-        _middlegroundTileMap = new TileMap(textureAtlas, GetCurrentStagePath() + "_MidGround.csv", 20);
-        _foregroundTileMap = new TileMap(textureAtlas, GetCurrentStagePath() + "_ForeGround.csv", 20);
+        BackgroundTileMap = new TileMap(textureAtlas, 20);
+        MiddlegroundTileMap = new TileMap(textureAtlas, 20);
+        ForegroundTileMap = new TileMap(textureAtlas, 20);
         
-        _collisionTileMap = new TileMap(textureAtlas, GetCurrentStagePath() + "_Collision.csv", 20);
+        CollisionTileMap = new TileMap(textureAtlas, 20);
+
+        BackgroundTileMap.LoadMap(GetCurrentStagePath() + "_BackGround.csv");
+        MiddlegroundTileMap.LoadMap(GetCurrentStagePath() + "_MidGround.csv");
+        ForegroundTileMap.LoadMap(GetCurrentStagePath() + "_ForeGround.csv");
+        
+        CollisionTileMap.LoadMap(GetCurrentStagePath() + "_Collision.csv");
+
+        _enemySpawnPoints = CollisionTileMap.GetEnemySpawnPoints();
+        _itemSpawnPoints = CollisionTileMap.GetItemSpawnPoints();
+        _playerSpawnPoint = CollisionTileMap.GetPlayerSpawnPoint();
     }
 
     public static string GetCurrentStagePath()
@@ -64,27 +81,28 @@ public class StageManager
 
     public Dictionary<Vector2, EnemyID> GetEnemySpawnPoints()
     {
-        return _collisionTileMap.GetEnemySpawnPoints();
+        return _enemySpawnPoints;
     }
 
     public Dictionary<Vector2, ItemID> GetItemSpawnPoints()
     {
-        return _collisionTileMap.GetItemSpawnPoints();
-    }
-
-    public int GetMapWorldWidth()
-    {
-        return _collisionTileMap.MapWidth * Singleton.TILE_SIZE;
-    }
-    public int GetMapWorldHeight()
-    {
-        return _collisionTileMap.MapHeight * Singleton.TILE_SIZE;
+        return _itemSpawnPoints;
     }
 
     public Vector2 GetPlayerWorldSpawnPoint()
     {
-        return _collisionTileMap.GetPlayerSpawnPoint();
+        return _playerSpawnPoint;
     }
+
+    public int GetMapWorldWidth()
+    {
+        return CollisionTileMap.MapWidth * Singleton.TILE_SIZE;
+    }
+    public int GetMapWorldHeight()
+    {
+        return CollisionTileMap.MapHeight * Singleton.TILE_SIZE;
+    }
+
 
     public void SetUpParallaxBackground(ContentManager content, GraphicsDevice graphicsDevice)
     {
@@ -111,5 +129,23 @@ public class StageManager
         _backgroundLayer1 = content.Load<Texture2D>("Level_1_Parallax_bg");  // Farthest layer
         _backgroundLayer2 = content.Load<Texture2D>("Level_1_Parallax_mg");  // Middle layer
         _backgroundLayer3 = content.Load<Texture2D>("Level_1_Parallax_fg");  // Closest layer
+    }
+
+    public void UpdateAmbushAreas(GameTime gameTime, List<GameObject> gameObjects)
+    {
+        foreach (var ambushArea in _ambushAreas)
+        {
+            ambushArea.Update(gameTime, gameObjects, this);
+        }
+    }
+
+    public void InitializeAmbushAreas()
+    {
+        _ambushAreas = CollisionTileMap.GetAmbushAreas();
+    }
+
+    public List<AmbushArea> GetAmbushAreas()
+    {
+        return _ambushAreas;
     }
 }
