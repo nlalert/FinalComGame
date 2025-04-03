@@ -31,7 +31,7 @@ namespace FinalComGame
         private float _scaleY;
         private float scaleOtOmg;
         private float scaleOtOfg;
-        
+
         public override void LoadContent(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch;
@@ -67,6 +67,8 @@ namespace FinalComGame
             if (_bgPosition.X <= -_bgTexture.Width) _bgPosition.X = 0;
             if (_mgPosition.X <= -_mgTexture.Width) _mgPosition.X = 0;
             if (_fgPosition.X <= -_fgTexture.Width) _fgPosition.X = 0;
+
+            _gameManager.IsMouseVisible = true;
         }
 
         public override void Draw(GameTime gameTime)

@@ -34,6 +34,7 @@ public class GameClearScene : Scene
     {
         base.Update(gameTime);
         PauseSong();
+        _gameManager.IsMouseVisible = true;
     }
 
     protected override void SetupHUD()

@@ -33,7 +33,8 @@ public class Settings : Scene
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-
+        _gameManager.IsMouseVisible = true;
+        
         Singleton.Instance.MusicVolume = _musicVolumeSlider.GetValue()/100;
         Singleton.Instance.SFXVolume = _soundEffectVolumeSlider.GetValue()/100;
 

@@ -57,6 +57,7 @@ public class PlayScene : Scene
 
     public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
         //Update
         _numObject = _gameObjects.Count;
         if(Singleton.Instance.IsKeyPressed(Keys.Tab))
@@ -103,8 +104,7 @@ public class PlayScene : Scene
         }
 
         //Console.WriteLine("GameObject :" + _numObject);
-
-        base.Update(gameTime);
+        _gameManager.IsMouseVisible = false;
     }
 
     public override void Draw(GameTime gameTime)

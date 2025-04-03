@@ -35,6 +35,7 @@ public class GameOverScene : Scene
     {
         base.Update(gameTime);
         StopSong();
+        _gameManager.IsMouseVisible = true;
     }
 
     protected override void SetupHUD()
