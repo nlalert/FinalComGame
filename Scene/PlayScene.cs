@@ -345,18 +345,19 @@ public class PlayScene : Scene
             SignBoard WalkTutorialSign = new SignBoard(
                 _whiteTexture,
                 "Press Left or Right Arrow Key to move around!",
-                TileMap.GetTileWorldPositionAt(10, 30),  // TopLeft Position  // TODO : More dynamic
+                TileMap.GetTileWorldPositionAt(12, 30),  // TopLeft Position  // TODO : More dynamic
                 200,                    // Width
-                100,                     // Height
+                48,                     // Height
                 new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                 Color.Gold
             );
             SignBoard JumpTutorialSign = new SignBoard(
                 _whiteTexture,
-                "Press Space Bar Key to Jump! \nLonger you hold Jump Button, Higher the Jump!",
+                "Press Space Bar Key to Jump      " +
+                "Longer a you hold Jump Button, Higher the Jump!",
                 TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
                 300,                    // Width
-                100,                     // Height
+                64,                     // Height
                 new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                 Color.Gold
             );
@@ -365,14 +366,60 @@ public class PlayScene : Scene
                 "Press UP Arrow Key to climb ladder or vines!",
                 TileMap.GetTileWorldPositionAt(55, 22), // TopLeft Position // TODO : More dynamic
                 220,                    // Width
-                80,                     // Height
+                48,                     // Height
                 new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                 Color.Gold
             );
-
+            SignBoard DashTutorialSign = new SignBoard(
+                _whiteTexture,
+                "Press SHIFT to Dash pass the gap!",
+                TileMap.GetTileWorldPositionAt(90, 17), // TopLeft Position // TODO : More dynamic
+                160,                    // Width
+                48,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
+            SignBoard PlatFormJumpTutorialSign = new SignBoard(
+                _whiteTexture,
+                "Jump to get on platform "+     
+                "Press Down to crouch "+
+                "Crouch then Jump to drop below on platform", 
+                TileMap.GetTileWorldPositionAt(123, 16), // TopLeft Position // TODO : More dynamic
+                192,                    // Width
+                96,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
+            SignBoard ItemTutorialSign = new SignBoard(
+                _whiteTexture,
+                "Preess F to pick up item " + 
+                "Press (1) (2) to use item",     
+                // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
+                TileMap.GetTileWorldPositionAt(149, 30), // TopLeft Position // TODO : More dynamic
+                208,                    // Width 
+                54,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
+            SignBoard ShootTutorialSign = new SignBoard(
+                _whiteTexture,
+                "Press Q to Punch        "+
+                "Press E to Shoot        " + 
+                "Hold E to charge bullet ",     
+                // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
+                TileMap.GetTileWorldPositionAt(166, 31), // TopLeft Position // TODO : More dynamic
+                192,                    // Width 
+                70,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
             _gameObjects.Add(WalkTutorialSign);
             _gameObjects.Add(JumpTutorialSign);
             _gameObjects.Add(ClimbTutorialSign);
+            _gameObjects.Add(DashTutorialSign);
+            _gameObjects.Add(PlatFormJumpTutorialSign);
+            _gameObjects.Add(ItemTutorialSign);
+            _gameObjects.Add(ShootTutorialSign);
         }
     }
 
