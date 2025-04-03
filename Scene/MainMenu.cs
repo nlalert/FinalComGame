@@ -10,9 +10,12 @@ namespace FinalComGame
 {
     public class MainMenu : Scene
     {
-        private ImageUI _Title;
+        private Texture2D _button;
+        private ImageUI _title;
         private Button _startButton;
         private Button _exitButton;
+        private Button _playTutorialButton;
+        private Button _skipTutorialButton;
 
         private Texture2D _TitleTexture;
         private Texture2D _bgTexture;
@@ -36,6 +39,7 @@ namespace FinalComGame
         {
             _spriteBatch = spriteBatch;
             _TitleTexture = _content.Load<Texture2D>("Title");
+            _button = _content.Load<Texture2D>("ItemSlot"); //Change Later
             // Load parallax layers
             _bgTexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
             _mgTexture = _content.Load<Texture2D>("Level_1_Parallax_mg");
@@ -109,7 +113,7 @@ namespace FinalComGame
             Texture2D Title = _TitleTexture; 
             int titleWidth = Singleton.SCREEN_WIDTH / 2;
             int titleHeight = 100;
-            _Title = new ImageUI(
+            _title = new ImageUI(
                 Title,
                 new Rectangle((Singleton.SCREEN_WIDTH - titleWidth) / 2, (Singleton.SCREEN_HEIGHT - titleHeight) / 4, titleWidth, titleHeight),
                 new Rectangle(0, 0, 236, 40)
@@ -141,9 +145,68 @@ namespace FinalComGame
             );
             _exitButton.OnClick += ExitGameButton_OnClick;
 
-            _ui.AddHUDElement(_Title);
+            _playTutorialButton = new Button(
+                new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth - 100) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight - 50) / 3, ButtonWidth + 100, ButtonHeight + 50),
+                _button,
+                _button,
+                "Play Tutorial",
+                Color.Wheat
+            );
+            _playTutorialButton.OnClick += PlayTutorialButton_OnClick;
+
+            _skipTutorialButton = new Button(
+                new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth + 300) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight + 50) * 2 / 3, ButtonWidth - 300, ButtonHeight - 50),
+                _button,
+                _button,
+                "Skip Tutorial",
+                Color.Wheat
+            );
+            _skipTutorialButton.OnClick += SkipTutorialButton_OnClick;
+
+            _ui.AddHUDElement(_title);
             _ui.AddHUDElement(_startButton);
             _ui.AddHUDElement(_exitButton);
         }
+
+        protected void StartGameButton_OnClick(object sender, EventArgs e)
+        {
+            ShowStartingChoices();
+        }
+
+        private void ShowStartingChoices()
+        {
+            _ui.RemoveHUDElement(_title);
+            _ui.RemoveHUDElement(_startButton);
+            _ui.RemoveHUDElement(_exitButton);
+
+            _ui.AddHUDElement(_playTutorialButton);
+            _ui.AddHUDElement(_skipTutorialButton);
+        }
+
+        private void ShowMainMenu()
+        {
+            _ui.AddHUDElement(_title);
+            _ui.AddHUDElement(_startButton);
+            _ui.AddHUDElement(_exitButton);
+
+            _ui.RemoveHUDElement(_playTutorialButton);
+            _ui.RemoveHUDElement(_skipTutorialButton);
+        }
+
+        protected void PlayTutorialButton_OnClick(object sender, EventArgs e)
+        {
+            Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
+            Singleton.Instance.Stage = 0;
+            ShowMainMenu();
+        }
+        
+        protected void SkipTutorialButton_OnClick(object sender, EventArgs e)
+        {
+            Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame; 
+            Singleton.Instance.Stage = 1;
+            ShowMainMenu();
+        }
+
     }
+
 }

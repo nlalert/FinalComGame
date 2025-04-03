@@ -9,6 +9,7 @@ namespace FinalComGame;
 
 public class PauseMenu : Scene
 {
+    private Texture2D _button;
     private TextUI _pauseTitle; // can change to ImageUI later
     private Button _resumeButton;
     private Button _restartButton;
@@ -18,7 +19,7 @@ public class PauseMenu : Scene
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
-
+        _button = _content.Load<Texture2D>("ItemSlot"); //Change Later
         SetupHUD();
     }
 
@@ -45,14 +46,13 @@ public class PauseMenu : Scene
             TextUI.TextAlignment.Center
         );
 
-        Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
         int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
         int ButtonHeight = 80;
 
         _resumeButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
+            _button,
+            _button,
             "Resume",
             Color.Wheat
         );
@@ -60,8 +60,8 @@ public class PauseMenu : Scene
 
         _restartButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
+            _button,
+            _button,
             "Restart Game",
             Color.Wheat
         );
@@ -69,8 +69,8 @@ public class PauseMenu : Scene
 
         _settingsButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
+            _button,
+            _button,
             "Settings",
             Color.Wheat
         );
@@ -78,8 +78,8 @@ public class PauseMenu : Scene
 
         _mainmenuButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
+            _button,
+            _button,
             "Back to Main Menu",
             Color.Wheat
         );

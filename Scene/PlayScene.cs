@@ -136,8 +136,7 @@ public class PlayScene : Scene
         base.Update(gameTime);
         //Update
         _numObject = _gameObjects.Count;
-        if(Singleton.Instance.IsKeyPressed(Keys.Tab))
-            this.ResetGame();
+
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.StartingGame:
@@ -266,7 +265,6 @@ public class PlayScene : Scene
     {
         _gameObjects = new List<GameObject>();
 
-        Singleton.Instance.Stage = 2;
         Singleton.Instance.Random = new Random();
         Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
 
