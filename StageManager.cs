@@ -97,9 +97,9 @@ public class StageManager
         // Create parallax background
         _parallaxBackground = new ParallaxBackground(graphicsDevice.Viewport);
 
-        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f, 1.0f, Vector2.Zero); // Sky/clouds move very slowly
-        _parallaxBackground.AddLayer(_backgroundLayer2, 0.1f, 1.5f, new Vector2(-50,-300)); // Mountains move at medium speed
-        _parallaxBackground.AddLayer(_backgroundLayer3, 0.2f, 2.0f, new Vector2(-100,-800)); // Trees move faster (closer to player)
+        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f, 1.0f); // Sky/clouds move very slowly
+        _parallaxBackground.AddLayer(_backgroundLayer2, 0.1f, 1.5f); // Mountains move at medium speed
+        _parallaxBackground.AddLayer(_backgroundLayer3, 0.2f, 2.0f); // Trees move faster (closer to player)
     }
 
     private void LoadParallaxBackgoundTextures(ContentManager content)

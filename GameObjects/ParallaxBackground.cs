@@ -21,9 +21,9 @@ public class ParallaxBackground
         _layers.Add(layer);
     }
 
-    public void AddLayer(Texture2D texture, float scrollSpeed, float scale = 1.0f, Vector2 offset = new Vector2())
+    public void AddLayer(Texture2D texture, float scrollSpeed, float scale = 1.0f)
     {
-        _layers.Add(new ParallaxLayer(texture, scrollSpeed, scale, offset));
+        _layers.Add(new ParallaxLayer(texture, scrollSpeed, scale));
     }
 
     public void Update(GameTime gameTime)
@@ -53,7 +53,7 @@ public class ParallaxBackground
             int horizontalCount = (int)Math.Ceiling(_viewport.Width / scaledWidth) + 2;
 
             // Draw the layer multiple times horizontally to create a seamless effect
-            for (int x = 0; x < horizontalCount; x++)
+            for (int x = -1; x < horizontalCount; x++)
             {
                 // Calculate position for this tile
                 Vector2 drawPosition = new Vector2(
