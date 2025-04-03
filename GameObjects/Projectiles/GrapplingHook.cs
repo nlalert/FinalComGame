@@ -9,7 +9,7 @@ namespace FinalComGame
     {
         public bool Hooked;
         public Vector2 HookedPosition;
-        private float _lifetime = 0.5f;
+        private float _lifetime = 1.0f;
         public Texture2D RopeTexture;
         public GrapplingHook(Texture2D texture) : base(texture) // No damage, high speed
         {
@@ -47,13 +47,12 @@ namespace FinalComGame
                     {
                         Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
                         Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                        if(tile != null && tile.IsSolid)
+                        if(tile != null)
                         {
-                            if (IsTouching(tile))
+                            if (IsTouching(tile) && tile.Type == TileType.Grappling_Tile)
                             {
-                                // IsActive = false;
                                 Hooked = true;
-                                _lifetime = 5f;
+                                _lifetime = 1.5f;
                                 HookedPosition = Position;
                                 Velocity = Vector2.Zero;
                                 break;

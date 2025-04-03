@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,9 +12,6 @@ namespace FinalComGame
     {
         public PlayerBullet Bullet;
         public GrapplingHook _grapplingHook;
-        public Texture2D _hookHeadTexture;
-        public Texture2D _ropeTexture;
-        public bool _isGrappling;
 
         public Keys Left, Right, Fire, Jump, Attack, Dash, Crouch, Climb, Interact, Item1, Item2, Grapple;
         
@@ -52,6 +47,13 @@ namespace FinalComGame
         public float JumpBufferTime;
         private float _jumpBufferCounter;
         public AbilityManager Abilities;
+
+        // Grappring Hook
+        public Texture2D _hookHeadTexture;
+        public Texture2D _ropeTexture;
+        private Vector2 GrapplingPosition;
+        public bool _isGrappling;
+        public bool _haveLineOfSight = false;
 
         // Dash 
         private bool _isDashing;
@@ -337,6 +339,23 @@ namespace FinalComGame
                     HandAnimation.GetTexture(),
                     GetDrawingPosition() - handOffset,
                     HandAnimation.GetCurrentFrame(),
+                    color,
+                    0f, 
+                    Vector2.Zero,
+                    Scale,
+                    spriteEffect, 
+                    0f
+                );
+            }
+
+            color = _haveLineOfSight ? Color.White : Color.DimGray;
+
+            if (!_isGrappling && GrapplingPosition != Vector2.Zero)
+            {
+                spriteBatch.Draw(
+                    _texture,
+                    GrapplingPosition - new Vector2 (16, 16),
+                    ViewportManager.Get("Hook_Target"),
                     color,
                     0f, 
                     Vector2.Zero,
@@ -772,8 +791,8 @@ namespace FinalComGame
                     _isClimbing = false;
             }
             
-            if(Singleton.Instance.IsKeyJustPressed(Grapple)){
-                if (Abilities.IsAbilityUnlocked(AbilityType.Grapple))
+            if(Singleton.Instance.IsKeyJustPressed(Grapple) && Abilities.IsAbilityUnlocked(AbilityType.Grapple)){
+                if (GrapplingPosition != Vector2.Zero && HaveLineOfSight(tileMap))
                 {
                     FireGrapplingHook(gameObjects);
                 }
@@ -834,28 +853,13 @@ namespace FinalComGame
                 }
                 _isHoldingItem2 = false;
             }
+            
+            if (!_isGrappling && GrapplingPosition != Vector2.Zero)
+                HaveLineOfSight(tileMap);
         }
 
         private bool IsOnladder(){
             return _overlappedTile == TileType.Ladder || _overlappedTile == TileType.Ladder_Platform;
-        }
-
-        private void FireGrapplingHook(List<GameObject> gameObjects)
-        {
-            if (!Abilities.IsAbilityUnlocked(AbilityType.Grapple) || _grapplingHook != null)
-                return;
-
-            Console.WriteLine("shooting grapple");
-            Vector2 AimDirection = new Vector2(5f* this.Direction , -5f );
-            _grapplingHook = new GrapplingHook(_hookHeadTexture){
-                Name = "GrapplingHook",
-                BaseDamageAmount = 0f,
-                Speed = 50f,
-                Viewport = ViewportManager.Get("Grappling_Hook"),
-                RopeTexture = _ropeTexture,
-            }; // Load a grappling hook texture
-            _grapplingHook.Shoot(Position, AimDirection);
-            gameObjects.Add(_grapplingHook);
         }
 
         protected override bool IsOnGround()
@@ -1004,8 +1008,9 @@ namespace FinalComGame
             _isOnPlatform = false;
             _ladderTopPosition = Vector2.Zero;
             _overlappedTile = TileType.None;
+            GrapplingPosition = Vector2.Zero;
 
-            int radius = 5;
+            int radius = 10;
             for (int i = -radius; i <= radius; i++)
             {
                 for (int j = -radius; j <= radius; j++)
@@ -1024,6 +1029,26 @@ namespace FinalComGame
 
                         if (tile.Type == TileType.Ladder_Top && IsTouching(tile)){
                             _ladderTopPosition = tile.Position;
+                        }
+
+                        if (tile.Type == TileType.Grappling_Tile)
+                        {
+                            Vector2 _tempPosition = tile.Position + new Vector2(Singleton.TILE_SIZE/2, Singleton.TILE_SIZE/2);
+                            if (GrapplingPosition == Vector2.Zero)
+                            {
+                                GrapplingPosition = _tempPosition;
+                            }
+                            else
+                            {
+                                if (Direction == 1 && _tempPosition.X > GrapplingPosition.X)
+                                {
+                                    GrapplingPosition = _tempPosition;
+                                }
+                                else if(Direction == -1 && _tempPosition.X < GrapplingPosition.X)
+                                {
+                                    GrapplingPosition = _tempPosition;
+                                }
+                            }
                         }
 
 
@@ -1045,6 +1070,29 @@ namespace FinalComGame
                     }
                 }
             }
+        }
+
+        public bool HaveLineOfSight(TileMap tileMap){
+            if (GrapplingPosition == Vector2.Zero) return false;
+            
+            Vector2 targetPosition = GrapplingPosition;
+            Vector2 currentPosition = GetPlayerCenter();
+            
+            float step = Singleton.TILE_SIZE; // Tile size or step size for checking
+            Vector2 direction = Vector2.Normalize(currentPosition - targetPosition);
+            Vector2 checkPosition = targetPosition;
+
+            while (Vector2.Distance(checkPosition, currentPosition) > step)
+            {
+                checkPosition += direction * step;
+                if (tileMap.IsObstacle(checkPosition))
+                {
+                    _haveLineOfSight = false;
+                    return false; // Blocked by an obstacle
+                }
+            }
+            _haveLineOfSight = true;
+            return true;
         }
 
 
@@ -1307,6 +1355,24 @@ namespace FinalComGame
         {
             Inventory.AddActiveConsumable(slot);
         }
+
+        private void FireGrapplingHook(List<GameObject> gameObjects)
+        {
+            if (!Abilities.IsAbilityUnlocked(AbilityType.Grapple) || _grapplingHook != null)
+                return;
+
+            Console.WriteLine("shooting grapple");
+            Vector2 AimDirection = GrapplingPosition - GetPlayerCenter();
+            _grapplingHook = new GrapplingHook(_hookHeadTexture){
+                Name = "GrapplingHook",
+                BaseDamageAmount = 0f,
+                Speed = 400f,
+                Viewport = ViewportManager.Get("Grappling_Hook"),
+                RopeTexture = _ropeTexture,
+            }; // Load a grappling hook texture
+            _grapplingHook.Shoot(GetPlayerCenter(), Vector2.Normalize(AimDirection));
+            gameObjects.Add(_grapplingHook);
+        }
         
         private void UpdateGrapplingHook(float deltaTime){
             if (_grapplingHook != null && _grapplingHook.Hooked)
@@ -1316,7 +1382,7 @@ namespace FinalComGame
                 Vector2 direction = _grapplingHook.HookedPosition - Position;
                 float distance = direction.Length();
                 direction.Normalize();
-                float pullSpeed = Math.Max(100f*distance,10000f);
+                float pullSpeed = Math.Max(200f*distance,20000f);
 
                 if (distance > 10f) // Move towards hook
                 {
