@@ -21,6 +21,7 @@ namespace FinalComGame
         private float _dashDuration = 2f;
         private bool _isSummoned = false;
         public float _actionTimeOffset = 1f;
+        public int CerberusCount = 3;
         
         private Vector2 _dashAim;
         private Vector2 _dashStart;
@@ -51,6 +52,7 @@ namespace FinalComGame
             _isSummoned = false;
             _actionTimeOffset = 1f;
             IsIgnorePlatform = true;
+            CerberusCount = 3;
             base.Reset();
         }
         public override void AddAnimation(){
@@ -388,7 +390,7 @@ namespace FinalComGame
         protected override void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
-            string displayText = $"State: {CurrentState}\n{base.Direction}\n HP {Health} \nAT:{_actionTimer}";
+            string displayText = $"State: {CurrentState}\n{base.Direction}\n HP {Health} \nAT:{_actionTimer} \n {CerberusCount}";
             spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition , Color.White);
             if(CurrentState == EnemyState.Charging || CurrentState == EnemyState.Dash){
                 DrawLine(spriteBatch, _dashAim, Position, Color.Green);
@@ -456,8 +458,15 @@ namespace FinalComGame
 
         public override void OnDead(List<GameObject> gameObjects)
         {
-            Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
-            Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
+            foreach(GameObject obj in gameObjects){
+                if(obj is Cerberus a){
+                    a.CerberusCount -=1;
+                }
+            }
+            if(CerberusCount <= 0){
+                Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+                Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
+            }
             base.OnDead(gameObjects);
         }
     }

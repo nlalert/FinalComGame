@@ -580,7 +580,7 @@ public class PlayScene : Scene
                 Name = "Cerberus",
                 Viewport = ViewportManager.Get("Cerberus"),
 
-                MaxHealth = 1000,
+                MaxHealth = 600,
                 BaseAttackDamage = 3f,
 
                 // JumpCooldown = 3.0f,
