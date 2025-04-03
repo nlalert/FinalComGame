@@ -34,6 +34,20 @@ public class PlayScene : Scene
     private Texture2D _rhulkTexture;
     private Texture2D _itemSlotTexture;
 
+    // Sound 
+    private SoundEffect _jumpSound;
+    private SoundEffect _dashSound;
+    private SoundEffect _punchSound;
+    private SoundEffect _chargeBulletSound;
+    private SoundEffect _bulletShotSound;
+    private SoundEffect _hitSound;
+    private SoundEffect _potionUseSound;
+    private SoundEffect _swordSlashSound;
+    private SoundEffect _gunshotSound;
+    private SoundEffect _fireBallShootingSound;
+    private SoundEffect _fireBallExplosionSound;
+    private SoundEffect _pickUpSound;
+
     private ParallaxBackground _parallaxBackground;
     private Texture2D _backgroundLayer1;
     private Texture2D _backgroundLayer2;
@@ -88,6 +102,21 @@ public class PlayScene : Scene
 
         //UI
         _itemSlotTexture = _content.Load<Texture2D>("ItemSlot");
+
+        // Load sounds
+        _jumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
+        _dashSound = _content.Load<SoundEffect>("Dash");
+        _punchSound = _content.Load<SoundEffect>("PlayerPunch");
+        _chargeBulletSound = _content.Load<SoundEffect>("ChargingBullet");
+        _bulletShotSound = _content.Load<SoundEffect>("BulletShot");
+        _hitSound = _content.Load<SoundEffect>("HitEnemy");
+        _potionUseSound = _content.Load<SoundEffect>("PotionUse");
+        _swordSlashSound = _content.Load<SoundEffect>("SwordSlash");
+        _gunshotSound = _content.Load<SoundEffect>("Gunshot");
+        _fireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
+        _fireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
+        _pickUpSound = _content.Load<SoundEffect>("PickUp");
+
         _song = _content.Load<Song>("ChillSong");
     }
     public override void Update(GameTime gameTime)
@@ -337,12 +366,6 @@ public class PlayScene : Scene
 
     private void CreatePlayer()
     {
-        SoundEffect _playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
-        SoundEffect playerDashSound = _content.Load<SoundEffect>("Dash");
-        SoundEffect playerPunchSound = _content.Load<SoundEffect>("PlayerPunch");
-        SoundEffect playerChargeBulletSound = _content.Load<SoundEffect>("ChargingBullet");
-        SoundEffect playerBulletShotSound = _content.Load<SoundEffect>("BulletShot");
-        
         Singleton.Instance.Player = new Player(_playerTexture, _whiteTexture)
         {
             Name = "Player",
@@ -395,11 +418,11 @@ public class PlayScene : Scene
             Item1 = Keys.D1,
             Item2 = Keys.D2,
             Grapple = Keys.R,
-            JumpSound = _playerJumpSound,
-            DashSound = playerDashSound,
-            PunchSound = playerPunchSound,
-            ChargingSound = playerChargeBulletSound,
-            BulletShotSound = playerBulletShotSound,
+            JumpSound = _jumpSound,
+            DashSound = _dashSound,
+            PunchSound = _punchSound,
+            ChargingSound = _chargeBulletSound,
+            BulletShotSound = _bulletShotSound,
 
             Bullet = new PlayerBullet(_projectileTexture)
             {
@@ -415,8 +438,6 @@ public class PlayScene : Scene
 
     private void CreateEnemies()
     {
-        SoundEffect hitSound = _content.Load<SoundEffect>("HitEnemy");
-
         Dictionary<ItemID, float> defaultLootTableChance = new Dictionary<ItemID, float>{ 
             {ItemID.None, 0.8f},
             {ItemID.HealthPotion, 0.2f},
@@ -433,7 +454,7 @@ public class PlayScene : Scene
                 BaseJumpStrength = 490,
                 Friction = 0.96f,
 
-                HitSound = hitSound,
+                HitSound = _hitSound,
 
                 LootTableChance = defaultLootTableChance
             });
@@ -452,7 +473,7 @@ public class PlayScene : Scene
                     ChaseDuration = 3.0f,
                     DashDuration = 1.0f,
 
-                    HitSound = hitSound,
+                    HitSound = _hitSound,
 
                     LootTableChance = defaultLootTableChance
                 });
@@ -469,7 +490,7 @@ public class PlayScene : Scene
 
                 IgnorePlayerDuration = 3f,
 
-                HitSound = hitSound,
+                HitSound = _hitSound,
 
                 LootTableChance = defaultLootTableChance
             });
@@ -481,7 +502,7 @@ public class PlayScene : Scene
 
                 MaxHealth = float.MaxValue,
 
-                HitSound = hitSound,// Temp
+                HitSound = _hitSound,// Temp
 
                 LootTableChance = defaultLootTableChance 
             });
@@ -493,7 +514,7 @@ public class PlayScene : Scene
 
                 MaxHealth = 150f,
 
-                HitSound = hitSound,
+                HitSound = _hitSound,
 
                 TowerBullet = new TowerBullet(_projectileTexture)
                 {
@@ -513,7 +534,7 @@ public class PlayScene : Scene
 
                 MaxHealth = 100f,
 
-                HitSound = hitSound,
+                HitSound = _hitSound,
 
                 DemonBullet = new DemonBullet(_projectileTexture)
                 {
@@ -539,7 +560,7 @@ public class PlayScene : Scene
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
 
-                HitSound = hitSound
+                HitSound = _hitSound
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Cerberus,         
@@ -554,7 +575,7 @@ public class PlayScene : Scene
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
 
-                HitSound = hitSound
+                HitSound = _hitSound
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Rhulk,         
@@ -569,7 +590,7 @@ public class PlayScene : Scene
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
 
-                HitSound = hitSound,
+                HitSound = _hitSound,
                 
                 Laserproj = new DemonLaser(_LaserTexture)
                 {
@@ -584,13 +605,7 @@ public class PlayScene : Scene
     {
         //set for all item
         Item.TooltipBackgroundTexture = _itemSlotTexture;
-        Item.PickUpSound = _content.Load<SoundEffect>("PickUp");
-        
-        SoundEffect PotionUseSound = _content.Load<SoundEffect>("PotionUse");
-        SoundEffect SwordSlashSound = _content.Load<SoundEffect>("SwordSlash");
-        SoundEffect GunshotSound = _content.Load<SoundEffect>("Gunshot");
-        SoundEffect FireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
-        SoundEffect FireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
+        Item.PickUpSound = _pickUpSound;
 
         //TODO : Change these to real ITEM ID
         ItemManager.AddGameItem(ItemID.HealthPotion,
@@ -598,7 +613,7 @@ public class PlayScene : Scene
                 Name =  "HealthPotion",
                 Description = "Test HealthPotion Description",
                 Viewport = ViewportManager.Get("Potion_Health"),
-                UseSound = PotionUseSound
+                UseSound = _potionUseSound
             });
 
         ItemManager.AddGameItem(ItemID.SpeedPotion,
@@ -606,7 +621,7 @@ public class PlayScene : Scene
                 Name =  "SpeedPotion",
                 Description = "Test SpeedPotion Description",
                 Viewport = ViewportManager.Get("Potion_Speed"),
-                UseSound = PotionUseSound
+                UseSound = _potionUseSound
             });
 
         ItemManager.AddGameItem(ItemID.JumpPotion,
@@ -614,7 +629,7 @@ public class PlayScene : Scene
                 Name =  "jumppotion",
                 Description = "Test JumpPotion Description",
                 Viewport = ViewportManager.Get("Potion_Jump"),
-                UseSound = PotionUseSound
+                UseSound = _potionUseSound
             });
 
         ItemManager.AddGameItem(ItemID.Barrier,
@@ -622,7 +637,7 @@ public class PlayScene : Scene
                 Name =  "barrier",
                 Description = "Test Barrier Description",
                 Viewport = ViewportManager.Get("Barrier"),
-                UseSound = PotionUseSound // Temp
+                UseSound = _potionUseSound // Temp
             });
 
         ItemManager.AddGameItem(ItemID.LifeUp,
@@ -630,7 +645,7 @@ public class PlayScene : Scene
                 Name =  "1Up",
                 Description = "Test LifeUp Description",
                 Viewport = ViewportManager.Get("LifeUp"),
-                UseSound = PotionUseSound // Temp
+                UseSound = _potionUseSound // Temp
             });
 
         ItemManager.AddGameItem(ItemID.SpeedBoots,
@@ -652,7 +667,7 @@ public class PlayScene : Scene
                 Name =  "Sword",
                 Description = "Test Sword Description",
                 Viewport = ViewportManager.Get("Sword"),
-                SlashSound = SwordSlashSound,
+                SlashSound = _swordSlashSound,
             });
 
         ItemManager.AddGameItem(ItemID.Gun,
@@ -660,7 +675,7 @@ public class PlayScene : Scene
                 Name =  "Gun",
                 Description = "Test Gun Description",
                 Viewport = ViewportManager.Get("Gun"),
-                ShootSound = GunshotSound,
+                ShootSound = _gunshotSound,
             });
 
         ItemManager.AddGameItem(ItemID.Staff,
@@ -668,7 +683,7 @@ public class PlayScene : Scene
                 Name =  "Staff",
                 Description = "Test Staff Description",
                 MPCost = 10,
-                ShootSound = FireBallShootingSound,
+                ShootSound = _fireBallShootingSound,
 
                 FireBall = new FireBall(_projectileTexture)
                 {
@@ -678,7 +693,7 @@ public class PlayScene : Scene
                     Radius = 30f,
                     ExplosionDuration = 0.5f,
                     Viewport = ViewportManager.Get("FireBall"),
-                    BaseExplosion = new Explosion(_projectileTexture, FireBallExplosionSound)
+                    BaseExplosion = new Explosion(_projectileTexture, _fireBallExplosionSound)
                     {
                         Viewport = ViewportManager.Get("Explosion")
                     }
@@ -711,7 +726,7 @@ public class PlayScene : Scene
                 Name =  "Grenade",
                 Description = "Test GrenadeTemp Description",
                 Viewport = ViewportManager.Get("Grenade"),
-                UseSound = PotionUseSound, // Temp
+                UseSound = _potionUseSound, // Temp
 
                 GrenadeProjectile = new GrenadeProjectile(_projectileTexture)
                 {
@@ -723,7 +738,7 @@ public class PlayScene : Scene
                     ExplosionDuration = 0.5f,
                     DetonateDelayDuration = 3.0f,
                     Viewport = ViewportManager.Get("Grenade_Projectile"),
-                    BaseExplosion = new Explosion(_projectileTexture, FireBallExplosionSound)
+                    BaseExplosion = new Explosion(_projectileTexture, _fireBallExplosionSound)
                     {
                         Viewport = ViewportManager.Get("Explosion")
                     }
