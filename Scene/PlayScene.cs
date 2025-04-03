@@ -125,11 +125,6 @@ public class PlayScene : Scene
                 DrawTileMap();
                 DrawAllObjects();
                 _spriteBatch.End();
-
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp); 
-                _spriteBatch.DrawString(Singleton.Instance.GameFont, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
-                _spriteBatch.DrawString(Singleton.Instance.GameFont, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
-                _spriteBatch.End();
                 break;
         }
 
@@ -717,6 +712,12 @@ public class PlayScene : Scene
     {
         _ui.ClearHUD();
 
+        TextUI HealthText = new TextUI(            
+            new Rectangle(20, 15, 200, 25),
+            () => $"HP ({Singleton.Instance.Player.Health:F0} / {Singleton.Instance.Player.MaxMP:F0})",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         HealthBar playerHealth = new HealthBar(
             Singleton.Instance.Player,
             new Rectangle(20, 40, 200, 30),
@@ -724,6 +725,12 @@ public class PlayScene : Scene
             Color.Gray
         );
 
+        TextUI MPText = new TextUI(            
+            new Rectangle(20, 75, 200, 25),
+            () => $"MP ({Singleton.Instance.Player.MP:F0} / {Singleton.Instance.Player.MaxMP:F0})",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         MPBar playerMP = new MPBar(
             new Rectangle(20, 100, 200, 30),
             Color.SkyBlue,
@@ -734,7 +741,7 @@ public class PlayScene : Scene
 
         TextUI MeleeWeaponText = new TextUI(            
             new Rectangle(250, 0, 50, 25),
-            "Melee (" + Singleton.Instance.Player.Attack + ")",
+            () => $"Melee ({Singleton.Instance.Player.Attack})",
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -747,7 +754,7 @@ public class PlayScene : Scene
 
         TextUI RangeWeaponText = new TextUI(            
             new Rectangle(350, 0, 50, 25),
-            "Range (" + Singleton.Instance.Player.Fire + ")",
+            () => $"Range ({Singleton.Instance.Player.Attack})",
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -784,7 +791,9 @@ public class PlayScene : Scene
             slot
         );
 
+        _ui.AddHUDElement(HealthText);
         _ui.AddHUDElement(playerHealth);
+        _ui.AddHUDElement(MPText);
         _ui.AddHUDElement(playerMP);
         _ui.AddHUDElement(MeleeWeaponText);
         _ui.AddHUDElement(MeleeWeaponSlot);
