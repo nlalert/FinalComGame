@@ -211,7 +211,7 @@ public class PlayScene : Scene
         for (int i = 0; i < _numObject; i++)
         {
             if(_gameObjects[i].IsActive)
-                _gameObjects[i].Update(gameTime, _gameObjects, _stageManager.GetCollisionTileMap());
+                _gameObjects[i].Update(gameTime, _gameObjects, _stageManager.CollisionTileMap);
         }
         // Console.WriteLine(_gameObjects.Count);
     }
