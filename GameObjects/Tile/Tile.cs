@@ -9,6 +9,7 @@ namespace FinalComGame
     {
         public bool IsSolid;
         public TileType Type;
+        public int ID;
 
         public Tile(Texture2D texture)
         {

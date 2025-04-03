@@ -48,12 +48,12 @@ public class EnemyManager
     }
 
     // Spawn enemies in the world based on tile map data
-    public static void SpawnWorldEnemy(Dictionary<Vector2, EnemyID> enemySpawnPoints, List<AmbushArea> ambushAreas, List<GameObject> gameObjects)
+    public static void SpawnWorldEnemy(StageManager stageManager, List<GameObject> gameObjects)
     {
-        foreach (var enemySpawnPoint in enemySpawnPoints)
+        foreach (var enemySpawnPoint in stageManager.GetEnemySpawnPoints())
         {
             bool isEnemyPositionInAmbushArea = false;
-            foreach (AmbushArea ambushArea in ambushAreas)
+            foreach (AmbushArea ambushArea in stageManager.GetAmbushAreas())
             {
                 if (ambushArea.IsEnemyPositionInAmbushArea(enemySpawnPoint.Key))
                 {
