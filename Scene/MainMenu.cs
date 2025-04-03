@@ -26,7 +26,6 @@ namespace FinalComGame
         private Vector2 _mgPosition;
         private Vector2 _fgPosition;
 
-        private float _bgSpeed = 0.2f;
         private float _mgSpeed = 0.5f;
         private float _fgSpeed = 1.0f;
 
@@ -59,7 +58,6 @@ namespace FinalComGame
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Move layers at different speeds
-            // _bgPosition.X -= _bgSpeed * deltaTime * 100;
             _mgPosition.X -= _mgSpeed * deltaTime * 100;
             _fgPosition.X -= _fgSpeed * deltaTime * 100;
             _scaleX = (float)Singleton.SCREEN_WIDTH / _bgTexture.Width;
