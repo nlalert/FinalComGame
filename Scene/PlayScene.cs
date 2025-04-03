@@ -168,19 +168,28 @@ public class PlayScene : Scene
                 _parallaxBackground.Update(gameTime);
                 break;
             case Singleton.GameState.StageCompleted:
-                Singleton.Instance.Stage++;
-                if (Singleton.Instance.Stage >= 4){
-                    Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
-                }
-                else
-                {
-                    Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
-                }
+                UpdateStage();
                 break;
         }
 
         //Console.WriteLine("GameObject :" + _numObject);
         _gameManager.IsMouseVisible = false;
+    }
+
+    private void UpdateStage()
+    {
+        if(Singleton.Instance.Stage != 0)
+            Singleton.Instance.Player.Life++; // Reward for clearing stage
+            
+        Singleton.Instance.Stage++;
+
+        if (Singleton.Instance.Stage >= 4){
+            Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
+        }
+        else
+        {
+            Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
+        }
     }
 
     public override void Draw(GameTime gameTime)
@@ -425,7 +434,7 @@ public class PlayScene : Scene
         Singleton.Instance.Player = new Player(_playerTexture, _whiteTexture)
         {
             Name = "Player",
-            Life = 2,
+            Life = 3,
             WalkSpeed = 200,
             CrouchSpeed = 100,
             ClimbSpeed = 100,
@@ -820,97 +829,148 @@ public class PlayScene : Scene
     {
         _ui.ClearHUD();
 
+        // Top Left - Health and MP
         TextUI HealthText = new TextUI(            
             new Rectangle(20, 15, 200, 25),
-            () => $"HP ({Singleton.Instance.Player.Health:F0} / {Singleton.Instance.Player.MaxMP:F0})",
+            () => $"HP ({Singleton.Instance.Player.Health:F0} / {Singleton.Instance.Player.MaxHealth:F0})",
             Color.White,
-            TextUI.TextAlignment.Center
+            TextUI.TextAlignment.Left
         );
+        
         HealthBar playerHealth = new HealthBar(
             Singleton.Instance.Player,
-            new Rectangle(20, 40, 200, 30),
+            new Rectangle(20, 40, 3 * (int) Singleton.Instance.Player.MaxHealth, 25),
             Color.Red,
             Color.Gray
         );
 
         TextUI MPText = new TextUI(            
-            new Rectangle(20, 75, 200, 25),
+            new Rectangle(20, 70, 200, 25),
             () => $"MP ({Singleton.Instance.Player.MP:F0} / {Singleton.Instance.Player.MaxMP:F0})",
             Color.White,
-            TextUI.TextAlignment.Center
+            TextUI.TextAlignment.Left
         );
+        
         MPBar playerMP = new MPBar(
-            new Rectangle(20, 100, 200, 30),
+            new Rectangle(20, 95, 200, 25),
             Color.SkyBlue,
             Color.Gray
         );
 
-        
+        // Top Right - Lives
+        TextUI LifeText = new TextUI(            
+            new Rectangle(1220, 15, 50, 25),
+            () => $"x{Singleton.Instance.Player.Life}",
+            Color.White,
+            TextUI.TextAlignment.Right
+        );
 
+        // Bottom Section - Equipment (moved closer to bottom of screen)
+        int slotY = 640; // Increased base Y position for slots (was 600)
+        
+        // Melee weapon section
         TextUI MeleeWeaponText = new TextUI(            
-            new Rectangle(250, 0, 50, 25),
-            () => $"Melee ({Singleton.Instance.Player.Attack})",
+            new Rectangle(490, slotY - 25, 50, 20),
+            "Melee",
             Color.White,
             TextUI.TextAlignment.Center
         );
+        
         ItemSlot MeleeWeaponSlot = new ItemSlot(
             Inventory.MELEE_SLOT,
-            new Rectangle(250, 30, 50, 50),
+            new Rectangle(490, slotY, 50, 50),
             _itemSlotTexture,
             _itemSlotTexture
         );
-
-        TextUI RangeWeaponText = new TextUI(            
-            new Rectangle(350, 0, 50, 25),
-            () => $"Range ({Singleton.Instance.Player.Fire})",
+        
+        TextUI MeleeWeaponButtonText = new TextUI(            
+            new Rectangle(490, slotY + 55, 50, 20),
+            "Q",
             Color.White,
             TextUI.TextAlignment.Center
         );
+
+        // Ranged weapon section
+        TextUI RangeWeaponText = new TextUI(            
+            new Rectangle(550, slotY - 25, 50, 20),
+            "Range",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
+        
         ItemSlot RangeWeaponSlot = new ItemSlot(
             Inventory.RANGE_SLOT,
-            new Rectangle(350, 30, 50, 50),
+            new Rectangle(550, slotY, 50, 50),
             _itemSlotTexture,
             _itemSlotTexture
         );
-
-        TextUI ItemText1 = new TextUI(            
-            new Rectangle(550, 0, 50, 25),
-            "Item (1)",
+        
+        TextUI RangeWeaponButtonText = new TextUI(            
+            new Rectangle(550, slotY + 55, 50, 20),
+            "E",
             Color.White,
             TextUI.TextAlignment.Center
         );
+
+        // Item slots section - with shared "Items" label centered over both
+        TextUI ItemsLabelText = new TextUI(            
+            new Rectangle(640, slotY - 25, 50, 20),
+            "Items",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
+        
         ItemSlot ItemSlot1 = new ItemSlot(
             Inventory.ITEM_SLOT_1,
-            new Rectangle(550, 30, 50, 50),
+            new Rectangle(610, slotY, 50, 50),
             _itemSlotTexture,
             _itemSlotTexture
         );
-
-        TextUI ItemText2 = new TextUI(            
-            new Rectangle(650, 0, 50, 25),
-            "Item (2)",
+        
+        TextUI ItemButtonText1 = new TextUI(            
+            new Rectangle(610, slotY + 55, 50, 20),
+            "1",
             Color.White,
             TextUI.TextAlignment.Center
         );
+        
         ItemSlot ItemSlot2 = new ItemSlot(
             Inventory.ITEM_SLOT_2,
-            new Rectangle(650, 30, 50, 50),
+            new Rectangle(670, slotY, 50, 50),
             _itemSlotTexture,
             _itemSlotTexture
         );
+        
+        TextUI ItemButtonText2 = new TextUI(            
+            new Rectangle(670, slotY + 55, 50, 20),
+            "2",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
 
+        // Add elements to UI
         _ui.AddHUDElement(HealthText);
         _ui.AddHUDElement(playerHealth);
         _ui.AddHUDElement(MPText);
         _ui.AddHUDElement(playerMP);
+        _ui.AddHUDElement(LifeText);
+        
+        // Melee weapon section
         _ui.AddHUDElement(MeleeWeaponText);
         _ui.AddHUDElement(MeleeWeaponSlot);
+        _ui.AddHUDElement(MeleeWeaponButtonText);
+        
+        // Ranged weapon section
         _ui.AddHUDElement(RangeWeaponText);
         _ui.AddHUDElement(RangeWeaponSlot);
-        _ui.AddHUDElement(ItemText1);
+        _ui.AddHUDElement(RangeWeaponButtonText);
+        
+        // Item slots section
+        _ui.AddHUDElement(ItemsLabelText);
         _ui.AddHUDElement(ItemSlot1);
-        _ui.AddHUDElement(ItemText2);
+        _ui.AddHUDElement(ItemButtonText1);
         _ui.AddHUDElement(ItemSlot2);
+        _ui.AddHUDElement(ItemButtonText2);
     }
 
     public void UnlockAbilityForStage()
