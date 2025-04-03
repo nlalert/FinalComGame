@@ -14,7 +14,15 @@ public class PlayScene : Scene
     List<GameObject> _gameObjects;
     int _numObject;
 
+    private Texture2D _textureAtlas;
+    private Texture2D _LaserTexture;
+    private Texture2D _HookHeadTexture;
+    private Texture2D _RopeTexture; 
+
     private ParallaxBackground _parallaxBackground;
+    private Texture2D _backgroundLayer1;
+    private Texture2D _backgroundLayer2;
+    private Texture2D _backgroundLayer3;
 
     private TileMap _collisionTileMap;
     private TileMap _FGTileMap;
@@ -37,6 +45,13 @@ public class PlayScene : Scene
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
+
+        _LaserTexture = _content.Load<Texture2D>("Laserbeam");
+        _HookHeadTexture = _content.Load<Texture2D>("HookHead");
+        _RopeTexture = _content.Load<Texture2D>("Rope");
+
+        _textureAtlas = _content.Load<Texture2D>("Tileset");
+
         _song = _content.Load<Song>("ChillSong");
     }
 
@@ -195,13 +210,11 @@ public class PlayScene : Scene
 
         Singleton.Instance.Random = new Random();
     
-        Texture2D textureAtlas = _content.Load<Texture2D>("Tileset");
-
-        _BGTileMap = new TileMap(textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
-        _MGTileMap = new TileMap(textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
-        _FGTileMap = new TileMap(textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
+        _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
+        _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
+        _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
         
-        _collisionTileMap = new TileMap(textureAtlas, GetCurrentStageCollisionPath(), 20);
+        _collisionTileMap = new TileMap(_textureAtlas, GetCurrentStageCollisionPath(), 20);
 
         Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.TILE_SIZE,  _collisionTileMap.MapHeight * Singleton.TILE_SIZE); // Map size
         Singleton.Instance.Camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
@@ -225,22 +238,26 @@ public class PlayScene : Scene
 
     private void SetUpParallaxBackground()
     {
-        Texture2D backgroundLayer1 = _content.Load<Texture2D>("Level_1_Parallax_bg");  // Farthest layer
-        Texture2D backgroundLayer2 = _content.Load<Texture2D>("Level_1_Parallax_mg");  // Middle layer
-        Texture2D backgroundLayer3 = _content.Load<Texture2D>("Level_1_Parallax_fg");  // Closest layer
+        // // Load background textures
+        // _backgroundLayer1 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_bg");  // Farthest layer
+        // _backgroundLayer2 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_mg");  // Middle layer
+        // _backgroundLayer3 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_fg");  // Closest layer
+
+        _backgroundLayer1 = _content.Load<Texture2D>("Level_1_Parallax_bg");  // Farthest layer
+        _backgroundLayer2 = _content.Load<Texture2D>("Level_1_Parallax_mg");  // Middle layer
+        _backgroundLayer3 = _content.Load<Texture2D>("Level_1_Parallax_fg");  // Closest layer
 
         // Create parallax background
         _parallaxBackground = new ParallaxBackground(_graphicsDevice.Viewport);
 
-        _parallaxBackground.AddLayer(backgroundLayer1, 0.0f, 1.0f, Vector2.Zero); // Sky/clouds move very slowly
-        _parallaxBackground.AddLayer(backgroundLayer2, 0.1f, 1.5f, new Vector2(-50,-300)); // Mountains move at medium speed
-        _parallaxBackground.AddLayer(backgroundLayer3, 0.2f, 2.0f, new Vector2(-100,-800)); // Trees move faster (closer to player)
+        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f, 1.0f, Vector2.Zero); // Sky/clouds move very slowly
+        _parallaxBackground.AddLayer(_backgroundLayer2, 0.1f, 1.5f, new Vector2(-50,-300)); // Mountains move at medium speed
+        _parallaxBackground.AddLayer(_backgroundLayer3, 0.2f, 2.0f, new Vector2(-100,-800)); // Trees move faster (closer to player)
     }
 
     // In your PlayScene or main game class
     public void InitializeAmbushAreas()
     {
-        ambushAreas.Clear();
         ambushAreas = _collisionTileMap.GetAmbushAreas();
     }
 
@@ -293,16 +310,13 @@ public class PlayScene : Scene
         Texture2D playerTexture = _content.Load<Texture2D>("Char");
         Texture2D playerParticle = new Texture2D(_graphicsDevice, 1, 1);
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
-        Texture2D hookHeadTexture = _content.Load<Texture2D>("HookHead");
-        Texture2D ropeTexture = _content.Load<Texture2D>("Rope");
     
         SoundEffect playerJumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         SoundEffect playerDashSound = _content.Load<SoundEffect>("Dash");
         SoundEffect playerPunchSound = _content.Load<SoundEffect>("PlayerPunch");
         SoundEffect playerChargeBulletSound = _content.Load<SoundEffect>("ChargingBullet");
         SoundEffect playerBulletShotSound = _content.Load<SoundEffect>("BulletShot");
-
-
+        
         Singleton.Instance.Player = new Player(playerTexture, playerParticle)
         {
             Name = "Player",
@@ -368,24 +382,24 @@ public class PlayScene : Scene
                 Speed = 500f,
                 Viewport = ViewportManager.Get("Charge_Bullet_0")
             },
-            _hookHeadTexture = hookHeadTexture,
-            _ropeTexture = ropeTexture
+            _hookHeadTexture = _HookHeadTexture,
+            _ropeTexture = _RopeTexture
         };
     }
 
     private void CreateEnemies()
     {
-        Texture2D enemyTexture = _content.Load<Texture2D>("Skeleton");
-        Texture2D dogTexture = _content.Load<Texture2D>("HellHound");
-        Texture2D slimeTexture = _content.Load<Texture2D>("HellSlime");
-        Texture2D demonTexture = _content.Load<Texture2D>("Demon");
-        Texture2D towerTexture = _content.Load<Texture2D>("Spitter");
-        Texture2D platformEnemyTexture = _content.Load<Texture2D>("Crab");
+        Texture2D _enemyTexture = _content.Load<Texture2D>("Skeleton");
+        Texture2D _DogTexture = _content.Load<Texture2D>("HellHound");
+        Texture2D _SlimeTexture = _content.Load<Texture2D>("HellSlime");
+        Texture2D _DemonTexture = _content.Load<Texture2D>("Demon");
+        Texture2D _TowerTexture = _content.Load<Texture2D>("Spitter");
+        Texture2D _PlatformTexture = _content.Load<Texture2D>("Crab");
 
-        Texture2D giantSlimeTexture = _content.Load<Texture2D>("LargeSlime");
-        Texture2D cerberusTexture = _content.Load<Texture2D>("Cerberus");
-        Texture2D RhulkTexture = _content.Load<Texture2D>("Rhulk");
-        Texture2D laserTexture = _content.Load<Texture2D>("Laserbeam");
+        Texture2D _GiantSlimeTexture = _content.Load<Texture2D>("LargeSlime");
+        Texture2D _CerberusTexture = _content.Load<Texture2D>("Cerberus");
+        Texture2D _RhulkTexture = _content.Load<Texture2D>("Rhulk");
+
         Texture2D projectileTexture = _content.Load<Texture2D>("Projectile");
 
         SoundEffect hitSound = _content.Load<SoundEffect>("HitEnemy");
@@ -396,7 +410,7 @@ public class PlayScene : Scene
         };
 
         EnemyManager.AddGameEnemy(EnemyID.Slime,
-            new SlimeEnemy(slimeTexture){
+            new SlimeEnemy(_SlimeTexture){
                 Name = "Slime",
                 Viewport = ViewportManager.Get("Slime"),
                 MaxHealth = 50f,
@@ -412,7 +426,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Hellhound,
-                new HellhoundEnemy(dogTexture){
+                new HellhoundEnemy(_DogTexture){
                     Name = "Hellhound",
                     Viewport = ViewportManager.Get("Hellhound"),
                     
@@ -431,7 +445,7 @@ public class PlayScene : Scene
                 });
 
         EnemyManager.AddGameEnemy(EnemyID.Skeleton,         
-            new SkeletonEnemy(enemyTexture){
+            new SkeletonEnemy(_enemyTexture){
                 Name = "Skeleton",
                 Viewport = ViewportManager.Get("Skeleton"),
 
@@ -448,7 +462,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.PlatformEnemy,
-            new PlatformEnemy(platformEnemyTexture){
+            new PlatformEnemy(_PlatformTexture){
                 Name = "PlatformEnemy",
                 Viewport = ViewportManager.Get("PlatformEnemy"),
 
@@ -460,7 +474,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.TowerEnemy,
-            new TowerEnemy(towerTexture){
+            new TowerEnemy(_TowerTexture){
                 Name = "TowerEnemy",
                 Viewport = ViewportManager.Get("TowerEnemy"),
 
@@ -480,7 +494,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Demon,
-            new DemonEnemy(demonTexture){
+            new DemonEnemy(_DemonTexture){
                 Name = "Demon",
                 Viewport = ViewportManager.Get("Demon"),
 
@@ -500,7 +514,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.GiantSlime,         
-            new GiantSlime(giantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
+            new GiantSlime(_GiantSlimeTexture, new Texture2D(_graphicsDevice, 1, 1)){
                 Name = "GiantSlime",
                 Viewport = ViewportManager.Get("GiantSlime"),
 
@@ -516,7 +530,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Cerberus,         
-            new Cerberus(cerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
+            new Cerberus(_CerberusTexture, new Texture2D(_graphicsDevice, 1, 1)){
                 Name = "Cerberus",
                 Viewport = ViewportManager.Get("Cerberus"),
 
@@ -531,7 +545,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Rhulk,         
-            new Rhulk(RhulkTexture){
+            new Rhulk(_RhulkTexture){
                 Name = "Rhulk",
                 Viewport = ViewportManager.Get("Rhulk"),
 
@@ -544,7 +558,7 @@ public class PlayScene : Scene
 
                 HitSound = hitSound,
                 
-                Laserproj = new DemonLaser(laserTexture)
+                Laserproj = new DemonLaser(_LaserTexture)
                 {
                     Name = "BulletEnemy",
                     BaseDamageAmount = 20f,
