@@ -21,6 +21,7 @@ namespace FinalComGame
         private float _dashDuration = 2f;
         private bool _isSummoned = false;
         public float _actionTimeOffset = 1f;
+        public int CerberusCount = 3;
         
         private Vector2 _dashAim;
         private Vector2 _dashStart;
@@ -35,6 +36,7 @@ namespace FinalComGame
         { 
             _texture = texture;
             CanCollideTile = true;
+            IsIgnorePlatform = true;
         }
         public override void Reset()
         {
@@ -49,6 +51,8 @@ namespace FinalComGame
             _dashDuration = 2f;
             _isSummoned = false;
             _actionTimeOffset = 1f;
+            IsIgnorePlatform = true;
+            CerberusCount = 3;
             base.Reset();
         }
         public override void AddAnimation(){
@@ -115,8 +119,7 @@ namespace FinalComGame
                     break;
             }
 
-            float delta = _isSummoned ? deltaTime/3 : deltaTime; 
-            UpdateAnimation(delta);
+            UpdateAnimation(deltaTime);
             base.Update(gameTime, gameObjects, tileMap);
         }
 
@@ -144,11 +147,6 @@ namespace FinalComGame
                 case EnemyState.Idle:
                     animation = "idle";
                     break;
-            }
-
-            if (_isSummoned)
-            {
-                animation = "sd_" + animation;
             }
                 
             if(_currentAnimation != animation && !Animation.IsTransition)
@@ -244,7 +242,7 @@ namespace FinalComGame
                 Vector2 direction = Position - _dashAim;
                 direction.Normalize();
                 Vector2 perpendicularDirection = new Vector2(-direction.Y, direction.X);
-                _barrierstart = Singleton.Instance.Player.GetPlayerCenter() - direction * 100f;
+                _barrierstart = Singleton.Instance.Player.GetPlayerCenter() - direction * 100f;// push further from player
                 _barrierEnd = _barrierstart - perpendicularDirection * 350;
                 _barrierEnd1 = _barrierstart - perpendicularDirection * -350;
             }
@@ -262,6 +260,13 @@ namespace FinalComGame
             if (_isDashing)
             {
                 _dashTimer -= deltaTime;
+                if(Vector2.Distance(_dashAim,Position)<50f){
+                    var tile = tileMap.GetTileAtWorldPostion(Position);
+                    if(tile!=null &&this.IsTouching(tileMap.GetTileAtWorldPostion(Position))){
+
+                    }else 
+                        CanCollideTile = true;
+                }
                 if (_dashTimer <=0 || IsIntersect(_barrierEnd,_barrierEnd1,_dashStart,Position))
                 {
                     //Console.WriteLine("Hellhound finished dashing, switching to chase mode.");
@@ -298,11 +303,31 @@ namespace FinalComGame
         }
         public override void OnCollisionHorizon()
         {
+            if(CurrentState == EnemyState.Chase){
+                if (!_isJumping){
+                    _isJumping = true;
+                    Velocity.Y = -600f;
+                }
+            }
             base.OnCollisionHorizon();
+            if(CurrentState == EnemyState.Dash && _isDashing){
+                _isDashing = false;
+                CurrentState = EnemyState.Chase;
+                _actionTimer =5f;
+                CanCollideTile = true;
+                _isJumping = false;
+            }
         }
         public override void OnLandVerticle()
         {
             _isJumping = false;
+            if(CurrentState == EnemyState.Dash && _isDashing){
+                _isDashing = false;
+                CurrentState = EnemyState.Chase;
+                _actionTimer =5f;
+                CanCollideTile = true;
+                _isJumping = false;
+            }
         }
 
         // protected override void UpdateAnimation(float deltaTime)
@@ -359,13 +384,12 @@ namespace FinalComGame
         protected override void DrawDebug(SpriteBatch spriteBatch)
         {
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
-            string displayText = $"State: {CurrentState}\n{base.Direction}\n HP {Health} \nAT:{_actionTimer}";
+            string displayText = $"State: {CurrentState}\n{base.Direction}\n HP {Health} \nAT:{_actionTimer} \n {CerberusCount}";
             spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition , Color.White);
             if(CurrentState == EnemyState.Charging || CurrentState == EnemyState.Dash){
                 DrawLine(spriteBatch, _dashAim, Position, Color.Green);
                 // Draw 90-degree line at the Aim position
                 DrawLine(spriteBatch,_barrierEnd,_barrierEnd1, Color.Blue);
-
             }
         }
 
@@ -421,6 +445,19 @@ namespace FinalComGame
 
             newObject1.Name = "Split Object"; // Give the new object a unique name if necessary
             newObject2.Name = "Split Object"; // Give the new object a unique name if necessary
+
+            newObject1.Animation = new Animation(_texture, 96, 80, new Vector2(96*8, 80*5), 24);
+            newObject1.Animation.AddAnimation("charge", new Vector2(0,2), 8);
+            newObject1.Animation.AddAnimation("dash", new Vector2(3,3), 2);
+            newObject1.Animation.AddAnimation("run", new Vector2(3,4), 3);
+            newObject1.Animation.ChangeAnimation("charge");
+
+            newObject2.Animation = new Animation(_texture, 96, 80, new Vector2(96*8, 80*5), 24);
+            newObject2.Animation.AddAnimation("charge", new Vector2(0,2), 8);
+            newObject2.Animation.AddAnimation("dash", new Vector2(3,3), 2);
+            newObject2.Animation.AddAnimation("run", new Vector2(3,4), 3);
+            newObject2.Animation.ChangeAnimation("charge");
+
             // Add the new object to the list of game objects
             gameObjects.Add(newObject1);
             gameObjects.Add(newObject2);
@@ -428,8 +465,15 @@ namespace FinalComGame
 
         public override void OnDead(List<GameObject> gameObjects)
         {
-            Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
-            Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
+            foreach(GameObject obj in gameObjects){
+                if(obj is Cerberus a){
+                    a.CerberusCount -=1;
+                }
+            }
+            if(CerberusCount <= 0){
+                Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+                Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
+            }
             base.OnDead(gameObjects);
         }
     }
