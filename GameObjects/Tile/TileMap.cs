@@ -53,24 +53,27 @@ namespace FinalComGame
                     {
                         if (int.TryParse(items[x], out int tileID) && tileID >= 0)
                         {
-                            TileType type = GetTileType(tileID);
-                            
-                            Tile tile = new Tile(textureAtlas)
-                            {
-                                Name = "Tile",
-                                ID = tileID,
-                                Type = type,
-                                Position = GetTileWorldPositionAt(x, y),
-                                Viewport = GetTileViewport(tileID),
-                                IsSolid = GetTileCollisionType(tileID)
-                            };
-                            Tiles.Add(new Vector2(x, y), tile);
+                            AddNewTile(tileID, x, y);
                         }
                     }
                     y++;
                 }
                 MapHeight = y;
             }
+        }
+
+        public void AddNewTile(int tileID, int x, int y)
+        {
+            Tile tile = new Tile(textureAtlas)
+            {
+                Name = "Tile",
+                ID = tileID,
+                Type = GetTileType(tileID),
+                Position = GetTileWorldPositionAt(x, y),
+                Viewport = GetTileViewport(tileID),
+                IsSolid = GetTileCollisionType(tileID)
+            };
+            Tiles.Add(new Vector2(x, y), tile);
         }
 
         // Methods to get spawn points on demand
@@ -182,7 +185,7 @@ namespace FinalComGame
             };
         }
 
-        private Rectangle GetTileViewport(int tileID)
+        public Rectangle GetTileViewport(int tileID)
         {
             int tileX = tileID % numTilesPerRow;
             int tileY = tileID / numTilesPerRow;
