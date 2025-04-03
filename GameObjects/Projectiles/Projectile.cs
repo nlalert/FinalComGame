@@ -39,7 +39,6 @@ namespace FinalComGame
             {
                 OnProjectileHit(Singleton.Instance.Player);
                 Singleton.Instance.Player.OnHitByProjectile(this,DamageAmount, false);
-                // s.Reset();//TODO ???? why does it need reset idk
                 IsActive = false;
             }
             

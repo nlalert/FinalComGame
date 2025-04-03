@@ -13,17 +13,7 @@ public class GameOverScene : Scene
     private Button _restartButton;
     private Button _mainmenuButton;
     private Button _exitButton;
-
-    private int buttonGap;
-
-    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
-    {
-        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
-
-        // a gap between each button
-        buttonGap = 5;
-    }
-
+    
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
@@ -35,6 +25,7 @@ public class GameOverScene : Scene
     {
         base.Update(gameTime);
         StopSong();
+        _gameManager.IsMouseVisible = true;
     }
 
     protected override void SetupHUD()

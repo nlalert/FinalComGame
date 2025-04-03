@@ -12,6 +12,7 @@ namespace FinalComGame;
 public class Scene
 {
     //System
+    protected GameManager _gameManager;
     protected GraphicsDeviceManager _graphics;
     protected GraphicsDevice _graphicsDevice;
     protected SpriteBatch _spriteBatch;
@@ -21,8 +22,9 @@ public class Scene
 
     protected Song _song;
 
-    public virtual void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
+    public virtual void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
+        _gameManager = gameManager;
         _graphics = graphicsDeviceManager;
         _graphicsDevice = graphicsDevice;
         _content = content;

@@ -39,7 +39,6 @@ namespace FinalComGame
         private bool _isGliding;
 
         //Crouch
-        //private bool _isHeadHitting;
         private bool _isOnPlatform;
 
         //Climb
@@ -52,6 +51,7 @@ namespace FinalComGame
         private float _coyoteTimeCounter;
         public float JumpBufferTime;
         private float _jumpBufferCounter;
+        public AbilityManager Abilities;
 
         // Dash 
         private bool _isDashing;
@@ -152,7 +152,6 @@ namespace FinalComGame
             Animation.AddAnimation("climb_up_1", new Vector2(0,13), 8);
             Animation.AddAnimation("climb_down_1", new Vector2(8,13), 4);
 
-            //TODO : Add sword attack animation
             Animation.AddAnimation("melee", new Vector2(0,2), 8);
             Animation.AddAnimation("sword", new Vector2(8,4), 8);
 
@@ -181,12 +180,14 @@ namespace FinalComGame
 
             paticleTexture.SetData([new Color(193, 255, 219)]);
             _particle = new SoulParticle(10, Position, paticleTexture);
+            Abilities = new AbilityManager();
         }
 
         public override void Reset()
         {
             // Reset inventory
             Inventory.Reset();
+            Abilities.Reset();
 
             Direction = 1; // Reset direction to right
 
@@ -250,12 +251,12 @@ namespace FinalComGame
             UpdateInvincibilityTimer(deltaTime);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
+            UpdateDash(deltaTime);
+            UpdateGlide();
 
             if (!_isClimbing && !_isDashing && !_isGrappling) 
                 ApplyGravity(deltaTime);
-                
-            UpdateDash(deltaTime);
-            UpdateGlide();
+
             UpdateGrapplingHook(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
@@ -419,7 +420,7 @@ namespace FinalComGame
                     animation = "jump_charge_2";
             }
 
-            else if (Velocity.X != 0)
+            else if (Velocity.X != 0 && (Singleton.Instance.IsKeyPressed(Left) || Singleton.Instance.IsKeyPressed(Right)))
             {
                 if(_isCrouching){
                     if (HandAnimation._currentAnimation == "idle")
@@ -665,13 +666,15 @@ namespace FinalComGame
             }
 
             if (Singleton.Instance.IsKeyJustPressed(Dash)){
-                if(_isClimbing){
-                    Direction *= -1;
-                    _isClimbing = false;
+                if (Abilities.IsAbilityUnlocked(AbilityType.Dash))
+                {
+                    if(_isClimbing){
+                        Direction *= -1;
+                        _isClimbing = false;
+                    }
+                    StartDash();
                 }
-                StartDash();
             }
-
             if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _coyoteTimeCounter > 0)
             {
                 if (!(Singleton.Instance.IsKeyPressed(Crouch) && _isClimbing) && 
@@ -698,7 +701,7 @@ namespace FinalComGame
             !_isJumping && !_isClimbing && !_isDashing && !_isAttacking && 
             MP > 0 && _coyoteTimeCounter <= 0)
             {
-                _isGliding = true;
+                _isGliding = Abilities.IsAbilityUnlocked(AbilityType.Glide);
             }
             else
             {
@@ -774,7 +777,10 @@ namespace FinalComGame
             }
             
             if(Singleton.Instance.IsKeyJustPressed(Grapple)){
-                FireGrapplingHook(gameObjects);
+                if (Abilities.IsAbilityUnlocked(AbilityType.Grapple))
+                {
+                    FireGrapplingHook(gameObjects);
+                }
             }
             
             if (Singleton.Instance.IsKeyJustPressed(Interact))
@@ -836,7 +842,7 @@ namespace FinalComGame
 
         private void FireGrapplingHook(List<GameObject> gameObjects)
         {
-            if(_grapplingHook != null)
+            if (!Abilities.IsAbilityUnlocked(AbilityType.Grapple) || _grapplingHook != null)
                 return;
 
             Console.WriteLine("shooting grapple");
@@ -854,7 +860,6 @@ namespace FinalComGame
 
         protected override bool IsOnGround()
         {
-            //TODO apex of jump is grounded?
             return Velocity.Y == 0 || _isClimbing ;
         }
 
@@ -920,6 +925,8 @@ namespace FinalComGame
 
         private void StartDash()
         {
+            if (!Abilities.IsAbilityUnlocked(AbilityType.Dash))
+                return;
             if (_dashCooldownTimer <= 0 && !_isDashing && MP >= DashMP)
             {
                 _isDashing = true;
@@ -953,10 +960,9 @@ namespace FinalComGame
         private void UpdateGlide()
         {
             // Stop gliding if we hit the ground
-            if (IsOnGround())
+            if (IsOnGround() || !Abilities.IsAbilityUnlocked(AbilityType.Glide))
             {
                 _isGliding = false;
-                return;
             }
         }
 
@@ -1050,7 +1056,7 @@ namespace FinalComGame
                 return;
             
             // Get position offset based on player state
-            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Singleton.TILE_SIZE, 6) : new Vector2(Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Direction * Singleton.TILE_SIZE, 6) : new Vector2(Direction * Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
             
             // Create and configure the projectile using the weapon
@@ -1123,7 +1129,7 @@ namespace FinalComGame
             PlayerBullet newBullet = Bullet.Clone() as PlayerBullet;
             newBullet.DamageAmount *= chargePower; // Increase damage
 
-            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Singleton.TILE_SIZE, 6) : new Vector2(Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
+            Vector2 bulletPositionOffset = _isCrouching ? new Vector2(Direction * Singleton.TILE_SIZE, 6) : new Vector2(Direction * Singleton.TILE_SIZE, Singleton.TILE_SIZE); 
             Vector2 bulletPosition = Position + bulletPositionOffset;
 
             newBullet.Shoot(bulletPosition, direction);

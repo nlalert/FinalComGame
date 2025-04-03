@@ -197,21 +197,24 @@ public class GameObject : ICloneable
         return isCollided;
     }
 
-    protected bool IsTouchingAsCircle(GameObject g)
-    {
-        float distance = Vector2.Distance(this.Position, g.Position);
-        return distance < this.Radius + g.Radius;
-    }
 
     #endregion
 
     protected virtual void ApplyGravity(float deltaTime)
     {
         Velocity.Y += Singleton.GRAVITY * deltaTime; // gravity
-
-        //TODO: Check and cap terminal velocity of player if want later
+        
+        ClampMaxFallVelocity();
     }
 
+    protected void ClampMaxFallVelocity()
+    {
+        if(Velocity.Y >= Singleton.TERMINAL_VELOCITY)
+        {
+            Velocity.Y = Singleton.TERMINAL_VELOCITY;
+        }
+    }
+    
     protected virtual void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
     {
         Position.X += Velocity.X * deltaTime;
@@ -227,6 +230,10 @@ public class GameObject : ICloneable
                     ResolveHorizontalCollision(tile);
                 }
             }
+        }
+        foreach (var platformEnemy in gameObjects.OfType<PlatformEnemy>())
+        {
+            ResolveHorizontalCollision(platformEnemy);
         }
     }
 

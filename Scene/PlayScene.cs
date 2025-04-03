@@ -31,9 +31,9 @@ public class PlayScene : Scene
 
     private List<AmbushArea> ambushAreas;
 
-    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
+    public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
-        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
+        base.Initialize(gameManager, graphicsDevice, graphicsDeviceManager, content);
 
         _graphics.PreferredBackBufferWidth = Singleton.SCREEN_WIDTH;
         _graphics.PreferredBackBufferHeight = Singleton.SCREEN_HEIGHT;
@@ -57,6 +57,7 @@ public class PlayScene : Scene
 
     public override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
         //Update
         _numObject = _gameObjects.Count;
         if(Singleton.Instance.IsKeyPressed(Keys.Tab))
@@ -71,8 +72,9 @@ public class PlayScene : Scene
             case Singleton.GameState.InitializingStage:
                 StopSong();
                 ResetStage();
-                // SetUpInitalChipsPattern();
 
+                UnlockAbilityForStage();
+                SetupHUD();
                 Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
                 break;
             case Singleton.GameState.Playing:
@@ -103,8 +105,7 @@ public class PlayScene : Scene
         }
 
         //Console.WriteLine("GameObject :" + _numObject);
-
-        base.Update(gameTime);
+        _gameManager.IsMouseVisible = false;
     }
 
     public override void Draw(GameTime gameTime)
@@ -124,11 +125,6 @@ public class PlayScene : Scene
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Singleton.Instance.Camera.GetTransformation()); // Apply camera matrix
                 DrawTileMap();
                 DrawAllObjects();
-                _spriteBatch.End();
-
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp); 
-                _spriteBatch.DrawString(Singleton.Instance.GameFont, "Health Bar : " + Singleton.Instance.Player.Health + " / " + Singleton.Instance.Player.MaxHealth, new Vector2(10, 10), Color.White);
-                _spriteBatch.DrawString(Singleton.Instance.GameFont, "MP Bar : " + Singleton.Instance.Player.MP + " / " + Singleton.Instance.Player.MaxMP, new Vector2(10, 70), Color.White);
                 _spriteBatch.End();
                 break;
         }
@@ -174,11 +170,9 @@ public class PlayScene : Scene
 
     private void DrawTileMap()
     {
-        //if (Singleton.Instance.Stage == 1){//remove later
         _BGTileMap.Draw(_spriteBatch);
         _MGTileMap.Draw(_spriteBatch);
         _FGTileMap.Draw(_spriteBatch);
-        //}
         
         //Should be hidden
         //_collisionTileMap.Draw(_spriteBatch);
@@ -196,7 +190,7 @@ public class PlayScene : Scene
     {
         _gameObjects = new List<GameObject>();
 
-        Singleton.Instance.Stage = 1;
+        Singleton.Instance.Stage = 0;
         Singleton.Instance.Random = new Random();
         Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
 
@@ -215,33 +209,32 @@ public class PlayScene : Scene
         _gameObjects.Clear();
 
         Singleton.Instance.Random = new Random();
-        //if (Singleton.Instance.Stage == 1)//remove later
-        //{
-            _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
-            _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
-            _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
-        //}
-        _collisionTileMap = new TileMap(_textureAtlas, StageManager.GetCurrentStageCollisionPath(), 20);
-
+    
+        _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
+        _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
+        _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
+        
+        _collisionTileMap = new TileMap(_textureAtlas, GetCurrentStageCollisionPath(), 20);
 
         Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.TILE_SIZE,  _collisionTileMap.MapHeight * Singleton.TILE_SIZE); // Map size
         Singleton.Instance.Camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
 
-        Singleton.Instance.Player.Position = StageManager.GetPlayerWorldSpawnPosition(); // get player location of each stage
+        Singleton.Instance.Player.Position = _collisionTileMap.GetPlayerSpawnPoint();// get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
 
         SetUpParallaxBackground();
         InitializeAmbushAreas();
+        AddSignBoard();
         SpawnEnemies();
         SpawnItems();
         AddItems(); // TODO: Remove Later this is only for testing
-        SetupHUD();
         
         foreach (GameObject s in _gameObjects)
         {
             s.Reset();
         }
     }
+
 
     private void SetUpParallaxBackground()
     {
@@ -268,6 +261,49 @@ public class PlayScene : Scene
         ambushAreas = _collisionTileMap.GetAmbushAreas();
     }
 
+    private void AddSignBoard()
+    {
+        // TODO : Change to desire texture
+        Texture2D signTexture = new Texture2D(_graphicsDevice, 1, 1);
+        signTexture.SetData(new[] { Color.White });
+
+        // TODO : More dynamic stage management sign
+        if(Singleton.Instance.Stage == 0)
+        {
+            SignBoard WalkTutorialSign = new SignBoard(
+                signTexture,
+                "Press Left or Right Arrow Key to move around!",
+                TileMap.GetTileWorldPositionAt(10, 30),  // TopLeft Position  // TODO : More dynamic
+                200,                    // Width
+                100,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
+            SignBoard JumpTutorialSign = new SignBoard(
+                signTexture,
+                "Press Space Bar Key to Jump! \nLonger you hold Jump Button, Higher the Jump!",
+                TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
+                300,                    // Width
+                100,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
+            SignBoard ClimbTutorialSign = new SignBoard(
+                signTexture,
+                "Press UP Arrow Key to climb ladder or vines!",
+                TileMap.GetTileWorldPositionAt(55, 22), // TopLeft Position // TODO : More dynamic
+                220,                    // Width
+                80,                     // Height
+                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                Color.Gold
+            );
+
+            _gameObjects.Add(WalkTutorialSign);
+            _gameObjects.Add(JumpTutorialSign);
+            _gameObjects.Add(ClimbTutorialSign);
+        }
+    }
+
     private void CreatePlayer()
     {
         // Load sprite sheets
@@ -284,7 +320,6 @@ public class PlayScene : Scene
         Singleton.Instance.Player = new Player(playerTexture, playerParticle)
         {
             Name = "Player",
-            Position = StageManager.GetPlayerWorldSpawnPosition(),// get player location of each stage
             Life = 2,
             WalkSpeed = 200,
             CrouchSpeed = 100,
@@ -720,6 +755,12 @@ public class PlayScene : Scene
     {
         _ui.ClearHUD();
 
+        TextUI HealthText = new TextUI(            
+            new Rectangle(20, 15, 200, 25),
+            () => $"HP ({Singleton.Instance.Player.Health:F0} / {Singleton.Instance.Player.MaxMP:F0})",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         HealthBar playerHealth = new HealthBar(
             Singleton.Instance.Player,
             new Rectangle(20, 40, 200, 30),
@@ -727,6 +768,12 @@ public class PlayScene : Scene
             Color.Gray
         );
 
+        TextUI MPText = new TextUI(            
+            new Rectangle(20, 75, 200, 25),
+            () => $"MP ({Singleton.Instance.Player.MP:F0} / {Singleton.Instance.Player.MaxMP:F0})",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         MPBar playerMP = new MPBar(
             new Rectangle(20, 100, 200, 30),
             Color.SkyBlue,
@@ -735,6 +782,12 @@ public class PlayScene : Scene
 
         Texture2D slot = _content.Load<Texture2D>("ItemSlot");
 
+        TextUI MeleeWeaponText = new TextUI(            
+            new Rectangle(250, 0, 50, 25),
+            () => $"Melee ({Singleton.Instance.Player.Attack})",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         ItemSlot MeleeWeaponSlot = new ItemSlot(
             Inventory.MELEE_SLOT,
             new Rectangle(250, 30, 50, 50),
@@ -742,17 +795,37 @@ public class PlayScene : Scene
             slot
         );
 
+        TextUI RangeWeaponText = new TextUI(            
+            new Rectangle(350, 0, 50, 25),
+            () => $"Range ({Singleton.Instance.Player.Fire})",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         ItemSlot RangeWeaponSlot = new ItemSlot(
             Inventory.RANGE_SLOT,
             new Rectangle(350, 30, 50, 50),
             slot,
             slot
         );
+
+        TextUI ItemText1 = new TextUI(            
+            new Rectangle(550, 0, 50, 25),
+            "Item (1)",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         ItemSlot ItemSlot1 = new ItemSlot(
             Inventory.ITEM_SLOT_1,
             new Rectangle(550, 30, 50, 50),
             slot,
             slot
+        );
+
+        TextUI ItemText2 = new TextUI(            
+            new Rectangle(650, 0, 50, 25),
+            "Item (2)",
+            Color.White,
+            TextUI.TextAlignment.Center
         );
         ItemSlot ItemSlot2 = new ItemSlot(
             Inventory.ITEM_SLOT_2,
@@ -761,11 +834,44 @@ public class PlayScene : Scene
             slot
         );
 
+        _ui.AddHUDElement(HealthText);
         _ui.AddHUDElement(playerHealth);
+        _ui.AddHUDElement(MPText);
         _ui.AddHUDElement(playerMP);
+        _ui.AddHUDElement(MeleeWeaponText);
         _ui.AddHUDElement(MeleeWeaponSlot);
+        _ui.AddHUDElement(RangeWeaponText);
         _ui.AddHUDElement(RangeWeaponSlot);
+        _ui.AddHUDElement(ItemText1);
         _ui.AddHUDElement(ItemSlot1);
+        _ui.AddHUDElement(ItemText2);
         _ui.AddHUDElement(ItemSlot2);
+    }
+
+    public void UnlockAbilityForStage()
+    {
+        if(Singleton.Instance.Stage >= 0)
+        {
+            Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Dash);
+        }
+        if(Singleton.Instance.Stage == 0 || Singleton.Instance.Stage >= 2)
+        {
+            Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Glide);
+        }
+        if(Singleton.Instance.Stage >= 3)
+        {
+            Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Grapple);
+        }
+    }
+
+    public static string GetCurrentStageCollisionPath()
+    {
+        if (Singleton.Instance.Stage >= 4)
+        {
+            Console.WriteLine("No more stage : Replaying");
+            Singleton.Instance.Stage = 1;
+        }
+
+        return "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_Collision.csv";
     }
 }

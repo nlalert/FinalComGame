@@ -15,16 +15,6 @@ public class PauseMenu : Scene
     private Button _settingsButton;
     private Button _mainmenuButton;
 
-    private int buttonGap;
-
-    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
-    {
-        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
-
-        // a gap between each button
-        buttonGap = 5;
-    }
-
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
@@ -36,6 +26,11 @@ public class PauseMenu : Scene
     {
         base.Update(gameTime);
         PauseSong();
+        _gameManager.IsMouseVisible = true;
+        if(Singleton.Instance.IsKeyJustPressed(Keys.Escape))
+        {
+            Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
+        }
     }
     
     protected override void SetupHUD()

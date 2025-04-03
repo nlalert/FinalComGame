@@ -89,12 +89,9 @@ namespace FinalComGame {
 
         public virtual void OnCollidePlayer()
         {
-            Singleton.Instance.Player.OnCollideNPC(this,this.AttackDamage);
+            Singleton.Instance.Player.OnCollideNPC(this, this.AttackDamage);
         }
-        public override void OnCollideNPC(Character npc, float damageAmount)
-        {   
-            base.OnCollideNPC(npc, damageAmount);
-        }
+
         public override void OnDead(List<GameObject> gameObjects)
         {
             DropItem(gameObjects);
@@ -123,12 +120,6 @@ namespace FinalComGame {
                 base.Draw(spriteBatch);
             }
             
-        }
-
-        protected override void UpdateAnimation(float deltaTime)
-        {
-            //TODO : add more animation
-            base.UpdateAnimation(deltaTime);
         }
 
         protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -189,14 +180,9 @@ namespace FinalComGame {
             return (IsAbovePlayer() && IsPlayerAbovePlatform(tile)) || Velocity.Y < 0 || IsIgnorePlatform;
         }
 
-        public virtual bool CheckContactPlayer(){
-            if(this.IsTouching(Singleton.Instance.Player)){
+        public virtual void CheckContactPlayer(){
+            if(IsTouching(Singleton.Instance.Player))
                 OnCollidePlayer();
-                // Console.WriteLine("contact Player");
-                return true;
-            }
-            else
-                return false;
         }
         public virtual void CheckHit(Rectangle attackHitbox, float damageAmount, bool isHeavyAttack)
         {

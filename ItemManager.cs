@@ -7,7 +7,6 @@ namespace FinalComGame;
 
 public enum ItemID
 {        
-    //TODO : Change Item ID to  real id from tilemap
     None = 0,
     HealthPotion = 14,
     SpeedPotion = 35,

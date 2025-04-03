@@ -13,16 +13,6 @@ public class GameClearScene : Scene
     private Button _restartButton;
     private Button _exitButton;
 
-    private int buttonGap;
-
-    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
-    {
-        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
-
-        // a gap between each button
-        buttonGap = 5;
-    }
-
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
@@ -34,6 +24,7 @@ public class GameClearScene : Scene
     {
         base.Update(gameTime);
         PauseSong();
+        _gameManager.IsMouseVisible = true;
     }
 
     protected override void SetupHUD()

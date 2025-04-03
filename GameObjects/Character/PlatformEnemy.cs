@@ -5,11 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
 {
-    /// <summary>
-    /// This first mean to be standable block using invis enemy to create tile that follow enemy 
-    /// But Cant find a way to attach tile to this enemy nor spawn tile in fixed location at all
-    /// so change to jumping block instead might update name later
-    /// </summary>
     public class PlatformEnemy : BaseEnemy
     {
         public PlatformEnemy(Texture2D texture): base(texture)
@@ -72,6 +67,7 @@ namespace FinalComGame
             base.Update(gameTime, gameObjects, tileMap);
             UpdateAnimation(deltaTime);
         }
+
         public override void OnSpawn()
         {
             base.OnSpawn();
@@ -98,6 +94,17 @@ namespace FinalComGame
         {
             Direction *= -1;
             base.OnCollisionHorizon();
+        }
+
+        public override void CheckContactPlayer(){
+            Position.Y -= Singleton.TILE_SIZE / 2;
+
+            if(IsTouchingBottom(Singleton.Instance.Player))
+            {
+                Singleton.Instance.Player.Velocity.X += Velocity.X;
+            }
+
+            Position.Y += Singleton.TILE_SIZE / 2;
         }
     }
 }
