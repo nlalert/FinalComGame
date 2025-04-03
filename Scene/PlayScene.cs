@@ -732,6 +732,12 @@ public class PlayScene : Scene
 
         Texture2D slot = _content.Load<Texture2D>("ItemSlot");
 
+        TextUI MeleeWeaponText = new TextUI(            
+            new Rectangle(250, 0, 50, 25),
+            "Melee (" + Singleton.Instance.Player.Attack + ")",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         ItemSlot MeleeWeaponSlot = new ItemSlot(
             Inventory.MELEE_SLOT,
             new Rectangle(250, 30, 50, 50),
@@ -739,6 +745,12 @@ public class PlayScene : Scene
             slot
         );
 
+        TextUI RangeWeaponText = new TextUI(            
+            new Rectangle(350, 0, 50, 25),
+            "Range (" + Singleton.Instance.Player.Fire + ")",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         ItemSlot RangeWeaponSlot = new ItemSlot(
             Inventory.RANGE_SLOT,
             new Rectangle(350, 30, 50, 50),
@@ -747,7 +759,7 @@ public class PlayScene : Scene
         );
 
         TextUI ItemText1 = new TextUI(            
-            new Rectangle(550, 0, 50, 0),
+            new Rectangle(550, 0, 50, 25),
             "Item (1)",
             Color.White,
             TextUI.TextAlignment.Center
@@ -760,7 +772,7 @@ public class PlayScene : Scene
         );
 
         TextUI ItemText2 = new TextUI(            
-            new Rectangle(650, 0, 50, 0),
+            new Rectangle(650, 0, 50, 25),
             "Item (2)",
             Color.White,
             TextUI.TextAlignment.Center
@@ -774,7 +786,9 @@ public class PlayScene : Scene
 
         _ui.AddHUDElement(playerHealth);
         _ui.AddHUDElement(playerMP);
+        _ui.AddHUDElement(MeleeWeaponText);
         _ui.AddHUDElement(MeleeWeaponSlot);
+        _ui.AddHUDElement(RangeWeaponText);
         _ui.AddHUDElement(RangeWeaponSlot);
         _ui.AddHUDElement(ItemText1);
         _ui.AddHUDElement(ItemSlot1);
