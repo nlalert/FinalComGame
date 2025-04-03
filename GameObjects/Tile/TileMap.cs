@@ -78,7 +78,7 @@ namespace FinalComGame
 
                             Tile tile = new Tile(textureAtlas)
                             {
-                                Name = GetTileName(tileID),
+                                Name = "Tile",
                                 Type = type,
                                 Position = GetTileWorldPositionAt(x, y), // Convert grid position to pixel position
                                 Viewport = GetTileViewport(tileID),
@@ -108,15 +108,6 @@ namespace FinalComGame
         public static Vector2 GetTileGridPositionAt(Vector2 tileWorldPosition)
         {
             return new Vector2((int) tileWorldPosition.X / Singleton.TILE_SIZE, (int) tileWorldPosition.Y / Singleton.TILE_SIZE); // Grid Position ust be int
-        }
-
-        private static string GetTileName(int tileID)
-        {
-            //TODO Add more detail
-            return tileID switch
-            {
-                _ => "Tile",
-            };
         }
 
         private static TileType GetTileType(int tileID)

@@ -91,10 +91,7 @@ namespace FinalComGame {
         {
             Singleton.Instance.Player.OnCollideNPC(this,this.AttackDamage);
         }
-        public override void OnCollideNPC(Character npc, float damageAmount)
-        {   
-            base.OnCollideNPC(npc, damageAmount);
-        }
+
         public override void OnDead(List<GameObject> gameObjects)
         {
             DropItem(gameObjects);
@@ -123,12 +120,6 @@ namespace FinalComGame {
                 base.Draw(spriteBatch);
             }
             
-        }
-
-        protected override void UpdateAnimation(float deltaTime)
-        {
-            //TODO : add more animation
-            base.UpdateAnimation(deltaTime);
         }
 
         protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)

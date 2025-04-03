@@ -152,7 +152,6 @@ namespace FinalComGame
             Animation.AddAnimation("climb_up_1", new Vector2(0,13), 8);
             Animation.AddAnimation("climb_down_1", new Vector2(8,13), 4);
 
-            //TODO : Add sword attack animation
             Animation.AddAnimation("melee", new Vector2(0,2), 8);
             Animation.AddAnimation("sword", new Vector2(8,4), 8);
 
@@ -854,7 +853,6 @@ namespace FinalComGame
 
         protected override bool IsOnGround()
         {
-            //TODO apex of jump is grounded?
             return Velocity.Y == 0 || _isClimbing ;
         }
 
