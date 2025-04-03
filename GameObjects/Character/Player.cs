@@ -740,10 +740,9 @@ namespace FinalComGame
                 _isDropping = false;
             }
 
-            if (Singleton.Instance.IsKeyPressed(Climb) && (Velocity.Y >= 0) &&
-                !_isClimbing && !_isCrouching && !_isDashing && Position.Y > (_ladderTopPosition.Y + 8) &&
-                (_overlappedTile == TileType.Ladder || _overlappedTile == TileType.Ladder_Platform ||
-                _overlappedTile == TileType.Ladder_Left || _overlappedTile == TileType.Ladder_Right))
+            if (((Singleton.Instance.IsKeyPressed(Climb) && Position.Y > (_ladderTopPosition.Y + 8) && IsOnladder() && !_isCrouching) || 
+                (Singleton.Instance.IsKeyPressed(Crouch) && _ladderTopPosition.Y != 0)) && 
+                (Velocity.Y >= 0) && !_isClimbing && !_isDashing)
             {
                 _isClimbing = true;
                 _isCharging = false;
@@ -751,6 +750,8 @@ namespace FinalComGame
                 _chargeTime = 0;
                 Velocity.Y = 0;
                 Position.X = _overlappedTilePosition.X;
+                if (Position.Y < _ladderTopPosition.Y + 8)
+                    Position.Y += Singleton.TILE_SIZE;
 
                 if(_overlappedTile == TileType.Ladder_Left)
                     Direction = -1;
@@ -838,6 +839,11 @@ namespace FinalComGame
                 }
                 _isHoldingItem2 = false;
             }
+        }
+
+        private bool IsOnladder(){
+            return _overlappedTile == TileType.Ladder || _overlappedTile == TileType.Ladder_Platform ||
+                _overlappedTile == TileType.Ladder_Left || _overlappedTile == TileType.Ladder_Right;
         }
 
         private void FireGrapplingHook(List<GameObject> gameObjects)
@@ -1023,8 +1029,9 @@ namespace FinalComGame
                             }
                         }
 
-                        if (tile.Type == TileType.Ladder_Top && IsTouching(tile))
+                        if (tile.Type == TileType.Ladder_Top && IsTouching(tile)){
                             _ladderTopPosition = tile.Position;
+                        }
 
 
                         if (tile.Type == TileType.Platform|| tile.Type == TileType.Ladder_Platform)
