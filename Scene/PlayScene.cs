@@ -276,7 +276,13 @@ public class PlayScene : Scene
         _stageManager = new StageManager();
         _stageManager.LoadTileMaps(_textureAtlas);
 
-        Rectangle mapBounds = new Rectangle(0, 0, _stageManager.GetMapWorldWidth(),  _stageManager.GetMapWorldHeight()); // Map size
+        Rectangle mapBounds = new Rectangle(
+            0, 
+            0,
+            _stageManager.GetMapWorldWidth(),  
+            _stageManager.GetMapWorldHeight()
+        ); // Map size
+
         Singleton.Instance.Camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
 
         Singleton.Instance.Player.Position = _stageManager.GetPlayerWorldSpawnPoint();// get player location of each stage
@@ -834,7 +840,7 @@ public class PlayScene : Scene
 
     private void SpawnEnemies()
     {
-        EnemyManager.SpawnWorldEnemy(_stageManager.GetEnemySpawnPoints(), _stageManager.GetAmbushAreas(), _gameObjects);
+        EnemyManager.SpawnWorldEnemy(_stageManager, _gameObjects);
     }
 
     private void SpawnItems()
