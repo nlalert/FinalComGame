@@ -20,7 +20,8 @@ public enum ItemID
     Gun = 55,
     Staff = 74,
     SoulStaff = 54,
-    Grenade = 115
+    Grenade = 115,
+    Random = 134
 }
 
 public class ItemManager
