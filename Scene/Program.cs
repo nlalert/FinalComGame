@@ -1,3 +1,3 @@
 ﻿// using var game = new FinalComGame.MainScene();
-using var game = new MidtermComGame.GameManager();
+using var game = new FinalComGame.GameManager();
 game.Run();

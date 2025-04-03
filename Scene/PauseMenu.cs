@@ -17,9 +17,9 @@ public class PauseMenu : Scene
 
     private int buttonGap;
 
-    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
+    public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
-        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
+        base.Initialize(gameManager, graphicsDevice, graphicsDeviceManager, content);
 
         // a gap between each button
         buttonGap = 5;

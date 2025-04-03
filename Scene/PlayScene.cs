@@ -31,9 +31,9 @@ public class PlayScene : Scene
 
     private List<AmbushArea> ambushAreas;
 
-    public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
+    public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
-        base.Initialize(graphicsDevice, graphicsDeviceManager, content);
+        base.Initialize(gameManager, graphicsDevice, graphicsDeviceManager, content);
 
         _graphics.PreferredBackBufferWidth = Singleton.SCREEN_WIDTH;
         _graphics.PreferredBackBufferHeight = Singleton.SCREEN_HEIGHT;

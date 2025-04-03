@@ -31,11 +31,7 @@ namespace FinalComGame
         private float _scaleY;
         private float scaleOtOmg;
         private float scaleOtOfg;
-        public override void Initialize(GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
-        {
-            base.Initialize(graphicsDevice, graphicsDeviceManager, content);
-        }
-
+        
         public override void LoadContent(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch;

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace MidtermComGame;
+namespace FinalComGame;
 
 public class GameManager : Game
 {
@@ -43,27 +43,27 @@ public class GameManager : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         _playScene = new PlayScene();
-        _playScene.Initialize(GraphicsDevice, _graphics, Content);
+        _playScene.Initialize(this, GraphicsDevice, _graphics, Content);
         _playScene.LoadContent(_spriteBatch);
                 
         _mainMenu = new MainMenu();
-        _mainMenu.Initialize(GraphicsDevice, _graphics, Content);
+        _mainMenu.Initialize(this, GraphicsDevice, _graphics, Content);
         _mainMenu.LoadContent(_spriteBatch);
 
         _pauseMenu = new PauseMenu();
-        _pauseMenu.Initialize(GraphicsDevice, _graphics, Content);
+        _pauseMenu.Initialize(this, GraphicsDevice, _graphics, Content);
         _pauseMenu.LoadContent(_spriteBatch);
 
         _settings = new Settings();
-        _settings.Initialize(GraphicsDevice, _graphics, Content);
+        _settings.Initialize(this, GraphicsDevice, _graphics, Content);
         _settings.LoadContent(_spriteBatch);
 
         _gameOverScene = new GameOverScene();
-        _gameOverScene.Initialize(GraphicsDevice, _graphics, Content);
+        _gameOverScene.Initialize(this, GraphicsDevice, _graphics, Content);
         _gameOverScene.LoadContent(_spriteBatch);
 
         _gameClearScene = new GameClearScene();
-        _gameClearScene.Initialize(GraphicsDevice, _graphics, Content);
+        _gameClearScene.Initialize(this, GraphicsDevice, _graphics, Content);
         _gameClearScene.LoadContent(_spriteBatch);
     }
 
