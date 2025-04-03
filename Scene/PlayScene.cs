@@ -169,11 +169,9 @@ public class PlayScene : Scene
 
     private void DrawTileMap()
     {
-        //if (Singleton.Instance.Stage == 1){//remove later
         _BGTileMap.Draw(_spriteBatch);
         _MGTileMap.Draw(_spriteBatch);
         _FGTileMap.Draw(_spriteBatch);
-        //}
         
         //Should be hidden
         //_collisionTileMap.Draw(_spriteBatch);
