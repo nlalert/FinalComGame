@@ -137,7 +137,7 @@ public class PlayScene : Scene
         //Update
         _numObject = _gameObjects.Count;
         if(Singleton.Instance.IsKeyPressed(Keys.Tab))
-            this.ResetGame();
+            Singleton.Instance.Player.Position = TileMap.GetTileWorldPositionAt(126,82);
         switch (Singleton.Instance.CurrentGameState)
         {
             case Singleton.GameState.StartingGame:
