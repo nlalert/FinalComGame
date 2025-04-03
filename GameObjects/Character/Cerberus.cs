@@ -35,6 +35,7 @@ namespace FinalComGame
         { 
             _texture = texture;
             CanCollideTile = true;
+            IsIgnorePlatform = true;
         }
         public override void Reset()
         {
@@ -49,6 +50,7 @@ namespace FinalComGame
             _dashDuration = 2f;
             _isSummoned = false;
             _actionTimeOffset = 1f;
+            IsIgnorePlatform = true;
             base.Reset();
         }
         public override void AddAnimation(){
@@ -263,7 +265,11 @@ namespace FinalComGame
             {
                 _dashTimer -= deltaTime;
                 if(Vector2.Distance(_dashAim,Position)<50f){
-                    CanCollideTile = true;
+                    var tile = tileMap.GetTileAtWorldPostion(Position);
+                    if(tile!=null &&this.IsTouching(tileMap.GetTileAtWorldPostion(Position))){
+
+                    }else 
+                        CanCollideTile = true;
                 }
                 if (_dashTimer <=0 || IsIntersect(_barrierEnd,_barrierEnd1,_dashStart,Position))
                 {
