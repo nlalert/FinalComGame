@@ -420,7 +420,7 @@ namespace FinalComGame
                     animation = "jump_charge_2";
             }
 
-            else if (Velocity.X != 0)
+            else if (Velocity.X != 0 && (Singleton.Instance.IsKeyPressed(Left) || Singleton.Instance.IsKeyPressed(Right)))
             {
                 if(_isCrouching){
                     if (HandAnimation._currentAnimation == "idle")
