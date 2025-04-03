@@ -196,7 +196,7 @@ public class PlayScene : Scene
     {
         _gameObjects = new List<GameObject>();
 
-        Singleton.Instance.Stage = 1;
+        Singleton.Instance.Stage = 0;
         Singleton.Instance.Random = new Random();
         Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
 
@@ -215,12 +215,11 @@ public class PlayScene : Scene
         _gameObjects.Clear();
 
         Singleton.Instance.Random = new Random();
-        //if (Singleton.Instance.Stage == 1)//remove later
-        //{
-            _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
-            _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
-            _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
-        //}
+    
+        _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
+        _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
+        _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
+        
         _collisionTileMap = new TileMap(_textureAtlas, GetCurrentStageCollisionPath(), 20);
 
         Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.TILE_SIZE,  _collisionTileMap.MapHeight * Singleton.TILE_SIZE); // Map size
@@ -746,11 +745,25 @@ public class PlayScene : Scene
             slot,
             slot
         );
+
+        TextUI ItemText1 = new TextUI(            
+            new Rectangle(550, 0, 50, 0),
+            "Item (1)",
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
         ItemSlot ItemSlot1 = new ItemSlot(
             Inventory.ITEM_SLOT_1,
             new Rectangle(550, 30, 50, 50),
             slot,
             slot
+        );
+
+        TextUI ItemText2 = new TextUI(            
+            new Rectangle(650, 0, 50, 0),
+            "Item (2)",
+            Color.White,
+            TextUI.TextAlignment.Center
         );
         ItemSlot ItemSlot2 = new ItemSlot(
             Inventory.ITEM_SLOT_2,
@@ -763,7 +776,9 @@ public class PlayScene : Scene
         _ui.AddHUDElement(playerMP);
         _ui.AddHUDElement(MeleeWeaponSlot);
         _ui.AddHUDElement(RangeWeaponSlot);
+        _ui.AddHUDElement(ItemText1);
         _ui.AddHUDElement(ItemSlot1);
+        _ui.AddHUDElement(ItemText2);
         _ui.AddHUDElement(ItemSlot2);
     }
 
