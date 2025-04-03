@@ -72,8 +72,9 @@ public class PlayScene : Scene
             case Singleton.GameState.InitializingStage:
                 StopSong();
                 ResetStage();
-                // SetUpInitalChipsPattern();
 
+                UnlockAbilityForStage();
+                SetupHUD();
                 Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
                 break;
             case Singleton.GameState.Playing:
@@ -226,7 +227,6 @@ public class PlayScene : Scene
         SpawnEnemies();
         SpawnItems();
         AddItems(); // TODO: Remove Later this is only for testing
-        SetupHUD();
         
         foreach (GameObject s in _gameObjects)
         {
@@ -801,6 +801,25 @@ public class PlayScene : Scene
         _ui.AddHUDElement(ItemSlot1);
         _ui.AddHUDElement(ItemText2);
         _ui.AddHUDElement(ItemSlot2);
+    }
+
+    public void UnlockAbilityForStage()
+    {
+        if(Singleton.Instance.Stage >= 1 || Singleton.Instance.Stage == 0)
+        {
+            Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Dash);
+            Singleton.Instance.CurrentUI.Prompt("Dash ability unlocked! Press SHIFT to dash.");
+        }
+        if(Singleton.Instance.Stage >= 2 || Singleton.Instance.Stage == 0)
+        {
+            Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Glide);
+            Singleton.Instance.CurrentUI.Prompt("Glide ability unlocked! Hold SPACE while falling to glide.");
+        }
+        if(Singleton.Instance.Stage >= 3)
+        {
+            Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Grapple);
+            Singleton.Instance.CurrentUI.Prompt("Grappling Hook unlocked! Press R to shoot.");
+        }
     }
 
     public static string GetCurrentStageCollisionPath()
