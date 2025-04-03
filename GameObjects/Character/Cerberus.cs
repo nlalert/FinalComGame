@@ -42,7 +42,7 @@ namespace FinalComGame
             _isEnraged = false;    // Enrage phase flag
             FloatDuration = 0.5f;   // Time floating above the player
             SlamChargeDuration = 0.5f;  // Charging before slam
-            SlamSpeed = 1500f;
+            SlamSpeed = 1000f;
             JumpsBeforeHighJump = 3;   // Number of normal jumps before high jump
             _chargeTime = 2.0f;
             _dashTimer = 0f;
@@ -175,7 +175,7 @@ namespace FinalComGame
             if(Math.Abs((Singleton.Instance.Player.Position - this.Position).X) >20f)
                 base.Direction = Math.Sign( (Singleton.Instance.Player.Position - this.Position).X);
 
-            Velocity.X = 200f * base.Direction;
+            Velocity.X = 150f * base.Direction;
             Velocity.X *= Friction;
 
             if (_actionTimer <= 0)

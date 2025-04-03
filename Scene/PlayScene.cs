@@ -266,7 +266,7 @@ public class PlayScene : Scene
     {
         _gameObjects = new List<GameObject>();
 
-        Singleton.Instance.Stage = 0;
+        Singleton.Instance.Stage = 2;
         Singleton.Instance.Random = new Random();
         Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
 
@@ -821,18 +821,18 @@ public class PlayScene : Scene
 
     private void AddItems()
     {
-        ItemManager.SpawnItem(ItemID.HealthPotion, TileMap.GetTileWorldPositionAt(12, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.SpeedPotion, TileMap.GetTileWorldPositionAt(31, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.JumpPotion, TileMap.GetTileWorldPositionAt(35, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.Barrier, TileMap.GetTileWorldPositionAt(20, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.LifeUp, TileMap.GetTileWorldPositionAt(16, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.SpeedBoots, TileMap.GetTileWorldPositionAt(24, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.CursedGauntlet, TileMap.GetTileWorldPositionAt(26, 80), _gameObjects);
-        ItemManager.SpawnItem(ItemID.Sword, TileMap.GetTileWorldPositionAt(4, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.Gun, TileMap.GetTileWorldPositionAt(8, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.Staff, TileMap.GetTileWorldPositionAt(40, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.SoulStaff, TileMap.GetTileWorldPositionAt(17, 90), _gameObjects);
-        ItemManager.SpawnItem(ItemID.Grenade, TileMap.GetTileWorldPositionAt(10, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.HealthPotion, TileMap.GetTileWorldPositionAt(12, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.SpeedPotion, TileMap.GetTileWorldPositionAt(31, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.JumpPotion, TileMap.GetTileWorldPositionAt(35, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.Barrier, TileMap.GetTileWorldPositionAt(20, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.LifeUp, TileMap.GetTileWorldPositionAt(16, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.SpeedBoots, TileMap.GetTileWorldPositionAt(24, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.CursedGauntlet, TileMap.GetTileWorldPositionAt(26, 80), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.Sword, TileMap.GetTileWorldPositionAt(4, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.Gun, TileMap.GetTileWorldPositionAt(8, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.Staff, TileMap.GetTileWorldPositionAt(40, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.SoulStaff, TileMap.GetTileWorldPositionAt(17, 90), _gameObjects);
+        // ItemManager.SpawnItem(ItemID.Grenade, TileMap.GetTileWorldPositionAt(10, 90), _gameObjects);
     }
 
     protected override void SetupHUD()
