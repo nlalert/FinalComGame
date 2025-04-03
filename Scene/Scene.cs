@@ -100,7 +100,8 @@ public class Scene
     protected virtual void RestartButton_OnClick(object sender, EventArgs e)
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
-        Singleton.Instance.Stage = 1;
+        if(Singleton.Instance.Stage >= 1)
+            Singleton.Instance.Stage = 1;
     }
 
     protected virtual void SettingButton_OnClick(object sender, EventArgs e)
