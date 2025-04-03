@@ -27,6 +27,10 @@ public class PauseMenu : Scene
         base.Update(gameTime);
         PauseSong();
         _gameManager.IsMouseVisible = true;
+        if(Singleton.Instance.IsKeyJustPressed(Keys.Escape))
+        {
+            Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
+        }
     }
     
     protected override void SetupHUD()
