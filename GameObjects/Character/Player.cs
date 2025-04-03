@@ -39,7 +39,6 @@ namespace FinalComGame
         private bool _isGliding;
 
         //Crouch
-        //private bool _isHeadHitting;
         private bool _isOnPlatform;
 
         //Climb
@@ -52,6 +51,7 @@ namespace FinalComGame
         private float _coyoteTimeCounter;
         public float JumpBufferTime;
         private float _jumpBufferCounter;
+        public AbilityManager Abilities;
 
         // Dash 
         private bool _isDashing;
@@ -180,12 +180,14 @@ namespace FinalComGame
 
             paticleTexture.SetData([new Color(193, 255, 219)]);
             _particle = new SoulParticle(10, Position, paticleTexture);
+            Abilities = new AbilityManager();
         }
 
         public override void Reset()
         {
             // Reset inventory
             Inventory.Reset();
+            Abilities.Reset();
 
             Direction = 1; // Reset direction to right
 
@@ -249,12 +251,12 @@ namespace FinalComGame
             UpdateInvincibilityTimer(deltaTime);
             UpdateCoyoteTime(deltaTime);
             CheckAndJump();
+            UpdateDash(deltaTime);
+            UpdateGlide();
 
             if (!_isClimbing && !_isDashing && !_isGrappling) 
                 ApplyGravity(deltaTime);
                 
-            UpdateDash(deltaTime);
-            UpdateGlide();
             UpdateGrapplingHook(deltaTime);
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
@@ -835,7 +837,7 @@ namespace FinalComGame
 
         private void FireGrapplingHook(List<GameObject> gameObjects)
         {
-            if(_grapplingHook != null)
+            if (!Abilities.IsAbilityUnlocked(AbilityType.Grapple) || _grapplingHook != null)
                 return;
 
             Console.WriteLine("shooting grapple");
@@ -918,6 +920,8 @@ namespace FinalComGame
 
         private void StartDash()
         {
+            if (!Abilities.IsAbilityUnlocked(AbilityType.Dash))
+                return;
             if (_dashCooldownTimer <= 0 && !_isDashing && MP >= DashMP)
             {
                 _isDashing = true;
@@ -951,10 +955,9 @@ namespace FinalComGame
         private void UpdateGlide()
         {
             // Stop gliding if we hit the ground
-            if (IsOnGround())
+            if (IsOnGround() || !Abilities.IsAbilityUnlocked(AbilityType.Glide))
             {
                 _isGliding = false;
-                return;
             }
         }
 
