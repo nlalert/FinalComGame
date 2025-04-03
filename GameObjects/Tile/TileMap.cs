@@ -165,6 +165,7 @@ namespace FinalComGame
                 37 => TileType.Ladder_Top,
                 77 or 78 or 79 => TileType.Ladder_Platform,
                 16 => TileType.Finish_Line,
+                36 => TileType.Grappling_Tile,
                 96 => TileType.PlayerSpawn,
                 18 => TileType.AmbushBarrier,
                 39 => TileType.AmbushAreaTopLeft,
