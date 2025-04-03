@@ -15,6 +15,7 @@ public class ViewportManager
         {"Charge_Bullet_2", new Rectangle(32, 3, 13, 9)},
 
         {"Player", new Rectangle(0, 0, 16, 32)},
+        {"Player_Head", new Rectangle(35, 21, 11, 11)},
 
         {"Slime", new Rectangle(0, 0, 16, 16)},
         {"Hellhound", new Rectangle(0, 0, 32, 32)},

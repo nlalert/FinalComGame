@@ -859,11 +859,16 @@ public class PlayScene : Scene
 
         // Top Right - Lives
         TextUI LifeText = new TextUI(            
-            new Rectangle(1220, 15, 50, 25),
+            new Rectangle(1220, 25, 60, 25),
             () => $"x{Singleton.Instance.Player.Life}",
             Color.White,
-            TextUI.TextAlignment.Right
+            TextUI.TextAlignment.Center
         );
+        ImageUI LifeImage = new ImageUI(
+            _playerTexture,
+                new Rectangle(1170, 15, 50, 50),
+                ViewportManager.Get("Player_Head")// viewport manager
+            );
 
         // Bottom Section - Equipment (moved closer to bottom of screen)
         int slotY = 640; // Increased base Y position for slots (was 600)
@@ -954,6 +959,7 @@ public class PlayScene : Scene
         _ui.AddHUDElement(MPText);
         _ui.AddHUDElement(playerMP);
         _ui.AddHUDElement(LifeText);
+        _ui.AddHUDElement(LifeImage);
         
         // Melee weapon section
         _ui.AddHUDElement(MeleeWeaponText);
