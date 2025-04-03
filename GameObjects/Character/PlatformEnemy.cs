@@ -10,7 +10,7 @@ namespace FinalComGame
         public PlatformEnemy(Texture2D texture): base(texture)
         {
             _texture = texture;
-            WalkSpeed = 30;
+            WalkSpeed = 75;
             Velocity = new Vector2(WalkSpeed, 0);
             CanCollideTile = true;
         }
@@ -94,6 +94,29 @@ namespace FinalComGame
         {
             Direction *= -1;
             base.OnCollisionHorizon();
+        }
+
+        protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+        {
+            Position.X += Velocity.X * deltaTime;
+            if(!CanCollideTile) 
+                return;
+
+            int radius = 5;
+            for (int i = -radius; i <= radius; i++)
+            {
+                for (int j = -radius; j <= radius; j++)
+                {
+                    Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
+                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                    if(tile != null && (tile.Type == TileType.Barrier || tile.Type == TileType.AmbushBarrier ||tile.Type == TileType.Platform))
+                    {
+                        if(ResolveHorizontalCollision(tile)){
+                            OnCollisionHorizon();
+                        }
+                    }
+                }
+            }
         }
 
         public override void CheckContactPlayer(){
