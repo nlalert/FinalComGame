@@ -18,6 +18,8 @@ public class StageManager
     private TileMap _middlegroundTileMap;
     private TileMap _foregroundTileMap;
 
+    private List<AmbushArea> _ambushAreas;
+
     public void UpdateParallaxBackground(GameTime gameTime)
     {
         _parallaxBackground.Update(gameTime);
@@ -111,5 +113,23 @@ public class StageManager
         _backgroundLayer1 = content.Load<Texture2D>("Level_1_Parallax_bg");  // Farthest layer
         _backgroundLayer2 = content.Load<Texture2D>("Level_1_Parallax_mg");  // Middle layer
         _backgroundLayer3 = content.Load<Texture2D>("Level_1_Parallax_fg");  // Closest layer
+    }
+
+    public void UpdateAmbushAreas(GameTime gameTime, List<GameObject> gameObjects)
+    {
+        foreach (var ambushArea in _ambushAreas)
+        {
+            ambushArea.Update(gameTime, gameObjects, _collisionTileMap);
+        }
+    }
+
+    public void InitializeAmbushAreas()
+    {
+        _ambushAreas = _collisionTileMap.GetAmbushAreas();
+    }
+
+    public List<AmbushArea> GetAmbushAreas()
+    {
+        return _ambushAreas;
     }
 }

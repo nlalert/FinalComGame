@@ -50,8 +50,6 @@ public class PlayScene : Scene
 
     private StageManager _stageManager;
 
-    private List<AmbushArea> ambushAreas;
-
     public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         base.Initialize(gameManager, graphicsDevice, graphicsDeviceManager, content);
@@ -152,7 +150,7 @@ public class PlayScene : Scene
                 }
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
-                UpdateAmbushAreas(gameTime);
+                _stageManager.UpdateAmbushAreas(gameTime, _gameObjects);
                 RemoveInactiveObjects();
 
                 Singleton.Instance.Camera.Follow(Singleton.Instance.Player); // Make camera follow the player
@@ -239,14 +237,6 @@ public class PlayScene : Scene
         }
     }
 
-    private void UpdateAmbushAreas(GameTime gameTime)
-    {
-        foreach (var ambushArea in ambushAreas)
-        {
-            ambushArea.Update(gameTime, _gameObjects, _stageManager.GetCollisionTileMap());
-        }
-    }
-
     public void RemoveInactiveObjects()
     {
         for (int i = 0; i < _numObject; i++)
@@ -293,7 +283,7 @@ public class PlayScene : Scene
         _gameObjects.Add(Singleton.Instance.Player);
 
         _stageManager.SetUpParallaxBackground(_content, _graphicsDevice);
-        InitializeAmbushAreas();
+        _stageManager.InitializeAmbushAreas();
         AddSignBoard();
         SpawnEnemies();
         SpawnItems();
@@ -302,12 +292,6 @@ public class PlayScene : Scene
         {
             s.Reset();
         }
-    }
-
-    // In your PlayScene or main game class
-    public void InitializeAmbushAreas()
-    {
-        ambushAreas = _stageManager.GetCollisionTileMap().GetAmbushAreas();
     }
 
     private void AddSignBoard()
@@ -850,7 +834,7 @@ public class PlayScene : Scene
 
     private void SpawnEnemies()
     {
-        EnemyManager.SpawnWorldEnemy(_stageManager.GetEnemySpawnPoints(), ambushAreas, _gameObjects);
+        EnemyManager.SpawnWorldEnemy(_stageManager.GetEnemySpawnPoints(), _stageManager.GetAmbushAreas(), _gameObjects);
     }
 
     private void SpawnItems()
