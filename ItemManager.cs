@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -32,8 +33,22 @@ public class ItemManager
     }
 
     public static void SpawnItem(ItemID itemID, Vector2 spawnPosition, List<GameObject> gameObjects){
-        if (!_itemPrefabs.ContainsKey(itemID))
-            return;
+        if (itemID != ItemID.Random)
+        {
+            if(!_itemPrefabs.ContainsKey(itemID))
+                return;
+        }
+        else
+        {
+            // Get all available item types except None, Random, and SoulStaff
+            List<ItemID> availableItems = _itemPrefabs.Keys
+                .Where(id => id != ItemID.None && id != ItemID.Random && id != ItemID.SoulStaff)
+                .ToList();
+            
+            // Select a random item from the available items
+            int randomIndex = Singleton.Instance.Random.Next(availableItems.Count);
+            itemID = availableItems[randomIndex];
+        }
             
         Item newItem = _itemPrefabs[itemID].Clone() as Item;
         newItem.Position = spawnPosition - new Vector2(Singleton.TILE_SIZE/2,0);
