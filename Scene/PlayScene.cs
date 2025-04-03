@@ -48,15 +48,7 @@ public class PlayScene : Scene
     private SoundEffect _fireBallExplosionSound;
     private SoundEffect _pickUpSound;
 
-    private ParallaxBackground _parallaxBackground;
-    private Texture2D _backgroundLayer1;
-    private Texture2D _backgroundLayer2;
-    private Texture2D _backgroundLayer3;
-
-    private TileMap _collisionTileMap;
-    private TileMap _FGTileMap;
-    private TileMap _MGTileMap;
-    private TileMap _BGTileMap;
+    private StageManager _stageManager;
 
     private List<AmbushArea> ambushAreas;
 
@@ -113,7 +105,6 @@ public class PlayScene : Scene
 
     private void LoadSounds()
     {
-
         // Load sounds
         _jumpSound = _content.Load<SoundEffect>("GoofyAhhJump");
         _dashSound = _content.Load<SoundEffect>("Dash");
@@ -165,7 +156,7 @@ public class PlayScene : Scene
                 RemoveInactiveObjects();
 
                 Singleton.Instance.Camera.Follow(Singleton.Instance.Player); // Make camera follow the player
-                _parallaxBackground.Update(gameTime);
+                UpdateBackGround(gameTime);
                 break;
             case Singleton.GameState.StageCompleted:
                 UpdateStage();
@@ -174,6 +165,62 @@ public class PlayScene : Scene
 
         //Console.WriteLine("GameObject :" + _numObject);
         _gameManager.IsMouseVisible = false;
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        if(_stageManager == null)
+            return;
+
+        _numObject = _gameObjects.Count;
+
+        DrawBackground();
+        DrawGameWorld();
+
+        _graphics.BeginDraw();
+    }
+
+    private void DrawBackground()
+    {
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        _stageManager.DrawParallaxBackground(_spriteBatch);
+        _spriteBatch.End();
+    }
+
+    private void DrawGameWorld()
+    {
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Singleton.Instance.Camera.GetTransformation()); // Apply camera matrix
+        _stageManager.DrawTileMaps(_spriteBatch);
+        DrawAllObjects();
+        _spriteBatch.End();
+    }
+
+    private void DrawAllObjects()
+    {
+        for (int i = 0; i < _numObject; i++)
+        {
+            _gameObjects[i].Draw(_spriteBatch);
+        }   
+    }
+
+    private void UpdateTileMap(GameTime gameTime)
+    {
+        _stageManager.UpdateTileMap(gameTime, _gameObjects);
+    }
+
+    public void UpdateAllObjects(GameTime gameTime)
+    {
+        for (int i = 0; i < _numObject; i++)
+        {
+            if(_gameObjects[i].IsActive)
+                _gameObjects[i].Update(gameTime, _gameObjects, _stageManager.GetCollisionTileMap());
+        }
+        // Console.WriteLine(_gameObjects.Count);
+    }
+
+    private void UpdateBackGround(GameTime gameTime)
+    {
+        _stageManager.UpdateParallaxBackground(gameTime);
     }
 
     private void UpdateStage()
@@ -192,50 +239,11 @@ public class PlayScene : Scene
         }
     }
 
-    public override void Draw(GameTime gameTime)
-    {
-        _numObject = _gameObjects.Count;
-
-        switch (Singleton.Instance.CurrentGameState)
-        {
-            case Singleton.GameState.Playing:
-            case Singleton.GameState.Pause:
-                // Draw background layers (no camera transform for parallax background)
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                _parallaxBackground.Draw(_spriteBatch);
-                _spriteBatch.End();
-
-                // Draw the Game World (Apply Camera)
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: Singleton.Instance.Camera.GetTransformation()); // Apply camera matrix
-                DrawTileMap();
-                DrawAllObjects();
-                _spriteBatch.End();
-                break;
-        }
-
-        _graphics.BeginDraw();
-    }
-
-    private void UpdateTileMap(GameTime gameTime)
-    {
-        _collisionTileMap.Update(gameTime, _gameObjects);
-    }
-
-    public void UpdateAllObjects(GameTime gameTime)
-    {
-        for (int i = 0; i < _numObject; i++)
-        {
-            if(_gameObjects[i].IsActive)
-                _gameObjects[i].Update(gameTime, _gameObjects, _collisionTileMap);
-        }
-        // Console.WriteLine(_gameObjects.Count);
-    }
-
     private void UpdateAmbushAreas(GameTime gameTime)
     {
         foreach (var ambushArea in ambushAreas)
         {
-            ambushArea.Update(gameTime, _gameObjects, _collisionTileMap);
+            ambushArea.Update(gameTime, _gameObjects, _stageManager.GetCollisionTileMap());
         }
     }
 
@@ -250,24 +258,6 @@ public class PlayScene : Scene
                 _numObject--;
             }
         }
-    }
-
-    private void DrawTileMap()
-    {
-        _BGTileMap.Draw(_spriteBatch);
-        _MGTileMap.Draw(_spriteBatch);
-        _FGTileMap.Draw(_spriteBatch);
-        
-        //Should be hidden
-        //_collisionTileMap.Draw(_spriteBatch);
-    }
-
-    private void DrawAllObjects()
-    {
-        for (int i = 0; i < _numObject; i++)
-        {
-            _gameObjects[i].Draw(_spriteBatch);
-        }   
     }
 
     public void ResetGame()
@@ -290,22 +280,19 @@ public class PlayScene : Scene
     protected void ResetStage()
     {
         _gameObjects.Clear();
-
-        Singleton.Instance.Random = new Random();
-    
-        _BGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_BackGround.csv", 20);
-        _MGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_MidGround.csv", 20);
-        _FGTileMap = new TileMap(_textureAtlas, "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_ForeGround.csv", 20);
         
-        _collisionTileMap = new TileMap(_textureAtlas, GetCurrentStageCollisionPath(), 20);
+        Singleton.Instance.Random = new Random();
+        
+        _stageManager = new StageManager();
+        _stageManager.LoadTileMaps(_textureAtlas);
 
-        Rectangle mapBounds = new Rectangle(0, 0,  _collisionTileMap.MapWidth * Singleton.TILE_SIZE,  _collisionTileMap.MapHeight * Singleton.TILE_SIZE); // Map size
+        Rectangle mapBounds = new Rectangle(0, 0, _stageManager.GetMapWorldWidth(),  _stageManager.GetMapWorldHeight()); // Map size
         Singleton.Instance.Camera = new Camera(_graphicsDevice.Viewport, mapBounds); // Initialize camera
 
-        Singleton.Instance.Player.Position = _collisionTileMap.GetPlayerSpawnPoint();// get player location of each stage
+        Singleton.Instance.Player.Position = _stageManager.GetPlayerWorldSpawnPoint();// get player location of each stage
         _gameObjects.Add(Singleton.Instance.Player);
 
-        SetUpParallaxBackground();
+        _stageManager.SetUpParallaxBackground(_content, _graphicsDevice);
         InitializeAmbushAreas();
         AddSignBoard();
         SpawnEnemies();
@@ -317,30 +304,10 @@ public class PlayScene : Scene
         }
     }
 
-
-    private void SetUpParallaxBackground()
-    {
-        // // Load background textures
-        // _backgroundLayer1 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_bg");  // Farthest layer
-        // _backgroundLayer2 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_mg");  // Middle layer
-        // _backgroundLayer3 = _content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_fg");  // Closest layer
-
-        _backgroundLayer1 = _content.Load<Texture2D>("Level_1_Parallax_bg");  // Farthest layer
-        _backgroundLayer2 = _content.Load<Texture2D>("Level_1_Parallax_mg");  // Middle layer
-        _backgroundLayer3 = _content.Load<Texture2D>("Level_1_Parallax_fg");  // Closest layer
-
-        // Create parallax background
-        _parallaxBackground = new ParallaxBackground(_graphicsDevice.Viewport);
-
-        _parallaxBackground.AddLayer(_backgroundLayer1, 0.0f, 1.0f, Vector2.Zero); // Sky/clouds move very slowly
-        _parallaxBackground.AddLayer(_backgroundLayer2, 0.1f, 1.5f, new Vector2(-50,-300)); // Mountains move at medium speed
-        _parallaxBackground.AddLayer(_backgroundLayer3, 0.2f, 2.0f, new Vector2(-100,-800)); // Trees move faster (closer to player)
-    }
-
     // In your PlayScene or main game class
     public void InitializeAmbushAreas()
     {
-        ambushAreas = _collisionTileMap.GetAmbushAreas();
+        ambushAreas = _stageManager.GetCollisionTileMap().GetAmbushAreas();
     }
 
     private void AddSignBoard()
@@ -570,23 +537,23 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Hellhound,
-                new HellhoundEnemy(_hellhoundTexture){
-                    Name = "Hellhound",
-                    Viewport = ViewportManager.Get("Hellhound"),
-                    
-                    MaxHealth = 1f,
-                    BaseAttackDamage = 8f,
+            new HellhoundEnemy(_hellhoundTexture){
+                Name = "Hellhound",
+                Viewport = ViewportManager.Get("Hellhound"),
+                
+                MaxHealth = 1f,
+                BaseAttackDamage = 8f,
 
-                    LimitIdlePatrol = 100,
-                    
-                    ChargeTime = 2.0f,
-                    ChaseDuration = 3.0f,
-                    DashDuration = 1.0f,
+                LimitIdlePatrol = 100,
+                
+                ChargeTime = 2.0f,
+                ChaseDuration = 3.0f,
+                DashDuration = 1.0f,
 
-                    HitSound = _hitSound,
+                HitSound = _hitSound,
 
-                    LootTableChance = defaultLootTableChance
-                });
+                LootTableChance = defaultLootTableChance
+            });
 
         EnemyManager.AddGameEnemy(EnemyID.Skeleton,         
             new SkeletonEnemy(_skeletonTexture){
@@ -858,13 +825,13 @@ public class PlayScene : Scene
 
     private void SpawnEnemies()
     {
-        EnemyManager.SpawnWorldEnemy(_collisionTileMap.GetEnemySpawnPoints(), ambushAreas, _gameObjects);
+        EnemyManager.SpawnWorldEnemy(_stageManager.GetEnemySpawnPoints(), ambushAreas, _gameObjects);
     }
 
     private void SpawnItems()
     {
         _ui.ClearWorldSpaceUI();
-        foreach (var itemSpawnPoint in _collisionTileMap.GetItemSpawnPoints())
+        foreach (var itemSpawnPoint in _stageManager.GetItemSpawnPoints())
         {
             ItemManager.SpawnItem(itemSpawnPoint.Value, TileMap.GetTileWorldPositionAt(itemSpawnPoint.Key), _gameObjects);
         }
@@ -1038,16 +1005,5 @@ public class PlayScene : Scene
         {
             Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Grapple);
         }
-    }
-
-    public static string GetCurrentStageCollisionPath()
-    {
-        if (Singleton.Instance.Stage >= 4)
-        {
-            Console.WriteLine("No more stage : Replaying");
-            Singleton.Instance.Stage = 1;
-        }
-
-        return "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage + "_Collision.csv";
     }
 }
