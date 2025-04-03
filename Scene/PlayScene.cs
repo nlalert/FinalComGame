@@ -805,12 +805,12 @@ public class PlayScene : Scene
 
     public void UnlockAbilityForStage()
     {
-        if(Singleton.Instance.Stage >= 1 || Singleton.Instance.Stage == 0)
+        if(Singleton.Instance.Stage >= 0)
         {
             Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Dash);
             Singleton.Instance.CurrentUI.Prompt("Dash ability unlocked! Press SHIFT to dash.");
         }
-        if(Singleton.Instance.Stage >= 2 || Singleton.Instance.Stage == 0)
+        if(Singleton.Instance.Stage == 0 || Singleton.Instance.Stage >= 2)
         {
             Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Glide);
             Singleton.Instance.CurrentUI.Prompt("Glide ability unlocked! Hold SPACE while falling to glide.");
