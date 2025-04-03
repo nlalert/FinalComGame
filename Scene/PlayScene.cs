@@ -580,7 +580,7 @@ public class PlayScene : Scene
                 Name = "Cerberus",
                 Viewport = ViewportManager.Get("Cerberus"),
 
-                MaxHealth = 600,
+                MaxHealth = 500,
                 BaseAttackDamage = 3f,
 
                 // JumpCooldown = 3.0f,
@@ -588,7 +588,7 @@ public class PlayScene : Scene
                 Friction = 0.96f,
 
                 HitSound = _hitSound
-            });
+            }); 
 
         EnemyManager.AddGameEnemy(EnemyID.Rhulk,         
             new Rhulk(_rhulkTexture){

@@ -119,8 +119,7 @@ namespace FinalComGame
                     break;
             }
 
-            float delta = _isSummoned ? deltaTime/3 : deltaTime; 
-            UpdateAnimation(delta);
+            UpdateAnimation(deltaTime);
             base.Update(gameTime, gameObjects, tileMap);
         }
 
@@ -148,11 +147,6 @@ namespace FinalComGame
                 case EnemyState.Idle:
                     animation = "idle";
                     break;
-            }
-
-            if (_isSummoned)
-            {
-                animation = "sd_" + animation;
             }
                 
             if(_currentAnimation != animation && !Animation.IsTransition)
@@ -451,6 +445,19 @@ namespace FinalComGame
 
             newObject1.Name = "Split Object"; // Give the new object a unique name if necessary
             newObject2.Name = "Split Object"; // Give the new object a unique name if necessary
+
+            newObject1.Animation = new Animation(_texture, 96, 80, new Vector2(96*8, 80*5), 24);
+            newObject1.Animation.AddAnimation("charge", new Vector2(0,2), 8);
+            newObject1.Animation.AddAnimation("dash", new Vector2(3,3), 2);
+            newObject1.Animation.AddAnimation("run", new Vector2(3,4), 3);
+            newObject1.Animation.ChangeAnimation("charge");
+
+            newObject2.Animation = new Animation(_texture, 96, 80, new Vector2(96*8, 80*5), 24);
+            newObject2.Animation.AddAnimation("charge", new Vector2(0,2), 8);
+            newObject2.Animation.AddAnimation("dash", new Vector2(3,3), 2);
+            newObject2.Animation.AddAnimation("run", new Vector2(3,4), 3);
+            newObject2.Animation.ChangeAnimation("charge");
+
             // Add the new object to the list of game objects
             gameObjects.Add(newObject1);
             gameObjects.Add(newObject2);
