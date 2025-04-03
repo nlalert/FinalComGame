@@ -97,14 +97,11 @@ public class Scene
         Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
     }
 
-    protected virtual void StartGameButton_OnClick(object sender, EventArgs e)
-    {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
-    }
-
     protected virtual void RestartButton_OnClick(object sender, EventArgs e)
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
+        if(Singleton.Instance.Stage >= 1)
+            Singleton.Instance.Stage = 1;
     }
 
     protected virtual void SettingButton_OnClick(object sender, EventArgs e)

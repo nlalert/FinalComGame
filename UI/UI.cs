@@ -59,15 +59,15 @@ public class UI
     public void Update(GameTime gameTime)
     {
         // Update HUD elements (screen space)
-        foreach (var element in hudElements)
+        for (int i = 0; i < hudElements.Count; i++)
         {
-            element.Update(gameTime);
+            hudElements[i].Update(gameTime);
         }
-        
+
         // Update world space elements
-        foreach (var element in worldSpaceElements)
+        for (int i = 0; i < worldSpaceElements.Count; i++)
         {
-            element.Update(gameTime);
+            worldSpaceElements[i].Update(gameTime);
         }
         
         // Update prompts and remove expired ones

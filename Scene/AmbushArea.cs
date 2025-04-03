@@ -11,6 +11,7 @@ namespace FinalComGame
         private Rectangle _triggerZone;
         private Dictionary<Vector2, EnemyID> _enemyWorldSpawnPoints;
         private List<BaseEnemy> _spawnedEnemies;
+        private Dictionary<Vector2, Tile> _activatedBarrierTiles;
         private bool _isActive;
         private bool _isCleared;
 
@@ -18,6 +19,7 @@ namespace FinalComGame
         {
             _triggerZone = triggerZone;
             _spawnedEnemies = new List<BaseEnemy>();
+            _activatedBarrierTiles = new Dictionary<Vector2, Tile>();
             
             // Find enemy spawn points within this area
             _enemyWorldSpawnPoints = new Dictionary<Vector2, EnemyID>();
@@ -53,7 +55,7 @@ namespace FinalComGame
                 if (_spawnedEnemies.Count == 0)
                 {
                     _isCleared = true;
-                    ChangeBarrierCollision(tileMap, false);
+                    DisableBarrierCollision();
                     Singleton.Instance.CurrentUI.Prompt("Ambush Cleared");
                 }
             }
@@ -64,7 +66,7 @@ namespace FinalComGame
             _isActive = true;
             _isCleared = false;
 
-            ChangeBarrierCollision(tileMap, true);
+            EnableBarrierCollision(tileMap);
 
             foreach (var enemySpawnPoint in _enemyWorldSpawnPoints)
             {
@@ -73,12 +75,23 @@ namespace FinalComGame
             }
         }
 
-        private static void ChangeBarrierCollision(TileMap tileMap, bool IsSolid)
+        private void EnableBarrierCollision(TileMap tileMap)
         {
             foreach (var tile in tileMap.Tiles)
             {
                 if(tile.Value.Type == TileType.AmbushBarrier)
-                    tile.Value.IsSolid = IsSolid;
+                {
+                    _activatedBarrierTiles.Add(tile.Key, tile.Value);
+                    tile.Value.IsSolid = true;
+                }
+            }
+        }
+
+        private void DisableBarrierCollision()
+        {
+            foreach (var tile in _activatedBarrierTiles)
+            {
+                tile.Value.IsSolid = false;
             }
         }
     }

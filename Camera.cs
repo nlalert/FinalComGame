@@ -36,11 +36,14 @@ public class Camera
 
     public Matrix GetTransformation()
     {
+        // Round camera position to whole pixels
+        Vector2 pixelPerfectPosition = RoundToWholePixel(_currentPosition);
+        
         // Apply screen shake offset
         Vector2 shakeOffset = GetScreenShakeOffset();
         
-        return Matrix.CreateTranslation(new Vector3(-_currentPosition + shakeOffset, 0)) *
-               Matrix.CreateScale(_zoom);
+        return Matrix.CreateTranslation(new Vector3(-pixelPerfectPosition + shakeOffset, 0)) *
+            Matrix.CreateScale(_zoom);
     }
 
     public void Follow(GameObject target)
@@ -49,8 +52,8 @@ public class Camera
 
         // Calculate the desired camera center position
         Vector2 targetPosition = new Vector2(
-            target.Position.X + target.Viewport.X / 2,
-            target.Position.Y + target.Viewport.Y / 2
+            target.Position.X + target.Viewport.Width / 2,  // Changed Viewport.X to Viewport.Width
+            target.Position.Y + target.Viewport.Height / 2  // Changed Viewport.Y to Viewport.Height
         );
 
         // Calculate the camera view size based on zoom
@@ -61,6 +64,9 @@ public class Camera
         Vector2 smoothedPosition = Vector2.Lerp(_currentPosition, 
             targetPosition - new Vector2(viewWidth / 2, viewHeight / 2), 
             _smoothSpeed);
+
+        // Round to whole pixels BEFORE clamping
+        smoothedPosition = RoundToWholePixel(smoothedPosition);
 
         // Clamp the camera position to map boundaries
         float clampedX = MathHelper.Clamp(smoothedPosition.X, 
@@ -107,5 +113,13 @@ public class Camera
         }
         
         return Vector2.Zero;
+    }
+
+    private Vector2 RoundToWholePixel(Vector2 position)
+    {
+        return  new Vector2(
+                    (float)Math.Floor(position.X),
+                    (float)Math.Floor(position.Y)
+                );
     }
 }

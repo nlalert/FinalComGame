@@ -8,18 +8,18 @@ namespace FinalComGame;
 public enum ItemID
 {        
     None = 0,
-    HealthPotion = 14,
-    SpeedPotion = 35,
-    JumpPotion = 34,
-    Barrier = 114,
-    LifeUp = 15,
-    SpeedBoots = 94,
-    CursedGauntlet = 95,
-    Sword = 75,
-    Gun = 55,
-    Staff = 74,
-    SoulStaff = 54,
-    Grenade = 115,
+    HealthPotion = 14,//consumable
+    SpeedPotion = 35,//consumable
+    JumpPotion = 34,//consumable
+    Barrier = 114,//
+    LifeUp = 15,//consumable
+    SpeedBoots = 94,//permanent
+    CursedGauntlet = 95,//permanent
+    Sword = 75,//weapon
+    Gun = 55,//weapon
+    Staff = 74,//weapon
+    SoulStaff = 54,//DONOT DROP
+    Grenade = 115,//consumable
     Random = 134
 }
 
