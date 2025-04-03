@@ -752,11 +752,6 @@ namespace FinalComGame
                 Position.X = _overlappedTilePosition.X;
                 if (Position.Y < _ladderTopPosition.Y + 8)
                     Position.Y += Singleton.TILE_SIZE;
-
-                if(_overlappedTile == TileType.Ladder_Left)
-                    Direction = -1;
-                else if(_overlappedTile == TileType.Ladder_Right)
-                    Direction = 1;
             }
 
             if (_isClimbing)
@@ -842,8 +837,7 @@ namespace FinalComGame
         }
 
         private bool IsOnladder(){
-            return _overlappedTile == TileType.Ladder || _overlappedTile == TileType.Ladder_Platform ||
-                _overlappedTile == TileType.Ladder_Left || _overlappedTile == TileType.Ladder_Right;
+            return _overlappedTile == TileType.Ladder || _overlappedTile == TileType.Ladder_Platform;
         }
 
         private void FireGrapplingHook(List<GameObject> gameObjects)
@@ -1020,8 +1014,7 @@ namespace FinalComGame
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
                     if(tile != null)
                     {
-                        if (tile.Type == TileType.Ladder || tile.Type == TileType.Ladder_Left || 
-                        tile.Type == TileType.Ladder_Right || tile.Type == TileType.Ladder_Platform)
+                        if (tile.Type == TileType.Ladder || tile.Type == TileType.Ladder_Platform)
                         {
                             if (IsTouching(tile)){
                                 _overlappedTile = tile.Type;
