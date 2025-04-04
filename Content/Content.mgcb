@@ -85,6 +85,18 @@
 /processorParam:Quality=Best
 /build:Dash.wav
 
+#begin Demon_death_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Demon_death_sound.wav
+
+#begin Demon_hurt_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Demon_hurt_sound.wav
+
 #begin Demon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -452,6 +464,18 @@
 /processorParam:TextureFormat=Color
 /build:Queue.png
 
+#begin Rhulk_death_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Rhulk_death_sound.wav
+
+#begin Rhulk_hurt_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Rhulk_hurt_sound.wav
+
 #begin Rhulk.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -608,9 +632,33 @@
 /processorParam:TextureFormat=Color
 /build:Title.png
 
+#begin Tower_death_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Tower_death_sound.wav
+
+#begin Tower_hurt_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Tower_hurt_sound.wav
+
 #begin Tower_sound.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Tower_sound.wav
+
+#begin Wolf_death_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Wolf_death_sound.wav
+
+#begin Wolf_hurt_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Wolf_hurt_sound.wav
 

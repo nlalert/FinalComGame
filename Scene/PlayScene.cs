@@ -60,7 +60,14 @@ public class PlayScene : Scene
     private SoundEffect _Slime_death_sound;
     private SoundEffect _Skeleton_hurt_sound;
     private SoundEffect _Skeleton_death_sound;
-
+    private SoundEffect _Tower_hurt_sound;
+    private SoundEffect _Tower_death_sound;
+    private SoundEffect _Wolf_hurt_sound;
+    private SoundEffect _Wolf_death_sound;
+    private SoundEffect _Demon_hurt_sound;
+    private SoundEffect _Demon_death_sound;
+    private SoundEffect _Rhulk_hurt_sound;
+    private SoundEffect _Rhulk_death_sound;
 
     private StageManager _stageManager;
     
@@ -144,7 +151,14 @@ public class PlayScene : Scene
         _Slime_death_sound = _content.Load<SoundEffect>("Slime_death_sound");
         _Skeleton_hurt_sound = _content.Load<SoundEffect>("Skeleton_hurt_sound");
         _Skeleton_death_sound = _content.Load<SoundEffect>("Skeleton_death_sound");
-
+        _Tower_hurt_sound = _content.Load<SoundEffect>("Tower_hurt_sound");
+        _Tower_death_sound = _content.Load<SoundEffect>("Tower_death_sound");
+        _Wolf_hurt_sound = _content.Load<SoundEffect>("Wolf_hurt_sound");
+        _Wolf_death_sound = _content.Load<SoundEffect>("Wolf_death_sound");
+        _Demon_hurt_sound = _content.Load<SoundEffect>("Demon_hurt_sound");
+        _Demon_death_sound = _content.Load<SoundEffect>("Demon_death_sound");
+        _Rhulk_hurt_sound = _content.Load<SoundEffect>("Rhulk_hurt_sound");
+        _Rhulk_death_sound = _content.Load<SoundEffect>("Rhulk_death_sound");
         // Load songs
         _songs[0] = _content.Load<Song>("ChillSong");
         _songs[1] = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
@@ -585,7 +599,6 @@ public class PlayScene : Scene
             new HellhoundEnemy(_hellhoundTexture){
                 Name = "Hellhound",
                 Viewport = ViewportManager.Get("Hellhound"),
-                DogSound = _Dog_sound,
                 MaxHealth = 50f,
                 BaseAttackDamage = 8f,
 
@@ -595,8 +608,9 @@ public class PlayScene : Scene
                 ChaseDuration = 3.0f,
                 DashDuration = 1.0f,
 
-                HitSound = _hitSound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                DogSound = _Dog_sound,
+                HitSound = _Wolf_hurt_sound,
+                DeathSound = _Wolf_death_sound,// TODO: PUT REAL SOUND
 
                 LootTableChance = hellHoundLootTableChance
             });
@@ -632,8 +646,8 @@ public class PlayScene : Scene
 
                 MaxHealth = float.MaxValue,
 
-                HitSound = _hitSound,// Temp
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                // HitSound = _hitSound,// Temp
+                // DeathSound = _hitSound,// TODO: PUT REAL SOUND
 
                 LootTableChance = defaultLootTableChance 
             });
@@ -649,8 +663,8 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("TowerEnemy"),
                 Tower_sound = _Tower_sound,
                 MaxHealth = 80f,
-                HitSound = _hitSound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                HitSound = _Tower_hurt_sound,
+                DeathSound = _Tower_death_sound,
 
                 TowerBullet = new TowerBullet(_projectileTexture)
                 {
@@ -679,8 +693,8 @@ public class PlayScene : Scene
                 BaseAttackDamage = 5f,
                 MaxHealth = 50f,
 
-                HitSound = _hitSound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                HitSound = _Demon_hurt_sound,
+                DeathSound = _Demon_death_sound,
 
                 DemonBullet = new DemonBullet(_projectileTexture)
                 {
@@ -706,8 +720,8 @@ public class PlayScene : Scene
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
 
-                HitSound = _hitSound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                HitSound = _Slime_hurt_sound,
+                DeathSound = _Slime_death_sound,
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Cerberus,         
@@ -722,8 +736,8 @@ public class PlayScene : Scene
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
 
-                HitSound = _hitSound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                HitSound = _Wolf_hurt_sound,
+                DeathSound = _Wolf_death_sound,
             }); 
 
         EnemyManager.AddGameEnemy(EnemyID.Rhulk,         
@@ -740,8 +754,8 @@ public class PlayScene : Scene
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
 
-                HitSound = _hitSound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                HitSound = _Rhulk_hurt_sound,
+                DeathSound = _Rhulk_death_sound,
                 
                 Laserproj = new DemonLaser(_LaserTexture)
                 {
