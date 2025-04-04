@@ -103,6 +103,7 @@ namespace FinalComGame {
             if (IsInvincible())
                 _invincibilityTimer -= deltaTime;
         }
+        
         /// <summary>
         /// Npc collide with any NPC 
         /// </summary>
