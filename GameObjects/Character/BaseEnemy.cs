@@ -128,18 +128,17 @@ namespace FinalComGame {
             if(!CanCollideTile) 
                 return;
 
-            for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
+            foreach (Vector2 offset in _collisionOffsets)
             {
-                for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
-                {
-                    Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
-                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && (tile.Type == TileType.Barrier || tile.Type == TileType.AmbushBarrier 
+                Vector2 checkPosition = new Vector2(Position.X + offset.X, Position.Y + offset.Y);
+                Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+                
+                if (tile != null && (tile.Type == TileType.Barrier || tile.Type == TileType.AmbushBarrier 
                     || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile))))
+                {
+                    if (ResolveHorizontalCollision(tile))
                     {
-                        if(ResolveHorizontalCollision(tile)){
-                            OnCollisionHorizon();
-                        }
+                        OnCollisionHorizon();
                     }
                 }
             }
@@ -151,17 +150,15 @@ namespace FinalComGame {
             if(!CanCollideTile) 
                 return;
 
-            for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
+            foreach (Vector2 offset in _collisionOffsets)
             {
-                for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
+                Vector2 checkPosition = new Vector2(Position.X + offset.X, Position.Y + offset.Y);
+                Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+                
+                if(tile != null && (tile.Type == TileType.Barrier || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile))))
                 {
-                    Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
-                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && (tile.Type == TileType.Barrier || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile))))
-                    {
-                        if(ResolveVerticalCollision(tile)){
-                            OnLandVerticle();
-                        }
+                    if(ResolveVerticalCollision(tile)){
+                        OnLandVerticle();
                     }
                 }
             }
