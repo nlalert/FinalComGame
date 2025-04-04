@@ -65,7 +65,8 @@ public class PlayScene : Scene
     private SoundEffect _Wolf_death_sound;
     private SoundEffect _Demon_hurt_sound;
     private SoundEffect _Demon_death_sound;
-
+    private SoundEffect _Rhulk_hurt_sound;
+    private SoundEffect _Rhulk_death_sound;
 
     private StageManager _stageManager;
     
@@ -154,6 +155,8 @@ public class PlayScene : Scene
         _Wolf_death_sound = _content.Load<SoundEffect>("Wolf_death_sound");
         _Demon_hurt_sound = _content.Load<SoundEffect>("Demon_hurt_sound");
         _Demon_death_sound = _content.Load<SoundEffect>("Demon_death_sound");
+        _Rhulk_hurt_sound = _content.Load<SoundEffect>("Rhulk_hurt_sound");
+        _Rhulk_death_sound = _content.Load<SoundEffect>("Rhulk_death_sound");
         // Load songs
         _songs[0] = _content.Load<Song>("ChillSong");
         _songs[1] = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
@@ -749,8 +752,8 @@ public class PlayScene : Scene
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
 
-                HitSound = _hitSound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                HitSound = _Rhulk_hurt_sound,
+                DeathSound = _Rhulk_death_sound,
                 
                 Laserproj = new DemonLaser(_LaserTexture)
                 {
