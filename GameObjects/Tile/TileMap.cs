@@ -201,7 +201,9 @@ namespace FinalComGame
         {
             foreach (var tile in Tiles)
             {
-                if (tile.Value.Type == TileType.Barrier && tile.Value.Rectangle.Contains(position))
+                if ((tile.Value.Type == TileType.Barrier || 
+                (tile.Value.Type == TileType.AmbushBarrier && tile.Value.IsSolid)) 
+                && tile.Value.Rectangle.Contains(position))
                 {
                     return true; // There's an obstacle at this position
                 }

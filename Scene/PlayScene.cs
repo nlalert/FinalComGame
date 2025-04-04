@@ -355,7 +355,7 @@ public class PlayScene : Scene
             );
             SignBoard ItemTutorialSign = new SignBoard(
                 _whiteTexture,
-                "Preess F to pick up item " + 
+                "Preess F to pick up item "+ 
                 "Press (1) (2) to use item",     
                 // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                 TileMap.GetTileWorldPositionAt(149, 30), // TopLeft Position // TODO : More dynamic
@@ -367,7 +367,7 @@ public class PlayScene : Scene
             SignBoard ShootTutorialSign = new SignBoard(
                 _whiteTexture,
                 "Press Q to Punch        "+
-                "Press E to Shoot        " + 
+                "Press E to Shoot        "+ 
                 "Hold E to charge bullet ",     
                 // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                 TileMap.GetTileWorldPositionAt(166, 31), // TopLeft Position // TODO : More dynamic
@@ -420,8 +420,8 @@ public class PlayScene : Scene
         else if(Singleton.Instance.Stage==3){
              SignBoard GraplingTutorialSign = new SignBoard(
                 _whiteTexture,
-                "Press R to Grapple to the wall",
-                TileMap.GetTileWorldPositionAt(12, 30),  // TopLeft Position  // TODO : More dynamic
+                "Press R to Grapple onto the hook",
+                TileMap.GetTileWorldPositionAt(64, 66),  // TopLeft Position  // TODO : More dynamic
                 200,                    // Width
                 48,                     // Height
                 new Color(10, 10, 40, 220), // Dark blue, semi-transparent
@@ -433,7 +433,7 @@ public class PlayScene : Scene
 
     private void CreatePlayer()
     {
-        Singleton.Instance.Player = new Player(_playerTexture, _whiteTexture)
+        Singleton.Instance.Player = new Player(_playerTexture, _whiteTexture, _projectileTexture)
         {
             Name = "Player",
             Life = 3,
@@ -457,11 +457,13 @@ public class PlayScene : Scene
             DashSpeed = 400f,
             DashDuration = 0.3f, // Dash lasts for 0.25 seconds
             DashCooldown = 0.2f,
-            DashMP = 20f,
+            DashMP = 25f,
 
             GlideGravityScale = 0.3f, // How much gravity affects gliding (lower = slower fall)
             GlideMaxFallSpeed = 80f, // Maximum fall speed while gliding
             GlideMP = 20f, // MP cost per second while gliding
+
+            GrappleMP = 30f, // MP cost when use Grappling Hook
 
             MaxChargeTime = 2.0f, // Maximum charge time in seconds
             MinChargePower = 1.0f, // Minimum damage/speed multiplier
@@ -498,8 +500,6 @@ public class PlayScene : Scene
                 Speed = 500f,
                 Viewport = ViewportManager.Get("Charge_Bullet_0")
             },
-            _hookHeadTexture = _HookHeadTexture,
-            _ropeTexture = _RopeTexture
         };
     }
 
@@ -615,7 +615,8 @@ public class PlayScene : Scene
 
         Dictionary<ItemID, float> DemonLootTableChance = new Dictionary<ItemID, float>{ 
             {ItemID.None, 0.4f},
-            {ItemID.LifeUp, 0.05f},
+            {ItemID.LifeUp, 0.025f},
+            {ItemID.Staff, 0.025f},
             {ItemID.JumpPotion, 0.05f},
             {ItemID.HealthPotion, 0.5f},
         };
