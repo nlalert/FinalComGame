@@ -1286,8 +1286,9 @@ namespace FinalComGame
                 // Cap fall speed while gliding
                 if (Velocity.Y > GlideMaxFallSpeed)
                     Velocity.Y = GlideMaxFallSpeed;
-                
-                DrainMP(GlideMP, deltaTime);
+                    
+                if(_isGliding)
+                    DrainMP(GlideMP, deltaTime);
             }
             else
             {
