@@ -543,7 +543,7 @@ namespace FinalComGame
                 }
             }
 
-            else
+            else if(!_isClimbing)
             {
                 if(Singleton.Instance.IsKeyJustPressed(Fire) && _currentWeapon != "none"){
                     if(_currentWeapon == "gun")
@@ -1013,7 +1013,7 @@ namespace FinalComGame
             _overlappedTile = TileType.None;
             GrapplingPosition = Vector2.Zero;
 
-            int radius = 10;
+            int radius = 8;
             for (int i = -radius; i <= radius; i++)
             {
                 for (int j = -radius; j <= radius; j++)
