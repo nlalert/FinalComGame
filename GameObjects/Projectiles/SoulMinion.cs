@@ -11,7 +11,7 @@ namespace FinalComGame
         private float angle; // Angle in radians
         private float orbitSpeed = 1.5f; // Speed of rotation (radians per second)
         private float orbitRadius = 12f; // Radius of the orbi
-        private float shootCooldown = 0.5f; // 3 sec cooldown
+        private float shootCooldown = 1f; // 
         private float shootTimer = 0f; 
         public SoulMinion(Texture2D texture) : base(texture)
         {

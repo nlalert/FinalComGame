@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class GameObject : ICloneable
 {
+    //for collision checking
+    protected Vector2[] _collisionOffsets;
+
     protected Texture2D _texture;
 
     public Vector2 Position;
@@ -48,6 +51,22 @@ public class GameObject : ICloneable
         Scale = Vector2.One;
         Rotation = 0f;
         IsActive = true;
+
+        CalculateCollisionOffsets();
+    }
+
+    private void CalculateCollisionOffsets()
+    {
+        // Pre-calculate all possible collision check positions relative to entity position
+        _collisionOffsets = new Vector2[(2 * Singleton.COLLISION_RADIUS + 1) * (2 * Singleton.COLLISION_RADIUS + 1)];
+        int index = 0;
+        for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
+        {
+            for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
+            {
+                _collisionOffsets[index++] = new Vector2(i * Singleton.TILE_SIZE, j * Singleton.TILE_SIZE);
+            }
+        }
     }
 
     public virtual void Update(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap)
@@ -219,16 +238,13 @@ public class GameObject : ICloneable
     {
         Position.X += Velocity.X * deltaTime;
 
-        for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
+        foreach (Vector2 offset in _collisionOffsets)
         {
-            for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
+            Vector2 checkPosition = new Vector2(Position.X + offset.X, Position.Y + offset.Y);
+            Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+            if(tile != null && tile.IsSolid)
             {
-                Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
-                Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                if(tile != null && tile.IsSolid)
-                {
-                    ResolveHorizontalCollision(tile);
-                }
+                ResolveHorizontalCollision(tile);
             }
         }
         foreach (var platformEnemy in gameObjects.OfType<PlatformEnemy>())
@@ -241,17 +257,14 @@ public class GameObject : ICloneable
     {
         Position.Y += Velocity.Y * deltaTime;
 
-        for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
+        foreach (Vector2 offset in _collisionOffsets)
         {
-            for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
+            Vector2 checkPosition = new Vector2(Position.X + offset.X, Position.Y + offset.Y);
+            Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+
+            if(tile != null && tile.IsSolid)
             {
-                Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
-                Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                if(tile != null && tile.IsSolid)
-                {
-                    ResolveVerticalCollision(tile);
-                }
-                
+                ResolveVerticalCollision(tile);
             }
         }
         foreach (var platformEnemy in gameObjects.OfType<PlatformEnemy>())

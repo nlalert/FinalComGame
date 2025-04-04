@@ -34,11 +34,9 @@ public class PlayScene : Scene
     private Texture2D _rhulkTexture;
     private Texture2D _queueTexture;
     private Texture2D _itemSlotTexture;
-    private Song _songlevel3;
-    private Song _songlevel2;
-    private Song _songlevel1;
-    private Song _songlevel0;
+
     // Sound 
+    private Song[] _songs;
     private SoundEffect _jumpSound;
     private SoundEffect _dashSound;
     private SoundEffect _punchSound;
@@ -68,6 +66,7 @@ public class PlayScene : Scene
         _graphics.ApplyChanges();
 
         _gameObjects = new List<GameObject>();
+        _songs = new Song[4];
     }
 
     public override void LoadContent(SpriteBatch spriteBatch)
@@ -134,12 +133,11 @@ public class PlayScene : Scene
         _Tower_sound = _content.Load<SoundEffect>("Tower_sound");
 
         // Load songs
-        _songlevel0 = _content.Load<Song>("ChillSong");
-        _songlevel1 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
-        _songlevel2 = _content.Load<Song>("Eternity's Divide OST  Enter Cold Fusion Core");
-        _songlevel3 = _content.Load<Song>("Eternity's Divide OST  Checkpoint 2");
-        _song = _songlevel0;//default song
-
+        _songs[0] = _content.Load<Song>("ChillSong");
+        _songs[1] = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
+        _songs[2] = _content.Load<Song>("Eternity's Divide OST  Enter Cold Fusion Core");
+        _songs[3] = _content.Load<Song>("Eternity's Divide OST  Checkpoint 2");
+        _song = _songs[0];//default song
     }
 
     public override void Update(GameTime gameTime)
@@ -323,22 +321,7 @@ public class PlayScene : Scene
         SpawnEnemies();
         SpawnItems();
 
-        if(Singleton.Instance.Stage == 0)
-        {
-            _song = _songlevel0;
-        }
-        if(Singleton.Instance.Stage == 1)
-        {
-            _song = _songlevel1;
-        }
-        if(Singleton.Instance.Stage == 2)
-        {
-            _song = _songlevel2;
-        }
-        if(Singleton.Instance.Stage == 3)
-        {
-            _song = _songlevel3;
-        }
+        _song = _songs[Singleton.Instance.Stage];
 
         foreach (GameObject s in _gameObjects)
         {
@@ -471,7 +454,7 @@ public class PlayScene : Scene
                 SignBoard GraplingTutorialSign = new SignBoard(
                     _whiteTexture,
                     "Press R to Grapple onto the hook",
-                    TileMap.GetTileWorldPositionAt(64, 66),  // TopLeft Position  // TODO : More dynamic
+                    TileMap.GetTileWorldPositionAt(45, 75),  // TopLeft Position  // TODO : More dynamic
                     200,                    // Width
                     48,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
@@ -494,7 +477,7 @@ public class PlayScene : Scene
             MaxHealth = 100,
             MaxMP = 100,
 
-            BaseAttackDamage = 10f,
+            BaseAttackDamage = 20f,
             AttackDuration = 0.4f, // How long the attack lasts
             AttackCooldown = 0.2f,
 
@@ -590,7 +573,7 @@ public class PlayScene : Scene
                 Name = "Hellhound",
                 Viewport = ViewportManager.Get("Hellhound"),
                 DogSound = _Dog_sound,
-                MaxHealth = 1f,
+                MaxHealth = 50f,
                 BaseAttackDamage = 8f,
 
                 LimitIdlePatrol = 100,
@@ -615,7 +598,7 @@ public class PlayScene : Scene
                 Name = "Skeleton",
                 Viewport = ViewportManager.Get("Skeleton"),
 
-                MaxHealth = 80f,
+                MaxHealth = 100f,
                 BaseAttackDamage = 5f,
 
                 LimitIdlePatrol = 100,
@@ -649,13 +632,13 @@ public class PlayScene : Scene
                 Name = "TowerEnemy",
                 Viewport = ViewportManager.Get("TowerEnemy"),
                 Tower_sound = _Tower_sound,
-                MaxHealth = 150f,
+                MaxHealth = 80f,
                 HitSound = _hitSound,
 
                 TowerBullet = new TowerBullet(_projectileTexture)
                 {
                     Name = "BulletEnemy",
-                    BaseDamageAmount = 20f,
+                    BaseDamageAmount = 15f,
                     Speed = 300f,
                     Viewport = ViewportManager.Get("TowerEnemy_Bullet")
                 },
@@ -675,14 +658,16 @@ public class PlayScene : Scene
                 Name = "Demon",
                 Viewport = ViewportManager.Get("Demon"),
 
-                MaxHealth = 100f,
                 DemonAttack_sound = _DemonAttack_sound,
+                BaseAttackDamage = 5f,
+                MaxHealth = 50f,
+
                 HitSound = _hitSound,
 
                 DemonBullet = new DemonBullet(_projectileTexture)
                 {
                     Name = "BulletEnemy",
-                    BaseDamageAmount = 15f,
+                    BaseDamageAmount = 10f,
                     Speed = 200f,
                     Viewport = ViewportManager.Get("Demon_Bullet")
                 },
@@ -695,8 +680,8 @@ public class PlayScene : Scene
                 Name = "GiantSlime",
                 Viewport = ViewportManager.Get("GiantSlime"),
 
-                MaxHealth = 1000f,
-                BaseAttackDamage = 3f,
+                MaxHealth = 500f,
+                BaseAttackDamage = 5f,
                 IsIgnorePlatform = true,
 
                 // JumpCooldown = 3.0f,
@@ -711,8 +696,8 @@ public class PlayScene : Scene
                 Name = "Cerberus",
                 Viewport = ViewportManager.Get("Cerberus"),
                 DogSound = _Dog_sound,
-                MaxHealth = 500,
-                BaseAttackDamage = 3f,
+                MaxHealth = 300,
+                BaseAttackDamage = 5f,
 
                 // JumpCooldown = 3.0f,
                 BaseJumpStrength = 550,
@@ -726,7 +711,7 @@ public class PlayScene : Scene
                 Name = "Rhulk",
                 Viewport = ViewportManager.Get("Rhulk"),
                 MaxHealth = 1000f,
-                BaseAttackDamage = 3f,
+                BaseAttackDamage = 10f,
 
                 LaserSound = _Rhulk_LaserSound,
                 DashSound = _Rhulk_DashSound,
@@ -761,32 +746,32 @@ public class PlayScene : Scene
         //TODO : Change these to real ITEM ID
         ItemManager.AddGameItem(ItemID.HealthPotion,
             new Potion(_itemTexture, ItemType.Consumable){
-                Name =  "HealthPotion",
-                Description = "Test HealthPotion Description",
+                Name =  "Health Potion",
+                Description = "Restore 30 HP",
                 Viewport = ViewportManager.Get("Potion_Health"),
                 UseSound = _potionUseSound
             });
 
         ItemManager.AddGameItem(ItemID.SpeedPotion,
             new SpeedPotion(_itemTexture, ItemType.Consumable){
-                Name =  "SpeedPotion",
-                Description = "Test SpeedPotion Description",
+                Name =  "Speed Potion",
+                Description = "Increase your movement speed",
                 Viewport = ViewportManager.Get("Potion_Speed"),
                 UseSound = _potionUseSound
             });
 
         ItemManager.AddGameItem(ItemID.JumpPotion,
             new JumpPotion(_itemTexture, ItemType.Consumable){
-                Name =  "jumppotion",
-                Description = "Test JumpPotion Description",
+                Name =  "Jump Potion",
+                Description = "Increase your jump height",
                 Viewport = ViewportManager.Get("Potion_Jump"),
                 UseSound = _potionUseSound
             });
 
         ItemManager.AddGameItem(ItemID.Barrier,
             new Barrier(_itemTexture, ItemType.Consumable){
-                Name =  "barrier",
-                Description = "Test Barrier Description",
+                Name =  "Barrier",
+                Description = "Give you a shield",
                 Viewport = ViewportManager.Get("Barrier"),
                 UseSound = _potionUseSound // Temp
             });
@@ -794,7 +779,7 @@ public class PlayScene : Scene
         ItemManager.AddGameItem(ItemID.LifeUp,
             new LifeUp(_itemTexture, ItemType.Consumable){
                 Name =  "1Up",
-                Description = "Test LifeUp Description",
+                Description = "The soul can be revived once more....",
                 Viewport = ViewportManager.Get("LifeUp"),
                 UseSound = _potionUseSound // Temp
             });
@@ -802,21 +787,21 @@ public class PlayScene : Scene
         ItemManager.AddGameItem(ItemID.SpeedBoots,
             new SpeedBoots(_itemTexture, ItemType.Accessory){
                 Name =  "SpeedBoots",
-                Description = "Test SpeedBoots Description",
+                Description = "Increase your movement speed",
                 Viewport = ViewportManager.Get("Speed_Boots")
             });
 
         ItemManager.AddGameItem(ItemID.CursedGauntlet,
             new CursedGauntlet(_itemTexture, ItemType.Accessory){
                 Name =  "CursedGauntlet",
-                Description = "Test CursedGauntlet Description",
+                Description = "You Have been cursed, Increase your damage but cost more MP",
                 Viewport = ViewportManager.Get("CursedGauntlet")
             });
 
         ItemManager.AddGameItem(ItemID.Sword,
             new Sword(_itemTexture, ItemType.MeleeWeapon){
                 Name =  "Sword",
-                Description = "Test Sword Description",
+                Description = "Use Sword instaed of your fist. Damage 50",
                 Viewport = ViewportManager.Get("Sword"),
                 SlashSound = _swordSlashSound,
             });
@@ -824,7 +809,7 @@ public class PlayScene : Scene
         ItemManager.AddGameItem(ItemID.Gun,
             new Gun(_itemTexture, ItemType.RangeWeapon){
                 Name =  "Gun",
-                Description = "Test Gun Description",
+                Description = "More fire power. Damage 100",
                 Viewport = ViewportManager.Get("Gun"),
                 ShootSound = _gunshotSound,
             });
@@ -832,14 +817,14 @@ public class PlayScene : Scene
         ItemManager.AddGameItem(ItemID.Staff,
             new Staff(_itemTexture, ItemType.RangeWeapon){
                 Name =  "Staff",
-                Description = "Test Staff Description",
+                Description = "Deal Explosion 50 Damage",
                 MPCost = 10,
                 ShootSound = _fireBallShootingSound,
 
                 FireBall = new FireBall(_projectileTexture)
                 {
                     Name = "FireBall",
-                    BaseDamageAmount = 30f,
+                    BaseDamageAmount = 50f,
                     Speed = 500f,
                     Radius = 30f,
                     ExplosionDuration = 0.5f,
@@ -864,7 +849,7 @@ public class PlayScene : Scene
                     Viewport = ViewportManager.Get("Soul_Minion"),
                     soulBullet = new SoulBullet(_projectileTexture){
                         Name = "Soul Bullet",
-                        BaseDamageAmount = 15f,
+                        BaseDamageAmount = 5f,
                         Speed = 150f,
                         Viewport = ViewportManager.Get("Soul_Bullet")
                     }
@@ -875,7 +860,7 @@ public class PlayScene : Scene
         ItemManager.AddGameItem(ItemID.Grenade,
             new Grenade(_itemTexture, ItemType.Consumable){
                 Name =  "Grenade",
-                Description = "Test GrenadeTemp Description",
+                Description = "High damage grenade",
                 Viewport = ViewportManager.Get("Grenade"),
                 UseSound = _potionUseSound, // Temp
 
@@ -883,7 +868,7 @@ public class PlayScene : Scene
                 {
                     // Grenade properties
                     Name = "GrenadeProjectile",
-                    BaseDamageAmount = 30f,
+                    BaseDamageAmount = 100f,
                     Speed = 450f,
                     Radius = 50f,
                     ExplosionDuration = 0.5f,

@@ -81,19 +81,16 @@ namespace FinalComGame
             float previousVelocityX = Velocity.X; 
             Position.X += Velocity.X * deltaTime;
 
-            for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
+            foreach (Vector2 offset in _collisionOffsets)
             {
-                for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
+                Vector2 checkPosition = new Vector2(Position.X + offset.X, Position.Y + offset.Y);
+                Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+                if(tile != null && tile.IsSolid)
                 {
-                    Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
-                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && tile.IsSolid)
+                    //Bounce
+                    if(ResolveHorizontalCollision(tile))
                     {
-                        //Bounce
-                        if(ResolveHorizontalCollision(tile))
-                        {
-                            Velocity.X = -previousVelocityX / 2;
-                        }
+                        Velocity.X = -previousVelocityX / 2;
                     }
                 }
             }
@@ -104,22 +101,19 @@ namespace FinalComGame
             float previousVelocityY = Velocity.Y; 
             Position.Y += Velocity.Y * deltaTime;
 
-            for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
+            foreach (Vector2 offset in _collisionOffsets)
             {
-                for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
+                Vector2 checkPosition = new Vector2(Position.X + offset.X, Position.Y + offset.Y);
+                Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+
+                if(tile != null && tile.IsSolid)
                 {
-                    Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
-                    Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                    if(tile != null && tile.IsSolid)
+                    //Bounce
+                    if(ResolveVerticalCollision(tile))
                     {
-                        //Bounce
-                        if(ResolveVerticalCollision(tile))
-                        {
-                            Velocity.Y = -previousVelocityY / 1.2f;
-                            Velocity.X /= 1.2f;
-                        }
+                        Velocity.Y = -previousVelocityY / 1.2f;
+                        Velocity.X /= 1.2f;
                     }
-                    
                 }
             }
             foreach (var platformEnemy in gameObjects.OfType<PlatformEnemy>())
