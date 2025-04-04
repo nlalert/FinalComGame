@@ -722,3 +722,15 @@
 /processorParam:Quality=Best
 /build:Tower_sound.wav
 
+#begin Wolf_death_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Wolf_death_sound.wav
+
+#begin Wolf_hurt_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Wolf_hurt_sound.wav
+
