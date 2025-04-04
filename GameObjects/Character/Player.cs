@@ -48,13 +48,6 @@ namespace FinalComGame
         private float _jumpBufferCounter;
         public AbilityManager Abilities;
 
-        // Grappring Hook
-        public Texture2D _hookHeadTexture;
-        public Texture2D _ropeTexture;
-        private Vector2 GrapplingPosition;
-        public bool _isGrappling;
-        public bool _haveLineOfSight = false;
-
         // Dash 
         private bool _isDashing;
         public float DashSpeed;
@@ -68,6 +61,14 @@ namespace FinalComGame
         public float GlideGravityScale;
         public float GlideMaxFallSpeed;        
         public float GlideMP;
+
+        // Grappring Hook
+        public Texture2D _hookHeadTexture;
+        public Texture2D _ropeTexture;
+        private Vector2 GrapplingPosition;
+        public bool _isGrappling;
+        public bool _haveLineOfSight = false;
+        public float GrappleMP;
 
         // Charge Shot properties
         private bool _isCharging;
@@ -283,7 +284,7 @@ namespace FinalComGame
 
         private void RegenerateMP(float deltaTime)
         {
-            if(_MPRegenTime < MPRegenCooldown && !_isCharging)
+            if(_MPRegenTime < MPRegenCooldown && !_isCharging && !_isGrappling)
                 _MPRegenTime += deltaTime;
 
             else if(_MPRegenTime >= MPRegenCooldown){
@@ -791,11 +792,9 @@ namespace FinalComGame
                     _isClimbing = false;
             }
             
-            if(Singleton.Instance.IsKeyJustPressed(Grapple) && Abilities.IsAbilityUnlocked(AbilityType.Grapple)){
+            if(Singleton.Instance.IsKeyJustPressed(Grapple) && Abilities.IsAbilityUnlocked(AbilityType.Grapple) && MP >= GrappleMP){
                 if (GrapplingPosition != Vector2.Zero && HaveLineOfSight(tileMap))
-                {
                     FireGrapplingHook(gameObjects);
-                }
             }
             
             if (Singleton.Instance.IsKeyJustPressed(Interact))
@@ -1361,6 +1360,7 @@ namespace FinalComGame
             if (!Abilities.IsAbilityUnlocked(AbilityType.Grapple) || _grapplingHook != null)
                 return;
 
+            UseMP(GrappleMP);
             Console.WriteLine("shooting grapple");
             Vector2 AimDirection = GrapplingPosition - GetPlayerCenter();
             _grapplingHook = new GrapplingHook(_hookHeadTexture){

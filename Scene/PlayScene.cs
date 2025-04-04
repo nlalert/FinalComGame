@@ -420,8 +420,8 @@ public class PlayScene : Scene
         else if(Singleton.Instance.Stage==3){
              SignBoard GraplingTutorialSign = new SignBoard(
                 _whiteTexture,
-                "Press R to Grapple to the wall",
-                TileMap.GetTileWorldPositionAt(12, 30),  // TopLeft Position  // TODO : More dynamic
+                "Press R to Grapple onto the hook",
+                TileMap.GetTileWorldPositionAt(64, 66),  // TopLeft Position  // TODO : More dynamic
                 200,                    // Width
                 48,                     // Height
                 new Color(10, 10, 40, 220), // Dark blue, semi-transparent
@@ -457,11 +457,13 @@ public class PlayScene : Scene
             DashSpeed = 400f,
             DashDuration = 0.3f, // Dash lasts for 0.25 seconds
             DashCooldown = 0.2f,
-            DashMP = 20f,
+            DashMP = 25f,
 
             GlideGravityScale = 0.3f, // How much gravity affects gliding (lower = slower fall)
             GlideMaxFallSpeed = 80f, // Maximum fall speed while gliding
             GlideMP = 20f, // MP cost per second while gliding
+
+            GrappleMP = 30f, // MP cost when use Grappling Hook
 
             MaxChargeTime = 2.0f, // Maximum charge time in seconds
             MinChargePower = 1.0f, // Minimum damage/speed multiplier
