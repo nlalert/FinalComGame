@@ -34,11 +34,9 @@ public class PlayScene : Scene
     private Texture2D _rhulkTexture;
     private Texture2D _queueTexture;
     private Texture2D _itemSlotTexture;
-    private Song _songlevel3;
-    private Song _songlevel2;
-    private Song _songlevel1;
-    private Song _songlevel0;
+
     // Sound 
+    private Song[] _songs;
     private SoundEffect _jumpSound;
     private SoundEffect _dashSound;
     private SoundEffect _punchSound;
@@ -63,6 +61,7 @@ public class PlayScene : Scene
         _graphics.ApplyChanges();
 
         _gameObjects = new List<GameObject>();
+        _songs = new Song[4];
     }
 
     public override void LoadContent(SpriteBatch spriteBatch)
@@ -124,12 +123,11 @@ public class PlayScene : Scene
         _pickUpSound = _content.Load<SoundEffect>("PickUp");
 
         // Load songs
-        _songlevel0 = _content.Load<Song>("ChillSong");
-        _songlevel1 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
-        _songlevel2 = _content.Load<Song>("Eternity's Divide OST  Enter Cold Fusion Core");
-        _songlevel3 = _content.Load<Song>("Eternity's Divide OST  Checkpoint 2");
-        _song = _songlevel0;//default song
-
+        _songs[0] = _content.Load<Song>("ChillSong");
+        _songs[1] = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
+        _songs[2] = _content.Load<Song>("Eternity's Divide OST  Enter Cold Fusion Core");
+        _songs[3] = _content.Load<Song>("Eternity's Divide OST  Checkpoint 2");
+        _song = _songs[0];//default song
     }
 
     public override void Update(GameTime gameTime)
@@ -313,22 +311,7 @@ public class PlayScene : Scene
         SpawnEnemies();
         SpawnItems();
 
-        if(Singleton.Instance.Stage == 0)
-        {
-            _song = _songlevel0;
-        }
-        if(Singleton.Instance.Stage == 1)
-        {
-            _song = _songlevel1;
-        }
-        if(Singleton.Instance.Stage == 2)
-        {
-            _song = _songlevel2;
-        }
-        if(Singleton.Instance.Stage == 3)
-        {
-            _song = _songlevel3;
-        }
+        _song = _songs[Singleton.Instance.Stage];
 
         foreach (GameObject s in _gameObjects)
         {
