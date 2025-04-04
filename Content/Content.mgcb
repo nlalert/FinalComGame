@@ -680,3 +680,9 @@
 /processorParam:TextureFormat=Color
 /build:Title.png
 
+#begin Tower_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Tower_sound.wav
+

@@ -56,6 +56,7 @@ public class PlayScene : Scene
     private SoundEffect _Rhulk_DashSound;
     private SoundEffect _Dog_sound;
     private SoundEffect _DemonAttack_sound;
+    private SoundEffect _Tower_sound;
     private StageManager _stageManager;
 
     public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
@@ -130,6 +131,7 @@ public class PlayScene : Scene
         _Rhulk_LaserSound = _content.Load<SoundEffect>("Laser_sound");
         _Dog_sound = _content.Load<SoundEffect>("Dog_sound");
         _DemonAttack_sound = _content.Load<SoundEffect>("DemonAttack_sound");
+        _Tower_sound = _content.Load<SoundEffect>("Tower_sound");
 
         // Load songs
         _songlevel0 = _content.Load<Song>("ChillSong");
@@ -646,9 +648,8 @@ public class PlayScene : Scene
             new TowerEnemy(_towerTexture){
                 Name = "TowerEnemy",
                 Viewport = ViewportManager.Get("TowerEnemy"),
-
+                Tower_sound = _Tower_sound,
                 MaxHealth = 150f,
-
                 HitSound = _hitSound,
 
                 TowerBullet = new TowerBullet(_projectileTexture)
