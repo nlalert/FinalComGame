@@ -122,13 +122,13 @@ public class StageManager
 
     private void LoadParallaxBackgoundTextures(ContentManager content)
     {
-        // _backgroundLayer1 = content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_bg");  // Farthest layer
-        // _backgroundLayer2 = content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_mg");  // Middle layer
-        // _backgroundLayer3 = content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_fg");  // Closest layer
+        _backgroundLayer1 = content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_bg");  // Farthest layer
+        _backgroundLayer2 = content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_mg");  // Middle layer
+        _backgroundLayer3 = content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_fg");  // Closest layer
 
-        _backgroundLayer1 = content.Load<Texture2D>("Level_1_Parallax_bg");  // Farthest layer
-        _backgroundLayer2 = content.Load<Texture2D>("Level_1_Parallax_mg");  // Middle layer
-        _backgroundLayer3 = content.Load<Texture2D>("Level_1_Parallax_fg");  // Closest layer
+        // _backgroundLayer1 = content.Load<Texture2D>("Level_2_Parallax_bg");  // Farthest layer
+        // _backgroundLayer2 = content.Load<Texture2D>("Level_2_Parallax_mg");  // Middle layer
+        // _backgroundLayer3 = content.Load<Texture2D>("Level_2_Parallax_fg");  // Closest layer
     }
 
     public void UpdateAmbushAreas(GameTime gameTime, List<GameObject> gameObjects)

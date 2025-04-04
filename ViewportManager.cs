@@ -32,6 +32,8 @@ public class ViewportManager
         {"Cerberus", new Rectangle(0, 0, 64, 48)},
         {"Rhulk", new Rectangle(0, 0, 32, 64)},
         {"Rhulk_Laser", new Rectangle(0, 0, 10, 200)},
+
+        {"Queue", new Rectangle(0, 0, 80, 64)},
         
         {"Potion_Health", new Rectangle(64, 64, 32, 32)},
         {"Potion_Speed", new Rectangle(0, 96, 32, 32)},
