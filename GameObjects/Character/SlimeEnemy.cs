@@ -129,7 +129,7 @@ namespace FinalComGame
             if (!_isJumping)
             {
                 _isJumping = true;
-                int horizontalDir = (Singleton.Instance.Player != null && HaveLineOfSight(tileMap)) ? Math.Sign(Singleton.Instance.Player.GetPlayerCenter().X - Position.X) : (Singleton.Instance.Random.Next(0, 2) == 0) ? 1 : -1;
+                int horizontalDir = (Singleton.Instance.Player != null && HaveLineOfSightOfPlayer(tileMap)) ? Math.Sign(Singleton.Instance.Player.GetPlayerCenter().X - Position.X) : (Singleton.Instance.Random.Next(0, 2) == 0) ? 1 : -1;
                 // float horizontalDir = Math.Sign(player.GetPlayerCenter().X - Position.X);
                 float horizontalSpeed = JumpStrength * 0.5f * (0.8f + 0.4f * (float)Singleton.Instance.Random.NextDouble());
                 Velocity = new Vector2(horizontalDir * horizontalSpeed, -JumpStrength * 0.8f);
