@@ -126,8 +126,8 @@ public class PlayScene : Scene
         // Load songs
         _songlevel0 = _content.Load<Song>("ChillSong");
         _songlevel1 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
-        _songlevel2 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
-        _songlevel3 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
+        _songlevel2 = _content.Load<Song>("Eternity's Divide OST  Enter Cold Fusion Core");
+        _songlevel3 = _content.Load<Song>("Eternity's Divide OST  Checkpoint 2");
         _song = _songlevel0;//default song
 
     }
@@ -332,7 +332,7 @@ public class PlayScene : Scene
         {
             _song = _songlevel3;
         }
-        
+
         foreach (GameObject s in _gameObjects)
         {
             s.Reset();
