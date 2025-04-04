@@ -734,11 +734,11 @@
 /processorParam:Quality=Best
 /build:Tower_death_sound.wav
 
-#begin Tower_Hit_sound.wav
+#begin Tower_hurt_sound.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Tower_Hit_sound.wav
+/build:Tower_hurt_sound.wav
 
 #begin Tower_sound.wav
 /importer:WavImporter
