@@ -123,10 +123,12 @@ public class PlayScene : Scene
         _fireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
         _pickUpSound = _content.Load<SoundEffect>("PickUp");
 
+        // Load songs
         _songlevel0 = _content.Load<Song>("ChillSong");
         _songlevel1 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
         _songlevel2 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
         _songlevel3 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
+        _song = _songlevel0;//default song
 
     }
 
