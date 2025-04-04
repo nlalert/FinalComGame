@@ -921,7 +921,6 @@ public class PlayScene : Scene
         ItemSlot MeleeWeaponSlot = new ItemSlot(
             Inventory.MELEE_SLOT,
             new Rectangle(490, slotY, 50, 50),
-            _itemSlotTexture,
             _itemSlotTexture
         );
         
@@ -943,7 +942,6 @@ public class PlayScene : Scene
         ItemSlot RangeWeaponSlot = new ItemSlot(
             Inventory.RANGE_SLOT,
             new Rectangle(550, slotY, 50, 50),
-            _itemSlotTexture,
             _itemSlotTexture
         );
         
@@ -965,7 +963,6 @@ public class PlayScene : Scene
         ItemSlot ItemSlot1 = new ItemSlot(
             Inventory.ITEM_SLOT_1,
             new Rectangle(610, slotY, 50, 50),
-            _itemSlotTexture,
             _itemSlotTexture
         );
         
@@ -979,7 +976,6 @@ public class PlayScene : Scene
         ItemSlot ItemSlot2 = new ItemSlot(
             Inventory.ITEM_SLOT_2,
             new Rectangle(670, slotY, 50, 50),
-            _itemSlotTexture,
             _itemSlotTexture
         );
         
