@@ -46,41 +46,49 @@ public class PauseMenu : Scene
             TextUI.TextAlignment.Center
         );
 
-        int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
+        int ButtonWidth = Singleton.SCREEN_WIDTH / 3;
         int ButtonHeight = 80;
 
+        Texture2D ResumeButtonTexture = _content.Load<Texture2D>("ResumeButtonStatic");
+        Texture2D ResumeHoverButtonTexture = _content.Load<Texture2D>("ResumeButtonHover");
+        Texture2D RestartButtonTexture = _content.Load<Texture2D>("RestartButtonStatic");
+        Texture2D RestartHoverButtonTexture = _content.Load<Texture2D>("RestartButtonHover");
+        Texture2D SoundSettingButtonTexture = _content.Load<Texture2D>("SoundSettingButtonStatic");
+        Texture2D SoundSettingHoverButtonTexture = _content.Load<Texture2D>("SoundSettingButtonHover");
+        Texture2D MainmenuButtonTexture = _content.Load<Texture2D>("MainmenuButtonStatic");
+        Texture2D MainmenuHoverButtonTexture = _content.Load<Texture2D>("MainmenuButtonHover");
         _resumeButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 6, ButtonWidth, ButtonHeight),
-            _button,
-            _button,
-            "Resume",
+            ResumeButtonTexture,
+            ResumeHoverButtonTexture,
+            "",
             Color.Wheat
         );
         _resumeButton.OnClick += ResumeButton_OnClick;
 
         _restartButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 6, ButtonWidth, ButtonHeight),
-            _button,
-            _button,
-            "Restart Game",
+            RestartButtonTexture,
+            RestartHoverButtonTexture,
+            "",
             Color.Wheat
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
         _settingsButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 6, ButtonWidth, ButtonHeight),
-            _button,
-            _button,
-            "Settings",
+            SoundSettingButtonTexture,
+            SoundSettingHoverButtonTexture,
+            "",
             Color.Wheat
         );
         _settingsButton.OnClick += SettingButton_OnClick;
 
         _mainmenuButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
-            _button,
-            _button,
-            "Back to Main Menu",
+            MainmenuButtonTexture,
+            MainmenuHoverButtonTexture,
+            "",
             Color.Wheat
         );
         _mainmenuButton.OnClick += MainMenuButton_OnClick;
