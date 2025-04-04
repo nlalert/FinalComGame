@@ -50,17 +50,12 @@ public class PauseMenu : Scene
         int ButtonHeight = 80;
 
         Texture2D ResumeButtonTexture = _content.Load<Texture2D>("ResumeButtonStatic");
-        Texture2D ResumeHoverButtonTexture = _content.Load<Texture2D>("ResumeButtonHover");
         Texture2D RestartButtonTexture = _content.Load<Texture2D>("RestartButtonStatic");
-        Texture2D RestartHoverButtonTexture = _content.Load<Texture2D>("RestartButtonHover");
         Texture2D SoundSettingButtonTexture = _content.Load<Texture2D>("SoundSettingButtonStatic");
-        Texture2D SoundSettingHoverButtonTexture = _content.Load<Texture2D>("SoundSettingButtonHover");
         Texture2D MainmenuButtonTexture = _content.Load<Texture2D>("MainmenuButtonStatic");
-        Texture2D MainmenuHoverButtonTexture = _content.Load<Texture2D>("MainmenuButtonHover");
         _resumeButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 6, ButtonWidth, ButtonHeight),
             ResumeButtonTexture,
-            ResumeHoverButtonTexture,
             "",
             Color.Wheat
         );
@@ -69,7 +64,6 @@ public class PauseMenu : Scene
         _restartButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 6, ButtonWidth, ButtonHeight),
             RestartButtonTexture,
-            RestartHoverButtonTexture,
             "",
             Color.Wheat
         );
@@ -78,7 +72,6 @@ public class PauseMenu : Scene
         _settingsButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 6, ButtonWidth, ButtonHeight),
             SoundSettingButtonTexture,
-            SoundSettingHoverButtonTexture,
             "",
             Color.Wheat
         );
@@ -87,7 +80,6 @@ public class PauseMenu : Scene
         _mainmenuButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
             MainmenuButtonTexture,
-            MainmenuHoverButtonTexture,
             "",
             Color.Wheat
         );

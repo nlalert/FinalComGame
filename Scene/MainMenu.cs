@@ -10,7 +10,6 @@ namespace FinalComGame
 {
     public class MainMenu : Scene
     {
-        private Texture2D _button;
         private ImageUI _title;
         private Button _startButton;
         private Button _exitButton;
@@ -38,7 +37,6 @@ namespace FinalComGame
         {
             _spriteBatch = spriteBatch;
             _TitleTexture = _content.Load<Texture2D>("Title");
-            _button = _content.Load<Texture2D>("ItemSlot"); //Change Later
             // Load parallax layers
             _bgTexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
             _mgTexture = _content.Load<Texture2D>("Level_1_Parallax_mg");
@@ -118,19 +116,14 @@ namespace FinalComGame
             );
 
             Texture2D StartButtonTexture = _content.Load<Texture2D>("StaticStartButton");
-            Texture2D StartHoverButtonTexture = _content.Load<Texture2D>("HoverStartButton");
             Texture2D ExitButtonTexture = _content.Load<Texture2D>("StaticExitButton");
-            Texture2D ExitHoverButtonTexture = _content.Load<Texture2D>("HoverExitButton");
             Texture2D PlayButtonTexture = _content.Load<Texture2D>("PlayButtonStatic");
-            Texture2D PlayHoverButtonTexture = _content.Load<Texture2D>("PlayButtonHover");
             Texture2D SkipButtonTexture = _content.Load<Texture2D>("SkipButtonStatic");
-            Texture2D SkipHoverButtonTexture = _content.Load<Texture2D>("SkipButtonHover");
             int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
             int ButtonHeight = 100;
             _startButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 4, ButtonWidth, ButtonHeight),
                 StartButtonTexture,
-                StartHoverButtonTexture,
                 "",
                 Color.Wheat
             );
@@ -140,7 +133,6 @@ namespace FinalComGame
             _exitButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 4, ButtonWidth, ButtonHeight),
                 ExitButtonTexture,
-                ExitHoverButtonTexture,
                 "",
                 Color.Wheat
             );
@@ -149,7 +141,6 @@ namespace FinalComGame
             _playTutorialButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth - 100) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight - 50) / 3, ButtonWidth + 100, ButtonHeight + 50),
                 PlayButtonTexture,
-                PlayHoverButtonTexture,
                 "",
                 Color.Wheat
             );
@@ -158,7 +149,6 @@ namespace FinalComGame
             _skipTutorialButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth + 300) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight + 50) * 2 / 3, ButtonWidth - 300, ButtonHeight - 50),
                 SkipButtonTexture,
-                SkipHoverButtonTexture,
                 "",
                 Color.Wheat
             );

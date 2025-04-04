@@ -47,7 +47,6 @@ public class GameOverScene : Scene
         _restartButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 5, ButtonWidth, ButtonHeight),
             Button,
-            Button,
             "Restart",
             Color.Wheat
         );
@@ -56,7 +55,6 @@ public class GameOverScene : Scene
         _mainmenuButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 5, ButtonWidth, ButtonHeight),
             Button,
-            Button,
             "Back to Main Menu",
             Color.Wheat
         );
@@ -64,7 +62,6 @@ public class GameOverScene : Scene
 
         _exitButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2, (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 5, ButtonWidth, ButtonHeight),
-            Button,
             Button,
             "Exit to Desktop",
             Color.Wheat

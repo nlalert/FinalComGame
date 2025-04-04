@@ -13,18 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin BackButtonHover.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:BackButtonHover.png
-
 #begin BackButtonStatic.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -181,30 +169,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:HookHead.png
-
-#begin HoverExitButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:HoverExitButton.png
-
-#begin HoverStartButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:HoverStartButton.png
 
 #begin Items.png
 /importer:TextureImporter
@@ -398,18 +362,6 @@
 /processorParam:TextureFormat=Color
 /build:Level_3_Parallax_mg.png
 
-#begin MainmenuButtonHover.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:MainmenuButtonHover.png
-
 #begin MainmenuButtonStatic.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -439,18 +391,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Pickup.wav
-
-#begin PlayButtonHover.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:PlayButtonHover.png
 
 #begin PlayButtonStatic.png
 /importer:TextureImporter
@@ -500,18 +440,6 @@
 /processorParam:TextureFormat=Color
 /build:Queue.png
 
-#begin RestartButtonHover.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:RestartButtonHover.png
-
 #begin RestartButtonStatic.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -523,18 +451,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:RestartButtonStatic.png
-
-#begin ResumeButtonHover.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:ResumeButtonHover.png
 
 #begin ResumeButtonStatic.png
 /importer:TextureImporter
@@ -583,18 +499,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Skeleton.png
-
-#begin SkipButtonHover.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SkipButtonHover.png
 
 #begin SkipButtonStatic.png
 /importer:TextureImporter
@@ -655,18 +559,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SoundBar.png
-
-#begin SoundSettingButtonHover.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SoundSettingButtonHover.png
 
 #begin SoundSettingButtonStatic.png
 /importer:TextureImporter
