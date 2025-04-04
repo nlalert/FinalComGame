@@ -73,14 +73,15 @@ public class Settings : Scene
             "{0}%" // value format
         );
 
-        Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later 
-        int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
+        Texture2D BackButtonTexture = _content.Load<Texture2D>("BackButtonStatic");
+        Texture2D BackHoverButtonTexture = _content.Load<Texture2D>("BackButtonHover");
+        int ButtonWidth = Singleton.SCREEN_WIDTH / 3;
         int ButtonHeight = 80;
         _backButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
-            Button,
-            Button,
-            "Back to Pause Menu",
+            BackButtonTexture,
+            BackHoverButtonTexture,
+            "",
             Color.Wheat
         );
         _backButton.OnClick += BackButton_OnClick;
