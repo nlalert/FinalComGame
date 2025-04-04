@@ -97,6 +97,12 @@
 /processorParam:TextureFormat=Color
 /build:Demon.png
 
+#begin Eternity's Divide OST  Snowstorm.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Eternity's Divide OST  Snowstorm.mp3
+
 #begin FireballExplosion.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

@@ -32,9 +32,12 @@ public class PlayScene : Scene
     private Texture2D _giantSlimeTexture;
     private Texture2D _cerberusTexture;
     private Texture2D _rhulkTexture;
-     private Texture2D _queueTexture;
+    private Texture2D _queueTexture;
     private Texture2D _itemSlotTexture;
-
+    private Song _songlevel3;
+    private Song _songlevel2;
+    private Song _songlevel1;
+    private Song _songlevel0;
     // Sound 
     private SoundEffect _jumpSound;
     private SoundEffect _dashSound;
@@ -48,7 +51,7 @@ public class PlayScene : Scene
     private SoundEffect _fireBallShootingSound;
     private SoundEffect _fireBallExplosionSound;
     private SoundEffect _pickUpSound;
-
+    
     private StageManager _stageManager;
 
     public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
@@ -101,7 +104,7 @@ public class PlayScene : Scene
 
         //UI
         _itemSlotTexture = _content.Load<Texture2D>("ItemSlot");
-
+        //load song
     }
 
     private void LoadSounds()
@@ -120,7 +123,11 @@ public class PlayScene : Scene
         _fireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
         _pickUpSound = _content.Load<SoundEffect>("PickUp");
 
-        _song = _content.Load<Song>("ChillSong");
+        _songlevel0 = _content.Load<Song>("ChillSong");
+        _songlevel1 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
+        _songlevel2 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
+        _songlevel3 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
+
     }
 
     public override void Update(GameTime gameTime)
@@ -231,6 +238,23 @@ public class PlayScene : Scene
             
         Singleton.Instance.Stage++;
 
+        if(Singleton.Instance.Stage == 0)
+        {
+            _song = _songlevel0;
+        }
+        if(Singleton.Instance.Stage == 1)
+        {
+            _song = _songlevel1;
+        }
+        if(Singleton.Instance.Stage == 1)
+        {
+            _song = _songlevel2;
+        }
+        if(Singleton.Instance.Stage == 1)
+        {
+            _song = _songlevel3;
+        }
+        
         if (Singleton.Instance.Stage >= 4){
             Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
         }
