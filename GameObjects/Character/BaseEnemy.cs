@@ -198,66 +198,29 @@ namespace FinalComGame {
         public virtual void OnLandVerticle(){
 
         }
+        /// <summary>
+        /// Enemy look for player with line of sight
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public bool HaveLineOfSight(TileMap tileMap){
+            if (Singleton.Instance.Player == null) return false;
+            
+            Vector2 enemyPosition = Position;
+            Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
+            
+            float step = Singleton.TILE_SIZE; // Tile size or step size for checking
+            Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);
+            Vector2 checkPosition = enemyPosition;
 
-        protected bool HaveLineOfSight(TileMap tileMap)
-        {
-            if (!IsWithinDetectionRange())
-                return false;
-            
-            return RaycastToPlayer(tileMap);
-        }
-
-        protected bool IsWithinDetectionRange()
-        {
-            float distanceToPlayer = Vector2.Distance(Position, Singleton.Instance.Player.GetPlayerCenter());
-            
-            return distanceToPlayer <= DetectionRange;
-        }
-
-        protected bool RaycastToPlayer(TileMap tileMap)
-        {
-            // Convert to integer grid coordinates for Bresenham's algorithm
-            int x0 = (int)(Position.X / Singleton.TILE_SIZE);
-            int y0 = (int)(Position.Y / Singleton.TILE_SIZE);
-            int x1 = (int)(Singleton.Instance.Player.GetPlayerCenter().X / Singleton.TILE_SIZE);
-            int y1 = (int)(Singleton.Instance.Player.GetPlayerCenter().Y / Singleton.TILE_SIZE);
-            
-            // Calculate deltas and steps
-            int dx = Math.Abs(x1 - x0);
-            int dy = -Math.Abs(y1 - y0);
-            int sx = x0 < x1 ? 1 : -1;
-            int sy = y0 < y1 ? 1 : -1;
-            int err = dx + dy;
-            
-            while (true)
+            while (Vector2.Distance(checkPosition, playerPosition) > step)
             {
-                // Check if we've reached the target position
-                if (x0 == x1 && y0 == y1)
-                    return true;
-                
-                // Check if the current grid position contains an obstacle
-                Vector2 gridPos = new Vector2(x0, y0);
-                Tile tile = tileMap.GetTileAtGridPosition(gridPos);
-                
-                if (tile != null && tile.IsSolid)
-                    return false; // Line of sight is blocked
-                
-                // Bresenham's algorithm to find the next point
-                int e2 = 2 * err;
-                if (e2 >= dy)
+                checkPosition += direction * step;
+                if (tileMap.IsObstacle(checkPosition))
                 {
-                    if (x0 == x1) break;
-                    err += dy;
-                    x0 += sx;
-                }
-                if (e2 <= dx)
-                {
-                    if (y0 == y1) break;
-                    err += dx;
-                    y0 += sy;
+                    return false; // Blocked by an obstacle
                 }
             }
-
             return true;
         }
 
