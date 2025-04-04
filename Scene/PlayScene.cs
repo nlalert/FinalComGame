@@ -34,6 +34,7 @@ public class PlayScene : Scene
     private Texture2D _rhulkTexture;
     private Texture2D _queueTexture;
     private Texture2D _itemSlotTexture;
+    private Texture2D _toolTipTexture;
 
     // Sound 
     private Song[] _songs;
@@ -115,6 +116,7 @@ public class PlayScene : Scene
 
         //UI
         _itemSlotTexture = _content.Load<Texture2D>("ItemSlot");
+        _toolTipTexture = _content.Load<Texture2D>("ButtonTexture"); // TODO: Change to REAL Tooltip texture
         //load song
     }
 
@@ -759,7 +761,7 @@ public class PlayScene : Scene
     private void CreateItemPrefabs()
     {
         //set for all item
-        Item.TooltipBackgroundTexture = _itemSlotTexture;
+        Item.TooltipBackgroundTexture = _toolTipTexture;
         Item.PickUpSound = _pickUpSound;
 
         //TODO : Change these to real ITEM ID
