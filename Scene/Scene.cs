@@ -22,6 +22,7 @@ public class Scene
 
     protected Song _song;
 
+
     public virtual void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
         _gameManager = gameManager;
@@ -34,6 +35,7 @@ public class Scene
 
     public virtual void LoadContent(SpriteBatch spriteBatch)
     {
+        
         _spriteBatch = spriteBatch;
     }
 

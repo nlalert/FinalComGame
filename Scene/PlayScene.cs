@@ -32,9 +32,12 @@ public class PlayScene : Scene
     private Texture2D _giantSlimeTexture;
     private Texture2D _cerberusTexture;
     private Texture2D _rhulkTexture;
-     private Texture2D _queueTexture;
+    private Texture2D _queueTexture;
     private Texture2D _itemSlotTexture;
-
+    private Song _songlevel3;
+    private Song _songlevel2;
+    private Song _songlevel1;
+    private Song _songlevel0;
     // Sound 
     private SoundEffect _jumpSound;
     private SoundEffect _dashSound;
@@ -48,7 +51,7 @@ public class PlayScene : Scene
     private SoundEffect _fireBallShootingSound;
     private SoundEffect _fireBallExplosionSound;
     private SoundEffect _pickUpSound;
-
+    
     private StageManager _stageManager;
 
     public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
@@ -101,7 +104,7 @@ public class PlayScene : Scene
 
         //UI
         _itemSlotTexture = _content.Load<Texture2D>("ItemSlot");
-
+        //load song
     }
 
     private void LoadSounds()
@@ -120,7 +123,13 @@ public class PlayScene : Scene
         _fireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
         _pickUpSound = _content.Load<SoundEffect>("PickUp");
 
-        _song = _content.Load<Song>("ChillSong");
+        // Load songs
+        _songlevel0 = _content.Load<Song>("ChillSong");
+        _songlevel1 = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
+        _songlevel2 = _content.Load<Song>("Eternity's Divide OST  Enter Cold Fusion Core");
+        _songlevel3 = _content.Load<Song>("Eternity's Divide OST  Checkpoint 2");
+        _song = _songlevel0;//default song
+
     }
 
     public override void Update(GameTime gameTime)
@@ -211,12 +220,17 @@ public class PlayScene : Scene
 
     public void UpdateAllObjects(GameTime gameTime)
     {
+        float updateDistanceSquared = Singleton.UPDATE_DISTANCE * Singleton.UPDATE_DISTANCE;
+        
         for (int i = 0; i < _numObject; i++)
         {
-            if(_gameObjects[i].IsActive)
-                _gameObjects[i].Update(gameTime, _gameObjects, _stageManager.CollisionTileMap);
+            GameObject g = _gameObjects[i];
+            if (!g.IsActive)
+                continue;
+                
+            if (Vector2.DistanceSquared(g.Position, Singleton.Instance.Player.Position) <= updateDistanceSquared)
+                g.Update(gameTime, _gameObjects, _stageManager.CollisionTileMap);
         }
-        // Console.WriteLine(_gameObjects.Count);
     }
 
     private void UpdateBackGround(GameTime gameTime)
@@ -230,6 +244,8 @@ public class PlayScene : Scene
             Singleton.Instance.Player.Life++; // Reward for clearing stage
             
         Singleton.Instance.Stage++;
+
+        
 
         if (Singleton.Instance.Stage >= 4){
             Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
@@ -296,7 +312,24 @@ public class PlayScene : Scene
         AddSignBoard();
         SpawnEnemies();
         SpawnItems();
-        
+
+        if(Singleton.Instance.Stage == 0)
+        {
+            _song = _songlevel0;
+        }
+        if(Singleton.Instance.Stage == 1)
+        {
+            _song = _songlevel1;
+        }
+        if(Singleton.Instance.Stage == 2)
+        {
+            _song = _songlevel2;
+        }
+        if(Singleton.Instance.Stage == 3)
+        {
+            _song = _songlevel3;
+        }
+
         foreach (GameObject s in _gameObjects)
         {
             s.Reset();
@@ -306,131 +339,136 @@ public class PlayScene : Scene
     private void AddSignBoard()
     {
         // TODO : More dynamic stage management sign
-        if(Singleton.Instance.Stage == 0)
+        switch (Singleton.Instance.Stage)
         {
-            SignBoard WalkTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Press Left or Right Arrow Key to move around!",
-                TileMap.GetTileWorldPositionAt(12, 30),  // TopLeft Position  // TODO : More dynamic
-                200,                    // Width
-                48,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            SignBoard JumpTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Press Space Bar Key to Jump      " +
-                "Longer a you hold Jump Button, Higher the Jump!",
-                TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
-                300,                    // Width
-                64,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            SignBoard ClimbTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Press UP Arrow Key to climb ladder or vines!",
-                TileMap.GetTileWorldPositionAt(55, 22), // TopLeft Position // TODO : More dynamic
-                220,                    // Width
-                48,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            SignBoard DashTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Press SHIFT to Dash pass the gap!",
-                TileMap.GetTileWorldPositionAt(90, 17), // TopLeft Position // TODO : More dynamic
-                160,                    // Width
-                48,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            SignBoard PlatFormJumpTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Jump to get on platform "+     
-                "Press Down to crouch "+
-                "Crouch then Jump to drop below on platform", 
-                TileMap.GetTileWorldPositionAt(123, 16), // TopLeft Position // TODO : More dynamic
-                192,                    // Width
-                96,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            SignBoard ItemTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Preess F to pick up item "+ 
-                "Press (1) (2) to use item",     
-                // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
-                TileMap.GetTileWorldPositionAt(149, 30), // TopLeft Position // TODO : More dynamic
-                208,                    // Width 
-                54,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            SignBoard ShootTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Press Q to Punch        "+
-                "Press E to Shoot        "+ 
-                "Hold E to charge bullet ",     
-                // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
-                TileMap.GetTileWorldPositionAt(166, 31), // TopLeft Position // TODO : More dynamic
-                192,                    // Width 
-                70,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            SignBoard ItemDropTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Defeat an enemy have chance to spawn an item",
-                // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
-                TileMap.GetTileWorldPositionAt(181, 28), // TopLeft Position // TODO : More dynamic
-                144,                    // Width 
-                70,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            SignBoard GoodluckSign = new SignBoard(
-                _whiteTexture,
-                "Ready to escape from this place and go back to delete your history? Jump in the Portal!", 
-                // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
-                TileMap.GetTileWorldPositionAt(225, 22), // TopLeft Position // TODO : More dynamic
-                230,                    // Width 
-                70,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            _gameObjects.Add(WalkTutorialSign);
-            _gameObjects.Add(JumpTutorialSign);
-            _gameObjects.Add(ClimbTutorialSign);
-            _gameObjects.Add(DashTutorialSign);
-            _gameObjects.Add(PlatFormJumpTutorialSign);
-            _gameObjects.Add(ItemTutorialSign);
-            _gameObjects.Add(ShootTutorialSign);
-            _gameObjects.Add(ItemDropTutorialSign);
-            _gameObjects.Add(GoodluckSign);
-        }else if(Singleton.Instance.Stage==2){
-            SignBoard GlideTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Holding Jump button while mid air to glide!",
-                TileMap.GetTileWorldPositionAt(23, 100),  // TopLeft Position  // TODO : More dynamic
-                180,                    // Width
-                56,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            _gameObjects.Add(GlideTutorialSign);
-        }
-        else if(Singleton.Instance.Stage==3){
-             SignBoard GraplingTutorialSign = new SignBoard(
-                _whiteTexture,
-                "Press R to Grapple onto the hook",
-                TileMap.GetTileWorldPositionAt(64, 66),  // TopLeft Position  // TODO : More dynamic
-                200,                    // Width
-                48,                     // Height
-                new Color(10, 10, 40, 220), // Dark blue, semi-transparent
-                Color.Gold
-            );
-            _gameObjects.Add(GraplingTutorialSign);
+            case 0:
+                SignBoard WalkTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Press Left or Right Arrow Key to move around!",
+                    TileMap.GetTileWorldPositionAt(12, 30),  // TopLeft Position  // TODO : More dynamic
+                    200,                    // Width
+                    48,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard JumpTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Press Space Bar Key to Jump      " +
+                    "Longer a you hold Jump Button, Higher the Jump!",
+                    TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
+                    300,                    // Width
+                    64,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard ClimbTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Press UP Arrow Key to climb ladder or vines!",
+                    TileMap.GetTileWorldPositionAt(55, 22), // TopLeft Position // TODO : More dynamic
+                    220,                    // Width
+                    48,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard DashTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Press SHIFT to Dash pass the gap!",
+                    TileMap.GetTileWorldPositionAt(90, 17), // TopLeft Position // TODO : More dynamic
+                    160,                    // Width
+                    48,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard PlatFormJumpTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Jump to get on platform "+     
+                    "Press Down to crouch "+
+                    "Crouch then Jump to drop below on platform", 
+                    TileMap.GetTileWorldPositionAt(123, 16), // TopLeft Position // TODO : More dynamic
+                    192,                    // Width
+                    96,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard ItemTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Preess F to pick up item "+ 
+                    "Press (1) (2) to use item",     
+                    // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
+                    TileMap.GetTileWorldPositionAt(149, 30), // TopLeft Position // TODO : More dynamic
+                    208,                    // Width 
+                    54,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard ShootTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Press Q to Punch        "+
+                    "Press E to Shoot        "+ 
+                    "Hold E to charge bullet ",     
+                    // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
+                    TileMap.GetTileWorldPositionAt(166, 31), // TopLeft Position // TODO : More dynamic
+                    192,                    // Width 
+                    70,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard ItemDropTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Defeat an enemy have chance to spawn an item",
+                    // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
+                    TileMap.GetTileWorldPositionAt(181, 28), // TopLeft Position // TODO : More dynamic
+                    144,                    // Width 
+                    70,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard GoodluckSign = new SignBoard(
+                    _whiteTexture,
+                    "Ready to escape from this place and go back to delete your history? Jump in the Portal!", 
+                    // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
+                    TileMap.GetTileWorldPositionAt(225, 22), // TopLeft Position // TODO : More dynamic
+                    230,                    // Width 
+                    70,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                _gameObjects.Add(WalkTutorialSign);
+                _gameObjects.Add(JumpTutorialSign);
+                _gameObjects.Add(ClimbTutorialSign);
+                _gameObjects.Add(DashTutorialSign);
+                _gameObjects.Add(PlatFormJumpTutorialSign);
+                _gameObjects.Add(ItemTutorialSign);
+                _gameObjects.Add(ShootTutorialSign);
+                _gameObjects.Add(ItemDropTutorialSign);
+                _gameObjects.Add(GoodluckSign);
+                break;
+
+            case 2:
+                SignBoard GlideTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Holding Jump button while mid air to glide!",
+                    TileMap.GetTileWorldPositionAt(23, 100),  // TopLeft Position  // TODO : More dynamic
+                    180,                    // Width
+                    56,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                _gameObjects.Add(GlideTutorialSign);
+                break;
+
+            case 3:
+                SignBoard GraplingTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Press R to Grapple onto the hook",
+                    TileMap.GetTileWorldPositionAt(64, 66),  // TopLeft Position  // TODO : More dynamic
+                    200,                    // Width
+                    48,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                _gameObjects.Add(GraplingTutorialSign);
+                break;
         }
     }
 
