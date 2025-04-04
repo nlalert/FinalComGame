@@ -121,7 +121,10 @@ namespace FinalComGame
             Texture2D StartHoverButtonTexture = _content.Load<Texture2D>("HoverStartButton");
             Texture2D ExitButtonTexture = _content.Load<Texture2D>("StaticExitButton");
             Texture2D ExitHoverButtonTexture = _content.Load<Texture2D>("HoverExitButton");
-
+            Texture2D PlayButtonTexture = _content.Load<Texture2D>("PlayButtonStatic");
+            Texture2D PlayHoverButtonTexture = _content.Load<Texture2D>("PlayButtonHover");
+            Texture2D SkipButtonTexture = _content.Load<Texture2D>("SkipButtonStatic");
+            Texture2D SkipHoverButtonTexture = _content.Load<Texture2D>("SkipButtonHover");
             int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
             int ButtonHeight = 100;
             _startButton = new Button(
@@ -145,18 +148,18 @@ namespace FinalComGame
 
             _playTutorialButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth - 100) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight - 50) / 3, ButtonWidth + 100, ButtonHeight + 50),
-                _button,
-                _button,
-                "Play Tutorial",
+                PlayButtonTexture,
+                PlayHoverButtonTexture,
+                "",
                 Color.Wheat
             );
             _playTutorialButton.OnClick += PlayTutorialButton_OnClick;
 
             _skipTutorialButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth + 300) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight + 50) * 2 / 3, ButtonWidth - 300, ButtonHeight - 50),
-                _button,
-                _button,
-                "Skip Tutorial",
+                SkipButtonTexture,
+                SkipHoverButtonTexture,
+                "",
                 Color.Wheat
             );
             _skipTutorialButton.OnClick += SkipTutorialButton_OnClick;
