@@ -66,6 +66,7 @@ namespace FinalComGame
         public Texture2D _hookHeadTexture;
         public Texture2D _ropeTexture;
         private Vector2 GrapplingPosition;
+        public bool _isGrappleTravelling;
         public bool _isGrappling;
         public bool _haveLineOfSight = false;
         public float GrappleMP;
@@ -429,7 +430,7 @@ namespace FinalComGame
                     animation = "fall_charge_2";
             }
 
-            else if (_isJumping && Velocity.Y < 0)
+            else if (_isJumping && Velocity.Y < 0 || _isGrappling)
             {
                 if (HandAnimation._currentAnimation == "idle")
                     animation = "jump";
@@ -1276,7 +1277,7 @@ namespace FinalComGame
         // New method to apply gravity depending on glide state
         protected override void ApplyGravity(float deltaTime)
         {
-            if (_isGliding)
+            if (_isGliding || _isGrappleTravelling)
             {
                 // Apply reduced gravity while gliding
                 Velocity.Y += Singleton.GRAVITY * GlideGravityScale * deltaTime;
@@ -1363,13 +1364,15 @@ namespace FinalComGame
             if (!Abilities.IsAbilityUnlocked(AbilityType.Grapple) || _grapplingHook != null)
                 return;
 
+        _isGrappleTravelling = true;
             UseMP(GrappleMP);
+            Velocity.Y = 0;
             Console.WriteLine("shooting grapple");
             Vector2 AimDirection = GrapplingPosition - GetPlayerCenter();
             _grapplingHook = new GrapplingHook(_hookHeadTexture){
                 Name = "GrapplingHook",
                 BaseDamageAmount = 0f,
-                Speed = 400f,
+                Speed = 450f,
                 Viewport = ViewportManager.Get("Grappling_Hook"),
                 RopeTexture = _ropeTexture,
             }; // Load a grappling hook texture
@@ -1380,14 +1383,15 @@ namespace FinalComGame
         private void UpdateGrapplingHook(float deltaTime){
             if (_grapplingHook != null && _grapplingHook.Hooked)
             {
+                _isGrappleTravelling = false;
                 _isGrappling = true;
                 _isJumping = true;
                 Vector2 direction = _grapplingHook.HookedPosition - Position;
                 float distance = direction.Length();
                 direction.Normalize();
-                float pullSpeed = Math.Max(200f*distance,20000f);
+                float pullSpeed = Math.Max(250f*distance,25000f);
 
-                if (distance > 10f) // Move towards hook
+                if (distance > 10f && !_isDashing) // Move towards hook
                 {
                     direction.Normalize();
                     Velocity = direction * pullSpeed * (float)deltaTime; // Pull speed
