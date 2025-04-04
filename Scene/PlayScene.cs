@@ -570,7 +570,7 @@ public class PlayScene : Scene
                 Friction = 0.96f,
 
                 HitSound = _Slime_hurt_sound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                DeathSound = _Slime_death_sound,
 
                 LootTableChance = slimeLootTableChance
             });
