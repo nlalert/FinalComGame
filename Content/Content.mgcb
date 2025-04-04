@@ -265,18 +265,6 @@
 /processorParam:TextureFormat=Color
 /build:EnemyRed.png
 
-#begin Rhulk.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Rhulk.png
-
 #begin EnemySlime.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -578,6 +566,42 @@
 /processorParam:TextureFormat=Color
 /build:Level_1_Parallax_mg.png
 
+#begin Level_2_Parallax_bg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level_2_Parallax_bg.png
+
+#begin Level_2_Parallax_fg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level_2_Parallax_fg.png
+
+#begin Level_2_Parallax_mg.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Level_2_Parallax_mg.png
+
 #begin MinionSoulBullet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -655,6 +679,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Queue.png
+
+#begin Rhulk.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Rhulk.png
 
 #begin Rope.png
 /importer:TextureImporter
