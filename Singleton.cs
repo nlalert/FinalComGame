@@ -17,6 +17,7 @@ class Singleton
     public const int GRAVITY = 2000;
     public const int TERMINAL_VELOCITY = 500;
     public const int MAX_VISIBLE_PROMPTS = 5;
+    public const int COLLISION_RADIUS = 5;
     public Random Random;
     public int Stage;
     public Player Player;
