@@ -704,6 +704,18 @@
 /processorParam:TextureFormat=Color
 /build:Title.png
 
+#begin Tower_death_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Tower_death_sound.wav
+
+#begin Tower_Hit_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Tower_Hit_sound.wav
+
 #begin Tower_sound.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

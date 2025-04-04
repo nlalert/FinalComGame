@@ -59,6 +59,8 @@ public class PlayScene : Scene
     private SoundEffect _Slime_death_sound;
     private SoundEffect _Skeleton_hurt_sound;
     private SoundEffect _Skeleton_death_sound;
+    private SoundEffect _Tower_hurt_sound;
+    private SoundEffect _Tower_death_sound;
 
 
     private StageManager _stageManager;
@@ -142,7 +144,9 @@ public class PlayScene : Scene
         _Slime_death_sound = _content.Load<SoundEffect>("Slime_death_sound");
         _Skeleton_hurt_sound = _content.Load<SoundEffect>("Skeleton_hurt_sound");
         _Skeleton_death_sound = _content.Load<SoundEffect>("Skeleton_death_sound");
-
+        _Tower_hurt_sound = _content.Load<SoundEffect>("Tower_hurt_sound");
+        _Tower_death_sound = _content.Load<SoundEffect>("Tower_death_sound");
+        
         // Load songs
         _songs[0] = _content.Load<Song>("ChillSong");
         _songs[1] = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
@@ -570,7 +574,7 @@ public class PlayScene : Scene
                 Friction = 0.96f,
 
                 HitSound = _Slime_hurt_sound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                DeathSound = _Slime_death_sound,
 
                 LootTableChance = slimeLootTableChance
             });
@@ -630,8 +634,8 @@ public class PlayScene : Scene
 
                 MaxHealth = float.MaxValue,
 
-                HitSound = _hitSound,// Temp
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                // HitSound = _hitSound,// Temp
+                // DeathSound = _hitSound,// TODO: PUT REAL SOUND
 
                 LootTableChance = defaultLootTableChance 
             });
@@ -647,8 +651,8 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("TowerEnemy"),
                 Tower_sound = _Tower_sound,
                 MaxHealth = 80f,
-                HitSound = _hitSound,
-                DeathSound = _hitSound,// TODO: PUT REAL SOUND
+                HitSound = _Tower_hurt_sound,
+                DeathSound = _Tower_death_sound,
 
                 TowerBullet = new TowerBullet(_projectileTexture)
                 {
