@@ -543,7 +543,7 @@ namespace FinalComGame
                 }
             }
 
-            else
+            else if(!_isClimbing)
             {
                 if(Singleton.Instance.IsKeyJustPressed(Fire) && _currentWeapon != "none"){
                     if(_currentWeapon == "gun")

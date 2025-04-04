@@ -95,6 +95,25 @@ public class Item : GameObject, IItemDisplayable
            
         base.Update(gameTime, gameObjects, tileMap);
     }
+
+    protected override void UpdateVerticalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
+    {
+        Position.Y += Velocity.Y * deltaTime;
+
+        for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
+        {
+            for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
+            {
+                Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
+                Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+                if(tile != null && (tile.IsSolid || tile.Type == TileType.Platform))
+                {
+                    ResolveVerticalCollision(tile);
+                }
+                
+            }
+        }
+    }
     
     public override void Draw(SpriteBatch spriteBatch)
     {
