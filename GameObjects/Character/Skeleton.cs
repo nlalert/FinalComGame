@@ -13,7 +13,6 @@ namespace FinalComGame
         public float IgnorePlayerDuration;
         private float _ignorePlayerTimer;
         private bool _isIgnoringPlayer;
-        public SoundEffect Skeleton_death_Sound;
         public SkeletonEnemy(Texture2D texture) : base(texture) { 
             _texture = texture;
         }
@@ -98,13 +97,6 @@ namespace FinalComGame
                 }    
             }
             base.UpdateAnimation(deltaTime);
-        }
-
-
-        public override void OnDead(List<GameObject> gameObjects)
-        {
-            Skeleton_death_Sound.Play();
-            base.OnDead(gameObjects);
         }
 
         public override void DropItem(List<GameObject> gameObjects)

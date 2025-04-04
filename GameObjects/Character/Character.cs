@@ -39,6 +39,7 @@ namespace FinalComGame {
         protected Animation _runAnimation;
 
         public SoundEffect HitSound;
+        public SoundEffect DeathSound;
 
         public string _currentAnimation = "idle";
 

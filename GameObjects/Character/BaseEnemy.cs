@@ -95,6 +95,7 @@ namespace FinalComGame {
         public override void OnDead(List<GameObject> gameObjects)
         {
             DropItem(gameObjects);
+            DeathSound?.Play();
             base.OnDead(gameObjects);
         }
 

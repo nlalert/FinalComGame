@@ -565,12 +565,12 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Slime"),
                 MaxHealth = 50f,
                 BaseAttackDamage = 3f,
-                Slime_death_Sound = _Slime_death_sound,
                 JumpCooldown = 3.0f,
                 BaseJumpStrength = 490,
                 Friction = 0.96f,
 
                 HitSound = _Slime_hurt_sound,
+                DeathSound = _hitSound,// TODO: PUT REAL SOUND
 
                 LootTableChance = slimeLootTableChance
             });
@@ -594,6 +594,7 @@ public class PlayScene : Scene
                 DashDuration = 1.0f,
 
                 HitSound = _hitSound,
+                DeathSound = _hitSound,// TODO: PUT REAL SOUND
 
                 LootTableChance = hellHoundLootTableChance
             });
@@ -617,9 +618,9 @@ public class PlayScene : Scene
                 IgnorePlayerDuration = 3f,
 
                 HitSound = _Skeleton_hurt_sound,
+                DeathSound = _Skeleton_death_sound,
 
-                LootTableChance = SkeletonLootTableChance,
-                Skeleton_death_Sound = _Skeleton_death_sound
+                LootTableChance = SkeletonLootTableChance
             });
 
         EnemyManager.AddGameEnemy(EnemyID.PlatformEnemy,
@@ -630,6 +631,7 @@ public class PlayScene : Scene
                 MaxHealth = float.MaxValue,
 
                 HitSound = _hitSound,// Temp
+                DeathSound = _hitSound,// TODO: PUT REAL SOUND
 
                 LootTableChance = defaultLootTableChance 
             });
@@ -646,6 +648,7 @@ public class PlayScene : Scene
                 Tower_sound = _Tower_sound,
                 MaxHealth = 80f,
                 HitSound = _hitSound,
+                DeathSound = _hitSound,// TODO: PUT REAL SOUND
 
                 TowerBullet = new TowerBullet(_projectileTexture)
                 {
@@ -675,6 +678,7 @@ public class PlayScene : Scene
                 MaxHealth = 50f,
 
                 HitSound = _hitSound,
+                DeathSound = _hitSound,// TODO: PUT REAL SOUND
 
                 DemonBullet = new DemonBullet(_projectileTexture)
                 {
@@ -700,7 +704,8 @@ public class PlayScene : Scene
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
 
-                HitSound = _hitSound
+                HitSound = _hitSound,
+                DeathSound = _hitSound,// TODO: PUT REAL SOUND
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Cerberus,         
@@ -715,7 +720,8 @@ public class PlayScene : Scene
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
 
-                HitSound = _hitSound
+                HitSound = _hitSound,
+                DeathSound = _hitSound,// TODO: PUT REAL SOUND
             }); 
 
         EnemyManager.AddGameEnemy(EnemyID.Rhulk,         
@@ -733,6 +739,7 @@ public class PlayScene : Scene
                 Friction = 0.96f,
 
                 HitSound = _hitSound,
+                DeathSound = _hitSound,// TODO: PUT REAL SOUND
                 
                 Laserproj = new DemonLaser(_LaserTexture)
                 {
