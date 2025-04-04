@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -465,10 +466,9 @@ namespace FinalComGame
 
         public override void OnDead(List<GameObject> gameObjects)
         {
-            foreach(GameObject obj in gameObjects){
-                if(obj is Cerberus a){
-                    a.CerberusCount -=1;
-                }
+            foreach (var cerberus in gameObjects.OfType<Cerberus>())
+            {
+                cerberus.CerberusCount--;
             }
             if(CerberusCount <= 0){
                 Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
