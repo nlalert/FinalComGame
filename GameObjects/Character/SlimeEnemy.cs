@@ -11,7 +11,6 @@ namespace FinalComGame
         public float JumpCooldown;
         private float _jumpTimer;
         public float Friction;
-        public SoundEffect Slime_Hurt_Sound;
         public SoundEffect Slime_death_Sound;
         public SlimeEnemy(Texture2D texture) : base(texture) { 
             _texture = texture;
@@ -173,12 +172,7 @@ namespace FinalComGame
             Velocity.Y +=Singleton.GRAVITY/1.75f * deltaTime;
             ClampMaxFallVelocity();
         }
-        public override void OnHit(float damageAmount, bool IsHeavyAttack)
-        {
-            if(damageAmount >0)
-                Slime_Hurt_Sound.Play();
-            base.OnHit(damageAmount, IsHeavyAttack);
-        }
+
         public override void OnDead(List<GameObject> gameObjects)
         {
             Slime_death_Sound.Play();

@@ -565,13 +565,12 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Slime"),
                 MaxHealth = 50f,
                 BaseAttackDamage = 3f,
-                Slime_Hurt_Sound = _Slime_hurt_sound,
                 Slime_death_Sound = _Slime_death_sound,
                 JumpCooldown = 3.0f,
                 BaseJumpStrength = 490,
                 Friction = 0.96f,
 
-                HitSound = _hitSound,
+                HitSound = _Slime_hurt_sound,
 
                 LootTableChance = slimeLootTableChance
             });
@@ -617,10 +616,9 @@ public class PlayScene : Scene
 
                 IgnorePlayerDuration = 3f,
 
-                HitSound = _hitSound,
+                HitSound = _Skeleton_hurt_sound,
 
                 LootTableChance = SkeletonLootTableChance,
-                Skeleton_Hurt_Sound = _Skeleton_hurt_sound,
                 Skeleton_death_Sound = _Skeleton_death_sound
             });
 

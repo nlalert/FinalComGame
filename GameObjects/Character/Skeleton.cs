@@ -13,7 +13,6 @@ namespace FinalComGame
         public float IgnorePlayerDuration;
         private float _ignorePlayerTimer;
         private bool _isIgnoringPlayer;
-        public SoundEffect Skeleton_Hurt_Sound;
         public SoundEffect Skeleton_death_Sound;
         public SkeletonEnemy(Texture2D texture) : base(texture) { 
             _texture = texture;
@@ -220,12 +219,5 @@ namespace FinalComGame
             _isIgnoringPlayer = true;
             base.OnCollidePlayer();
         }
-        public override void OnHit(float damageAmount, bool IsHeavyAttack)
-        {  
-            if(damageAmount >0)
-                Skeleton_Hurt_Sound.Play();
-            base.OnHit(damageAmount, IsHeavyAttack);
-        }
-
     }
 }
