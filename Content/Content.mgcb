@@ -85,6 +85,18 @@
 /processorParam:Quality=Best
 /build:Dash.wav
 
+#begin Demon_death_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Demon_death_sound.wav
+
+#begin Demon_hurt_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Demon_hurt_sound.wav
+
 #begin Demon.png
 /importer:TextureImporter
 /processor:TextureProcessor
