@@ -872,8 +872,9 @@ namespace FinalComGame
 
         public void BoostSpeed(float speedModifier)
         {
-            if(_isDashing) 
+            if(_isDashing || !(Singleton.Instance.IsKeyPressed(Left) || Singleton.Instance.IsKeyPressed(Right)))
                 return;
+                
             Velocity.X *= speedModifier;
         }
 
