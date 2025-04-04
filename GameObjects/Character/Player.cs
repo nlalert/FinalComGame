@@ -63,8 +63,7 @@ namespace FinalComGame
         public float GlideMP;
 
         // Grappring Hook
-        public Texture2D _hookHeadTexture;
-        public Texture2D _ropeTexture;
+        public Texture2D _grapplingHookTexture;
         private Vector2 GrapplingPosition;
         public bool _isGrappleTravelling;
         public bool _isGrappling;
@@ -110,7 +109,7 @@ namespace FinalComGame
         private bool _isHoldingItem2;
         private const float DROP_ITEM_THRESHOLD = 0.5f; // Half a second hold to drop
 
-        public Player(Texture2D texture, Texture2D paticleTexture) : base(texture)
+        public Player(Texture2D texture, Texture2D paticleTexture, Texture2D projectileTexture) : base(texture)
         {
             // Create inventory instance
             Inventory = new Inventory();
@@ -185,6 +184,8 @@ namespace FinalComGame
             paticleTexture.SetData([new Color(193, 255, 219)]);
             _particle = new SoulParticle(10, Position, paticleTexture);
             Abilities = new AbilityManager();
+
+            _grapplingHookTexture = projectileTexture;
         }
 
         public override void Reset()
@@ -1369,12 +1370,11 @@ namespace FinalComGame
             Velocity.Y = 0;
             Console.WriteLine("shooting grapple");
             Vector2 AimDirection = GrapplingPosition - GetPlayerCenter();
-            _grapplingHook = new GrapplingHook(_hookHeadTexture){
+            _grapplingHook = new GrapplingHook(_grapplingHookTexture){
                 Name = "GrapplingHook",
                 BaseDamageAmount = 0f,
                 Speed = 450f,
-                Viewport = ViewportManager.Get("Grappling_Hook"),
-                RopeTexture = _ropeTexture,
+                Viewport = ViewportManager.Get("Hook_Head"),
             }; // Load a grappling hook texture
             _grapplingHook.Shoot(GetPlayerCenter(), Vector2.Normalize(AimDirection));
             gameObjects.Add(_grapplingHook);

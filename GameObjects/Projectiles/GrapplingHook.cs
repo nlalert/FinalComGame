@@ -10,7 +10,6 @@ namespace FinalComGame
         public bool Hooked;
         public Vector2 HookedPosition;
         private float _lifetime = 1.0f;
-        public Texture2D RopeTexture;
         public GrapplingHook(Texture2D texture) : base(texture) // No damage, high speed
         {
             CanCollideTile = true;
@@ -64,20 +63,31 @@ namespace FinalComGame
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
+
             Vector2 playerPos = Singleton.Instance.Player.GetPlayerCenter();
-            float hookDistance = Vector2.Distance(playerPos, this.Position);
-            Vector2 projectileCenter = new Vector2(Position.X + _texture.Width/2, Position.Y + _texture.Height/2); 
+
+            float hookAngle = MathF.Atan2(_direction.Y, _direction.X) + MathF.PI / 2f;
+
+            //bottom end of a hook
+            Vector2 hookOrigin = new Vector2(Viewport.Width/2, Viewport.Height/2);
+            Vector2 hookPosition = Position + hookOrigin;
+            Vector2 hookLocalBottomCenter = new Vector2(0, Viewport.Height/2);
+            Vector2 hookRotatedOffset = hookOrigin + RotateVector(hookLocalBottomCenter, hookAngle);
+            Vector2 hookEndPosition = Position + hookRotatedOffset;
 
             // Correct the angle calculation by remove MathF.PI / 2 for proper alignment
-            float angle = MathF.Atan2(projectileCenter.Y - playerPos.Y, projectileCenter.X - playerPos.X) - MathF.PI / 2;
-            Vector2 ropeOrigin = new Vector2(RopeTexture.Width / 2f, 0); // Origin at the top of the rope texture
-            Vector2 ropePosition = playerPos; // Start the rope at the player position
+            float ropeAngle = MathF.Atan2(hookEndPosition.Y - playerPos.Y, hookEndPosition.X - playerPos.X) - MathF.PI / 2;
+            Vector2 ropeOrigin = new Vector2(ViewportManager.Get("Hook_Rope").Width/2, 0); // Origin at the top of the rope texture
+            Vector2 ropePosition = playerPos + ropeOrigin; // Start the rope at the player position
+
+            float hookDistance = Vector2.Distance(playerPos, Position + hookRotatedOffset);
 
             // Draw the rope texture stretched to the distance
-            spriteBatch.Draw(RopeTexture, ropePosition, null, Color.White, angle, ropeOrigin, new Vector2(1.0f, hookDistance / RopeTexture.Height), SpriteEffects.None, 0f);
+            spriteBatch.Draw(_texture, ropePosition, ViewportManager.Get("Hook_Rope"), Color.White, ropeAngle, ropeOrigin, 
+            new Vector2(1.0f, hookDistance / ViewportManager.Get("Hook_Rope").Height), SpriteEffects.None, 0f);
 
             // Draw the grappling hook (the projectile itself)
-            // spriteBatch.Draw(_texture, Position, Color.White);
+            spriteBatch.Draw(_texture, hookPosition, Viewport, Color.White, hookAngle, hookOrigin, Vector2.One, SpriteEffects.None, 0f);
 
             // Optional: Draw debug information (if needed)
             DrawDebug(spriteBatch);
@@ -86,6 +96,14 @@ namespace FinalComGame
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
             string displayText = $"StarPos : {Position} \ntimer {_lifetime} ";
             spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition , Color.White);
+        }
+
+        Vector2 RotateVector(Vector2 v, float angle)
+        {
+            //Calculate the Bottom End Position After Rotated
+            float cos = MathF.Cos(angle);
+            float sin = MathF.Sin(angle);
+            return new Vector2( v.X * cos - v.Y * sin, v.X * sin + v.Y * cos );
         }
     }
 }

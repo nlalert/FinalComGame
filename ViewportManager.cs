@@ -7,12 +7,13 @@ public class ViewportManager
 {
     private static readonly Dictionary<string, Rectangle> _spriteRects = new Dictionary<string, Rectangle>
     {
-        {"Grappling_Hook", new Rectangle(0, 0, 16, 16)},
         {"Gun_Bullet", new Rectangle(50, 5, 11, 5)},
         {"Staff_Bullet", new Rectangle(35, 17, 10, 13)},
         {"Charge_Bullet_0", new Rectangle(1, 5, 12, 5)},
         {"Charge_Bullet_1", new Rectangle(17, 4, 12, 7)},
         {"Charge_Bullet_2", new Rectangle(32, 3, 13, 9)},
+        {"Hook_Head", new Rectangle(20, 50, 8, 13)},
+        {"Hook_Rope", new Rectangle(70, 0, 4, 80)},
 
         {"Player", new Rectangle(0, 0, 16, 32)},
         {"Player_Head", new Rectangle(35, 21, 11, 11)},

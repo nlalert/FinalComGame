@@ -433,7 +433,7 @@ public class PlayScene : Scene
 
     private void CreatePlayer()
     {
-        Singleton.Instance.Player = new Player(_playerTexture, _whiteTexture)
+        Singleton.Instance.Player = new Player(_playerTexture, _whiteTexture, _projectileTexture)
         {
             Name = "Player",
             Life = 3,
@@ -500,8 +500,6 @@ public class PlayScene : Scene
                 Speed = 500f,
                 Viewport = ViewportManager.Get("Charge_Bullet_0")
             },
-            _hookHeadTexture = _HookHeadTexture,
-            _ropeTexture = _RopeTexture
         };
     }
 
