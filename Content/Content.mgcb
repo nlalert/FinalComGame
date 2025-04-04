@@ -824,7 +824,7 @@
 /processorParam:TextureFormat=Color
 /build:SkipButtonStatic.png
 
-#begin SliderHandle.jpg
+#begin SliderHandle.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -834,7 +834,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SliderHandle.jpg
+/build:SliderHandle.png
 
 #begin SoulMinion.png
 /importer:TextureImporter
@@ -859,6 +859,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SoulStaff.png
+
+#begin SoundBar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SoundBar.png
 
 #begin SoundSettingButtonHover.png
 /importer:TextureImporter

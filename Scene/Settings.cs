@@ -49,7 +49,7 @@ public class Settings : Scene
         // Create a volume slider
         int SliderWidth = Singleton.SCREEN_WIDTH / 2;
         int SliderHeight = 30;
-        Texture2D SliderBar = _content.Load<Texture2D>("ItemSlot");//TEMP
+        Texture2D SliderBar = _content.Load<Texture2D>("SoundBar");//TEMP
         Texture2D SliderHandle =   _content.Load<Texture2D>("sliderHandle");
         _musicVolumeSlider = new SlideBarUI(
             new Rectangle((Singleton.SCREEN_WIDTH - SliderWidth) / 2 , (Singleton.SCREEN_HEIGHT - SliderHeight) * 2 / 7, SliderWidth, SliderHeight),
@@ -59,7 +59,7 @@ public class Settings : Scene
             0,    // min value
             100,  // max value
             75,   // start value
-            "{0}%" // value format
+            "{0:F0}%" // value format
         );
 
         _soundEffectVolumeSlider = new SlideBarUI(
@@ -70,7 +70,7 @@ public class Settings : Scene
             0,    // min value
             100,  // max value
             75,   // start value
-            "{0}%" // value format
+            "{0:F0}%" // value format
         );
 
         Texture2D BackButtonTexture = _content.Load<Texture2D>("BackButtonStatic");

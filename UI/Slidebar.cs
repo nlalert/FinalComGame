@@ -71,7 +71,7 @@ public class SlideBarUI : HUDElement
         // Label on left
         Rectangle labelBounds = new Rectangle(
             _bounds.X,
-            _bounds.Y,
+            _bounds.Y + _bounds.Height  / 4,
             leftTextWidth,
             _bounds.Height
         );
@@ -79,7 +79,7 @@ public class SlideBarUI : HUDElement
         // Value on right
         Rectangle valueBounds = new Rectangle(
             _bounds.X + _bounds.Width - rightTextWidth,
-            _bounds.Y,
+            _bounds.Y + _bounds.Height  / 4,
             rightTextWidth,
             _bounds.Height
         );
