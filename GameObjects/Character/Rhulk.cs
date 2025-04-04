@@ -117,13 +117,7 @@ namespace FinalComGame
 
             base.UpdateAnimation(deltaTime);
         }
-        public override bool IsAbovePlayer()
-        {
-            return Position.Y < Singleton.Instance.Player.Position.Y;
-        }
-        public override bool CanDropThroughPlatform(Tile tile){
-            return (IsAbovePlayer() && IsPlayerAbovePlatform(tile)) || Velocity.Y < 0 || IsIgnorePlatform;
-        }
+
         private void AI_Chase(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);

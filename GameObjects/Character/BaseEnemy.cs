@@ -156,7 +156,8 @@ namespace FinalComGame {
                 Vector2 checkPosition = new Vector2(Position.X + offset.X, Position.Y + offset.Y);
                 Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
                 
-                if(tile != null && (tile.Type == TileType.Barrier || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile))))
+                if(tile != null && (tile.Type == TileType.Barrier || tile.Type == TileType.AmbushBarrier 
+                || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile))))
                 {
                     if(ResolveVerticalCollision(tile)){
                         OnLandVerticle();
@@ -165,22 +166,15 @@ namespace FinalComGame {
             }
         }
 
-        public virtual bool IsAbovePlayer(){
-            return Position.Y < Singleton.Instance.Player.Position.Y;
-        }
-
-        public virtual bool IsPlayerAbovePlatform(Tile tile){
-            return Position.Y <= tile.Position.Y;
-        }
-
         public virtual bool CanDropThroughPlatform(Tile tile){
-            return (IsAbovePlayer() && IsPlayerAbovePlatform(tile)) || Velocity.Y < 0 || IsIgnorePlatform;
+            return (tile.Position.Y < Singleton.Instance.Player.Position.Y + Singleton.Instance.Player.Viewport.Height) || Velocity.Y < 0 || IsIgnorePlatform;
         }
 
         public virtual void CheckContactPlayer(){
             if(IsTouching(Singleton.Instance.Player))
                 OnCollidePlayer();
         }
+
         public virtual void CheckHit(Rectangle attackHitbox, float damageAmount, bool isHeavyAttack)
         {
             if(IsTouching(attackHitbox))
@@ -217,7 +211,7 @@ namespace FinalComGame {
             {
                 checkPosition += direction * step;
                 Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
-                if (tile != null && tile.IsSolid)
+                if (tile != null && tile.IsSolid && tile.Type != TileType.Platform )
                 {
                     return false; // Blocked by an obstacle
                 }
