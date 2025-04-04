@@ -8,7 +8,7 @@ namespace FinalComGame;
 
 public class Gun : RangeWeapon
 {
-    public Gun(Texture2D texture, ItemType type, float attackDamage = 100f, int ammoAmount = 6)
+    public Gun(Texture2D texture, ItemType type, float attackDamage = 50f, int ammoAmount = 6)
         : base(texture, type, attackDamage, ammoAmount)
     {
         // Gun-specific initialization
