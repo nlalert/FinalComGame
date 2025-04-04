@@ -14,7 +14,7 @@ namespace FinalComGame
         
         public event EventHandler OnClick;
         private bool wasPressed = false;
-        
+        private float fontScale = 2.5f; // Half the original font size
         public Button(Rectangle bounds, Texture2D texture, string text, Color textColor) : base(bounds)
         {
             this.texture = texture;
@@ -22,7 +22,7 @@ namespace FinalComGame
             this.textColor = textColor;
             
             // Center text
-            Vector2 textSize = Singleton.Instance.GameFont.MeasureString(text);
+            Vector2 textSize = Singleton.Instance.GameFont.MeasureString(text) * fontScale;
             textPosition = new Vector2(
                 bounds.X + (bounds.Width - textSize.X) / 2,
                 bounds.Y + (bounds.Height - textSize.Y) / 2
@@ -45,13 +45,23 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, _bounds, Color.White);
-            spriteBatch.DrawString(Singleton.Instance.GameFont, text, textPosition, textColor);
-
+            // Draw item details (left-aligned)
             if (_isHovered)
             {
                 // Draw a hover effect
                 spriteBatch.Draw(texture, _bounds, new Color(255, 255, 255, 128));
             }
+            spriteBatch.DrawString(
+                Singleton.Instance.GameFont,
+                text,
+                textPosition,
+                textColor,
+                0f,
+                Vector2.Zero,
+                fontScale,
+                SpriteEffects.None,
+                0f
+            );
         }
     }
 }

@@ -115,16 +115,14 @@ namespace FinalComGame
                 new Rectangle(0, 0, 236, 40)
             );
 
-            Texture2D StartButtonTexture = _content.Load<Texture2D>("StaticStartButton");
-            Texture2D ExitButtonTexture = _content.Load<Texture2D>("StaticExitButton");
-            Texture2D PlayButtonTexture = _content.Load<Texture2D>("PlayButtonStatic");
-            Texture2D SkipButtonTexture = _content.Load<Texture2D>("SkipButtonStatic");
+            Texture2D ButtonTexture = _content.Load<Texture2D>("ButtonTexture");
             int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
             int ButtonHeight = 100;
+
             _startButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 4, ButtonWidth, ButtonHeight),
-                StartButtonTexture,
-                "",
+                ButtonTexture,
+                "Start",
                 Color.Wheat
             );
 
@@ -132,24 +130,24 @@ namespace FinalComGame
 
             _exitButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 4, ButtonWidth, ButtonHeight),
-                ExitButtonTexture,
-                "",
+                ButtonTexture,
+                "Exit",
                 Color.Wheat
             );
             _exitButton.OnClick += ExitGameButton_OnClick;
 
             _playTutorialButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth - 100) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight - 50) / 3, ButtonWidth + 100, ButtonHeight + 50),
-                PlayButtonTexture,
-                "",
+                ButtonTexture,
+                "Play Prologue \n (Tutorial)",
                 Color.Wheat
             );
             _playTutorialButton.OnClick += PlayTutorialButton_OnClick;
 
             _skipTutorialButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth + 300) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight + 50) * 2 / 3, ButtonWidth - 300, ButtonHeight - 50),
-                SkipButtonTexture,
-                "",
+                ButtonTexture,
+                "Skip Tutorial",
                 Color.Wheat
             );
             _skipTutorialButton.OnClick += SkipTutorialButton_OnClick;
