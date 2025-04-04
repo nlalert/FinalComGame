@@ -17,7 +17,7 @@ namespace FinalComGame
         public DemonLaser(Texture2D texture) : base(texture)
         {
             CanCollideTile =false;
-            _lifeTime = 20f;
+            _lifeTime = 10f;
         }
 
 
@@ -110,6 +110,7 @@ namespace FinalComGame
             _lenght = direction.Y;
             // Vector2 dir = new Vector2((float)Math.Cos(_angle), (float)Math.Sin(_angle)) * _lenght;
             // _endPosition = this.Position+ dir;
+            DamageAmount = base.BaseDamageAmount;
         }
         private void DrawRotatingLines(SpriteBatch spriteBatch)
         {
