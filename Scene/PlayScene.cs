@@ -248,22 +248,7 @@ public class PlayScene : Scene
             
         Singleton.Instance.Stage++;
 
-        if(Singleton.Instance.Stage == 0)
-        {
-            _song = _songlevel0;
-        }
-        if(Singleton.Instance.Stage == 1)
-        {
-            _song = _songlevel1;
-        }
-        if(Singleton.Instance.Stage == 2)
-        {
-            _song = _songlevel2;
-        }
-        if(Singleton.Instance.Stage == 3)
-        {
-            _song = _songlevel3;
-        }
+        
 
         if (Singleton.Instance.Stage >= 4){
             Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
@@ -330,6 +315,23 @@ public class PlayScene : Scene
         AddSignBoard();
         SpawnEnemies();
         SpawnItems();
+
+        if(Singleton.Instance.Stage == 0)
+        {
+            _song = _songlevel0;
+        }
+        if(Singleton.Instance.Stage == 1)
+        {
+            _song = _songlevel1;
+        }
+        if(Singleton.Instance.Stage == 2)
+        {
+            _song = _songlevel2;
+        }
+        if(Singleton.Instance.Stage == 3)
+        {
+            _song = _songlevel3;
+        }
         
         foreach (GameObject s in _gameObjects)
         {
