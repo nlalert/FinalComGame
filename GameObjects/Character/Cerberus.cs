@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -31,6 +32,7 @@ namespace FinalComGame
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
         public HealthBar HealthBar;
+        public SoundEffect DogSound;
 
 
         public Cerberus(Texture2D texture, Texture2D particleTexture) : base(texture) 
@@ -230,6 +232,7 @@ namespace FinalComGame
             {
                 //going to dash
                 //Console.WriteLine("Hellhound dashes!");
+                DogSound.Play();
                 CanCollideTile = false;
                 CurrentState = EnemyState.Dash;
                 _dashStart = this.Position;

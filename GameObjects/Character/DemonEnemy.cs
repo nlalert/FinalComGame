@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -16,7 +17,7 @@ namespace FinalComGame
         private float verticalOffset; // Randomized offset for smooth hovering
         private float loopOffset =0;
         private float loopSpeed =2f;
-
+        public SoundEffect DemonAttack_sound;
         public DemonBullet DemonBullet;
 
         public DemonEnemy(Texture2D texture) 
@@ -166,6 +167,7 @@ namespace FinalComGame
                 if (distanceToPlayer <= AttackRange && shootTimer >= shootCooldown && HaveLineOfSight(tileMap))
                 {
                     ShootBullet(gameObjects);
+                    DemonAttack_sound.Play();
                     shootTimer = 0;
                 }
             }

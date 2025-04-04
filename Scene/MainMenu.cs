@@ -197,7 +197,5 @@ namespace FinalComGame
             Singleton.Instance.Stage = 3;
             ShowMainMenu();
         }
-
     }
-
 }

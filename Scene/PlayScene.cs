@@ -54,7 +54,8 @@ public class PlayScene : Scene
 
     private SoundEffect _Rhulk_LaserSound;
     private SoundEffect _Rhulk_DashSound;
-    
+    private SoundEffect _Dog_sound;
+    private SoundEffect _DemonAttack_sound;
     private StageManager _stageManager;
 
     public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
@@ -127,6 +128,8 @@ public class PlayScene : Scene
         _pickUpSound = _content.Load<SoundEffect>("PickUp");
         _Rhulk_DashSound = _content.Load<SoundEffect>("RhulkDash_sound");
         _Rhulk_LaserSound = _content.Load<SoundEffect>("Laser_sound");
+        _Dog_sound = _content.Load<SoundEffect>("Dog_sound");
+        _DemonAttack_sound = _content.Load<SoundEffect>("DemonAttack_sound");
 
         // Load songs
         _songlevel0 = _content.Load<Song>("ChillSong");
@@ -584,7 +587,7 @@ public class PlayScene : Scene
             new HellhoundEnemy(_hellhoundTexture){
                 Name = "Hellhound",
                 Viewport = ViewportManager.Get("Hellhound"),
-                
+                DogSound = _Dog_sound,
                 MaxHealth = 1f,
                 BaseAttackDamage = 8f,
 
@@ -672,7 +675,7 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Demon"),
 
                 MaxHealth = 100f,
-
+                DemonAttack_sound = _DemonAttack_sound,
                 HitSound = _hitSound,
 
                 DemonBullet = new DemonBullet(_projectileTexture)
@@ -706,7 +709,7 @@ public class PlayScene : Scene
             new Cerberus(_cerberusTexture, _whiteTexture){
                 Name = "Cerberus",
                 Viewport = ViewportManager.Get("Cerberus"),
-
+                DogSound = _Dog_sound,
                 MaxHealth = 500,
                 BaseAttackDamage = 3f,
 
@@ -726,7 +729,7 @@ public class PlayScene : Scene
 
                 LaserSound = _Rhulk_LaserSound,
                 DashSound = _Rhulk_DashSound,
-                
+
                 // JumpCooldown = 3.0f,
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
