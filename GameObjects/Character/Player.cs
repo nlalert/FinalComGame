@@ -1013,10 +1013,9 @@ namespace FinalComGame
             _overlappedTile = TileType.None;
             GrapplingPosition = Vector2.Zero;
 
-            int radius = 8;
-            for (int i = -radius; i <= radius; i++)
+            for (int i = -Singleton.COLLISION_RADIUS * 2; i <= Singleton.COLLISION_RADIUS * 2; i++)
             {
-                for (int j = -radius; j <= radius; j++)
+                for (int j = -Singleton.COLLISION_RADIUS * 2; j <= Singleton.COLLISION_RADIUS * 2; j++)
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);

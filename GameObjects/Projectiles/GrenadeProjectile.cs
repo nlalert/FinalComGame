@@ -80,10 +80,10 @@ namespace FinalComGame
         {
             float previousVelocityX = Velocity.X; 
             Position.X += Velocity.X * deltaTime;
-            int radius = 5;
-            for (int i = -radius; i <= radius; i++)
+
+            for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
             {
-                for (int j = -radius; j <= radius; j++)
+                for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
@@ -103,10 +103,10 @@ namespace FinalComGame
         {
             float previousVelocityY = Velocity.Y; 
             Position.Y += Velocity.Y * deltaTime;
-            int radius = 5;
-            for (int i = -radius; i <= radius; i++)
+
+            for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
             {
-                for (int j = -radius; j <= radius; j++)
+                for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
                 {
                     Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
                     Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
