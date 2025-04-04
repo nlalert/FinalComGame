@@ -433,7 +433,7 @@ public class PlayScene : Scene
                 SignBoard GraplingTutorialSign = new SignBoard(
                     _whiteTexture,
                     "Press R to Grapple onto the hook",
-                    TileMap.GetTileWorldPositionAt(65, 66),  // TopLeft Position  // TODO : More dynamic
+                    TileMap.GetTileWorldPositionAt(45, 75),  // TopLeft Position  // TODO : More dynamic
                     200,                    // Width
                     48,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
