@@ -13,7 +13,13 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin BackButtonStatic.png
+#begin BulletShot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BulletShot.wav
+
+#begin ButtonTexture.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,13 +29,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:BackButtonStatic.png
-
-#begin BulletShot.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:BulletShot.wav
+/build:ButtonTexture.png
 
 #begin Cerberus.png
 /importer:TextureImporter
@@ -398,18 +398,6 @@
 /processorParam:TextureFormat=Color
 /build:Level_3_Parallax_mg.png
 
-#begin MainmenuButtonStatic.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:MainmenuButtonStatic.png
-
 #begin MinionSoulBullet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -427,18 +415,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Pickup.wav
-
-#begin PlayButtonStatic.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:PlayButtonStatic.png
 
 #begin PlayerPunch.wav
 /importer:WavImporter
@@ -475,30 +451,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Queue.png
-
-#begin RestartButtonStatic.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:RestartButtonStatic.png
-
-#begin ResumeButtonStatic.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:ResumeButtonStatic.png
 
 #begin Rhulk.png
 /importer:TextureImporter
@@ -553,18 +505,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Skeleton.png
-
-#begin SkipButtonStatic.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SkipButtonStatic.png
 
 #begin SliderHandle.png
 /importer:TextureImporter
@@ -626,18 +566,6 @@
 /processorParam:TextureFormat=Color
 /build:SoundBar.png
 
-#begin SoundSettingButtonStatic.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SoundSettingButtonStatic.png
-
 #begin Spitter.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -649,30 +577,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Spitter.png
-
-#begin StaticExitButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:StaticExitButton.png
-
-#begin StaticStartButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:StaticStartButton.png
 
 #begin SwordSlash.wav
 /importer:WavImporter

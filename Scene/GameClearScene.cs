@@ -39,7 +39,7 @@ public class GameClearScene : Scene
             TextUI.TextAlignment.Center
         );
 
-        Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
+        Texture2D Button = _content.Load<Texture2D>("ButtonTexture");
         int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
         int ButtonHeight = 80;
 
