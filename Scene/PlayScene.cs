@@ -246,15 +246,15 @@ public class PlayScene : Scene
         {
             _song = _songlevel1;
         }
-        if(Singleton.Instance.Stage == 1)
+        if(Singleton.Instance.Stage == 2)
         {
             _song = _songlevel2;
         }
-        if(Singleton.Instance.Stage == 1)
+        if(Singleton.Instance.Stage == 3)
         {
             _song = _songlevel3;
         }
-        
+
         if (Singleton.Instance.Stage >= 4){
             Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
         }
