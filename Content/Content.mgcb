@@ -97,17 +97,23 @@
 /processorParam:TextureFormat=Color
 /build:Demon.png
 
+#begin DemonAttack_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:DemonAttack_sound.wav
+
+#begin Dog_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Dog_sound.wav
+
 #begin Eternity's Divide OST  Checkpoint 2.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Eternity's Divide OST  Checkpoint 2.mp3
-
-#begin Eternity's Divide OST  Enter Cold Fusion Core.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Eternity's Divide OST  Enter Cold Fusion Core.mp3
 
 #begin Eternity's Divide OST  Enter Cold Fusion Core.mp3
 /importer:Mp3Importer
@@ -229,6 +235,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:LargeSlime.png
+
+#begin Laser_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Laser_sound.wav
 
 #begin Laserbeam.png
 /importer:TextureImporter
@@ -500,6 +512,12 @@
 /processorParam:TextureFormat=Color
 /build:Rhulk.png
 
+#begin RhulkDash_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:RhulkDash_sound.wav
+
 #begin Rope.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -511,6 +529,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Rope.png
+
+#begin Skeleton_death_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Skeleton_death_sound.wav
+
+#begin Skeleton_hurt_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Skeleton_hurt_sound.wav
 
 #begin Skeleton.png
 /importer:TextureImporter
@@ -547,6 +577,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SliderHandle.png
+
+#begin Slime_death_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Slime_death_sound.wav
+
+#begin Slime_hurt_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Slime_hurt_sound.wav
 
 #begin SoulMinion.png
 /importer:TextureImporter
@@ -661,4 +703,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Title.png
+
+#begin Tower_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Tower_sound.wav
 

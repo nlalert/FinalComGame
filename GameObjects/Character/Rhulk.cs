@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -27,8 +28,11 @@ namespace FinalComGame
         public DemonLaser Laserproj;
 
         public HealthBar HealthBar;
-
-
+        
+        public SoundEffect LaserSound;
+        public SoundEffect DashSound;
+        
+        private int _lastSecondMark = -1;
         public Rhulk(Texture2D texture) : base(texture)
         { 
             _texture = texture;
@@ -54,7 +58,6 @@ namespace FinalComGame
             Animation = new Animation(_texture, 64, 96, new Vector2(64*6 , 96*3), 12);
             Animation.AddAnimation("idle", new Vector2(0, 0), 12);
             Animation.AddAnimation("run", new Vector2(0, 2), 6);
-
             Animation.ChangeAnimation("idle");
         }
 
@@ -180,6 +183,7 @@ namespace FinalComGame
                 _barrierstart = Singleton.Instance.Player.GetPlayerCenter() - direction * 100f;
                 _barrierEnd = _barrierstart - perpendicularDirection * 350;
                 _barrierEnd1 = _barrierstart - perpendicularDirection * -350;
+                DashSound.Play();
             }
             else{
                 Velocity.X *= 0.95f;
@@ -238,11 +242,19 @@ namespace FinalComGame
                 }
             }
         }
+
         private void AI_Attack(float deltaTime,List<GameObject> gameObjects, TileMap tileMap){
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
+            int currentSecond = (int)Math.Floor(_actionTimer);
             if(_actionTimer>0){
+                //playsound here 
+                if (currentSecond != _lastSecondMark && currentSecond >= 0)
+                {
+                    _lastSecondMark = currentSecond;
+                    LaserSound.Play();
+                }
                 //doing Attack
             }else{
                 CurrentState = EnemyState.Chase;

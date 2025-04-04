@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -12,6 +13,7 @@ namespace FinalComGame
         private float shootTimer;
         private Rectangle _baseTextureViewPort;
         public TowerBullet TowerBullet;
+        public SoundEffect Tower_sound;
 
         public TowerEnemy(Texture2D texture) : base(texture)
         {
@@ -153,6 +155,7 @@ namespace FinalComGame
             {
                 if (distanceToPlayer <=AttackRange && shootTimer >= shootCooldown && HaveLineOfSightOfPlayer(tileMap))
                 {
+                    Tower_sound.Play();
                     ShootBullet(gameObjects);
                     shootTimer = 0;
                 }

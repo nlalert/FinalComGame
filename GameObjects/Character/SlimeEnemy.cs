@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -10,7 +11,7 @@ namespace FinalComGame
         public float JumpCooldown;
         private float _jumpTimer;
         public float Friction;
-
+        public SoundEffect Slime_death_Sound;
         public SlimeEnemy(Texture2D texture) : base(texture) { 
             _texture = texture;
             CanCollideTile = true;
@@ -170,6 +171,12 @@ namespace FinalComGame
         {
             Velocity.Y +=Singleton.GRAVITY/1.75f * deltaTime;
             ClampMaxFallVelocity();
+        }
+
+        public override void OnDead(List<GameObject> gameObjects)
+        {
+            Slime_death_Sound.Play();
+            base.OnDead(gameObjects);
         }
     }
 }

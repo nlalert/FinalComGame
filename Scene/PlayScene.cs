@@ -49,8 +49,20 @@ public class PlayScene : Scene
     private SoundEffect _fireBallShootingSound;
     private SoundEffect _fireBallExplosionSound;
     private SoundEffect _pickUpSound;
-    
+
+    private SoundEffect _Rhulk_LaserSound;
+    private SoundEffect _Rhulk_DashSound;
+    private SoundEffect _Dog_sound;
+    private SoundEffect _DemonAttack_sound;
+    private SoundEffect _Tower_sound;
+    private SoundEffect _Slime_hurt_sound;
+    private SoundEffect _Slime_death_sound;
+    private SoundEffect _Skeleton_hurt_sound;
+    private SoundEffect _Skeleton_death_sound;
+
+
     private StageManager _stageManager;
+    
 
     public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
@@ -121,6 +133,15 @@ public class PlayScene : Scene
         _fireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
         _fireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
         _pickUpSound = _content.Load<SoundEffect>("PickUp");
+        _Rhulk_DashSound = _content.Load<SoundEffect>("RhulkDash_sound");
+        _Rhulk_LaserSound = _content.Load<SoundEffect>("Laser_sound");
+        _Dog_sound = _content.Load<SoundEffect>("Dog_sound");
+        _DemonAttack_sound = _content.Load<SoundEffect>("DemonAttack_sound");
+        _Tower_sound = _content.Load<SoundEffect>("Tower_sound");
+        _Slime_hurt_sound = _content.Load<SoundEffect>("Slime_hurt_sound");
+        _Slime_death_sound = _content.Load<SoundEffect>("Slime_death_sound");
+        _Skeleton_hurt_sound = _content.Load<SoundEffect>("Skeleton_hurt_sound");
+        _Skeleton_death_sound = _content.Load<SoundEffect>("Skeleton_death_sound");
 
         // Load songs
         _songs[0] = _content.Load<Song>("ChillSong");
@@ -544,12 +565,12 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Slime"),
                 MaxHealth = 50f,
                 BaseAttackDamage = 3f,
-
+                Slime_death_Sound = _Slime_death_sound,
                 JumpCooldown = 3.0f,
                 BaseJumpStrength = 490,
                 Friction = 0.96f,
 
-                HitSound = _hitSound,
+                HitSound = _Slime_hurt_sound,
 
                 LootTableChance = slimeLootTableChance
             });
@@ -562,7 +583,7 @@ public class PlayScene : Scene
             new HellhoundEnemy(_hellhoundTexture){
                 Name = "Hellhound",
                 Viewport = ViewportManager.Get("Hellhound"),
-                
+                DogSound = _Dog_sound,
                 MaxHealth = 50f,
                 BaseAttackDamage = 8f,
 
@@ -595,9 +616,10 @@ public class PlayScene : Scene
 
                 IgnorePlayerDuration = 3f,
 
-                HitSound = _hitSound,
+                HitSound = _Skeleton_hurt_sound,
 
-                LootTableChance = SkeletonLootTableChance
+                LootTableChance = SkeletonLootTableChance,
+                Skeleton_death_Sound = _Skeleton_death_sound
             });
 
         EnemyManager.AddGameEnemy(EnemyID.PlatformEnemy,
@@ -621,9 +643,8 @@ public class PlayScene : Scene
             new TowerEnemy(_towerTexture){
                 Name = "TowerEnemy",
                 Viewport = ViewportManager.Get("TowerEnemy"),
-
+                Tower_sound = _Tower_sound,
                 MaxHealth = 80f,
-
                 HitSound = _hitSound,
 
                 TowerBullet = new TowerBullet(_projectileTexture)
@@ -648,6 +669,8 @@ public class PlayScene : Scene
             new DemonEnemy(_demonTexture){
                 Name = "Demon",
                 Viewport = ViewportManager.Get("Demon"),
+
+                DemonAttack_sound = _DemonAttack_sound,
                 BaseAttackDamage = 5f,
                 MaxHealth = 50f,
 
@@ -684,7 +707,7 @@ public class PlayScene : Scene
             new Cerberus(_cerberusTexture, _whiteTexture){
                 Name = "Cerberus",
                 Viewport = ViewportManager.Get("Cerberus"),
-
+                DogSound = _Dog_sound,
                 MaxHealth = 300,
                 BaseAttackDamage = 5f,
 
@@ -699,9 +722,11 @@ public class PlayScene : Scene
             new Rhulk(_rhulkTexture){
                 Name = "Rhulk",
                 Viewport = ViewportManager.Get("Rhulk"),
-
                 MaxHealth = 1000f,
                 BaseAttackDamage = 10f,
+
+                LaserSound = _Rhulk_LaserSound,
+                DashSound = _Rhulk_DashSound,
 
                 // JumpCooldown = 3.0f,
                 BaseJumpStrength = 550,

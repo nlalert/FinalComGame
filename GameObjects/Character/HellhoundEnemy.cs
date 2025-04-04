@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -17,6 +18,7 @@ namespace FinalComGame
         private bool _isDashing;
         private float _dashTimer;
         public float DashDuration;
+        public SoundEffect DogSound;
 
         public HellhoundEnemy(Texture2D texture) : base(texture) { 
             _texture = texture;
@@ -198,7 +200,7 @@ namespace FinalComGame
                 Velocity = (_dashTarget - Position);
                 Velocity.Normalize();
                 Velocity *= 600f;//Dash speed
-                
+                DogSound.Play();
             }
             else{
                 Velocity.X *= 0.95f;
