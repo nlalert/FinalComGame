@@ -39,22 +39,19 @@ namespace FinalComGame
            
             // Check collision with solid tiles
             if(CanCollideTile){
-                for (int i = -Singleton.COLLISION_RADIUS; i <= Singleton.COLLISION_RADIUS; i++)
+                foreach (Vector2 offset in _collisionOffsets)
                 {
-                    for (int j = -Singleton.COLLISION_RADIUS; j <= Singleton.COLLISION_RADIUS; j++)
+                    Vector2 checkPosition = new Vector2(Position.X + offset.X, Position.Y + offset.Y);
+                    Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+                    if(tile != null)
                     {
-                        Vector2 newPosition = new(Position.X + i * Singleton.TILE_SIZE, Position.Y + j * Singleton.TILE_SIZE);
-                        Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-                        if(tile != null)
+                        if (IsTouching(tile) && tile.Type == TileType.Grappling_Tile)
                         {
-                            if (IsTouching(tile) && tile.Type == TileType.Grappling_Tile)
-                            {
-                                Hooked = true;
-                                _lifetime = 1.5f;
-                                HookedPosition = Position;
-                                Velocity = Vector2.Zero;
-                                break;
-                            }
+                            Hooked = true;
+                            _lifetime = 1.5f;
+                            HookedPosition = Position;
+                            Velocity = Vector2.Zero;
+                            break;
                         }
                     }
                 }
