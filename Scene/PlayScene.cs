@@ -211,20 +211,17 @@ public class PlayScene : Scene
 
     public void UpdateAllObjects(GameTime gameTime)
     {
+        float updateDistanceSquared = Singleton.UPDATE_DISTANCE * Singleton.UPDATE_DISTANCE;
+        
         for (int i = 0; i < _numObject; i++)
         {
-            if(!IsInUpdateRange(_gameObjects[i]))
+            GameObject g = _gameObjects[i];
+            if (!g.IsActive)
                 continue;
-            if(_gameObjects[i].IsActive)
-                _gameObjects[i].Update(gameTime, _gameObjects, _stageManager.CollisionTileMap);
+                
+            if (Vector2.DistanceSquared(g.Position, Singleton.Instance.Player.Position) <= updateDistanceSquared)
+                g.Update(gameTime, _gameObjects, _stageManager.CollisionTileMap);
         }
-        // Console.WriteLine(_gameObjects.Count);
-    }
-
-    private bool IsInUpdateRange(GameObject g)
-    {
-        return  Math.Abs(g.Position.X - Singleton.Instance.Player.Position.X) <= Singleton.UPDATE_DISTANCE &&
-                Math.Abs(g.Position.Y - Singleton.Instance.Player.Position.Y) <= Singleton.UPDATE_DISTANCE;
     }
 
     private void UpdateBackGround(GameTime gameTime)
