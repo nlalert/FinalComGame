@@ -691,7 +691,7 @@ public class PlayScene : Scene
                 Laserproj = new DemonLaser(_LaserTexture)
                 {
                     Name = "BulletEnemy",
-                    BaseDamageAmount = 20f,
+                    BaseDamageAmount = 10f,
                     Viewport = ViewportManager.Get("Rhulk_Laser")
                 }
             });

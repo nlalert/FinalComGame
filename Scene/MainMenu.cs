@@ -187,7 +187,7 @@ namespace FinalComGame
         protected void PlayTutorialButton_OnClick(object sender, EventArgs e)
         {
             Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
-            Singleton.Instance.Stage = 0;
+            Singleton.Instance.Stage = 3;
             ShowMainMenu();
         }
         
