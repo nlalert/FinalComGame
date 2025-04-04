@@ -355,7 +355,7 @@ public class PlayScene : Scene
             );
             SignBoard ItemTutorialSign = new SignBoard(
                 _whiteTexture,
-                "Preess F to pick up item " + 
+                "Preess F to pick up item "+ 
                 "Press (1) (2) to use item",     
                 // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                 TileMap.GetTileWorldPositionAt(149, 30), // TopLeft Position // TODO : More dynamic
@@ -367,7 +367,7 @@ public class PlayScene : Scene
             SignBoard ShootTutorialSign = new SignBoard(
                 _whiteTexture,
                 "Press Q to Punch        "+
-                "Press E to Shoot        " + 
+                "Press E to Shoot        "+ 
                 "Hold E to charge bullet ",     
                 // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                 TileMap.GetTileWorldPositionAt(166, 31), // TopLeft Position // TODO : More dynamic
@@ -617,7 +617,8 @@ public class PlayScene : Scene
 
         Dictionary<ItemID, float> DemonLootTableChance = new Dictionary<ItemID, float>{ 
             {ItemID.None, 0.4f},
-            {ItemID.LifeUp, 0.05f},
+            {ItemID.LifeUp, 0.025f},
+            {ItemID.Staff, 0.025f},
             {ItemID.JumpPotion, 0.05f},
             {ItemID.HealthPotion, 0.5f},
         };

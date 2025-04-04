@@ -761,7 +761,7 @@ namespace FinalComGame
             }
 
             if (((Singleton.Instance.IsKeyPressed(Climb) && Position.Y > (_ladderTopPosition.Y + 8) && IsOnladder() && !_isCrouching) || 
-                (Singleton.Instance.IsKeyPressed(Crouch) && _ladderTopPosition.Y != 0)) && 
+                (Singleton.Instance.IsKeyPressed(Crouch) && _ladderTopPosition.Y != 0 && Velocity.Y == 0)) && 
                 (Velocity.Y >= 0) && !_isClimbing && !_isDashing)
             {
                 _isClimbing = true;
@@ -784,6 +784,8 @@ namespace FinalComGame
                 }
                 else if (Singleton.Instance.IsKeyPressed(Crouch))
                 {
+                    if (Position.Y < _ladderTopPosition.Y + 8)
+                        Position.Y += Singleton.TILE_SIZE;
                     Velocity.Y = ClimbSpeed;
                 }
                 else Velocity.Y = 0;
@@ -1053,8 +1055,9 @@ namespace FinalComGame
 
                         if (tile.Type == TileType.Platform|| tile.Type == TileType.Ladder_Platform)
                         {
-                            if(IsTouchingTop(tile))
+                            if(IsTouchingTop(tile)){
                                 _isOnPlatform = true;
+                            }
                             if (tile.Position.Y < Position.Y + Viewport.Height || _isDropping)
                                 tile.IsSolid = false;
                             else
