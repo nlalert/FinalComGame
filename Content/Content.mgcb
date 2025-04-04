@@ -109,12 +109,6 @@
 /processorParam:Quality=Best
 /build:Eternity's Divide OST  Enter Cold Fusion Core.mp3
 
-#begin Eternity's Divide OST  Enter Cold Fusion Core.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Eternity's Divide OST  Enter Cold Fusion Core.mp3
-
 #begin Eternity's Divide OST  Snowstorm.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
@@ -229,6 +223,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:LargeSlime.png
+
+#begin Laser_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Laser_sound.wav
 
 #begin Laserbeam.png
 /importer:TextureImporter
@@ -499,6 +499,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Rhulk.png
+
+#begin RhulkDash_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:RhulkDash_sound.wav
 
 #begin Rope.png
 /importer:TextureImporter

@@ -51,6 +51,9 @@ public class PlayScene : Scene
     private SoundEffect _fireBallShootingSound;
     private SoundEffect _fireBallExplosionSound;
     private SoundEffect _pickUpSound;
+
+    private SoundEffect _Rhulk_LaserSound;
+    private SoundEffect _Rhulk_DashSound;
     
     private StageManager _stageManager;
 
@@ -122,6 +125,8 @@ public class PlayScene : Scene
         _fireBallShootingSound = _content.Load<SoundEffect>("FireBallShooting");
         _fireBallExplosionSound = _content.Load<SoundEffect>("FireBallExplosion");
         _pickUpSound = _content.Load<SoundEffect>("PickUp");
+        _Rhulk_DashSound = _content.Load<SoundEffect>("RhulkDash_sound");
+        _Rhulk_LaserSound = _content.Load<SoundEffect>("Laser_sound");
 
         // Load songs
         _songlevel0 = _content.Load<Song>("ChillSong");
@@ -716,10 +721,12 @@ public class PlayScene : Scene
             new Rhulk(_rhulkTexture){
                 Name = "Rhulk",
                 Viewport = ViewportManager.Get("Rhulk"),
-
                 MaxHealth = 1000f,
                 BaseAttackDamage = 3f,
 
+                LaserSound = _Rhulk_LaserSound,
+                DashSound = _Rhulk_DashSound,
+                
                 // JumpCooldown = 3.0f,
                 BaseJumpStrength = 550,
                 Friction = 0.96f,
