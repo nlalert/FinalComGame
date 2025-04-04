@@ -55,7 +55,14 @@ public class PlayScene : Scene
     private SoundEffect _Dog_sound;
     private SoundEffect _DemonAttack_sound;
     private SoundEffect _Tower_sound;
+    private SoundEffect _Slime_hurt_sound;
+    private SoundEffect _Slime_death_sound;
+    private SoundEffect _Skeleton_hurt_sound;
+    private SoundEffect _Skeleton_death_sound;
+
+
     private StageManager _stageManager;
+    
 
     public override void Initialize(GameManager gameManager, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsDeviceManager, ContentManager content)
     {
@@ -131,6 +138,10 @@ public class PlayScene : Scene
         _Dog_sound = _content.Load<SoundEffect>("Dog_sound");
         _DemonAttack_sound = _content.Load<SoundEffect>("DemonAttack_sound");
         _Tower_sound = _content.Load<SoundEffect>("Tower_sound");
+        _Slime_hurt_sound = _content.Load<SoundEffect>("Slime_hurt_sound");
+        _Slime_death_sound = _content.Load<SoundEffect>("Slime_death_sound");
+        _Skeleton_hurt_sound = _content.Load<SoundEffect>("Skeleton_hurt_sound");
+        _Skeleton_death_sound = _content.Load<SoundEffect>("Skeleton_death_sound");
 
         // Load songs
         _songs[0] = _content.Load<Song>("ChillSong");
@@ -554,7 +565,8 @@ public class PlayScene : Scene
                 Viewport = ViewportManager.Get("Slime"),
                 MaxHealth = 50f,
                 BaseAttackDamage = 3f,
-
+                Slime_Hurt_Sound = _Slime_hurt_sound,
+                Slime_death_Sound = _Slime_death_sound,
                 JumpCooldown = 3.0f,
                 BaseJumpStrength = 490,
                 Friction = 0.96f,
@@ -607,7 +619,9 @@ public class PlayScene : Scene
 
                 HitSound = _hitSound,
 
-                LootTableChance = SkeletonLootTableChance
+                LootTableChance = SkeletonLootTableChance,
+                Skeleton_Hurt_Sound = _Skeleton_hurt_sound,
+                Skeleton_death_Sound = _Skeleton_death_sound
             });
 
         EnemyManager.AddGameEnemy(EnemyID.PlatformEnemy,

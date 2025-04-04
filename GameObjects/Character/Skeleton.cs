@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -12,6 +13,8 @@ namespace FinalComGame
         public float IgnorePlayerDuration;
         private float _ignorePlayerTimer;
         private bool _isIgnoringPlayer;
+        public SoundEffect Skeleton_Hurt_Sound;
+        public SoundEffect Skeleton_death_Sound;
         public SkeletonEnemy(Texture2D texture) : base(texture) { 
             _texture = texture;
         }
@@ -95,18 +98,13 @@ namespace FinalComGame
                         break;
                 }    
             }
-     
             base.UpdateAnimation(deltaTime);
         }
 
-        public override void OnSpawn()
-        {
-            Console.WriteLine("Skeleton rises from the ground!");
-        }
 
         public override void OnDead(List<GameObject> gameObjects)
         {
-            Console.WriteLine("Skeleton slowly crumbles to dust...");
+            Skeleton_death_Sound.Play();
             base.OnDead(gameObjects);
         }
 
@@ -222,5 +220,12 @@ namespace FinalComGame
             _isIgnoringPlayer = true;
             base.OnCollidePlayer();
         }
+        public override void OnHit(float damageAmount, bool IsHeavyAttack)
+        {  
+            if(damageAmount >0)
+                Skeleton_Hurt_Sound.Play();
+            base.OnHit(damageAmount, IsHeavyAttack);
+        }
+
     }
 }
