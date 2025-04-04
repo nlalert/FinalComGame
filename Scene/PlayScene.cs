@@ -32,6 +32,7 @@ public class PlayScene : Scene
     private Texture2D _giantSlimeTexture;
     private Texture2D _cerberusTexture;
     private Texture2D _rhulkTexture;
+     private Texture2D _queueTexture;
     private Texture2D _itemSlotTexture;
 
     // Sound 
@@ -95,6 +96,8 @@ public class PlayScene : Scene
         _giantSlimeTexture = _content.Load<Texture2D>("LargeSlime");
         _cerberusTexture = _content.Load<Texture2D>("Cerberus");
         _rhulkTexture = _content.Load<Texture2D>("Rhulk");
+
+        _queueTexture = _content.Load<Texture2D>("Queue");
 
         //UI
         _itemSlotTexture = _content.Load<Texture2D>("ItemSlot");
@@ -691,6 +694,12 @@ public class PlayScene : Scene
                     BaseDamageAmount = 20f,
                     Viewport = ViewportManager.Get("Rhulk_Laser")
                 }
+            });
+
+        EnemyManager.AddGameEnemy(EnemyID.Queue,         
+            new Queue(_queueTexture){
+                Name = "Queue",
+                Viewport = ViewportManager.Get("Rhulk"),
             });
     }
 

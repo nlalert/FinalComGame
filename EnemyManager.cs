@@ -16,7 +16,8 @@ public enum EnemyID
     Demon = 119,
     GiantSlime = 137,
     Cerberus = 138,
-    Rhulk = 139
+    Rhulk = 139,
+    Queue = 154
 }
 
 
