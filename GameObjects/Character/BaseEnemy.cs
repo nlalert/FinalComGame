@@ -203,25 +203,32 @@ namespace FinalComGame {
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public bool HaveLineOfSight(TileMap tileMap){
-            if (Singleton.Instance.Player == null) return false;
-            
-            Vector2 enemyPosition = Position;
-            Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
+        protected bool HaveLineOfSightOfPlayer(TileMap tileMap){
+            if (!IsWithinDetectionRange())
+                return false;
             
             float step = Singleton.TILE_SIZE; // Tile size or step size for checking
-            Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);
-            Vector2 checkPosition = enemyPosition;
+            Vector2 checkPosition = Position;
+            Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
+            Vector2 direction = Vector2.Normalize(playerPosition - checkPosition);
 
             while (Vector2.Distance(checkPosition, playerPosition) > step)
             {
                 checkPosition += direction * step;
-                if (tileMap.IsObstacle(checkPosition))
+                Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+                if (tile != null && tile.IsSolid)
                 {
                     return false; // Blocked by an obstacle
                 }
             }
             return true;
+        }
+
+        protected bool IsWithinDetectionRange()
+        {
+            float distanceToPlayer = Vector2.Distance(Position, Singleton.Instance.Player.GetPlayerCenter());
+            
+            return distanceToPlayer <= DetectionRange;
         }
 
         public override void Reset()

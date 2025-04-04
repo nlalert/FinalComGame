@@ -797,7 +797,7 @@ namespace FinalComGame
             }
             
             if(Singleton.Instance.IsKeyJustPressed(Grapple) && Abilities.IsAbilityUnlocked(AbilityType.Grapple) && MP >= GrappleMP){
-                if (GrapplingPosition != Vector2.Zero && HaveLineOfSight(tileMap))
+                if (GrapplingPosition != Vector2.Zero && HaveLineOfSightOfHook(tileMap))
                     FireGrapplingHook(gameObjects);
             }
             
@@ -858,7 +858,7 @@ namespace FinalComGame
             }
             
             if (!_isGrappling && GrapplingPosition != Vector2.Zero)
-                HaveLineOfSight(tileMap);
+                HaveLineOfSightOfHook(tileMap);
         }
 
         private bool IsOnladder(){
@@ -1076,20 +1076,41 @@ namespace FinalComGame
             }
         }
 
-        public bool HaveLineOfSight(TileMap tileMap){
+        // public bool HaveLineOfSight(TileMap tileMap){
+        //     if (GrapplingPosition == Vector2.Zero) return false;
+            
+        //     Vector2 targetPosition = GrapplingPosition;
+        //     Vector2 currentPosition = GetPlayerCenter();
+            
+        //     float step = Singleton.TILE_SIZE; // Tile size or step size for checking
+        //     Vector2 direction = Vector2.Normalize(currentPosition - targetPosition);
+        //     Vector2 checkPosition = targetPosition;
+
+        //     while (Vector2.Distance(checkPosition, currentPosition) > step)
+        //     {
+        //         checkPosition += direction * step;
+        //         if (tileMap.IsObstacle(checkPosition))
+        //         {
+        //             _haveLineOfSight = false;
+        //             return false; // Blocked by an obstacle
+        //         }
+        //     }
+        //     _haveLineOfSight = true;
+        //     return true;
+        // }
+        public bool HaveLineOfSightOfHook(TileMap tileMap){
             if (GrapplingPosition == Vector2.Zero) return false;
             
-            Vector2 targetPosition = GrapplingPosition;
-            Vector2 currentPosition = GetPlayerCenter();
-            
             float step = Singleton.TILE_SIZE; // Tile size or step size for checking
-            Vector2 direction = Vector2.Normalize(currentPosition - targetPosition);
-            Vector2 checkPosition = targetPosition;
+            Vector2 checkPosition = GrapplingPosition;
+            Vector2 currentPosition = Singleton.Instance.Player.GetPlayerCenter();
+            Vector2 direction = Vector2.Normalize(currentPosition - checkPosition);
 
             while (Vector2.Distance(checkPosition, currentPosition) > step)
             {
                 checkPosition += direction * step;
-                if (tileMap.IsObstacle(checkPosition))
+                Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+                if (tile != null && tile.IsSolid)
                 {
                     _haveLineOfSight = false;
                     return false; // Blocked by an obstacle
@@ -1098,7 +1119,6 @@ namespace FinalComGame
             _haveLineOfSight = true;
             return true;
         }
-
 
         private void Shoot(List<GameObject> gameObjects)
         {

@@ -136,27 +136,22 @@ namespace FinalComGame
         }
 
         private void AI_Idle(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap, float deltaTime){
-            float distanceToPlayer = Vector2.Distance(Position, Singleton.Instance.Player.GetPlayerCenter());
-
-            if (distanceToPlayer <= DetectionRange && HaveLineOfSight(tileMap))
+            if (HaveLineOfSightOfPlayer(tileMap))
             {
                 // Transition to chase state
                 CurrentState = EnemyState.Chase;
             }
-            else
-            {
-            }
         }
         private void AI_Chase(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
             float distanceToPlayer = Vector2.Distance(Position, Singleton.Instance.Player.GetPlayerCenter());
-            if (distanceToPlayer > DetectionRange || !HaveLineOfSight(tileMap))
+            if (!HaveLineOfSightOfPlayer(tileMap))
             {
                 CurrentState = EnemyState.Idle;
                 Velocity = Vector2.Zero; // Stop moving
             }
             else
             {
-                if (distanceToPlayer <=AttackRange && shootTimer >= shootCooldown && HaveLineOfSight(tileMap))
+                if (distanceToPlayer <=AttackRange && shootTimer >= shootCooldown && HaveLineOfSightOfPlayer(tileMap))
                 {
                     ShootBullet(gameObjects);
                     shootTimer = 0;

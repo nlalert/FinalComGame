@@ -140,7 +140,7 @@ namespace FinalComGame
             }
 
             Velocity.X = 50f * Direction;
-            if(this.HaveLineOfSight(tileMap) && Vector2.Distance(Singleton.Instance.Player.Position,this.Position) <=100)
+            if(this.HaveLineOfSightOfPlayer(tileMap) && Vector2.Distance(Singleton.Instance.Player.Position,this.Position) <=100)
             {
                 Console.WriteLine("Skeleton sees the player! Switching to chase mode.");
                 CurrentState = EnemyState.Chase;
@@ -157,7 +157,7 @@ namespace FinalComGame
             float distanceToPlayer = Vector2.Distance(Singleton.Instance.Player.Position, this.Position);
 
             // Check if the enemy still sees the player
-            if (!this.HaveLineOfSight(tileMap) || distanceToPlayer > 400) // Max chase range
+            if (!this.HaveLineOfSightOfPlayer(tileMap) || distanceToPlayer > 400) // Max chase range
             {
                 Console.WriteLine("Skeleton lost sight of the player. Returning to idle patrol.");
                 CurrentState = EnemyState.Idle;
