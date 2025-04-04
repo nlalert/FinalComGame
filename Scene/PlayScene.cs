@@ -1039,7 +1039,7 @@ public class PlayScene : Scene
         {
             Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Dash);
         }
-        if(Singleton.Instance.Stage == 0 || Singleton.Instance.Stage >= 2)
+        if(Singleton.Instance.Stage >= 2)
         {
             Singleton.Instance.Player.Abilities.UnlockAbility(AbilityType.Glide);
         }
