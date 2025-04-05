@@ -118,7 +118,7 @@ public class StageTransitionScene : Scene
     private void ResetTransition()
     {
         _opacity = 0f;
-        _fadeInTime = 1.5f;
+        _fadeInTime = 1.0f;
         _messageTime = 2.5f;
         _timer = 0f;
 
