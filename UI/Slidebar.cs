@@ -10,12 +10,9 @@ public class SlideBarUI : HUDElement
     // UI Components
     private TextUI _labelText;
     private TextUI _valueText;
+    private Texture2D _UITexture;
     private Rectangle _barBounds;
     private Rectangle _handleBounds;
-    
-    // Textures
-    private Texture2D _barTexture;
-    private Texture2D _handleTexture;
     
     // Values
     private float _minValue;
@@ -24,7 +21,6 @@ public class SlideBarUI : HUDElement
     private string _labelFormat;
     private string _valueFormat;
     private bool _isDragging;
-    private int _handleWidth;
     private Color _barColor;
     private Color _textColor;
     
@@ -35,25 +31,22 @@ public class SlideBarUI : HUDElement
     public SlideBarUI(
         Rectangle bounds,
         string label,
-        Texture2D barTexture,
-        Texture2D handleTexture,
+        Texture2D UITexture,
         float minValue = 0,
         float maxValue = 100,
         float startValue = 50,
         string valueFormat = "{0:F0}")
         : base(bounds)
     {
-        _barTexture = barTexture;
-        _handleTexture = handleTexture;
         _minValue = minValue;
         _maxValue = maxValue;
         _currentValue = MathHelper.Clamp(startValue, minValue, maxValue);
+        _UITexture = UITexture;
         _labelFormat = label;
         _valueFormat = valueFormat;
         _barColor = Color.White;
         _textColor = Color.White;
         _isDragging = false;
-        _handleWidth = handleTexture.Width;
         _barHeight = 24;
         _labelWidth = 150;
         
@@ -136,8 +129,8 @@ public class SlideBarUI : HUDElement
         // Update value while dragging
         if (_isDragging)
         {
-            float relativeX = MathHelper.Clamp(mousePos.X - _barBounds.X, 0, _barBounds.Width - _handleWidth);
-            float valuePercent = relativeX / (_barBounds.Width - _handleWidth);
+            float relativeX = MathHelper.Clamp(mousePos.X - _barBounds.X, 0, _barBounds.Width - ViewportManager.Get("Volume_Slider").Width);
+            float valuePercent = relativeX / (_barBounds.Width - ViewportManager.Get("Volume_Slider").Width);
             _currentValue = _minValue + valuePercent * (_maxValue - _minValue);
             UpdateHandlePosition();
         }
@@ -150,24 +143,24 @@ public class SlideBarUI : HUDElement
         float valuePercent = (_currentValue - _minValue) / valueRange;
         
         // Calculate handle position
-        int handleX = (int)(_barBounds.X + valuePercent * (_barBounds.Width - _handleWidth));
-        int handleY = _barBounds.Y + (_barBounds.Height - _handleTexture.Height) / 2;
+        int handleX = (int)(_barBounds.X + valuePercent * (_barBounds.Width - ViewportManager.Get("Volume_Slider").Width));
+        int handleY = _barBounds.Y + (_barBounds.Height - ViewportManager.Get("Volume_Slider").Height) / 2;
         
         _handleBounds = new Rectangle(
             handleX,
             handleY,
-            _handleWidth,
-            _handleTexture.Height
+            ViewportManager.Get("Volume_Slider").Width,
+            ViewportManager.Get("Volume_Slider").Height
         );
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
         // Draw bar background
-        spriteBatch.Draw(_barTexture, _barBounds, _barColor);
+        spriteBatch.Draw(_UITexture, _barBounds,ViewportManager.Get("Volume_Bar"), _barColor);
         
         // Draw handle
-        spriteBatch.Draw(_handleTexture, _handleBounds, Color.White);
+        spriteBatch.Draw(_UITexture, _handleBounds,ViewportManager.Get("Volume_Slider"), Color.White);
         
         // Draw text elements
         _labelText.Draw(spriteBatch);

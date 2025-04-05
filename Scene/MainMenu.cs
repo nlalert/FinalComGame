@@ -16,10 +16,14 @@ namespace FinalComGame
         private Button _playTutorialButton;
         private Button _skipTutorialButton;
 
-        private Texture2D _TitleTexture;
         private Texture2D _bgTexture;
         private Texture2D _mgTexture;
         private Texture2D _fgTexture;
+        private Texture2D _UITexture;
+
+        private Rectangle _titleRectangle;
+        private Rectangle _buttonRectangle ;
+
 
         private Vector2 _bgPosition;
         private Vector2 _mgPosition;
@@ -36,7 +40,10 @@ namespace FinalComGame
         public override void LoadContent(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch;
-            _TitleTexture = _content.Load<Texture2D>("Title");
+            _UITexture = _content.Load<Texture2D>("UI");
+            _titleRectangle = new Rectangle(0, 0, 304, 48);
+            _buttonRectangle = new Rectangle(0, 48, 304, 48);
+
             // Load parallax layers
             _bgTexture = _content.Load<Texture2D>("Level_1_Parallax_bg");
             _mgTexture = _content.Load<Texture2D>("Level_1_Parallax_mg");
@@ -106,49 +113,51 @@ namespace FinalComGame
 
         protected override void SetupHUD()
         {
-            Texture2D Title = _TitleTexture; 
             int titleWidth = Singleton.SCREEN_WIDTH / 2;
             int titleHeight = 100;
             _title = new ImageUI(
-                Title,
+                _UITexture,
                 new Rectangle((Singleton.SCREEN_WIDTH - titleWidth) / 2, (Singleton.SCREEN_HEIGHT - titleHeight) / 4, titleWidth, titleHeight),
-                new Rectangle(0, 0, 236, 40)
+                _titleRectangle
             );
 
-            Texture2D ButtonTexture = _content.Load<Texture2D>("ButtonTexture");
             int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
             int ButtonHeight = 100;
 
             _startButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 4, ButtonWidth, ButtonHeight),
-                ButtonTexture,
+                _UITexture,
                 "Start",
-                Color.Wheat
+                Color.Wheat,
+                _buttonRectangle
             );
 
             _startButton.OnClick += StartGameButton_OnClick;
 
             _exitButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 4, ButtonWidth, ButtonHeight),
-                ButtonTexture,
+                _UITexture,
                 "Exit",
-                Color.Wheat
+                Color.Wheat,
+                _buttonRectangle
             );
             _exitButton.OnClick += ExitGameButton_OnClick;
 
             _playTutorialButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth - 100) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight - 50) / 3, ButtonWidth + 100, ButtonHeight + 50),
-                ButtonTexture,
+                _UITexture,
                 "Play Prologue \n (Tutorial)",
-                Color.Wheat
+                Color.Wheat,
+                _buttonRectangle
             );
             _playTutorialButton.OnClick += PlayTutorialButton_OnClick;
 
             _skipTutorialButton = new Button(
                 new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth + 300) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight + 50) * 2 / 3, ButtonWidth - 300, ButtonHeight - 50),
-                ButtonTexture,
+                _UITexture,
                 "Skip Tutorial",
-                Color.Wheat
+                Color.Wheat,
+                _buttonRectangle
             );
             _skipTutorialButton.OnClick += SkipTutorialButton_OnClick;
 
