@@ -9,13 +9,13 @@ namespace FinalComGame;
 
 public class StageTransitionScene : Scene
 {
-    private Texture2D _pixelTexture;
     private TextUI _stageName;
     private Rectangle _fullScreenRect;
     
     // Transition state tracking
     private enum TransitionState
     {
+        SetUpText,
         FadingIn,
         ShowingMessage
     }
@@ -33,26 +33,19 @@ public class StageTransitionScene : Scene
         _fullScreenRect = new Rectangle(0, 0, Singleton.SCREEN_WIDTH, Singleton.SCREEN_HEIGHT);
         ResetTransition();
     }
-    public override void LoadContent(SpriteBatch spriteBatch)
-    {
-        base.LoadContent(spriteBatch);
-        
-        // Create 1x1 white pixel texture for opacity overlay
-        _pixelTexture = new Texture2D(_graphicsDevice, 1, 1);
-        _pixelTexture.SetData(new[] { Color.White });
-        
-        SetupHUD();
-    }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _timer += deltaTime;
         
         switch (_currentState)
         {
+            case TransitionState.SetUpText:
+                SetupHUD();
+                _currentState = TransitionState.FadingIn;
+                break;
             case TransitionState.FadingIn:
                 // Fade to black
                 _opacity = Math.Min(1f, _timer / _fadeInTime);
@@ -80,7 +73,7 @@ public class StageTransitionScene : Scene
     public override void Draw(GameTime gameTime)
     {
         _spriteBatch.Begin();
-        _spriteBatch.Draw(_pixelTexture, _fullScreenRect, Color.Black * _opacity);
+        _spriteBatch.Draw(Singleton.Instance.PixelTexture, _fullScreenRect, Color.Black * _opacity);
         _spriteBatch.End();
     }
     
@@ -99,7 +92,7 @@ public class StageTransitionScene : Scene
                 textWidth, 
                 textHeight
             ),
-            StageManager.GetNextStageName(),
+            StageManager.GetStageName(),
             5,  
             Color.Gold, 
             TextUI.TextAlignment.Center
@@ -110,9 +103,15 @@ public class StageTransitionScene : Scene
     
     private void PrepareNextStage()
     {
-        Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
+        if(Singleton.Instance.Stage == 1)
+        {
+            Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame;
+        }
+        else
+        {
+            Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
+        }
         ResetTransition();
-        SetupHUD();
     }
 
     private void ResetTransition()
@@ -122,6 +121,6 @@ public class StageTransitionScene : Scene
         _messageTime = 2.5f;
         _timer = 0f;
 
-        _currentState = TransitionState.FadingIn;
+        _currentState = TransitionState.SetUpText;
     }
 }

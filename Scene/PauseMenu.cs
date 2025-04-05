@@ -17,11 +17,15 @@ public class PauseMenu : Scene
     private Button _mainmenuButton;
     private Rectangle _buttonRectangle;
 
+    private Rectangle _fullScreenRect;
+
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
         _UITexture = _content.Load<Texture2D>("UI");
         _buttonRectangle = ViewportManager.Get("Button");
+
+        _fullScreenRect = new Rectangle(0, 0, Singleton.SCREEN_WIDTH, Singleton.SCREEN_HEIGHT);
 
         SetupHUD();
     }
@@ -36,7 +40,13 @@ public class PauseMenu : Scene
             Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
         }
     }
-    
+    public override void Draw(GameTime gameTime)
+    {
+        _spriteBatch.Begin();
+        _spriteBatch.Draw(Singleton.Instance.PixelTexture, _fullScreenRect, Color.Black * 0.8f); // draw murky background
+        _spriteBatch.End();
+    }
+
     protected override void SetupHUD()
     {
         int TextWidth = Singleton.SCREEN_WIDTH / 2;
@@ -45,7 +55,7 @@ public class PauseMenu : Scene
         _pauseTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 6, TextWidth, TextHeight),
             "Pause",  
-            1,
+            4,
             Color.White, 
             TextUI.TextAlignment.Center
         );
@@ -58,7 +68,8 @@ public class PauseMenu : Scene
             _UITexture,
             "Resume",
             Color.Wheat,
-            _buttonRectangle
+            _buttonRectangle,
+            2
         );
         _resumeButton.OnClick += ResumeButton_OnClick;
 
@@ -67,7 +78,8 @@ public class PauseMenu : Scene
             _UITexture,
             "Restart",
             Color.Wheat,
-            _buttonRectangle
+            _buttonRectangle,
+            2
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
@@ -76,7 +88,8 @@ public class PauseMenu : Scene
             _UITexture,
             "Settings",
             Color.Wheat,
-            _buttonRectangle
+            _buttonRectangle,
+            2
         );
         _settingsButton.OnClick += SettingButton_OnClick;
 
@@ -85,7 +98,8 @@ public class PauseMenu : Scene
             _UITexture,
             "Back to Main Menu",
             Color.Wheat,
-            _buttonRectangle
+            _buttonRectangle,
+            2
         );
         _mainmenuButton.OnClick += MainMenuButton_OnClick;
 

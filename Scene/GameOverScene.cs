@@ -40,7 +40,7 @@ public class GameOverScene : Scene
         _gameOverTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 5, TextWidth, TextHeight),
             "GAME OVER",  
-            1,
+            6,
             Color.White, 
             TextUI.TextAlignment.Center
         );
@@ -52,7 +52,8 @@ public class GameOverScene : Scene
             _UITexture,
             "Restart",
             Color.Wheat,
-            _buttonRectangle
+            _buttonRectangle,
+            2.5f
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
@@ -61,7 +62,8 @@ public class GameOverScene : Scene
             _UITexture,
             "Back to Main Menu",
             Color.Wheat,
-            _buttonRectangle
+            _buttonRectangle,
+            2
         );
         _mainmenuButton.OnClick += MainMenuButton_OnClick;
 
@@ -70,7 +72,8 @@ public class GameOverScene : Scene
             _UITexture,
             "Exit to Desktop",
             Color.Wheat,
-            _buttonRectangle
+            _buttonRectangle,
+            2
         );
         _exitButton.OnClick += ExitGameButton_OnClick;
 

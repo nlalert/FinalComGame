@@ -23,7 +23,6 @@ public class Prompt : UIElement
     
     private float _timer;
     private float _alpha;
-    private Texture2D _pixelTexture;
     
     // Background color and opacity
     private Color _backgroundColor = new Color(0, 0, 0, 180); // Semi-transparent black
@@ -73,13 +72,6 @@ public class Prompt : UIElement
         if (IsExpired)
             return;
         
-        // Create pixel texture if it doesn't exist
-        if (_pixelTexture == null)
-        {
-            _pixelTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            _pixelTexture.SetData(new[] { Color.White });
-        }
-        
         // Draw background with current alpha
         Color bgColor = new Color(
             _backgroundColor.R, 
@@ -88,7 +80,7 @@ public class Prompt : UIElement
             (byte)(_backgroundColor.A * _alpha)
         );
         
-        spriteBatch.Draw(_pixelTexture, _bounds, bgColor);
+        spriteBatch.Draw(Singleton.Instance.PixelTexture, _bounds, bgColor);
         
         // Draw text with current alpha
         Color textColorWithAlpha = new Color(

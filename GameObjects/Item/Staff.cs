@@ -27,8 +27,17 @@ public class Staff : RangeWeapon
 
     public override bool CanShoot()
     {
-        // Staff requires both ammo and MP
-        return _ammoAmount > 0 && Singleton.Instance.Player.MP >= MPCost;
+        if(Singleton.Instance.Player.MP >= MPCost)
+        {
+            if(_ammoAmount > 0)
+            {
+                return true;
+            }
+        }
+        else{
+            Singleton.Instance.CurrentUI.Prompt("Not Enough Soul Mana!");
+        }
+        return false;
     }
 
     public override void OnShoot()

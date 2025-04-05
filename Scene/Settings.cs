@@ -46,7 +46,7 @@ public class Settings : Scene
         _settingsTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 7, TextWidth, TextHeight),
             "Settings",  
-            1,
+            4,
             Color.White, 
             TextUI.TextAlignment.Center
         );
@@ -83,7 +83,8 @@ public class Settings : Scene
             _UITexture,
             "Back",
             Color.Wheat,
-            _buttonRectangle
+            _buttonRectangle,
+            2
         );
         _backButton.OnClick += BackButton_OnClick;
 

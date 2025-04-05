@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Barrier_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Barrier_sound.wav
+
 #begin BulletShot.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -163,6 +169,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:GoofyAhhJump.wav
+
+#begin Grenade_Explode_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Grenade_Explode_sound.wav
+
+#begin Grenade_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Grenade_sound.wav
 
 #begin Gunshot.wav
 /importer:WavImporter
@@ -409,6 +427,24 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Level_3_Parallax_mg.png
+
+#begin LifeUp_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:LifeUp_sound.wav
+
+#begin Medkit_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Medkit_sound.wav
+
+#begin MinionJar_sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:MinionJar_sound.wav
 
 #begin MinionSoulBullet.png
 /importer:TextureImporter

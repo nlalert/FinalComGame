@@ -24,6 +24,7 @@ class Singleton
     public Player Player;
     public Camera Camera;
     public UI CurrentUI;
+    public Texture2D PixelTexture;
 
     public float MusicVolume = 1.0f;
     public float SFXVolume = 1.0f;

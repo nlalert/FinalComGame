@@ -18,7 +18,6 @@ public class PlayScene : Scene
     private Texture2D _LaserTexture;
     private Texture2D _HookHeadTexture;
     private Texture2D _RopeTexture; 
-    private Texture2D _whiteTexture; // For SignBoard backgrounds         // TODO : Change to desire texture
     private Texture2D _playerTexture;
     private Texture2D _projectileTexture; // Used by many objects
     private Texture2D _itemTexture; // Used for all items
@@ -42,7 +41,6 @@ public class PlayScene : Scene
     private SoundEffect _punchSound;
     private SoundEffect _chargeBulletSound;
     private SoundEffect _bulletShotSound;
-    private SoundEffect _hitSound;
     private SoundEffect _potionUseSound;
     private SoundEffect _swordSlashSound;
     private SoundEffect _gunshotSound;
@@ -67,6 +65,13 @@ public class PlayScene : Scene
     private SoundEffect _Demon_death_sound;
     private SoundEffect _Rhulk_hurt_sound;
     private SoundEffect _Rhulk_death_sound;
+
+    private SoundEffect _Medkit_sound;
+    private SoundEffect _Barrier_sound;
+    private SoundEffect _LifeUp_sound;
+    private SoundEffect _Grenade_sound;
+    private SoundEffect _MinionJar_sound;
+    private SoundEffect _Grenade_Explode_sound;
 
     private StageManager _stageManager;
     
@@ -95,9 +100,6 @@ public class PlayScene : Scene
     {
         _RopeTexture = _content.Load<Texture2D>("Rope");
         _textureAtlas = _content.Load<Texture2D>("Tileset");
-        
-        _whiteTexture = new Texture2D(_graphicsDevice, 1, 1);
-        _whiteTexture.SetData(new[] { Color.White });
         
         _playerTexture = _content.Load<Texture2D>("Char");
         _projectileTexture = _content.Load<Texture2D>("Projectile");
@@ -133,7 +135,6 @@ public class PlayScene : Scene
         _punchSound = _content.Load<SoundEffect>("PlayerPunch");
         _chargeBulletSound = _content.Load<SoundEffect>("ChargingBullet");
         _bulletShotSound = _content.Load<SoundEffect>("BulletShot");
-        _hitSound = _content.Load<SoundEffect>("HitEnemy");
         _potionUseSound = _content.Load<SoundEffect>("PotionUse");
         _swordSlashSound = _content.Load<SoundEffect>("SwordSlash");
         _gunshotSound = _content.Load<SoundEffect>("Gunshot");
@@ -157,6 +158,12 @@ public class PlayScene : Scene
         _Demon_death_sound = _content.Load<SoundEffect>("Demon_death_sound");
         _Rhulk_hurt_sound = _content.Load<SoundEffect>("Rhulk_hurt_sound");
         _Rhulk_death_sound = _content.Load<SoundEffect>("Rhulk_death_sound");
+        _Medkit_sound = _content.Load<SoundEffect>("Medkit_sound");
+        _Barrier_sound = _content.Load<SoundEffect>("Barrier_sound");
+        _LifeUp_sound = _content.Load<SoundEffect>("LifeUp_sound");
+        _Grenade_sound = _content.Load<SoundEffect>("Grenade_sound");
+        _MinionJar_sound = _content.Load<SoundEffect>("MinionJar_sound");
+        _Grenade_Explode_sound = _content.Load<SoundEffect>("Grenade_Explode_sound");
         // Load songs
         _songs[0] = _content.Load<Song>("ChillSong");
         _songs[1] = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
@@ -363,7 +370,7 @@ public class PlayScene : Scene
         {
             case 0:
                 SignBoard WalkTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press Left or Right Arrow Key to move around!",
                     TileMap.GetTileWorldPositionAt(12, 30),  // TopLeft Position  // TODO : More dynamic
                     200,                    // Width
@@ -372,7 +379,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard JumpTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press Space Bar Key to Jump      " +
                     "Longer a you hold Jump Button, Higher the Jump!",
                     TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
@@ -382,7 +389,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard ClimbTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press UP Arrow Key to climb ladder or vines!",
                     TileMap.GetTileWorldPositionAt(53, 22), // TopLeft Position // TODO : More dynamic
                     252,                    // Width
@@ -391,7 +398,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard DashTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press SHIFT to Dash pass the gap!",
                     TileMap.GetTileWorldPositionAt(90, 17), // TopLeft Position // TODO : More dynamic
                     160,                    // Width
@@ -400,7 +407,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard PlatFormJumpTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Jump to get on platform",     
                     TileMap.GetTileWorldPositionAt(123, 24), // TopLeft Position // TODO : More dynamic
                     144,                    // Width
@@ -409,17 +416,17 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard PlatFormCrouchTutorialSign = new SignBoard(
-                    _whiteTexture,
-                    "Press Down to crouch "+
+                    Singleton.Instance.PixelTexture,
+                    "Press Down Arrow Key to crouch "+
                     "Crouch then Jump to drop below on platform", 
-                    TileMap.GetTileWorldPositionAt(123, 4), // TopLeft Position // TODO : More dynamic
-                    256,                    // Width
+                    TileMap.GetTileWorldPositionAt(120, 4), // TopLeft Position // TODO : More dynamic
+                    348,                    // Width
                     80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
                 SignBoard ItemTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Preess F to pick up item "+ 
                     "Press (1) (2) to use item " +
                     "Hold (1) (2) to drop item",     
@@ -431,7 +438,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard ShootTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press Q to Punch        "+
                     "Press E to Shoot        "+ 
                     "Hold E to charge Shot ",     
@@ -443,7 +450,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard ItemDropTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Defeat an enemy have chance to spawn an item",
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                     TileMap.GetTileWorldPositionAt(181, 28), // TopLeft Position // TODO : More dynamic
@@ -453,7 +460,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard GoodluckSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Ready to escape from this place and go back to delete your history? Jump in the Portal!", 
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                     TileMap.GetTileWorldPositionAt(225, 22), // TopLeft Position // TODO : More dynamic
@@ -476,7 +483,7 @@ public class PlayScene : Scene
 
             case 2:
                 SignBoard GlideTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Holding Jump button while mid air to glide!",
                     TileMap.GetTileWorldPositionAt(23, 100),  // TopLeft Position  // TODO : More dynamic
                     180,                    // Width
@@ -489,7 +496,7 @@ public class PlayScene : Scene
 
             case 3:
                 SignBoard GraplingTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press R to Grapple onto the hook",
                     TileMap.GetTileWorldPositionAt(43, 73),  // TopLeft Position  // TODO : More dynamic
                     240,                    // Width
@@ -504,7 +511,7 @@ public class PlayScene : Scene
 
     private void CreatePlayer()
     {
-        Singleton.Instance.Player = new Player(_playerTexture, _whiteTexture, _projectileTexture)
+        Singleton.Instance.Player = new Player(_playerTexture, Singleton.Instance.PixelTexture, _projectileTexture)
         {
             Name = "Player",
             Life = 3,
@@ -718,7 +725,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.GiantSlime,         
-            new GiantSlime(_giantSlimeTexture, _whiteTexture){
+            new GiantSlime(_giantSlimeTexture, Singleton.Instance.PixelTexture){
                 Name = "GiantSlime",
                 Viewport = ViewportManager.Get("GiantSlime"),
 
@@ -735,7 +742,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Cerberus,         
-            new Cerberus(_cerberusTexture, _whiteTexture){
+            new Cerberus(_cerberusTexture, Singleton.Instance.PixelTexture){
                 Name = "Cerberus",
                 Viewport = ViewportManager.Get("Cerberus"),
                 DogSound = _Dog_sound,
@@ -788,13 +795,12 @@ public class PlayScene : Scene
         Item.TooltipBackgroundTexture = _toolTipTexture;
         Item.PickUpSound = _pickUpSound;
 
-        //TODO : Change these to real ITEM ID
         ItemManager.AddGameItem(ItemID.HealthPotion,
             new Potion(_itemTexture, ItemType.Consumable){
-                Name =  "Health Potion",
+                Name =  "Medkit",
                 Description = "Restore 30 HP",
                 Viewport = ViewportManager.Get("Potion_Health"),
-                UseSound = _potionUseSound
+                UseSound = _Medkit_sound
             });
 
         ItemManager.AddGameItem(ItemID.SpeedPotion,
@@ -818,7 +824,7 @@ public class PlayScene : Scene
                 Name =  "Barrier",
                 Description = "Give you a shield",
                 Viewport = ViewportManager.Get("Barrier"),
-                UseSound = _potionUseSound // Temp
+                UseSound = _Barrier_sound// Temp
             });
 
         ItemManager.AddGameItem(ItemID.LifeUp,
@@ -826,7 +832,7 @@ public class PlayScene : Scene
                 Name =  "1Up",
                 Description = "The soul can be revived once more....",
                 Viewport = ViewportManager.Get("LifeUp"),
-                UseSound = _potionUseSound // Temp
+                UseSound = _LifeUp_sound // Temp
             });
 
         ItemManager.AddGameItem(ItemID.SpeedBoots,
@@ -865,7 +871,6 @@ public class PlayScene : Scene
                 Description = "Deal Explosion 50 Damage",
                 MPCost = 10,
                 ShootSound = _fireBallShootingSound,
-
                 FireBall = new FireBall(_projectileTexture)
                 {
                     Name = "FireBall",
@@ -887,6 +892,7 @@ public class PlayScene : Scene
                 Name =  "Staff",
                 Description = "Summon Your best Minion!",
                 MPCost = 10,
+                UseSound = _MinionJar_sound,
                 soulMinion = new SoulMinion(_projectileTexture)
                 {
                     Name = "Soul Minion",
@@ -907,7 +913,7 @@ public class PlayScene : Scene
                 Name =  "Grenade",
                 Description = "High damage grenade",
                 Viewport = ViewportManager.Get("Grenade"),
-                UseSound = _potionUseSound, // Temp
+                UseSound = _Grenade_sound, // Temp
 
                 GrenadeProjectile = new GrenadeProjectile(_projectileTexture)
                 {
@@ -918,6 +924,7 @@ public class PlayScene : Scene
                     Radius = 50f,
                     ExplosionDuration = 0.5f,
                     DetonateDelayDuration = 3.0f,
+                    grenade_Explode_sound = _Grenade_Explode_sound,
                     Viewport = ViewportManager.Get("Grenade_Projectile"),
                     BaseExplosion = new Explosion(_projectileTexture, _fireBallExplosionSound)
                     {
@@ -948,7 +955,7 @@ public class PlayScene : Scene
         // Top Left - Health and MP
         TextUI HealthText = new TextUI(            
             new Rectangle(20, 15, 200, 25),
-            () => $"HP ({Singleton.Instance.Player.Health:F0} / {Singleton.Instance.Player.MaxHealth:F0})",
+            () => $"HP ({Singleton.Instance.Player.Health + Singleton.Instance.Player.AbsorptionHealth:F0} / {Singleton.Instance.Player.MaxHealth:F0})",
             1,
             Color.White,
             TextUI.TextAlignment.Left
@@ -970,7 +977,7 @@ public class PlayScene : Scene
         );
         
         MPBar playerMP = new MPBar(
-            new Rectangle(20, 95, 200, 25),
+            new Rectangle(20, 95, 2 * (int) Singleton.Instance.Player.MaxMP, 25),
             new Color(75, 240, 145), // Bright Green
             new Color(20, 60, 35) // Dark Green
         );
@@ -979,7 +986,7 @@ public class PlayScene : Scene
         TextUI LifeText = new TextUI(            
             new Rectangle(1220, 25, 60, 25),
             () => $"x{Singleton.Instance.Player.Life}",
-            1,
+            2,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1065,10 +1072,20 @@ public class PlayScene : Scene
             new Rectangle(670, slotY, 50, 50),
             _UITexture
         );
-        
+
         TextUI ItemButtonText2 = new TextUI(            
             new Rectangle(670, slotY + 55, 50, 20),
             "2",
+            1,
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
+
+        //Pause Button
+
+        TextUI PauseButton = new TextUI(            
+            new Rectangle(100, slotY + 30, 50, 20),
+            "Press ESC to Pause",
             1,
             Color.White,
             TextUI.TextAlignment.Center
@@ -1098,6 +1115,9 @@ public class PlayScene : Scene
         _ui.AddHUDElement(ItemButtonText1);
         _ui.AddHUDElement(ItemSlot2);
         _ui.AddHUDElement(ItemButtonText2);
+
+        //Pause
+        _ui.AddHUDElement(PauseButton);
     }
 
     public void UnlockAbilityForStage()

@@ -719,12 +719,19 @@ namespace FinalComGame
 
             // Grappling hook
             if (Singleton.Instance.IsKeyJustPressed(Grapple) && 
-                Abilities.IsAbilityUnlocked(AbilityType.Grapple) && 
-                MP >= GrappleMP && 
-                GrapplingPosition != Vector2.Zero && 
-                HaveLineOfSightOfHook(tileMap))
+                Abilities.IsAbilityUnlocked(AbilityType.Grapple))
             {
-                FireGrapplingHook(gameObjects);
+                if(MP >= GrappleMP)
+                {
+                    if(GrapplingPosition != Vector2.Zero && HaveLineOfSightOfHook(tileMap))
+                    {
+                        FireGrapplingHook(gameObjects);
+                    }
+                }
+                else
+                {
+                    Singleton.Instance.CurrentUI.Prompt("Not Enough Soul Mana!");
+                }
             }
             
             // Item interaction
@@ -921,16 +928,23 @@ namespace FinalComGame
         {
             if (!Abilities.IsAbilityUnlocked(AbilityType.Dash))
                 return;
-            if (_dashCooldownTimer <= 0 && !_isDashing && MP >= DashMP)
+            if (_dashCooldownTimer <= 0 && !_isDashing)
             {
-                _isDashing = true;
-                _isGliding = false;
-                _dashTimer = DashDuration;
-                _dashCooldownTimer = DashCooldown;
-                Velocity.Y = 0;
-                Velocity.X = DashSpeed * Direction;
-                UseMP(DashMP);
-                DashSound.Play();
+                if(MP >= DashMP)
+                {
+                    _isDashing = true;
+                    _isGliding = false;
+                    _dashTimer = DashDuration;
+                    _dashCooldownTimer = DashCooldown;
+                    Velocity.Y = 0;
+                    Velocity.X = DashSpeed * Direction;
+                    UseMP(DashMP);
+                    DashSound.Play();
+                }
+                else
+                {
+                    Singleton.Instance.CurrentUI.Prompt("Not Enough Soul Mana!");
+                }
             }
         }
 
@@ -1146,6 +1160,10 @@ namespace FinalComGame
                 if(_chargingSoundInstance == null)
                     _chargingSoundInstance = ChargingSound.CreateInstance();
                 _chargingSoundInstance.Volume = 1.0f;
+            }
+            else
+            {
+                Singleton.Instance.CurrentUI.Prompt("Not Enough Soul Mana!");
             }
         }
         
