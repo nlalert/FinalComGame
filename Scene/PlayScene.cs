@@ -947,7 +947,7 @@ public class PlayScene : Scene
             Singleton.Instance.Player,
             new Rectangle(20, 40, 3 * (int) Singleton.Instance.Player.MaxHealth, 25),
             Color.Red,
-            Color.Gray
+            new Color(90, 0, 5) // Dark Red
         );
 
         TextUI MPText = new TextUI(            
@@ -959,8 +959,8 @@ public class PlayScene : Scene
         
         MPBar playerMP = new MPBar(
             new Rectangle(20, 95, 200, 25),
-            Color.SkyBlue,
-            Color.Gray
+            new Color(75, 240, 145), // Bright Green
+            new Color(20, 60, 35) // Dark Green
         );
 
         // Top Right - Lives

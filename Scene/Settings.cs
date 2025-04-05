@@ -64,7 +64,7 @@ public class Settings : Scene
 
         _soundEffectVolumeSlider = new SlideBarUI(
             new Rectangle((Singleton.SCREEN_WIDTH - SliderWidth) / 2 , (Singleton.SCREEN_HEIGHT - SliderHeight) * 3 / 7, SliderWidth, SliderHeight),
-            "Sound Effect Volume",
+            "SFX Volume",
             SliderBar,
             SliderHandle,
             0,    // min value
