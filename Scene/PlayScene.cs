@@ -68,6 +68,13 @@ public class PlayScene : Scene
     private SoundEffect _Rhulk_hurt_sound;
     private SoundEffect _Rhulk_death_sound;
 
+    private SoundEffect _Medkit_sound;
+    private SoundEffect _Barrier_sound;
+    private SoundEffect _LifeUp_sound;
+    private SoundEffect _Grenade_sound;
+    private SoundEffect _MinionJar_sound;
+    private SoundEffect _Grenade_Explode_sound;
+
     private StageManager _stageManager;
     
 
@@ -157,6 +164,12 @@ public class PlayScene : Scene
         _Demon_death_sound = _content.Load<SoundEffect>("Demon_death_sound");
         _Rhulk_hurt_sound = _content.Load<SoundEffect>("Rhulk_hurt_sound");
         _Rhulk_death_sound = _content.Load<SoundEffect>("Rhulk_death_sound");
+        _Medkit_sound = _content.Load<SoundEffect>("Medkit_sound");
+        _Barrier_sound = _content.Load<SoundEffect>("Barrier_sound");
+        _LifeUp_sound = _content.Load<SoundEffect>("LifeUp_sound");
+        _Grenade_sound = _content.Load<SoundEffect>("Grenade_sound");
+        _MinionJar_sound = _content.Load<SoundEffect>("MinionJar_sound");
+        _Grenade_Explode_sound = _content.Load<SoundEffect>("Grenade_Explode_sound");
         // Load songs
         _songs[0] = _content.Load<Song>("ChillSong");
         _songs[1] = _content.Load<Song>("Eternity's Divide OST  Snowstorm");
@@ -791,10 +804,10 @@ public class PlayScene : Scene
         //TODO : Change these to real ITEM ID
         ItemManager.AddGameItem(ItemID.HealthPotion,
             new Potion(_itemTexture, ItemType.Consumable){
-                Name =  "Health Potion",
+                Name =  "Medkit",
                 Description = "Restore 30 HP",
                 Viewport = ViewportManager.Get("Potion_Health"),
-                UseSound = _potionUseSound
+                UseSound = _Medkit_sound
             });
 
         ItemManager.AddGameItem(ItemID.SpeedPotion,
@@ -818,7 +831,7 @@ public class PlayScene : Scene
                 Name =  "Barrier",
                 Description = "Give you a shield",
                 Viewport = ViewportManager.Get("Barrier"),
-                UseSound = _potionUseSound // Temp
+                UseSound = _Barrier_sound// Temp
             });
 
         ItemManager.AddGameItem(ItemID.LifeUp,
@@ -826,7 +839,7 @@ public class PlayScene : Scene
                 Name =  "1Up",
                 Description = "The soul can be revived once more....",
                 Viewport = ViewportManager.Get("LifeUp"),
-                UseSound = _potionUseSound // Temp
+                UseSound = _LifeUp_sound // Temp
             });
 
         ItemManager.AddGameItem(ItemID.SpeedBoots,
@@ -865,7 +878,6 @@ public class PlayScene : Scene
                 Description = "Deal Explosion 50 Damage",
                 MPCost = 10,
                 ShootSound = _fireBallShootingSound,
-
                 FireBall = new FireBall(_projectileTexture)
                 {
                     Name = "FireBall",
@@ -887,6 +899,7 @@ public class PlayScene : Scene
                 Name =  "Staff",
                 Description = "Summon Your best Minion!",
                 MPCost = 10,
+                UseSound = _MinionJar_sound,
                 soulMinion = new SoulMinion(_projectileTexture)
                 {
                     Name = "Soul Minion",
@@ -907,7 +920,7 @@ public class PlayScene : Scene
                 Name =  "Grenade",
                 Description = "High damage grenade",
                 Viewport = ViewportManager.Get("Grenade"),
-                UseSound = _potionUseSound, // Temp
+                UseSound = _Grenade_sound, // Temp
 
                 GrenadeProjectile = new GrenadeProjectile(_projectileTexture)
                 {
@@ -918,6 +931,7 @@ public class PlayScene : Scene
                     Radius = 50f,
                     ExplosionDuration = 0.5f,
                     DetonateDelayDuration = 3.0f,
+                    grenade_Explode_sound = _Grenade_Explode_sound,
                     Viewport = ViewportManager.Get("Grenade_Projectile"),
                     BaseExplosion = new Explosion(_projectileTexture, _fireBallExplosionSound)
                     {

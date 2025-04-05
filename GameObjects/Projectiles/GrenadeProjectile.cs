@@ -14,6 +14,7 @@ namespace FinalComGame
         public float ExplosionDuration;
         public float DetonateDelayDuration;
         public float DetonateTimer;
+        public SoundEffect grenade_Explode_sound;
         public GrenadeProjectile(Texture2D texture) : base(texture)
         {
             CanCollideTile = true;
@@ -64,8 +65,8 @@ namespace FinalComGame
 
         public void StartExplosion(List<GameObject> gameObjects)
         {
+            grenade_Explode_sound.Play();
             IsActive = false; // Remove Grenade and left with only explosion
-
             Velocity = Vector2.Zero;
             Explosion newExplosion = BaseExplosion.Clone() as Explosion;
             newExplosion.Position = Position;
@@ -74,6 +75,7 @@ namespace FinalComGame
             newExplosion.Damage = BaseDamageAmount * 0.8f;
             newExplosion.TriggerExplosion();
             gameObjects.Add(newExplosion);
+            
         }
 
         protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
