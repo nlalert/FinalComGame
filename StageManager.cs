@@ -76,7 +76,7 @@ public class StageManager
 
     public static string GetCurrentStagePath()
     {
-        return "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage;
+        return "Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage;
     }
 
     public Dictionary<Vector2, EnemyID> GetEnemySpawnPoints()
