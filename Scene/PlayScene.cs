@@ -979,7 +979,7 @@ public class PlayScene : Scene
         TextUI LifeText = new TextUI(            
             new Rectangle(1220, 25, 60, 25),
             () => $"x{Singleton.Instance.Player.Life}",
-            1,
+            2,
             Color.White,
             TextUI.TextAlignment.Center
         );
