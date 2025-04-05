@@ -650,6 +650,18 @@
 /processorParam:Quality=Best
 /build:Tower_sound.wav
 
+#begin UI.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI.png
+
 #begin Wolf_death_sound.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

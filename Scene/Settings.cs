@@ -15,9 +15,13 @@ public class Settings : Scene
     private SlideBarUI _musicVolumeSlider;
     private SlideBarUI _soundEffectVolumeSlider;
     private Button _backButton;
+    private Texture2D _UITexture;
+    private Rectangle _buttonRectangle;
 
     public override void LoadContent(SpriteBatch spriteBatch)
     {
+        _UITexture = _content.Load<Texture2D>("UI");
+        _buttonRectangle = new Rectangle(0, 48, 304, 48);
         base.LoadContent(spriteBatch);
         SetupHUD();
     }
@@ -49,13 +53,12 @@ public class Settings : Scene
         // Create a volume slider
         int SliderWidth = Singleton.SCREEN_WIDTH / 2;
         int SliderHeight = 30;
-        Texture2D SliderBar = _content.Load<Texture2D>("SoundBar");//TEMP
-        Texture2D SliderHandle =   _content.Load<Texture2D>("sliderHandle");
+        // Texture2D SliderBar = _content.Load<Texture2D>("");//TEMP
+        // Texture2D SliderHandle =   _content.Load<Texture2D>("sliderHandle");
         _musicVolumeSlider = new SlideBarUI(
             new Rectangle((Singleton.SCREEN_WIDTH - SliderWidth) / 2 , (Singleton.SCREEN_HEIGHT - SliderHeight) * 2 / 7, SliderWidth, SliderHeight),
             "Music Volume",
-            SliderBar,
-            SliderHandle,
+            _UITexture,
             0,    // min value
             100,  // max value
             75,   // start value
@@ -64,23 +67,22 @@ public class Settings : Scene
 
         _soundEffectVolumeSlider = new SlideBarUI(
             new Rectangle((Singleton.SCREEN_WIDTH - SliderWidth) / 2 , (Singleton.SCREEN_HEIGHT - SliderHeight) * 3 / 7, SliderWidth, SliderHeight),
-            "Sound Effect Volume",
-            SliderBar,
-            SliderHandle,
+            "SFX Volume",
+            _UITexture,
             0,    // min value
             100,  // max value
             75,   // start value
             "{0:F0}%" // value format
         );
 
-        Texture2D ButtonTexture = _content.Load<Texture2D>("ButtonTexture");
         int ButtonWidth = Singleton.SCREEN_WIDTH / 3;
         int ButtonHeight = 80;
         _backButton = new Button(
-            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
-            ButtonTexture,
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 7, ButtonWidth, ButtonHeight),
+            _UITexture,
             "Back",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle
         );
         _backButton.OnClick += BackButton_OnClick;
 

@@ -84,9 +84,11 @@ namespace FinalComGame {
                                 ,Position.Y - (Animation.GetFrameSize().Y - Viewport.Height) / 2);
         }
 
-        protected virtual bool IsOnGround()
+        protected virtual bool IsOnGround(TileMap tileMap)
         {
-            return Velocity.Y == 0;
+            Vector2 newPosition = new(Position.X, Position.Y + Viewport.Height + Singleton.TILE_SIZE/2);
+            Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
+            return tile != null && tile.IsSolid;
         }
 
         protected virtual void UpdateAnimation(float deltaTime)

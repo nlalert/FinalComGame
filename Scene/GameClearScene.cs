@@ -12,9 +12,12 @@ public class GameClearScene : Scene
     private TextUI _gameClearTitle; // can change to ImageUI later
     private Button _restartButton;
     private Button _exitButton;
-
+    private Texture2D _UITexture;
+    private Rectangle _buttonRectangle;
     public override void LoadContent(SpriteBatch spriteBatch)
     {
+        _UITexture = _content.Load<Texture2D>("UI");
+        _buttonRectangle = ViewportManager.Get("Button");
         base.LoadContent(spriteBatch);
 
         SetupHUD();
@@ -26,7 +29,6 @@ public class GameClearScene : Scene
         PauseSong();
         _gameManager.IsMouseVisible = true;
     }
-
     protected override void SetupHUD()
     {
         int TextWidth = Singleton.SCREEN_WIDTH / 2;
@@ -39,23 +41,25 @@ public class GameClearScene : Scene
             TextUI.TextAlignment.Center
         );
 
-        Texture2D Button = _content.Load<Texture2D>("ButtonTexture");
+        
         int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
         int ButtonHeight = 80;
-
+        
         _restartButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 5, ButtonWidth, ButtonHeight),
-            Button,
+            _UITexture,
             "Restart",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
         _exitButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2, (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 5, ButtonWidth, ButtonHeight),
-            Button,
+            _UITexture,
             "Exit to Desktop",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle
         );
         _exitButton.OnClick += ExitGameButton_OnClick;
 
