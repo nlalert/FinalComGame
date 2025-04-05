@@ -46,7 +46,6 @@ namespace FinalComGame
         private float _coyoteTimeCounter;
         public float JumpBufferTime;
         private float _jumpBufferCounter;
-        public bool _isAllowedJump = true;
         public AbilityManager Abilities;
 
         // Dash 
@@ -255,10 +254,10 @@ namespace FinalComGame
             Inventory.UpdateActiveConsumables(deltaTime, gameObjects);
             
             UpdateInvincibilityTimer(deltaTime);
-            UpdateCoyoteTime(deltaTime);
+            UpdateCoyoteTime(deltaTime, tileMap);
             CheckAndJump();
             UpdateDash(deltaTime);
-            UpdateGlide();
+            UpdateGlide(tileMap);
 
             if (!_isClimbing && !_isDashing && !_isGrappling) 
                 ApplyGravity(deltaTime);
@@ -700,15 +699,11 @@ namespace FinalComGame
                 }
             }
 
-            Console.WriteLine(_isAllowedJump);
-
-            if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _isAllowedJump && _coyoteTimeCounter > 0)
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _coyoteTimeCounter > 0)
             {
                 if (!(Singleton.Instance.IsKeyPressed(Crouch) && _isClimbing) && 
                 !(Singleton.Instance.IsKeyPressed(Crouch) && _isOnPlatform))
                 {
-                    _isAllowedJump = false;
-
                     if (_isCrouching) {
                         Position.Y -= Singleton.TILE_SIZE;
                         Viewport.Height = Singleton.TILE_SIZE * 2;
@@ -724,7 +719,7 @@ namespace FinalComGame
                 _jumpBufferCounter -= deltaTime; // Decrease over time
 
             // Gliding - activate when holding Jump while in air and not climbing or dashing
-            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && 
+            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround(tileMap) && 
             !_isJumping && !_isClimbing && !_isDashing && !_isAttacking && 
             MP > 0 && _coyoteTimeCounter <= 0)
             {
@@ -869,12 +864,6 @@ namespace FinalComGame
         private bool IsOnladder(){
             return _overlappedTile == TileType.Ladder || _overlappedTile == TileType.Ladder_Platform;
         }
-
-        protected override bool IsOnGround()
-        {
-            return Velocity.Y == 0 || _isClimbing ;
-        }
-
         public void BoostSpeed(float speedModifier)
         {
             if(_isDashing || !(Singleton.Instance.IsKeyPressed(Left) || Singleton.Instance.IsKeyPressed(Right)))
@@ -970,19 +959,19 @@ namespace FinalComGame
         }
 
         // New method to update glide state
-        private void UpdateGlide()
+        private void UpdateGlide(TileMap tileMap)
         {
             // Stop gliding if we hit the ground
-            if (IsOnGround() || !Abilities.IsAbilityUnlocked(AbilityType.Glide))
+            if (IsOnGround(tileMap) || !Abilities.IsAbilityUnlocked(AbilityType.Glide))
             {
                 _isGliding = false;
             }
         }
 
-        private void UpdateCoyoteTime(float deltaTime)
+        private void UpdateCoyoteTime(float deltaTime, TileMap tileMap)
         {
             // Apply coyote time: Reset if on ground
-            if (IsOnGround())
+            if (IsOnGround(tileMap) || _isClimbing)
             {
                 _coyoteTimeCounter = CoyoteTime; // Reset coyote time when on ground
             }
@@ -1075,12 +1064,6 @@ namespace FinalComGame
                         {
                             if (IsTouching(tile)) Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
                         }
-
-                        if((tile.IsSolid && IsTouchingTop(tile))|| _isClimbing) 
-                            _isAllowedJump = true;
-
-                        else if(_isDashing)
-                            _isAllowedJump = false;
                     }
                 }
             }
