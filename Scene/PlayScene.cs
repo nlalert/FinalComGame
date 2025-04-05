@@ -365,7 +365,7 @@ public class PlayScene : Scene
                     "Press Left or Right Arrow Key to move around!",
                     TileMap.GetTileWorldPositionAt(12, 30),  // TopLeft Position  // TODO : More dynamic
                     200,                    // Width
-                    48,                     // Height
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -374,17 +374,17 @@ public class PlayScene : Scene
                     "Press Space Bar Key to Jump      " +
                     "Longer a you hold Jump Button, Higher the Jump!",
                     TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
-                    300,                    // Width
-                    64,                     // Height
+                    316,                    // Width
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
                 SignBoard ClimbTutorialSign = new SignBoard(
                     _whiteTexture,
                     "Press UP Arrow Key to climb ladder or vines!",
-                    TileMap.GetTileWorldPositionAt(55, 22), // TopLeft Position // TODO : More dynamic
-                    220,                    // Width
-                    48,                     // Height
+                    TileMap.GetTileWorldPositionAt(53, 22), // TopLeft Position // TODO : More dynamic
+                    252,                    // Width
+                    64,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -393,29 +393,30 @@ public class PlayScene : Scene
                     "Press SHIFT to Dash pass the gap!",
                     TileMap.GetTileWorldPositionAt(90, 17), // TopLeft Position // TODO : More dynamic
                     160,                    // Width
-                    48,                     // Height
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
                 SignBoard PlatFormJumpTutorialSign = new SignBoard(
                     _whiteTexture,
-                    "Jump to get on platform "+     
-                    "Press Down to crouch "+
+                    "Jump to get on platform. "+     
+                    "Press Down to crouch. "+
                     "Crouch then Jump to drop below on platform", 
                     TileMap.GetTileWorldPositionAt(123, 16), // TopLeft Position // TODO : More dynamic
-                    192,                    // Width
-                    96,                     // Height
+                    224,                    // Width
+                    142,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
                 SignBoard ItemTutorialSign = new SignBoard(
                     _whiteTexture,
-                    "Preess F to pick up item "+ 
-                    "Press (1) (2) to use item",     
+                    "Preess F to pick up "+ 
+                    "Press (1) (2) to use " +
+                    "Hold (1) (2) to drop ",     
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
-                    TileMap.GetTileWorldPositionAt(149, 30), // TopLeft Position // TODO : More dynamic
-                    208,                    // Width 
-                    54,                     // Height
+                    TileMap.GetTileWorldPositionAt(148, 30), // TopLeft Position // TODO : More dynamic
+                    240,                    // Width 
+                    86,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -423,11 +424,11 @@ public class PlayScene : Scene
                     _whiteTexture,
                     "Press Q to Punch        "+
                     "Press E to Shoot        "+ 
-                    "Hold E to charge bullet ",     
+                    "Hold E to charge Shot ",     
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
-                    TileMap.GetTileWorldPositionAt(166, 31), // TopLeft Position // TODO : More dynamic
-                    192,                    // Width 
-                    70,                     // Height
+                    TileMap.GetTileWorldPositionAt(164, 30), // TopLeft Position // TODO : More dynamic
+                    240,                    // Width 
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -436,8 +437,8 @@ public class PlayScene : Scene
                     "Defeat an enemy have chance to spawn an item",
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                     TileMap.GetTileWorldPositionAt(181, 28), // TopLeft Position // TODO : More dynamic
-                    144,                    // Width 
-                    70,                     // Height
+                    202,                    // Width 
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -446,8 +447,8 @@ public class PlayScene : Scene
                     "Ready to escape from this place and go back to delete your history? Jump in the Portal!", 
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                     TileMap.GetTileWorldPositionAt(225, 22), // TopLeft Position // TODO : More dynamic
-                    230,                    // Width 
-                    70,                     // Height
+                    262,                    // Width 
+                    102,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -468,7 +469,7 @@ public class PlayScene : Scene
                     "Holding Jump button while mid air to glide!",
                     TileMap.GetTileWorldPositionAt(23, 100),  // TopLeft Position  // TODO : More dynamic
                     180,                    // Width
-                    56,                     // Height
+                    88,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -479,9 +480,9 @@ public class PlayScene : Scene
                 SignBoard GraplingTutorialSign = new SignBoard(
                     _whiteTexture,
                     "Press R to Grapple onto the hook",
-                    TileMap.GetTileWorldPositionAt(45, 73),  // TopLeft Position  // TODO : More dynamic
-                    200,                    // Width
-                    48,                     // Height
+                    TileMap.GetTileWorldPositionAt(43, 73),  // TopLeft Position  // TODO : More dynamic
+                    240,                    // Width
+                    64,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
