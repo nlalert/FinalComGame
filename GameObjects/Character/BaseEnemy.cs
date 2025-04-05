@@ -95,6 +95,7 @@ namespace FinalComGame {
         public override void OnDead(List<GameObject> gameObjects)
         {
             DropItem(gameObjects);
+            DeathSound?.Play();
             base.OnDead(gameObjects);
         }
 
@@ -155,7 +156,8 @@ namespace FinalComGame {
                 Vector2 checkPosition = new Vector2(Position.X + offset.X, Position.Y + offset.Y);
                 Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
                 
-                if(tile != null && (tile.Type == TileType.Barrier || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile))))
+                if(tile != null && (tile.Type == TileType.Barrier || tile.Type == TileType.AmbushBarrier 
+                || (tile.Type == TileType.Platform && !CanDropThroughPlatform(tile))))
                 {
                     if(ResolveVerticalCollision(tile)){
                         OnLandVerticle();
@@ -164,22 +166,15 @@ namespace FinalComGame {
             }
         }
 
-        public virtual bool IsAbovePlayer(){
-            return Position.Y < Singleton.Instance.Player.Position.Y;
-        }
-
-        public virtual bool IsPlayerAbovePlatform(Tile tile){
-            return Position.Y <= tile.Position.Y;
-        }
-
         public virtual bool CanDropThroughPlatform(Tile tile){
-            return (IsAbovePlayer() && IsPlayerAbovePlatform(tile)) || Velocity.Y < 0 || IsIgnorePlatform;
+            return (tile.Position.Y < Singleton.Instance.Player.Position.Y + Singleton.Instance.Player.Viewport.Height) || Velocity.Y < 0 || IsIgnorePlatform;
         }
 
         public virtual void CheckContactPlayer(){
             if(IsTouching(Singleton.Instance.Player))
                 OnCollidePlayer();
         }
+
         public virtual void CheckHit(Rectangle attackHitbox, float damageAmount, bool isHeavyAttack)
         {
             if(IsTouching(attackHitbox))
@@ -203,25 +198,32 @@ namespace FinalComGame {
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public bool HaveLineOfSight(TileMap tileMap){
-            if (Singleton.Instance.Player == null) return false;
-            
-            Vector2 enemyPosition = Position;
-            Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
+        protected bool HaveLineOfSightOfPlayer(TileMap tileMap){
+            if (!IsWithinDetectionRange())
+                return false;
             
             float step = Singleton.TILE_SIZE; // Tile size or step size for checking
-            Vector2 direction = Vector2.Normalize(playerPosition - enemyPosition);
-            Vector2 checkPosition = enemyPosition;
+            Vector2 checkPosition = Position;
+            Vector2 playerPosition = Singleton.Instance.Player.GetPlayerCenter();
+            Vector2 direction = Vector2.Normalize(playerPosition - checkPosition);
 
             while (Vector2.Distance(checkPosition, playerPosition) > step)
             {
                 checkPosition += direction * step;
-                if (tileMap.IsObstacle(checkPosition))
+                Tile tile = tileMap.GetTileAtWorldPostion(checkPosition);
+                if (tile != null && tile.IsSolid && tile.Type != TileType.Platform )
                 {
                     return false; // Blocked by an obstacle
                 }
             }
             return true;
+        }
+
+        protected bool IsWithinDetectionRange()
+        {
+            float distanceToPlayer = Vector2.Distance(Position, Singleton.Instance.Player.GetPlayerCenter());
+            
+            return distanceToPlayer <= DetectionRange;
         }
 
         public override void Reset()

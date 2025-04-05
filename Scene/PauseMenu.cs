@@ -9,17 +9,24 @@ namespace FinalComGame;
 
 public class PauseMenu : Scene
 {
-    private Texture2D _button;
+    private Texture2D _UITexture;
     private TextUI _pauseTitle; // can change to ImageUI later
     private Button _resumeButton;
     private Button _restartButton;
     private Button _settingsButton;
     private Button _mainmenuButton;
+    private Rectangle _buttonRectangle;
+
+    private Rectangle _fullScreenRect;
 
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
-        _button = _content.Load<Texture2D>("ItemSlot"); //Change Later
+        _UITexture = _content.Load<Texture2D>("UI");
+        _buttonRectangle = ViewportManager.Get("Button");
+
+        _fullScreenRect = new Rectangle(0, 0, Singleton.SCREEN_WIDTH, Singleton.SCREEN_HEIGHT);
+
         SetupHUD();
     }
 
@@ -33,7 +40,13 @@ public class PauseMenu : Scene
             Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
         }
     }
-    
+    public override void Draw(GameTime gameTime)
+    {
+        _spriteBatch.Begin();
+        _spriteBatch.Draw(Singleton.Instance.PixelTexture, _fullScreenRect, Color.Black * 0.8f); // draw murky background
+        _spriteBatch.End();
+    }
+
     protected override void SetupHUD()
     {
         int TextWidth = Singleton.SCREEN_WIDTH / 2;
@@ -42,6 +55,7 @@ public class PauseMenu : Scene
         _pauseTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 6, TextWidth, TextHeight),
             "Pause",  
+            4,
             Color.White, 
             TextUI.TextAlignment.Center
         );
@@ -49,39 +63,43 @@ public class PauseMenu : Scene
         int ButtonWidth = Singleton.SCREEN_WIDTH / 3;
         int ButtonHeight = 80;
 
-        Texture2D ResumeButtonTexture = _content.Load<Texture2D>("ResumeButtonStatic");
-        Texture2D RestartButtonTexture = _content.Load<Texture2D>("RestartButtonStatic");
-        Texture2D SoundSettingButtonTexture = _content.Load<Texture2D>("SoundSettingButtonStatic");
-        Texture2D MainmenuButtonTexture = _content.Load<Texture2D>("MainmenuButtonStatic");
         _resumeButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 6, ButtonWidth, ButtonHeight),
-            ResumeButtonTexture,
-            "",
-            Color.Wheat
+            _UITexture,
+            "Resume",
+            Color.Wheat,
+            _buttonRectangle,
+            2
         );
         _resumeButton.OnClick += ResumeButton_OnClick;
 
         _restartButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 6, ButtonWidth, ButtonHeight),
-            RestartButtonTexture,
-            "",
-            Color.Wheat
+            _UITexture,
+            "Restart",
+            Color.Wheat,
+            _buttonRectangle,
+            2
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
         _settingsButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 6, ButtonWidth, ButtonHeight),
-            SoundSettingButtonTexture,
-            "",
-            Color.Wheat
+            _UITexture,
+            "Settings",
+            Color.Wheat,
+            _buttonRectangle,
+            2
         );
         _settingsButton.OnClick += SettingButton_OnClick;
 
         _mainmenuButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
-            MainmenuButtonTexture,
-            "",
-            Color.Wheat
+            _UITexture,
+            "Back to Main Menu",
+            Color.Wheat,
+            _buttonRectangle,
+            2
         );
         _mainmenuButton.OnClick += MainMenuButton_OnClick;
 

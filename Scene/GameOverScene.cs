@@ -13,9 +13,13 @@ public class GameOverScene : Scene
     private Button _restartButton;
     private Button _mainmenuButton;
     private Button _exitButton;
+    private Texture2D _UITexture;
+    private Rectangle _buttonRectangle;
     
     public override void LoadContent(SpriteBatch spriteBatch)
     {
+        _UITexture = _content.Load<Texture2D>("UI");
+        _buttonRectangle = ViewportManager.Get("Button");
         base.LoadContent(spriteBatch);
 
         SetupHUD();
@@ -36,35 +40,40 @@ public class GameOverScene : Scene
         _gameOverTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 5, TextWidth, TextHeight),
             "GAME OVER",  
+            6,
             Color.White, 
             TextUI.TextAlignment.Center
         );
 
-        Texture2D Button = _content.Load<Texture2D>("ItemSlot"); //Change Later
         int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
         int ButtonHeight = 80;
-
         _restartButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 5, ButtonWidth, ButtonHeight),
-            Button,
+            _UITexture,
             "Restart",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle,
+            2.5f
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
         _mainmenuButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 5, ButtonWidth, ButtonHeight),
-            Button,
+            _UITexture,
             "Back to Main Menu",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle,
+            2
         );
         _mainmenuButton.OnClick += MainMenuButton_OnClick;
 
         _exitButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2, (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 5, ButtonWidth, ButtonHeight),
-            Button,
+            _UITexture,
             "Exit to Desktop",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle,
+            2
         );
         _exitButton.OnClick += ExitGameButton_OnClick;
 

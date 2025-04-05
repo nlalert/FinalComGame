@@ -86,7 +86,7 @@ namespace FinalComGame
                 0f
             );
             base.Draw(spriteBatch);
-            //DrawDebug(spriteBatch);
+            ////DrawDebug(spriteBatch);
         }
         private void DrawDebug(SpriteBatch spriteBatch)
         {

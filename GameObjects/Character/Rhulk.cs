@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -25,10 +26,14 @@ namespace FinalComGame
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
         public DemonLaser Laserproj;
-
+        
+        public TextUI DisplayNameUI;
         public HealthBar HealthBar;
-
-
+        
+        public SoundEffect LaserSound;
+        public SoundEffect DashSound;
+        
+        private int _lastSecondMark = -1;
         public Rhulk(Texture2D texture) : base(texture)
         { 
             _texture = texture;
@@ -54,7 +59,6 @@ namespace FinalComGame
             Animation = new Animation(_texture, 64, 96, new Vector2(64*6 , 96*3), 12);
             Animation.AddAnimation("idle", new Vector2(0, 0), 12);
             Animation.AddAnimation("run", new Vector2(0, 2), 6);
-
             Animation.ChangeAnimation("idle");
         }
 
@@ -73,17 +77,29 @@ namespace FinalComGame
             {
                 case EnemyState.Chase:
                     AI_Chase(deltaTime, gameObjects, tileMap);
+                    if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
+                        Direction = 1;
+                    else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
+                        Direction = -1;                    
                     break;
                 case EnemyState.Charging:
                     AI_Charging(deltaTime,gameObjects, tileMap);
+                    if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
+                        Direction = 1;
+                    else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
+                        Direction = -1;
                     break;
                 case EnemyState.Dash:
                     AI_Dash(deltaTime,gameObjects, tileMap);
                     break;
                 case EnemyState.Floating:
                     AI_Floating(deltaTime,gameObjects, tileMap);
+                    if (Velocity.X > 0)
+                        Direction = 1;
+                    else if (Velocity.X < 0)
+                        Direction = -1;                    
                     break;
-                case EnemyState.Attack:
+                case EnemyState.Attack:       
                     AI_Attack(deltaTime,gameObjects, tileMap);
                     break;
             }
@@ -114,13 +130,7 @@ namespace FinalComGame
 
             base.UpdateAnimation(deltaTime);
         }
-        public override bool IsAbovePlayer()
-        {
-            return Position.Y < Singleton.Instance.Player.Position.Y;
-        }
-        public override bool CanDropThroughPlatform(Tile tile){
-            return (IsAbovePlayer() && IsPlayerAbovePlatform(tile)) || Velocity.Y < 0 || IsIgnorePlatform;
-        }
+
         private void AI_Chase(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
@@ -180,6 +190,7 @@ namespace FinalComGame
                 _barrierstart = Singleton.Instance.Player.GetPlayerCenter() - direction * 100f;
                 _barrierEnd = _barrierstart - perpendicularDirection * 350;
                 _barrierEnd1 = _barrierstart - perpendicularDirection * -350;
+                DashSound.Play();
             }
             else{
                 Velocity.X *= 0.95f;
@@ -238,11 +249,19 @@ namespace FinalComGame
                 }
             }
         }
+
         private void AI_Attack(float deltaTime,List<GameObject> gameObjects, TileMap tileMap){
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
             UpdateVerticalMovement(deltaTime, gameObjects, tileMap);
             _actionTimer -= deltaTime * (_isEnraged ? 1.5f : 1);
+            int currentSecond = (int)Math.Floor(_actionTimer);
             if(_actionTimer>0){
+                //playsound here 
+                if (currentSecond != _lastSecondMark && currentSecond >= 0)
+                {
+                    _lastSecondMark = currentSecond;
+                    LaserSound.Play();
+                }
                 //doing Attack
             }else{
                 CurrentState = EnemyState.Chase;
@@ -267,40 +286,10 @@ namespace FinalComGame
             _isJumping = false;
         }
 
-        // protected override void UpdateAnimation(float deltaTime)
-        // {
-        //     string animation = "Chase";
-
-        //     if (CurrentState == EnemyState.Dying)
-        //     {
-        //         animation = "die";
-        //     }
-        //     else if (CurrentState == EnemyState.Charging)
-        //     {
-        //         animation = "float";
-        //     }
-        //     else if (CurrentState == EnemyState.Dash)
-        //     {
-        //         animation = "slam";
-        //     }
-        //     else if (_isJumping)
-        //     {
-        //         animation = "jump";
-        //     }
-
-        //     if (_currentAnimation != animation)
-        //     {
-        //         _currentAnimation = animation;
-        //         Animation.ChangeAnimation(_currentAnimation);
-        //     }
-
-        //     base.UpdateAnimation(deltaTime);
-        // }
-
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            //DrawDebug(spriteBatch);
+            ////DrawDebug(spriteBatch);
         }
 
         protected override void DrawDebug(SpriteBatch spriteBatch)
@@ -341,12 +330,8 @@ namespace FinalComGame
             Vector2 direction = end - start;
             direction.Normalize();
 
-            // Create a 1x1 pixel texture if you don't already have one
-            Texture2D pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            pixel.SetData(new Color[] { Color.White });
-
             // Draw the line (scaled 1x1 texture)
-            spriteBatch.Draw(pixel, start, null, color, (float)Math.Atan2(direction.Y, direction.X), Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
+            spriteBatch.Draw(Singleton.Instance.PixelTexture, start, null, color, (float)Math.Atan2(direction.Y, direction.X), Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
         }
 
         protected override void ApplyGravity(float deltaTime)
@@ -359,18 +344,27 @@ namespace FinalComGame
             _spawnPoint = this.Position;
             _actionTimer = 3f;
             CurrentState = EnemyState.Chase;
+            DisplayNameUI = new TextUI(
+                new Rectangle(Singleton.SCREEN_WIDTH/4, (int)(Singleton.SCREEN_HEIGHT * 2.75f / 4), Singleton.SCREEN_WIDTH/2 , 30),
+                Name,  
+                1.75f,
+                Color.White, 
+                TextUI.TextAlignment.Center
+            );
             HealthBar = new HealthBar(
                 this,
-                new Rectangle((Singleton.SCREEN_WIDTH - 200)/2, Singleton.SCREEN_HEIGHT * 5 / 6, 200, 30),
+                new Rectangle(Singleton.SCREEN_WIDTH/4, Singleton.SCREEN_HEIGHT * 3 / 4, Singleton.SCREEN_WIDTH/2 , 30),
                 Color.Red,
-                Color.Gray
+                Color.Black
             );
+            Singleton.Instance.CurrentUI.AddHUDElement(DisplayNameUI);
             Singleton.Instance.CurrentUI.AddHUDElement(HealthBar);
             base.OnSpawn();
         }
         public override void OnDead(List<GameObject> gameObjects)
         {
             Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+            Singleton.Instance.CurrentUI.RemoveHUDElement(DisplayNameUI);
             Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
             base.OnDead(gameObjects);
         }

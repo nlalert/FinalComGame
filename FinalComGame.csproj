@@ -13,6 +13,11 @@
   <ItemGroup>
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+    <Content Include="Data\**">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Icon.ico" />
+    <None Include="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico">

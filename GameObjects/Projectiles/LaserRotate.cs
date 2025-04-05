@@ -46,7 +46,7 @@ namespace FinalComGame
             Vector2 scale = new Vector2(1.0f, _lenght / _texture.Height);
             spriteBatch.Draw(_texture,Position,null,Color.White,_angle,_origin,scale,SpriteEffects.None,0f);
             // base.Draw(spriteBatch);
-            DrawDebug(spriteBatch);
+            ////DrawDebug(spriteBatch);
         }
 
         private void DrawLaser(SpriteBatch spriteBatch, Vector2 start, Vector2 end)
@@ -126,12 +126,8 @@ namespace FinalComGame
             Vector2 direction = end - start;
             direction.Normalize();
 
-            // Create a 1x1 pixel texture if you don't already have one
-            Texture2D pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            pixel.SetData(new Color[] { Color.White });
-
             // Draw the line (scaled 1x1 texture)
-            spriteBatch.Draw(pixel, start, null, color, (float)Math.Atan2(direction.Y, direction.X), Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
+            spriteBatch.Draw(Singleton.Instance.PixelTexture, start, null, color, (float)Math.Atan2(direction.Y, direction.X), Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
         }
     }
 }

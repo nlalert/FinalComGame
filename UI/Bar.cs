@@ -29,12 +29,8 @@ namespace FinalComGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // 1x1 pixel texture 
-            Texture2D dotTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            dotTexture.SetData(new[] { Color.White });
-
             // Draw background
-            spriteBatch.Draw(dotTexture, _bounds, backgroundColor);
+            spriteBatch.Draw(Singleton.Instance.PixelTexture, _bounds, backgroundColor);
 
             // Calculate bar width
             float percentage = GetPercentage();
@@ -45,32 +41,32 @@ namespace FinalComGame
                 _bounds.Height);
 
             // Draw the bar
-            spriteBatch.Draw(dotTexture, healthRect, foregroundColor);
+            spriteBatch.Draw(Singleton.Instance.PixelTexture, healthRect, foregroundColor);
 
             // Draw border if enabled
             if (showBorder)
             {
                 // Top border
                 spriteBatch.Draw(
-                    dotTexture, 
+                    Singleton.Instance.PixelTexture, 
                     new Rectangle(_bounds.X, _bounds.Y, _bounds.Width, borderThickness), 
                     borderColor);
                 
                 // Bottom border
                 spriteBatch.Draw(
-                    dotTexture, 
+                    Singleton.Instance.PixelTexture, 
                     new Rectangle(_bounds.X, _bounds.Y + _bounds.Height - borderThickness, _bounds.Width, borderThickness), 
                     borderColor);
                 
                 // Left border
                 spriteBatch.Draw(
-                    dotTexture, 
+                    Singleton.Instance.PixelTexture, 
                     new Rectangle(_bounds.X, _bounds.Y, borderThickness, _bounds.Height), 
                     borderColor);
                 
                 // Right border
                 spriteBatch.Draw(
-                    dotTexture, 
+                    Singleton.Instance.PixelTexture, 
                     new Rectangle(_bounds.X + _bounds.Width - borderThickness, _bounds.Y, borderThickness, _bounds.Height), 
                     borderColor);
             }

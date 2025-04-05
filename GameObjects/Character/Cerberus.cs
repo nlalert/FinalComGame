@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -30,7 +31,9 @@ namespace FinalComGame
         private Vector2 _barrierstart;
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
+        public TextUI DisplayNameUI;
         public HealthBar HealthBar;
+        public SoundEffect DogSound;
 
 
         public Cerberus(Texture2D texture, Texture2D particleTexture) : base(texture) 
@@ -230,6 +233,7 @@ namespace FinalComGame
             {
                 //going to dash
                 //Console.WriteLine("Hellhound dashes!");
+                DogSound.Play();
                 CanCollideTile = false;
                 CurrentState = EnemyState.Dash;
                 _dashStart = this.Position;
@@ -378,7 +382,7 @@ namespace FinalComGame
                 0f
             );
 
-            DrawDebug(spriteBatch);
+            // //DrawDebug(spriteBatch);
         }
     
 
@@ -401,12 +405,8 @@ namespace FinalComGame
             Vector2 direction = end - start;
             direction.Normalize();
 
-            // Create a 1x1 pixel texture if you don't already have one
-            Texture2D pixel = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            pixel.SetData(new Color[] { Color.White });
-
             // Draw the line (scaled 1x1 texture)
-            spriteBatch.Draw(pixel, start, null, color, (float)Math.Atan2(direction.Y, direction.X), Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
+            spriteBatch.Draw(Singleton.Instance.PixelTexture, start, null, color, (float)Math.Atan2(direction.Y, direction.X), Vector2.Zero, new Vector2(length, 1), SpriteEffects.None, 0);
         }
 
         protected override void ApplyGravity(float deltaTime)
@@ -420,12 +420,20 @@ namespace FinalComGame
         {
             _actionTimer = 3f;
             CurrentState = EnemyState.Chase;
+            DisplayNameUI = new TextUI(
+                new Rectangle(Singleton.SCREEN_WIDTH/4, (int)(Singleton.SCREEN_HEIGHT * 2.75f / 4), Singleton.SCREEN_WIDTH/2 , 30),
+                Name,  
+                1.75f,
+                Color.White, 
+                TextUI.TextAlignment.Center
+            );
             HealthBar = new HealthBar(
                 this,
-                new Rectangle((Singleton.SCREEN_WIDTH - 200)/2, Singleton.SCREEN_HEIGHT * 5 / 6, 200, 30),
+                new Rectangle(Singleton.SCREEN_WIDTH/4, Singleton.SCREEN_HEIGHT * 3 / 4, Singleton.SCREEN_WIDTH/2 , 30),
                 Color.Red,
-                Color.Gray
+                Color.Black
             );
+            Singleton.Instance.CurrentUI.AddHUDElement(DisplayNameUI);
             Singleton.Instance.CurrentUI.AddHUDElement(HealthBar);
             base.OnSpawn();
         }
@@ -472,6 +480,7 @@ namespace FinalComGame
             }
             if(CerberusCount <= 0){
                 Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+                Singleton.Instance.CurrentUI.RemoveHUDElement(DisplayNameUI);
                 Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
             }
             base.OnDead(gameObjects);

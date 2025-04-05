@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -95,19 +96,7 @@ namespace FinalComGame
                         break;
                 }    
             }
-     
             base.UpdateAnimation(deltaTime);
-        }
-
-        public override void OnSpawn()
-        {
-            Console.WriteLine("Skeleton rises from the ground!");
-        }
-
-        public override void OnDead(List<GameObject> gameObjects)
-        {
-            Console.WriteLine("Skeleton slowly crumbles to dust...");
-            base.OnDead(gameObjects);
         }
 
         public override void DropItem(List<GameObject> gameObjects)
@@ -118,7 +107,7 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            //DrawDebug(spriteBatch);
+            ////DrawDebug(spriteBatch);
         }
 
         protected override void DrawDebug(SpriteBatch spriteBatch)
@@ -140,7 +129,7 @@ namespace FinalComGame
             }
 
             Velocity.X = 50f * Direction;
-            if(this.HaveLineOfSight(tileMap) && Vector2.Distance(Singleton.Instance.Player.Position,this.Position) <=100)
+            if(this.HaveLineOfSightOfPlayer(tileMap) && Vector2.Distance(Singleton.Instance.Player.Position,this.Position) <=100)
             {
                 Console.WriteLine("Skeleton sees the player! Switching to chase mode.");
                 CurrentState = EnemyState.Chase;
@@ -157,7 +146,7 @@ namespace FinalComGame
             float distanceToPlayer = Vector2.Distance(Singleton.Instance.Player.Position, this.Position);
 
             // Check if the enemy still sees the player
-            if (!this.HaveLineOfSight(tileMap) || distanceToPlayer > 400) // Max chase range
+            if (!this.HaveLineOfSightOfPlayer(tileMap) || distanceToPlayer > 400) // Max chase range
             {
                 Console.WriteLine("Skeleton lost sight of the player. Returning to idle patrol.");
                 CurrentState = EnemyState.Idle;

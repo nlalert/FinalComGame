@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -16,7 +17,7 @@ namespace FinalComGame
         private float verticalOffset; // Randomized offset for smooth hovering
         private float loopOffset =0;
         private float loopSpeed =2f;
-
+        public SoundEffect DemonAttack_sound;
         public DemonBullet DemonBullet;
 
         public DemonEnemy(Texture2D texture) 
@@ -120,9 +121,7 @@ namespace FinalComGame
             base.UpdateAnimation(deltaTime);
         }
         private void AI_Idle(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap, float deltaTime){
-            float distanceToPlayer = Vector2.Distance(Position, Singleton.Instance.Player.GetPlayerCenter());
-
-            if (distanceToPlayer <= DetectionRange && HaveLineOfSight(tileMap))
+            if (HaveLineOfSightOfPlayer(tileMap))
             {
                 // Transition to chase state
                 CurrentState = EnemyState.Chase;
@@ -144,7 +143,7 @@ namespace FinalComGame
         }
         private void AI_Chase(GameTime gameTime, List<GameObject> gameObjects, TileMap tileMap){
             float distanceToPlayer = Vector2.Distance(Position, Singleton.Instance.Player.GetPlayerCenter());
-            if (distanceToPlayer > DetectionRange || !HaveLineOfSight(tileMap))
+            if (!HaveLineOfSightOfPlayer(tileMap))
             {
                 CurrentState = EnemyState.Idle;
                 Velocity = Vector2.Zero; // Stop moving
@@ -163,9 +162,10 @@ namespace FinalComGame
                 float horizontalVelocity = MathHelper.Clamp((targetX - Position.X) * 2f, -hoverSpeed, hoverSpeed);
                 Velocity.X = horizontalVelocity;
 
-                if (distanceToPlayer <= AttackRange && shootTimer >= shootCooldown && HaveLineOfSight(tileMap))
+                if (distanceToPlayer <= AttackRange && shootTimer >= shootCooldown && HaveLineOfSightOfPlayer(tileMap))
                 {
                     ShootBullet(gameObjects);
+                    DemonAttack_sound.Play();
                     shootTimer = 0;
                 }
             }
@@ -203,7 +203,7 @@ namespace FinalComGame
                 0f
             );
 
-            //DrawDebug(spriteBatch);
+            ////DrawDebug(spriteBatch);
         }
         protected override void DrawDebug(SpriteBatch spriteBatch)
         {

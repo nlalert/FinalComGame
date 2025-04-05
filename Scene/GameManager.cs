@@ -20,6 +20,7 @@ public class GameManager : Game
     private MainMenu _mainMenu;
     private PauseMenu _pauseMenu;
     private Settings _settings;
+    private StageTransitionScene _transitionScene;
     private GameOverScene _gameOverScene;
     private GameClearScene _gameClearScene;
 
@@ -42,6 +43,9 @@ public class GameManager : Game
 
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        Singleton.Instance.PixelTexture = new Texture2D(GraphicsDevice, 1, 1);
+        Singleton.Instance.PixelTexture.SetData(new[] { Color.White });
+
         _playScene = new PlayScene();
         _playScene.Initialize(this, GraphicsDevice, _graphics, Content);
         _playScene.LoadContent(_spriteBatch);
@@ -57,6 +61,10 @@ public class GameManager : Game
         _settings = new Settings();
         _settings.Initialize(this, GraphicsDevice, _graphics, Content);
         _settings.LoadContent(_spriteBatch);
+
+        _transitionScene = new StageTransitionScene();
+        _transitionScene.Initialize(this, GraphicsDevice, _graphics, Content);
+        _transitionScene.LoadContent(_spriteBatch);
 
         _gameOverScene = new GameOverScene();
         _gameOverScene.Initialize(this, GraphicsDevice, _graphics, Content);
@@ -81,6 +89,9 @@ public class GameManager : Game
                 break;
             case Singleton.GameState.Settings:
                 _settings.Update(gameTime);
+                break;
+            case Singleton.GameState.ChangingStage:
+                _transitionScene.Update(gameTime);
                 break;
             case Singleton.GameState.GameOver:
                 _gameOverScene.Update(gameTime);
@@ -119,6 +130,10 @@ public class GameManager : Game
                 break;
             case Singleton.GameState.Settings:
                 _settings.Draw(gameTime);
+                break;
+            case Singleton.GameState.ChangingStage:
+                _playScene.Draw(gameTime);
+                _transitionScene.Draw(gameTime);
                 break;
             case Singleton.GameState.GameOver:
                 _gameOverScene.Draw(gameTime);

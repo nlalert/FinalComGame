@@ -14,6 +14,7 @@ namespace FinalComGame
         public float ExplosionDuration;
         public float DetonateDelayDuration;
         public float DetonateTimer;
+        public SoundEffect grenade_Explode_sound;
         public GrenadeProjectile(Texture2D texture) : base(texture)
         {
             CanCollideTile = true;
@@ -54,10 +55,6 @@ namespace FinalComGame
 
         public override void Shoot(Vector2 position, Vector2 direction)
         {
-            // if (player._isCrouching)
-            //     position += new Vector2(player.Direction * 20, 6); // Lower when crouching
-            // else
-            //     position += new Vector2(player.Direction * 20, 16); // At hand level
             DetonateTimer = DetonateDelayDuration;
             base.Shoot(position, direction);
         }
@@ -65,15 +62,16 @@ namespace FinalComGame
         public void StartExplosion(List<GameObject> gameObjects)
         {
             IsActive = false; // Remove Grenade and left with only explosion
-
             Velocity = Vector2.Zero;
             Explosion newExplosion = BaseExplosion.Clone() as Explosion;
             newExplosion.Position = Position;
             newExplosion.Radius = Radius;
             newExplosion.Duration = ExplosionDuration;
             newExplosion.Damage = BaseDamageAmount * 0.8f;
+            newExplosion.ExplosionSound = grenade_Explode_sound;
             newExplosion.TriggerExplosion();
             gameObjects.Add(newExplosion);
+            
         }
 
         protected override void UpdateHorizontalMovement(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FinalComGame
@@ -17,6 +18,7 @@ namespace FinalComGame
         private bool _isDashing;
         private float _dashTimer;
         public float DashDuration;
+        public SoundEffect DogSound;
 
         public HellhoundEnemy(Texture2D texture) : base(texture) { 
             _texture = texture;
@@ -151,7 +153,7 @@ namespace FinalComGame
                 0f
             );
 
-            //DrawDebug(spriteBatch);
+            ////DrawDebug(spriteBatch);
         }
         protected override void DrawDebug(SpriteBatch spriteBatch)
         {
@@ -173,7 +175,7 @@ namespace FinalComGame
 
             Velocity.X = 60f * Direction;
 
-            if (Singleton.Instance.Player != null && this.HaveLineOfSight(tileMap) && Vector2.Distance(Singleton.Instance.Player.Position, this.Position) <= 100)
+            if (Singleton.Instance.Player != null && this.HaveLineOfSightOfPlayer(tileMap) && Vector2.Distance(Singleton.Instance.Player.Position, this.Position) <= 100)
             {
                 //Console.WriteLine("Hellhound spots the player! Preparing to charge.");
                 CurrentState = EnemyState.Charging;
@@ -198,11 +200,11 @@ namespace FinalComGame
                 Velocity = (_dashTarget - Position);
                 Velocity.Normalize();
                 Velocity *= 600f;//Dash speed
-                
+                DogSound.Play();
             }
             else{
                 Velocity.X *= 0.95f;
-                if(this.HaveLineOfSight(tileMap)){ //while have line of sight will aim add player all time 
+                if(this.HaveLineOfSightOfPlayer(tileMap)){ //while have line of sight will aim add player all time 
                     _dashTarget = Singleton.Instance.Player.GetPlayerCenter();
                 }
             }
@@ -235,7 +237,7 @@ namespace FinalComGame
 
             _chaseTimer -= deltaTime;
 
-            if (!this.HaveLineOfSight(tileMap) || _chaseTimer <= 0)
+            if (!this.HaveLineOfSightOfPlayer(tileMap) || _chaseTimer <= 0)
             {
                 //Console.WriteLine("Hellhound lost sight of the player, returning to idle.");
                 CurrentState = EnemyState.Idle;
@@ -250,7 +252,7 @@ namespace FinalComGame
 
             UpdateHorizontalMovement(deltaTime, gameObjects, tileMap);
 
-            if (_chaseTimer <= 0 && this.HaveLineOfSight(tileMap))
+            if (_chaseTimer <= 0 && this.HaveLineOfSightOfPlayer(tileMap))
             {
                 //Console.WriteLine("Hellhound still sees the player, preparing to charge again.");
                 CurrentState = EnemyState.Charging;

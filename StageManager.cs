@@ -76,7 +76,7 @@ public class StageManager
 
     public static string GetCurrentStagePath()
     {
-        return "../../../Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage;
+        return "./Data/Level_" + Singleton.Instance.Stage + "/Level_" + Singleton.Instance.Stage;
     }
 
     public Dictionary<Vector2, EnemyID> GetEnemySpawnPoints()
@@ -125,10 +125,6 @@ public class StageManager
         _backgroundLayer1 = content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_bg");  // Farthest layer
         _backgroundLayer2 = content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_mg");  // Middle layer
         _backgroundLayer3 = content.Load<Texture2D>("Level_" + Singleton.Instance.Stage + "_Parallax_fg");  // Closest layer
-
-        // _backgroundLayer1 = content.Load<Texture2D>("Level_2_Parallax_bg");  // Farthest layer
-        // _backgroundLayer2 = content.Load<Texture2D>("Level_2_Parallax_mg");  // Middle layer
-        // _backgroundLayer3 = content.Load<Texture2D>("Level_2_Parallax_fg");  // Closest layer
     }
 
     public void UpdateAmbushAreas(GameTime gameTime, List<GameObject> gameObjects)
@@ -147,5 +143,20 @@ public class StageManager
     public List<AmbushArea> GetAmbushAreas()
     {
         return _ambushAreas;
+    }
+
+    public static string GetStageName()
+    {
+        switch (Singleton.Instance.Stage)
+        {
+            case 1:
+                return "Searing Roots";
+            case 2:
+                return "Blazing Hollow";
+            case 3:
+                return "Obsidian Keep";
+            default:
+                return "";
+        }
     }
 }

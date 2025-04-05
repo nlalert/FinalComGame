@@ -11,6 +11,7 @@ public class TextUI : HUDElement
     private Func<string> _dynamicTextProvider;
     private Vector2 _textPosition;
     private TextAlignment _alignment;
+    private float _textScale;
     
     public enum TextAlignment
     {
@@ -20,18 +21,19 @@ public class TextUI : HUDElement
     }
 
     // Constructor for static text
-    public TextUI(Rectangle bounds, string text, Color color = default, 
+    public TextUI(Rectangle bounds, string text, float scale = 1,Color color = default, 
         TextAlignment alignment = TextAlignment.Left) 
         : base(bounds)
     {
         _text = text;
         _color = color == default ? Color.White : color;
         _alignment = alignment;
+        _textScale = scale;
         UpdateTextPosition();
     }
 
     // Constructor for dynamic text (using a function)
-    public TextUI(Rectangle bounds, Func<string> textProvider, Color color = default, 
+    public TextUI(Rectangle bounds, Func<string> textProvider, float scale = 1, Color color = default, 
         TextAlignment alignment = TextAlignment.Left)
         : base(bounds)
     {
@@ -39,43 +41,15 @@ public class TextUI : HUDElement
         _text = textProvider();
         _color = color == default ? Color.White : color;
         _alignment = alignment;
+        _textScale = scale;
         UpdateTextPosition();
     }
-
-    // Set a new static text
-    public void SetText(string text)
-    {
-        _text = text;
-        _dynamicTextProvider = null;
-        UpdateTextPosition();
-    }
-
-    // Set a dynamic text provider function
-    public void SetDynamicTextProvider(Func<string> textProvider)
-    {
-        _dynamicTextProvider = textProvider;
-        UpdateTextPosition();
-    }
-
-    // Set the text color
-    public void SetColor(Color color)
-    {
-        _color = color;
-    }
-
-    // Set the text alignment
-    public void SetAlignment(TextAlignment alignment)
-    {
-        _alignment = alignment;
-        UpdateTextPosition();
-    }
-
 
     // Calculate the position of the text based on alignment
     private void UpdateTextPosition()
     {
         string textToMeasure = _text ?? (_dynamicTextProvider != null ? _dynamicTextProvider() : "");
-        Vector2 textSize = Singleton.Instance.GameFont.MeasureString(textToMeasure);
+        Vector2 textSize = Singleton.Instance.GameFont.MeasureString(textToMeasure) * _textScale;
 
         switch (_alignment)
         {
@@ -115,7 +89,17 @@ public class TextUI : HUDElement
     {
         if (_text != null)
         {
-            spriteBatch.DrawString(Singleton.Instance.GameFont, _text, _textPosition, _color);
+            spriteBatch.DrawString(
+                Singleton.Instance.GameFont, 
+                _text, 
+                _textPosition, 
+                _color,
+                0f,
+                Vector2.Zero,
+                _textScale,
+                SpriteEffects.None,
+                0f
+            );
         }
         
         base.Draw(spriteBatch);
