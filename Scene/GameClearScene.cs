@@ -17,7 +17,7 @@ public class GameClearScene : Scene
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         _UITexture = _content.Load<Texture2D>("UI");
-        _buttonRectangle = new Rectangle(0, 48, 304, 48);
+        _buttonRectangle = ViewportManager.Get("Button");
         base.LoadContent(spriteBatch);
 
         SetupHUD();

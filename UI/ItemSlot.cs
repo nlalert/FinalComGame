@@ -11,7 +11,7 @@ namespace FinalComGame
         private Item item;
         private Texture2D slotTexture;
         private float scale;
-        Rectangle _itemSlotRectangle = new Rectangle(192, 112, 32, 32);
+        Rectangle _itemSlotRectangle = ViewportManager.Get("Item_Slot");
 
         public ItemSlot(int slotNumber, Rectangle bounds, Texture2D slotTexture, float scale = 0.8f) 
             : base(bounds)

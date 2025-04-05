@@ -27,8 +27,6 @@ public class SlideBarUI : HUDElement
     // Customization
     private int _barHeight;
     private int _labelWidth;
-    private Rectangle _BarRectangle = new Rectangle (0,96,306,16);
-    private Rectangle _HandleRectangle = new Rectangle(224, 112, 16, 16);
 
     public SlideBarUI(
         Rectangle bounds,
@@ -131,8 +129,8 @@ public class SlideBarUI : HUDElement
         // Update value while dragging
         if (_isDragging)
         {
-            float relativeX = MathHelper.Clamp(mousePos.X - _barBounds.X, 0, _barBounds.Width - _HandleRectangle.Width);
-            float valuePercent = relativeX / (_barBounds.Width - _HandleRectangle.Width);
+            float relativeX = MathHelper.Clamp(mousePos.X - _barBounds.X, 0, _barBounds.Width - ViewportManager.Get("Volume_Slider").Width);
+            float valuePercent = relativeX / (_barBounds.Width - ViewportManager.Get("Volume_Slider").Width);
             _currentValue = _minValue + valuePercent * (_maxValue - _minValue);
             UpdateHandlePosition();
         }
@@ -145,24 +143,24 @@ public class SlideBarUI : HUDElement
         float valuePercent = (_currentValue - _minValue) / valueRange;
         
         // Calculate handle position
-        int handleX = (int)(_barBounds.X + valuePercent * (_barBounds.Width - _HandleRectangle.Width));
-        int handleY = _barBounds.Y + (_barBounds.Height - _HandleRectangle.Height) / 2;
+        int handleX = (int)(_barBounds.X + valuePercent * (_barBounds.Width - ViewportManager.Get("Volume_Slider").Width));
+        int handleY = _barBounds.Y + (_barBounds.Height - ViewportManager.Get("Volume_Slider").Height) / 2;
         
         _handleBounds = new Rectangle(
             handleX,
             handleY,
-            _HandleRectangle.Width,
-            _HandleRectangle.Height
+            ViewportManager.Get("Volume_Slider").Width,
+            ViewportManager.Get("Volume_Slider").Height
         );
     }
 
     public override void Draw(SpriteBatch spriteBatch)
     {
         // Draw bar background
-        spriteBatch.Draw(_UITexture, _barBounds,_BarRectangle, _barColor);
+        spriteBatch.Draw(_UITexture, _barBounds,ViewportManager.Get("Volume_Bar"), _barColor);
         
         // Draw handle
-        spriteBatch.Draw(_UITexture, _handleBounds,_HandleRectangle, Color.White);
+        spriteBatch.Draw(_UITexture, _handleBounds,ViewportManager.Get("Volume_Slider"), Color.White);
         
         // Draw text elements
         _labelText.Draw(spriteBatch);

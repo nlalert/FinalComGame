@@ -21,7 +21,7 @@ public class PauseMenu : Scene
     {
         base.LoadContent(spriteBatch);
         _UITexture = _content.Load<Texture2D>("UI");
-        _buttonRectangle = new Rectangle(0, 48, 304, 48);
+        _buttonRectangle = ViewportManager.Get("Button");
 
         SetupHUD();
     }
