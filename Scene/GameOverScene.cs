@@ -40,15 +40,16 @@ public class GameOverScene : Scene
             TextUI.TextAlignment.Center
         );
 
-        Texture2D Button = _content.Load<Texture2D>("ButtonTexture");
+        Texture2D Button = _content.Load<Texture2D>("UI");
         int ButtonWidth = Singleton.SCREEN_WIDTH / 2;
         int ButtonHeight = 80;
-
+        Rectangle buttonRectangle = new Rectangle(0, 48, 304, 48);
         _restartButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 5, ButtonWidth, ButtonHeight),
             Button,
             "Restart",
-            Color.Wheat
+            Color.Wheat,
+            buttonRectangle
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
@@ -56,7 +57,8 @@ public class GameOverScene : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 5, ButtonWidth, ButtonHeight),
             Button,
             "Back to Main Menu",
-            Color.Wheat
+            Color.Wheat,
+            buttonRectangle
         );
         _mainmenuButton.OnClick += MainMenuButton_OnClick;
 
@@ -64,7 +66,8 @@ public class GameOverScene : Scene
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2, (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 5, ButtonWidth, ButtonHeight),
             Button,
             "Exit to Desktop",
-            Color.Wheat
+            Color.Wheat,
+            buttonRectangle
         );
         _exitButton.OnClick += ExitGameButton_OnClick;
 

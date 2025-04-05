@@ -73,14 +73,23 @@ public class Settings : Scene
             "{0:F0}%" // value format
         );
 
-        Texture2D ButtonTexture = _content.Load<Texture2D>("ButtonTexture");
+        Texture2D ButtonTexture = _content.Load<Texture2D>("UI");
         int ButtonWidth = Singleton.SCREEN_WIDTH / 3;
         int ButtonHeight = 80;
+        Rectangle buttonRectangle = new Rectangle(0, 48, 304, 48);
+        _backButton = new Button(
+            new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 7, ButtonWidth, ButtonHeight),
+            ButtonTexture,
+            "Back",
+            Color.Wheat,
+            buttonRectangle
+        );
         _backButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
             ButtonTexture,
             "Back",
-            Color.Wheat
+            Color.Wheat,
+            buttonRectangle
         );
         _backButton.OnClick += BackButton_OnClick;
 
