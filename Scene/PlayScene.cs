@@ -825,7 +825,7 @@ public class PlayScene : Scene
 
         ItemManager.AddGameItem(ItemID.LifeUp,
             new LifeUp(_itemTexture, ItemType.Consumable){
-                Name =  "1Up",
+                Name =  "LifeUp",
                 Description = "The soul can be revived once more....",
                 Viewport = ViewportManager.Get("LifeUp"),
                 UseSound = _LifeUp_sound // Temp
@@ -951,7 +951,7 @@ public class PlayScene : Scene
         // Top Left - Health and MP
         TextUI HealthText = new TextUI(            
             new Rectangle(20, 15, 200, 25),
-            () => $"HP ({Singleton.Instance.Player.Health + Singleton.Instance.Player.AbsorptionHealth:F0} / {Singleton.Instance.Player.MaxHealth:F0})",
+            () => $"Hit Point     ({Singleton.Instance.Player.Health + Singleton.Instance.Player.AbsorptionHealth:F0} / {Singleton.Instance.Player.MaxHealth:F0})",
             1,
             Color.White,
             TextUI.TextAlignment.Left
@@ -966,7 +966,7 @@ public class PlayScene : Scene
 
         TextUI MPText = new TextUI(            
             new Rectangle(20, 70, 200, 25),
-            () => $"MP ({Singleton.Instance.Player.MP:F0} / {Singleton.Instance.Player.MaxMP:F0})",
+            () => $"Soul Mana ({Singleton.Instance.Player.MP:F0} / {Singleton.Instance.Player.MaxMP:F0})",
             1,
             Color.White,
             TextUI.TextAlignment.Left
