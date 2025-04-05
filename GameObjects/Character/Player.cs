@@ -46,7 +46,6 @@ namespace FinalComGame
         private float _coyoteTimeCounter;
         public float JumpBufferTime;
         private float _jumpBufferCounter;
-        public bool _isAllowedJump = true;
         public AbilityManager Abilities;
 
         // Dash 
@@ -192,7 +191,6 @@ namespace FinalComGame
         public override void Reset()
         {
             // Reset inventory
-            Inventory.Reset();
             Abilities.Reset();
 
             Direction = 1; // Reset direction to right
@@ -255,10 +253,10 @@ namespace FinalComGame
             Inventory.UpdateActiveConsumables(deltaTime, gameObjects);
             
             UpdateInvincibilityTimer(deltaTime);
-            UpdateCoyoteTime(deltaTime);
+            UpdateCoyoteTime(deltaTime, gameObjects, tileMap);
             CheckAndJump();
             UpdateDash(deltaTime);
-            UpdateGlide();
+            UpdateGlide(gameObjects, tileMap);
 
             if (!_isClimbing && !_isDashing && !_isGrappling) 
                 ApplyGravity(deltaTime);
@@ -603,9 +601,12 @@ namespace FinalComGame
 
         private void HandleInput(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
-            if (Singleton.Instance.IsKeyPressed(Left))
+            // Movement controls
+            bool canMove = !_isDashing && !_isAttacking && !_isGrappling;
+            
+            if (canMove)
             {
-                if (!_isDashing && !_isAttacking && !_isGrappling) 
+                if (Singleton.Instance.IsKeyPressed(Left))
                 {
                     if (_isClimbing && _overlappedTile == TileType.Ladder)
                         Direction = 1;
@@ -615,10 +616,8 @@ namespace FinalComGame
                         Velocity.X = -WalkSpeed;
                     }
                 }
-            }
-            if (Singleton.Instance.IsKeyPressed(Right))
-            {
-                if (!_isDashing && !_isAttacking && !_isGrappling)  
+                
+                if (Singleton.Instance.IsKeyPressed(Right))
                 {
                     if (_isClimbing && _overlappedTile == TileType.Ladder)
                         Direction = -1;
@@ -630,21 +629,16 @@ namespace FinalComGame
                 }
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Attack) && (!_isClimbing || (_isCrouching && CanStandUp(tileMap)))){
-
-                if (_isCrouching) 
-                {
-                    Position.Y -= Singleton.TILE_SIZE;
-                    Viewport.Height = Singleton.TILE_SIZE * 2;
-                    WalkSpeed = 200;
-                    _isCrouching = false;
-                }
-
+            // Attack
+            if (Singleton.Instance.IsKeyJustPressed(Attack) && (!_isClimbing || (_isCrouching && CanStandUp(tileMap))))
+            {
+                StandUpIfCrouching(tileMap);
                 _isCharging = false;
                 _chargeTime = 0;
                 StartAttack();
             }
 
+            // Update attack timers
             if (_isAttacking)
             {
                 _attackTimer -= deltaTime;
@@ -656,120 +650,150 @@ namespace FinalComGame
                 _attackCooldownTimer -= deltaTime;
             }
 
-            // Handle Fire button (charge shot)
-            if (Singleton.Instance.IsKeyJustPressed(Fire) && !_isClimbing && !_isAttacking)
+            // Weapon/firing controls
+            bool canFire = !_isClimbing && !_isAttacking;
+            
+            if (Singleton.Instance.IsKeyJustPressed(Fire) && canFire)
             {
-                if(_isSoulBullet)
+                if (_isSoulBullet)
                 {
-                    // Start charging
                     _currentWeapon = "none";
                     StartCharging();
                 }
                 else
                 {
-                    if (Inventory.GetItem(Inventory.RANGE_SLOT) is Staff && MP >= Inventory.GetItem(Inventory.RANGE_SLOT).MPCost)
-                       _currentWeapon = "staff";
-                    else if (Inventory.GetItem(Inventory.RANGE_SLOT) is Gun)
-                        _currentWeapon = "gun";
-                    else
-                        _currentWeapon = "none";
+                    SetCurrentWeapon();
                     Shoot(gameObjects);
                 }
-
             }
-            else if (Singleton.Instance.IsKeyPressed(Fire) && !_isClimbing && !_isAttacking)
+            else if (Singleton.Instance.IsKeyPressed(Fire) && canFire)
             {
-                // Continue charging
                 ContinueCharging(deltaTime);
             }
-            else if (Singleton.Instance.IsKeyJustReleased(Fire) && !_isClimbing && !_isAttacking)
+            else if (Singleton.Instance.IsKeyJustReleased(Fire) && canFire)
             {
-                // Release shot
                 ReleaseChargedShot(gameObjects);
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Dash)){
-                if (Abilities.IsAbilityUnlocked(AbilityType.Dash))
+            // Dash ability
+            if (Singleton.Instance.IsKeyJustPressed(Dash) && Abilities.IsAbilityUnlocked(AbilityType.Dash))
+            {
+                if (_isClimbing)
                 {
-                    if(_isClimbing){
-                        Direction *= -1;
-                        _isClimbing = false;
-                    }
-                    
-                    StartDash();
+                    Direction *= -1;
+                    _isClimbing = false;
                 }
+                StartDash();
             }
 
-            Console.WriteLine(_isAllowedJump);
-
-            if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _isAllowedJump && _coyoteTimeCounter > 0)
+            // Jump
+            bool jumpBlocked = Singleton.Instance.IsKeyPressed(Crouch) && (_isClimbing || _isOnPlatform);
+            
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _coyoteTimeCounter > 0 && !jumpBlocked)
             {
-                if (!(Singleton.Instance.IsKeyPressed(Crouch) && _isClimbing) && 
-                !(Singleton.Instance.IsKeyPressed(Crouch) && _isOnPlatform))
-                {
-                    _isAllowedJump = false;
-
-                    if (_isCrouching) {
-                        Position.Y -= Singleton.TILE_SIZE;
-                        Viewport.Height = Singleton.TILE_SIZE * 2;
-                        WalkSpeed = 200;
-                        _isCrouching = false;
-                    }
-
-                    _jumpBufferCounter = JumpBufferTime;
-                }
+                StandUpIfCrouching(tileMap);
                 _isClimbing = false;
-            }
-            else
-                _jumpBufferCounter -= deltaTime; // Decrease over time
-
-            // Gliding - activate when holding Jump while in air and not climbing or dashing
-            if (Singleton.Instance.IsKeyPressed(Jump) && !IsOnGround() && 
-            !_isJumping && !_isClimbing && !_isDashing && !_isAttacking && 
-            MP > 0 && _coyoteTimeCounter <= 0)
-            {
-                _isGliding = Abilities.IsAbilityUnlocked(AbilityType.Glide);
+                _jumpBufferCounter = JumpBufferTime;
             }
             else
             {
-                _isGliding = false;
+                _jumpBufferCounter -= deltaTime;
             }
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && !_isJumping && !_isClimbing && Velocity.Y == 0 && !_isDashing)
+            // Gliding
+            bool canGlide = !IsOnGround(gameObjects, tileMap) && !_isJumping && !_isClimbing && !_isDashing && 
+                            !_isAttacking && MP > 0 && _coyoteTimeCounter <= 0;
+            
+            _isGliding = Singleton.Instance.IsKeyPressed(Jump) && canGlide && 
+                        Abilities.IsAbilityUnlocked(AbilityType.Glide);
+
+            // Crouching
+            HandleCrouching(tileMap);
+
+            // Platform dropping
+            _isDropping = Singleton.Instance.IsKeyPressed(Crouch) && 
+                        Singleton.Instance.IsKeyJustPressed(Jump) && _isOnPlatform;
+
+            // Climbing
+            HandleClimbing();
+
+            // Grappling hook
+            if (Singleton.Instance.IsKeyJustPressed(Grapple) && 
+                Abilities.IsAbilityUnlocked(AbilityType.Grapple) && 
+                MP >= GrappleMP && 
+                GrapplingPosition != Vector2.Zero && 
+                HaveLineOfSightOfHook(tileMap))
+            {
+                FireGrapplingHook(gameObjects);
+            }
+            
+            // Item interaction
+            if (Singleton.Instance.IsKeyJustPressed(Interact))
+                Inventory.CheckForItemPickup(gameObjects);
+
+            // Item slot 1
+            HandleItemSlot(Item1, ref _isHoldingItem1, ref _item1HoldTime, Inventory.ITEM_SLOT_1, deltaTime);
+            
+            // Item slot 2
+            HandleItemSlot(Item2, ref _isHoldingItem2, ref _item2HoldTime, Inventory.ITEM_SLOT_2, deltaTime);
+            
+            // Update grappling hook line of sight
+            if (!_isGrappling && GrapplingPosition != Vector2.Zero)
+                HaveLineOfSightOfHook(tileMap);
+        }
+
+        // Helper methods
+        private void StandUpIfCrouching(TileMap tileMap)
+        {
+            if (_isCrouching && CanStandUp(tileMap))
+            {
+                Position.Y -= Singleton.TILE_SIZE;
+                Viewport.Height = Singleton.TILE_SIZE * 2;
+                WalkSpeed = 200;
+                _isCrouching = false;
+            }
+        }
+
+        private void SetCurrentWeapon()
+        {
+            if (Inventory.GetItem(Inventory.RANGE_SLOT) is Staff && MP >= Inventory.GetItem(Inventory.RANGE_SLOT).MPCost)
+                _currentWeapon = "staff";
+            else if (Inventory.GetItem(Inventory.RANGE_SLOT) is Gun)
+                _currentWeapon = "gun";
+            else
+                _currentWeapon = "none";
+        }
+
+        private void HandleCrouching(TileMap tileMap)
+        {
+            bool shouldCrouch = Singleton.Instance.IsKeyPressed(Crouch) && !_isJumping && 
+                                !_isClimbing && Velocity.Y == 0 && !_isDashing;
+            
+            if (shouldCrouch)
             {
                 if (!_isCrouching) Position.Y += Singleton.TILE_SIZE;
                 Viewport.Height = Singleton.TILE_SIZE;
                 WalkSpeed = CrouchSpeed;
                 _isCrouching = true;
             }
-            else if (_isCrouching && !_isDashing)
+            else if (_isCrouching && !_isDashing && CanStandUp(tileMap))
             {
-                // Only stand up if there's enough room
-                if (CanStandUp(tileMap))
-                {
-                    Position.Y -= Singleton.TILE_SIZE;
-                    Viewport.Height = Singleton.TILE_SIZE * 2;
-                    WalkSpeed = 200;
-                    _isCrouching = false;
-                }
-                // If we can't stand up, force the player to remain crouched
-                else
-                {
-                    _isCrouching = true;
-                }
+                Position.Y -= Singleton.TILE_SIZE;
+                Viewport.Height = Singleton.TILE_SIZE * 2;
+                WalkSpeed = 200;
+                _isCrouching = false;
             }
+            // Otherwise stay crouched if we can't stand up
+        }
 
-            if (Singleton.Instance.IsKeyPressed(Crouch) && Singleton.Instance.IsKeyJustPressed(Jump) && _isOnPlatform){
-                _isDropping = true;
-            }
-            else
-            {
-                _isDropping = false;
-            }
-
-            if (((Singleton.Instance.IsKeyPressed(Climb) && Position.Y > (_ladderTopPosition.Y + 8) && IsOnladder() && !_isCrouching) || 
-                (Singleton.Instance.IsKeyPressed(Crouch) && _ladderTopPosition.Y != 0 && Velocity.Y == 0)) && 
-                (Velocity.Y >= 0) && !_isClimbing && !_isDashing)
+        private void HandleClimbing()
+        {
+            bool atLadderTop = Position.Y <= (_ladderTopPosition.Y + 8);
+            bool canStartClimb = ((Singleton.Instance.IsKeyPressed(Climb) && !atLadderTop && IsOnladder() && !_isCrouching) || 
+                                (Singleton.Instance.IsKeyPressed(Crouch) && _ladderTopPosition.Y != 0 && Velocity.Y == 0)) && 
+                                (Velocity.Y >= 0) && !_isClimbing && !_isDashing;
+            
+            if (canStartClimb)
             {
                 _isClimbing = true;
                 _isCharging = false;
@@ -777,6 +801,7 @@ namespace FinalComGame
                 _chargeTime = 0;
                 Velocity.Y = 0;
                 Position.X = _overlappedTilePosition.X;
+                
                 if (Position.Y < _ladderTopPosition.Y + 8)
                     Position.Y += Singleton.TILE_SIZE;
             }
@@ -786,93 +811,49 @@ namespace FinalComGame
                 Position.X = _overlappedTilePosition.X;
                 
                 if (Singleton.Instance.IsKeyPressed(Climb) && Position.Y >= (_ladderTopPosition.Y + 8))
-                {
                     Velocity.Y = -ClimbSpeed;
-                }
                 else if (Singleton.Instance.IsKeyPressed(Crouch))
                 {
                     if (Position.Y < _ladderTopPosition.Y + 8)
                         Position.Y += Singleton.TILE_SIZE;
                     Velocity.Y = ClimbSpeed;
                 }
-                else Velocity.Y = 0;
+                else 
+                    Velocity.Y = 0;
                 
                 if (_overlappedTile == TileType.None)
                     _isClimbing = false;
             }
-            
-            if(Singleton.Instance.IsKeyJustPressed(Grapple) && Abilities.IsAbilityUnlocked(AbilityType.Grapple) && MP >= GrappleMP){
-                if (GrapplingPosition != Vector2.Zero && HaveLineOfSightOfHook(tileMap))
-                    FireGrapplingHook(gameObjects);
-            }
-            
-            if (Singleton.Instance.IsKeyJustPressed(Interact))
-                Inventory.CheckForItemPickup(gameObjects);
+        }
 
-            if (Singleton.Instance.IsKeyJustPressed(Item1))
+        private void HandleItemSlot(Keys itemKey, ref bool isHolding, ref float holdTime, int slotIndex, float deltaTime)
+        {
+            if (Singleton.Instance.IsKeyJustPressed(itemKey))
             {
-                _isHoldingItem1 = true;
-                _item1HoldTime = 0f;
+                isHolding = true;
+                holdTime = 0f;
             }
-            else if (Singleton.Instance.IsKeyPressed(Item1) && _isHoldingItem1)
+            else if (Singleton.Instance.IsKeyPressed(itemKey) && isHolding)
             {
-                _item1HoldTime += deltaTime;
+                holdTime += deltaTime;
                 
-                // If held longer than threshold, drop the item
-                if (_item1HoldTime >= DROP_ITEM_THRESHOLD)
+                if (holdTime >= DROP_ITEM_THRESHOLD)
                 {
-                    Inventory.DropItem(Inventory.ITEM_SLOT_1);
-                    _isHoldingItem1 = false;
+                    Inventory.DropItem(slotIndex);
+                    isHolding = false;
                 }
             }
-            else if (Singleton.Instance.IsKeyJustReleased(Item1))
+            else if (Singleton.Instance.IsKeyJustReleased(itemKey))
             {
-                if (_isHoldingItem1 && _item1HoldTime < DROP_ITEM_THRESHOLD)
-                {
-                    // Normal use if released before threshold
-                    Inventory.UseItem(Inventory.ITEM_SLOT_1);
-                }
-                _isHoldingItem1 = false;
-            }
-
-            // Similarly for Item2
-            if (Singleton.Instance.IsKeyJustPressed(Item2))
-            {
-                _isHoldingItem2 = true;
-                _item2HoldTime = 0f;
-            }
-            else if (Singleton.Instance.IsKeyPressed(Item2) && _isHoldingItem2)
-            {
-                _item2HoldTime += deltaTime;
+                if (isHolding && holdTime < DROP_ITEM_THRESHOLD)
+                    Inventory.UseItem(slotIndex);
                 
-                // If held longer than threshold, drop the item
-                if (_item2HoldTime >= DROP_ITEM_THRESHOLD)
-                {
-                    Inventory.DropItem(Inventory.ITEM_SLOT_2);
-                    _isHoldingItem2 = false;
-                }
+                isHolding = false;
             }
-            else if (Singleton.Instance.IsKeyJustReleased(Item2))
-            {
-                if (_isHoldingItem2 && _item2HoldTime < DROP_ITEM_THRESHOLD)
-                {
-                    // Normal use if released before threshold
-                    Inventory.UseItem(Inventory.ITEM_SLOT_2);
-                }
-                _isHoldingItem2 = false;
-            }
-            
-            if (!_isGrappling && GrapplingPosition != Vector2.Zero)
-                HaveLineOfSightOfHook(tileMap);
         }
 
         private bool IsOnladder(){
             return _overlappedTile == TileType.Ladder || _overlappedTile == TileType.Ladder_Platform;
-        }
-
-        protected override bool IsOnGround()
-        {
-            return Velocity.Y == 0 || _isClimbing ;
         }
 
         public void BoostSpeed(float speedModifier)
@@ -970,19 +951,19 @@ namespace FinalComGame
         }
 
         // New method to update glide state
-        private void UpdateGlide()
+        private void UpdateGlide(List<GameObject> gameObjects, TileMap tileMap)
         {
             // Stop gliding if we hit the ground
-            if (IsOnGround() || !Abilities.IsAbilityUnlocked(AbilityType.Glide))
+            if (IsOnGround(gameObjects, tileMap) || !Abilities.IsAbilityUnlocked(AbilityType.Glide))
             {
                 _isGliding = false;
             }
         }
 
-        private void UpdateCoyoteTime(float deltaTime)
+        private void UpdateCoyoteTime(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             // Apply coyote time: Reset if on ground
-            if (IsOnGround())
+            if (IsOnGround(gameObjects, tileMap) || _isClimbing)
             {
                 _coyoteTimeCounter = CoyoteTime; // Reset coyote time when on ground
             }
@@ -1075,12 +1056,6 @@ namespace FinalComGame
                         {
                             if (IsTouching(tile)) Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
                         }
-
-                        if((tile.IsSolid && IsTouchingTop(tile))|| _isClimbing) 
-                            _isAllowedJump = true;
-
-                        else if(_isDashing)
-                            _isAllowedJump = false;
                     }
                 }
             }
