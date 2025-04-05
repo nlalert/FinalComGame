@@ -191,6 +191,7 @@ namespace FinalComGame
         public override void Reset()
         {
             // Reset inventory
+            Inventory.Reset();
             Abilities.Reset();
 
             Direction = 1; // Reset direction to right
