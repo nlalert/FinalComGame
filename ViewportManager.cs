@@ -26,7 +26,6 @@ public class ViewportManager
         {"Hook_Rope", new Rectangle(70, 0, 4, 80)},
 
         {"Player", new Rectangle(0, 0, 16, 32)},
-        {"Player_Head", new Rectangle(35, 21, 11, 11)},
         {"Hook_Target", new Rectangle(992, 976, 32, 32)},
 
         {"Slime", new Rectangle(0, 0, 16, 16)},
