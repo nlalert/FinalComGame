@@ -984,9 +984,9 @@ public class PlayScene : Scene
             TextUI.TextAlignment.Center
         );
         ImageUI LifeImage = new ImageUI(
-            _playerTexture,
+            _itemTexture,
                 new Rectangle(1170, 15, 50, 50),
-                ViewportManager.Get("Player_Head")// viewport manager
+                ViewportManager.Get("LifeUp")// viewport manager
             );
 
         // Bottom Section - Equipment (moved closer to bottom of screen)
