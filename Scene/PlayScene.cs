@@ -420,12 +420,12 @@ public class PlayScene : Scene
                 );
                 SignBoard ItemTutorialSign = new SignBoard(
                     _whiteTexture,
-                    "Preess F to pick up item"+ 
-                    "Press (1) (2) to use item" +
+                    "Preess F to pick up item "+ 
+                    "Press (1) (2) to use item " +
                     "Hold (1) (2) to drop item",     
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                     TileMap.GetTileWorldPositionAt(148, 41  ), // TopLeft Position // TODO : More dynamic
-                    290,                    // Width 
+                    260,                    // Width 
                     86,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
