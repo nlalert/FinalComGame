@@ -11,15 +11,17 @@ namespace FinalComGame
         private string text;
         private Color textColor;
         private Vector2 textPosition;
+        private Rectangle rectangle = new Rectangle(0, 0, 0, 0);
         
         public event EventHandler OnClick;
         private bool wasPressed = false;
         private float fontScale = 2.5f; // Half the original font size
-        public Button(Rectangle bounds, Texture2D texture, string text, Color textColor) : base(bounds)
+        public Button(Rectangle bounds, Texture2D texture, string text, Color textColor,Rectangle SpriteRectagle) : base(bounds)
         {
             this.texture = texture;
             this.text = text;
             this.textColor = textColor;
+            this.rectangle = SpriteRectagle;
             
             // Center text
             Vector2 textSize = Singleton.Instance.GameFont.MeasureString(text) * fontScale;
@@ -44,12 +46,12 @@ namespace FinalComGame
         
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, _bounds, Color.White);
+            spriteBatch.Draw(texture, _bounds,rectangle, Color.White);
             // Draw item details (left-aligned)
             if (_isHovered)
             {
                 // Draw a hover effect
-                spriteBatch.Draw(texture, _bounds, new Color(255, 255, 255, 128));
+                spriteBatch.Draw(texture, _bounds,rectangle, new Color(255, 255, 255, 128));
             }
             spriteBatch.DrawString(
                 Singleton.Instance.GameFont,
