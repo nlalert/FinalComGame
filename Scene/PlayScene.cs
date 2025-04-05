@@ -401,23 +401,31 @@ public class PlayScene : Scene
                 );
                 SignBoard PlatFormJumpTutorialSign = new SignBoard(
                     _whiteTexture,
-                    "Jump to get on platform. "+     
-                    "Press Down to crouch. "+
+                    "Jump to get on platform",     
+                    TileMap.GetTileWorldPositionAt(123, 24), // TopLeft Position // TODO : More dynamic
+                    144,                    // Width
+                    60,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard PlatFormCrouchTutorialSign = new SignBoard(
+                    _whiteTexture,
+                    "Press Down to crouch "+
                     "Crouch then Jump to drop below on platform", 
-                    TileMap.GetTileWorldPositionAt(123, 16), // TopLeft Position // TODO : More dynamic
-                    224,                    // Width
-                    142,                     // Height
+                    TileMap.GetTileWorldPositionAt(123, 4), // TopLeft Position // TODO : More dynamic
+                    256,                    // Width
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
                 SignBoard ItemTutorialSign = new SignBoard(
                     _whiteTexture,
-                    "Preess F to pick up "+ 
-                    "Press (1) (2) to use " +
-                    "Hold (1) (2) to drop ",     
+                    "Preess F to pick up item"+ 
+                    "Press (1) (2) to use item" +
+                    "Hold (1) (2) to drop item",     
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
-                    TileMap.GetTileWorldPositionAt(148, 30), // TopLeft Position // TODO : More dynamic
-                    240,                    // Width 
+                    TileMap.GetTileWorldPositionAt(148, 41  ), // TopLeft Position // TODO : More dynamic
+                    290,                    // Width 
                     86,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
@@ -459,6 +467,7 @@ public class PlayScene : Scene
                 _gameObjects.Add(ClimbTutorialSign);
                 _gameObjects.Add(DashTutorialSign);
                 _gameObjects.Add(PlatFormJumpTutorialSign);
+                _gameObjects.Add(PlatFormCrouchTutorialSign);
                 _gameObjects.Add(ItemTutorialSign);
                 _gameObjects.Add(ShootTutorialSign);
                 _gameObjects.Add(ItemDropTutorialSign);
