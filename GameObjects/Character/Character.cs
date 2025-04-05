@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FinalComGame {
     public class Character : GameObject
@@ -84,13 +85,38 @@ namespace FinalComGame {
                                 ,Position.Y - (Animation.GetFrameSize().Y - Viewport.Height) / 2);
         }
 
-        protected virtual bool IsOnGround(TileMap tileMap)
+        protected virtual bool IsOnGround(List<GameObject> gameObjects, TileMap tileMap)
         {
-            Vector2 newPosition = new(Position.X, Position.Y + Viewport.Height + Singleton.TILE_SIZE/2);
-            Tile tile = tileMap.GetTileAtWorldPostion(newPosition);
-            return tile != null && tile.IsSolid;
-        }
+            Vector2 centerPosition = new(Position.X, Position.Y + Viewport.Height + Singleton.TILE_SIZE/2);
+            Vector2 rightFootPosition = new(Position.X + Viewport.Width, Position.Y + Viewport.Height + Singleton.TILE_SIZE/2);
+            
+            // Check tile ground at each position
 
+            Tile centerTile = tileMap.GetTileAtWorldPostion(centerPosition);
+            Tile rightTile = tileMap.GetTileAtWorldPostion(rightFootPosition);
+
+            if(centerTile != null)
+            Console.WriteLine("CENTER:" + centerTile.Position);
+            if(rightTile != null)
+            Console.WriteLine("RIGHT:" + rightTile.Position);
+            
+            bool onSolidTile = (centerTile != null && centerTile.IsSolid) || 
+                            (rightTile != null && rightTile.IsSolid);
+            if(onSolidTile)
+                return true;
+            
+            // Check platform enemies at each position
+            foreach (var platformEnemy in gameObjects.OfType<PlatformEnemy>())
+            {
+                if (platformEnemy.Rectangle.Contains(centerPosition) || 
+                    platformEnemy.Rectangle.Contains(rightFootPosition))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
         protected virtual void UpdateAnimation(float deltaTime)
         {
             Animation?.Update(deltaTime);

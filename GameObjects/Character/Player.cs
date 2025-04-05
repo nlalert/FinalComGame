@@ -253,10 +253,10 @@ namespace FinalComGame
             Inventory.UpdateActiveConsumables(deltaTime, gameObjects);
             
             UpdateInvincibilityTimer(deltaTime);
-            UpdateCoyoteTime(deltaTime, tileMap);
+            UpdateCoyoteTime(deltaTime, gameObjects, tileMap);
             CheckAndJump();
             UpdateDash(deltaTime);
-            UpdateGlide(tileMap);
+            UpdateGlide(gameObjects, tileMap);
 
             if (!_isClimbing && !_isDashing && !_isGrappling) 
                 ApplyGravity(deltaTime);
@@ -701,7 +701,7 @@ namespace FinalComGame
             }
 
             // Gliding
-            bool canGlide = !IsOnGround(tileMap) && !_isJumping && !_isClimbing && !_isDashing && 
+            bool canGlide = !IsOnGround(gameObjects, tileMap) && !_isJumping && !_isClimbing && !_isDashing && 
                             !_isAttacking && MP > 0 && _coyoteTimeCounter <= 0;
             
             _isGliding = Singleton.Instance.IsKeyPressed(Jump) && canGlide && 
@@ -951,19 +951,19 @@ namespace FinalComGame
         }
 
         // New method to update glide state
-        private void UpdateGlide(TileMap tileMap)
+        private void UpdateGlide(List<GameObject> gameObjects, TileMap tileMap)
         {
             // Stop gliding if we hit the ground
-            if (IsOnGround(tileMap) || !Abilities.IsAbilityUnlocked(AbilityType.Glide))
+            if (IsOnGround(gameObjects, tileMap) || !Abilities.IsAbilityUnlocked(AbilityType.Glide))
             {
                 _isGliding = false;
             }
         }
 
-        private void UpdateCoyoteTime(float deltaTime, TileMap tileMap)
+        private void UpdateCoyoteTime(float deltaTime, List<GameObject> gameObjects, TileMap tileMap)
         {
             // Apply coyote time: Reset if on ground
-            if (IsOnGround(tileMap) || _isClimbing)
+            if (IsOnGround(gameObjects, tileMap) || _isClimbing)
             {
                 _coyoteTimeCounter = CoyoteTime; // Reset coyote time when on ground
             }
