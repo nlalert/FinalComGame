@@ -367,7 +367,7 @@ namespace FinalComGame
                 );
             }
 
-            //DrawDebug(spriteBatch);
+            ////DrawDebug(spriteBatch);
         }
 
         protected override void UpdateAnimation(float deltaTime)
@@ -1295,7 +1295,7 @@ namespace FinalComGame
             }
             spriteBatch.DrawString(Singleton.Instance.GameFont, displayText, textPosition, Color.White);
             spriteBatch.DrawString(Singleton.Instance.GameFont, ".", this.GetPlayerCenter(), Color.Red);
-            base.DrawDebug(spriteBatch);
+            base.//DrawDebug(spriteBatch);
         }
 
         // New method to apply gravity depending on glide state

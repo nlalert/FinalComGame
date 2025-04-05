@@ -107,7 +107,7 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            //DrawDebug(spriteBatch);
+            ////DrawDebug(spriteBatch);
         }
 
         protected override void DrawDebug(SpriteBatch spriteBatch)

@@ -46,7 +46,7 @@ namespace FinalComGame
             Vector2 scale = new Vector2(1.0f, _lenght / _texture.Height);
             spriteBatch.Draw(_texture,Position,null,Color.White,_angle,_origin,scale,SpriteEffects.None,0f);
             // base.Draw(spriteBatch);
-            //DrawDebug(spriteBatch);
+            ////DrawDebug(spriteBatch);
         }
 
         private void DrawLaser(SpriteBatch spriteBatch, Vector2 start, Vector2 end)

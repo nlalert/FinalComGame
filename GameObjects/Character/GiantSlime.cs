@@ -320,7 +320,7 @@ namespace FinalComGame
                 0f
             );
             
-            DrawDebug(spriteBatch);
+            //DrawDebug(spriteBatch);
         }
 
         protected override void DrawDebug(SpriteBatch spriteBatch)
