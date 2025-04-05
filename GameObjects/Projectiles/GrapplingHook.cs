@@ -86,7 +86,7 @@ namespace FinalComGame
             spriteBatch.Draw(_texture, hookPosition, Viewport, Color.White, hookAngle, hookOrigin, Vector2.One, SpriteEffects.None, 0f);
 
             // Optional: Draw debug information (if needed)
-            DrawDebug(spriteBatch);
+            //DrawDebug(spriteBatch);
         }
         private void DrawDebug(SpriteBatch spriteBatch){
             Vector2 textPosition = new Vector2(Position.X, Position.Y - 40);
