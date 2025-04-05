@@ -16,7 +16,6 @@ namespace FinalComGame
         private Button _playTutorialButton;
         private Button _skipTutorialButton;
 
-        private Texture2D _TitleTexture;
         private Texture2D _bgTexture;
         private Texture2D _mgTexture;
         private Texture2D _fgTexture;

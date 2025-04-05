@@ -9,17 +9,20 @@ namespace FinalComGame;
 
 public class PauseMenu : Scene
 {
-    private Texture2D _button;
+    private Texture2D _UITexture;
     private TextUI _pauseTitle; // can change to ImageUI later
     private Button _resumeButton;
     private Button _restartButton;
     private Button _settingsButton;
     private Button _mainmenuButton;
+    private Rectangle _buttonRectangle;
 
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
-        _button = _content.Load<Texture2D>("ItemSlot"); //Change Later
+        _UITexture = _content.Load<Texture2D>("UI");
+        _buttonRectangle = new Rectangle(0, 48, 304, 48);
+
         SetupHUD();
     }
 
@@ -49,36 +52,39 @@ public class PauseMenu : Scene
         int ButtonWidth = Singleton.SCREEN_WIDTH / 3;
         int ButtonHeight = 80;
 
-        Texture2D ButtonTexture = _content.Load<Texture2D>("ButtonTexture");
         _resumeButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 2 / 6, ButtonWidth, ButtonHeight),
-            ButtonTexture,
+            _UITexture,
             "Resume",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle
         );
         _resumeButton.OnClick += ResumeButton_OnClick;
 
         _restartButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 3 / 6, ButtonWidth, ButtonHeight),
-            ButtonTexture,
+            _UITexture,
             "Restart",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle
         );
         _restartButton.OnClick += RestartButton_OnClick;
 
         _settingsButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 4 / 6, ButtonWidth, ButtonHeight),
-            ButtonTexture,
+            _UITexture,
             "Settings",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle
         );
         _settingsButton.OnClick += SettingButton_OnClick;
 
         _mainmenuButton = new Button(
             new Rectangle((Singleton.SCREEN_WIDTH - ButtonWidth) / 2 , (Singleton.SCREEN_HEIGHT - ButtonHeight) * 5 / 6, ButtonWidth, ButtonHeight),
-            ButtonTexture,
+            _UITexture,
             "Back to Main Menu",
-            Color.Wheat
+            Color.Wheat,
+            _buttonRectangle
         );
         _mainmenuButton.OnClick += MainMenuButton_OnClick;
 
