@@ -76,17 +76,29 @@ namespace FinalComGame
             {
                 case EnemyState.Chase:
                     AI_Chase(deltaTime, gameObjects, tileMap);
+                    if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
+                        Direction = 1;
+                    else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
+                        Direction = -1;                    
                     break;
                 case EnemyState.Charging:
                     AI_Charging(deltaTime,gameObjects, tileMap);
+                    if (Singleton.Instance.Player.GetPlayerCenter().X > Position.X)
+                        Direction = 1;
+                    else if (Singleton.Instance.Player.GetPlayerCenter().X < Position.X)
+                        Direction = -1;
                     break;
                 case EnemyState.Dash:
                     AI_Dash(deltaTime,gameObjects, tileMap);
                     break;
                 case EnemyState.Floating:
                     AI_Floating(deltaTime,gameObjects, tileMap);
+                    if (Velocity.X > 0)
+                        Direction = 1;
+                    else if (Velocity.X < 0)
+                        Direction = -1;                    
                     break;
-                case EnemyState.Attack:
+                case EnemyState.Attack:       
                     AI_Attack(deltaTime,gameObjects, tileMap);
                     break;
             }
@@ -272,36 +284,6 @@ namespace FinalComGame
         {
             _isJumping = false;
         }
-
-        // protected override void UpdateAnimation(float deltaTime)
-        // {
-        //     string animation = "Chase";
-
-        //     if (CurrentState == EnemyState.Dying)
-        //     {
-        //         animation = "die";
-        //     }
-        //     else if (CurrentState == EnemyState.Charging)
-        //     {
-        //         animation = "float";
-        //     }
-        //     else if (CurrentState == EnemyState.Dash)
-        //     {
-        //         animation = "slam";
-        //     }
-        //     else if (_isJumping)
-        //     {
-        //         animation = "jump";
-        //     }
-
-        //     if (_currentAnimation != animation)
-        //     {
-        //         _currentAnimation = animation;
-        //         Animation.ChangeAnimation(_currentAnimation);
-        //     }
-
-        //     base.UpdateAnimation(deltaTime);
-        // }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
