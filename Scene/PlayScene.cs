@@ -939,6 +939,7 @@ public class PlayScene : Scene
         TextUI HealthText = new TextUI(            
             new Rectangle(20, 15, 200, 25),
             () => $"HP ({Singleton.Instance.Player.Health:F0} / {Singleton.Instance.Player.MaxHealth:F0})",
+            1,
             Color.White,
             TextUI.TextAlignment.Left
         );
@@ -953,6 +954,7 @@ public class PlayScene : Scene
         TextUI MPText = new TextUI(            
             new Rectangle(20, 70, 200, 25),
             () => $"MP ({Singleton.Instance.Player.MP:F0} / {Singleton.Instance.Player.MaxMP:F0})",
+            1,
             Color.White,
             TextUI.TextAlignment.Left
         );
@@ -967,6 +969,7 @@ public class PlayScene : Scene
         TextUI LifeText = new TextUI(            
             new Rectangle(1220, 25, 60, 25),
             () => $"x{Singleton.Instance.Player.Life}",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -982,6 +985,7 @@ public class PlayScene : Scene
         TextUI MeleeWeaponText = new TextUI(            
             new Rectangle(490, slotY - 25, 50, 20),
             "Melee",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -995,6 +999,7 @@ public class PlayScene : Scene
         TextUI MeleeWeaponButtonText = new TextUI(            
             new Rectangle(490, slotY + 55, 50, 20),
             "Q",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1003,6 +1008,7 @@ public class PlayScene : Scene
         TextUI RangeWeaponText = new TextUI(            
             new Rectangle(550, slotY - 25, 50, 20),
             "Range",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1016,6 +1022,7 @@ public class PlayScene : Scene
         TextUI RangeWeaponButtonText = new TextUI(            
             new Rectangle(550, slotY + 55, 50, 20),
             "E",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1024,6 +1031,7 @@ public class PlayScene : Scene
         TextUI ItemsLabelText = new TextUI(            
             new Rectangle(640, slotY - 25, 50, 20),
             "Items",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1037,6 +1045,7 @@ public class PlayScene : Scene
         TextUI ItemButtonText1 = new TextUI(            
             new Rectangle(610, slotY + 55, 50, 20),
             "1",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1050,6 +1059,7 @@ public class PlayScene : Scene
         TextUI ItemButtonText2 = new TextUI(            
             new Rectangle(670, slotY + 55, 50, 20),
             "2",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );

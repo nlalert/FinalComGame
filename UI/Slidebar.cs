@@ -89,6 +89,7 @@ public class SlideBarUI : HUDElement
         _labelText = new TextUI(
             labelBounds,
             _labelFormat,
+            1,
             _textColor,
             TextUI.TextAlignment.Left
         );
@@ -96,6 +97,7 @@ public class SlideBarUI : HUDElement
         _valueText = new TextUI(
             valueBounds,
             () => string.Format(_valueFormat, _currentValue),
+            1,
             _textColor,
             TextUI.TextAlignment.Right
         );

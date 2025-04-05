@@ -45,6 +45,7 @@ public class PauseMenu : Scene
         _pauseTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 6, TextWidth, TextHeight),
             "Pause",  
+            1,
             Color.White, 
             TextUI.TextAlignment.Center
         );
