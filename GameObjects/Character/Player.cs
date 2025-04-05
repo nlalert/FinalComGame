@@ -191,7 +191,6 @@ namespace FinalComGame
         public override void Reset()
         {
             // Reset inventory
-            Inventory.Reset();
             Abilities.Reset();
 
             Direction = 1; // Reset direction to right
@@ -856,7 +855,7 @@ namespace FinalComGame
         private bool IsOnladder(){
             return _overlappedTile == TileType.Ladder || _overlappedTile == TileType.Ladder_Platform;
         }
-        
+
         public void BoostSpeed(float speedModifier)
         {
             if(_isDashing || !(Singleton.Instance.IsKeyPressed(Left) || Singleton.Instance.IsKeyPressed(Right)))
