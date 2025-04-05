@@ -129,7 +129,8 @@ namespace FinalComGame
                 _UITexture,
                 "Start",
                 Color.Wheat,
-                _buttonRectangle
+                _buttonRectangle,
+                3
             );
 
             _startButton.OnClick += StartGameButton_OnClick;
@@ -139,7 +140,8 @@ namespace FinalComGame
                 _UITexture,
                 "Exit",
                 Color.Wheat,
-                _buttonRectangle
+                _buttonRectangle,
+                3
             );
             _exitButton.OnClick += ExitGameButton_OnClick;
 
@@ -148,7 +150,8 @@ namespace FinalComGame
                 _UITexture,
                 "Play Prologue \n (Tutorial)",
                 Color.Wheat,
-                _buttonRectangle
+                _buttonRectangle,
+                2f
             );
             _playTutorialButton.OnClick += PlayTutorialButton_OnClick;
 
@@ -157,7 +160,8 @@ namespace FinalComGame
                 _UITexture,
                 "Skip Tutorial",
                 Color.Wheat,
-                _buttonRectangle
+                _buttonRectangle,
+                1.5f
             );
             _skipTutorialButton.OnClick += SkipTutorialButton_OnClick;
 

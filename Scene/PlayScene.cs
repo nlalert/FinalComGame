@@ -962,7 +962,7 @@ public class PlayScene : Scene
         // Top Left - Health and MP
         TextUI HealthText = new TextUI(            
             new Rectangle(20, 15, 200, 25),
-            () => $"HP ({Singleton.Instance.Player.Health:F0} / {Singleton.Instance.Player.MaxHealth:F0})",
+            () => $"HP ({Singleton.Instance.Player.Health + Singleton.Instance.Player.AbsorptionHealth:F0} / {Singleton.Instance.Player.MaxHealth:F0})",
             1,
             Color.White,
             TextUI.TextAlignment.Left
@@ -984,7 +984,7 @@ public class PlayScene : Scene
         );
         
         MPBar playerMP = new MPBar(
-            new Rectangle(20, 95, 200, 25),
+            new Rectangle(20, 95, 2 * (int) Singleton.Instance.Player.MaxMP, 25),
             new Color(75, 240, 145), // Bright Green
             new Color(20, 60, 35) // Dark Green
         );
@@ -1079,10 +1079,20 @@ public class PlayScene : Scene
             new Rectangle(670, slotY, 50, 50),
             _UITexture
         );
-        
+
         TextUI ItemButtonText2 = new TextUI(            
             new Rectangle(670, slotY + 55, 50, 20),
             "2",
+            1,
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
+
+        //Pause Button
+
+        TextUI PauseButton = new TextUI(            
+            new Rectangle(100, slotY + 30, 50, 20),
+            "Press ESC to Pause",
             1,
             Color.White,
             TextUI.TextAlignment.Center
@@ -1112,6 +1122,9 @@ public class PlayScene : Scene
         _ui.AddHUDElement(ItemButtonText1);
         _ui.AddHUDElement(ItemSlot2);
         _ui.AddHUDElement(ItemButtonText2);
+
+        //Pause
+        _ui.AddHUDElement(PauseButton);
     }
 
     public void UnlockAbilityForStage()

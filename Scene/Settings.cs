@@ -83,7 +83,8 @@ public class Settings : Scene
             _UITexture,
             "Back",
             Color.Wheat,
-            _buttonRectangle
+            _buttonRectangle,
+            2
         );
         _backButton.OnClick += BackButton_OnClick;
 
