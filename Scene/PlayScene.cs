@@ -722,7 +722,7 @@ public class PlayScene : Scene
 
         EnemyManager.AddGameEnemy(EnemyID.GiantSlime,         
             new GiantSlime(_giantSlimeTexture, Singleton.Instance.PixelTexture){
-                Name = "GiantSlime",
+                Name = "Giant Slime",
                 Viewport = ViewportManager.Get("GiantSlime"),
 
                 MaxHealth = 500f,

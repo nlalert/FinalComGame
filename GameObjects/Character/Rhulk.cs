@@ -26,7 +26,8 @@ namespace FinalComGame
         private Vector2 _barrierEnd ;
         private Vector2 _barrierEnd1;
         public DemonLaser Laserproj;
-
+        
+        public TextUI DisplayNameUI;
         public HealthBar HealthBar;
         
         public SoundEffect LaserSound;
@@ -343,18 +344,27 @@ namespace FinalComGame
             _spawnPoint = this.Position;
             _actionTimer = 3f;
             CurrentState = EnemyState.Chase;
+            DisplayNameUI = new TextUI(
+                new Rectangle(Singleton.SCREEN_WIDTH/4, (int)(Singleton.SCREEN_HEIGHT * 2.75f / 4), Singleton.SCREEN_WIDTH/2 , 30),
+                Name,  
+                1.75f,
+                Color.White, 
+                TextUI.TextAlignment.Center
+            );
             HealthBar = new HealthBar(
                 this,
-                new Rectangle((Singleton.SCREEN_WIDTH - 200)/2, Singleton.SCREEN_HEIGHT * 5 / 6, 200, 30),
+                new Rectangle(Singleton.SCREEN_WIDTH/4, Singleton.SCREEN_HEIGHT * 3 / 4, Singleton.SCREEN_WIDTH/2 , 30),
                 Color.Red,
-                Color.Gray
+                Color.Black
             );
+            Singleton.Instance.CurrentUI.AddHUDElement(DisplayNameUI);
             Singleton.Instance.CurrentUI.AddHUDElement(HealthBar);
             base.OnSpawn();
         }
         public override void OnDead(List<GameObject> gameObjects)
         {
             Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+            Singleton.Instance.CurrentUI.RemoveHUDElement(DisplayNameUI);
             Singleton.Instance.CurrentUI.RemoveHUDElement(HealthBar);
             base.OnDead(gameObjects);
         }
