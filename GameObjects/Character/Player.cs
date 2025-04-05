@@ -630,7 +630,7 @@ namespace FinalComGame
             }
 
             // Attack
-            if (Singleton.Instance.IsKeyJustPressed(Attack) && (!_isClimbing || (_isCrouching && CanStandUp(tileMap))))
+            if (Singleton.Instance.IsKeyJustPressed(Attack) && !_isClimbing && (!_isCrouching || CanStandUp(tileMap)))
             {
                 StandUpIfCrouching(tileMap);
                 _isCharging = false;
