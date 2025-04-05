@@ -37,6 +37,7 @@ public class GameClearScene : Scene
         _gameClearTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 5, TextWidth, TextHeight),
             "Congratulation!",  
+            1,
             Color.White, 
             TextUI.TextAlignment.Center
         );

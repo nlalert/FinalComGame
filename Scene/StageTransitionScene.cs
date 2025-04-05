@@ -31,15 +31,8 @@ public class StageTransitionScene : Scene
         base.Initialize(gameManager, graphicsDevice, graphicsDeviceManager, content);
 
         _fullScreenRect = new Rectangle(0, 0, Singleton.SCREEN_WIDTH, Singleton.SCREEN_HEIGHT);
-
-        _opacity = 0f;
-        _fadeInTime = 1.5f;
-        _messageTime = 2.0f;
-        _timer = 0f;
-
-        _currentState = TransitionState.FadingIn;
+        ResetTransition();
     }
-
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
@@ -106,7 +99,8 @@ public class StageTransitionScene : Scene
                 textWidth, 
                 textHeight
             ),
-            StageManager.GetNextStageName(),  
+            StageManager.GetNextStageName(),
+            5,  
             Color.Gold, 
             TextUI.TextAlignment.Center
         );
@@ -117,12 +111,17 @@ public class StageTransitionScene : Scene
     private void PrepareNextStage()
     {
         Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
+        ResetTransition();
+        SetupHUD();
+    }
+
+    private void ResetTransition()
+    {
         _opacity = 0f;
-        _fadeInTime = 1.5f;
-        _messageTime = 2.0f;
+        _fadeInTime = 1.0f;
+        _messageTime = 2.5f;
         _timer = 0f;
 
         _currentState = TransitionState.FadingIn;
-        SetupHUD();
     }
 }

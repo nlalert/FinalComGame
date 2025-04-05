@@ -367,7 +367,7 @@ public class PlayScene : Scene
                     "Press Left or Right Arrow Key to move around!",
                     TileMap.GetTileWorldPositionAt(12, 30),  // TopLeft Position  // TODO : More dynamic
                     200,                    // Width
-                    48,                     // Height
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -376,17 +376,17 @@ public class PlayScene : Scene
                     "Press Space Bar Key to Jump      " +
                     "Longer a you hold Jump Button, Higher the Jump!",
                     TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
-                    300,                    // Width
-                    64,                     // Height
+                    316,                    // Width
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
                 SignBoard ClimbTutorialSign = new SignBoard(
                     _whiteTexture,
                     "Press UP Arrow Key to climb ladder or vines!",
-                    TileMap.GetTileWorldPositionAt(55, 22), // TopLeft Position // TODO : More dynamic
-                    220,                    // Width
-                    48,                     // Height
+                    TileMap.GetTileWorldPositionAt(53, 22), // TopLeft Position // TODO : More dynamic
+                    252,                    // Width
+                    64,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -395,29 +395,38 @@ public class PlayScene : Scene
                     "Press SHIFT to Dash pass the gap!",
                     TileMap.GetTileWorldPositionAt(90, 17), // TopLeft Position // TODO : More dynamic
                     160,                    // Width
-                    48,                     // Height
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
                 SignBoard PlatFormJumpTutorialSign = new SignBoard(
                     _whiteTexture,
-                    "Jump to get on platform "+     
+                    "Jump to get on platform",     
+                    TileMap.GetTileWorldPositionAt(123, 24), // TopLeft Position // TODO : More dynamic
+                    144,                    // Width
+                    60,                     // Height
+                    new Color(10, 10, 40, 220), // Dark blue, semi-transparent
+                    Color.Gold
+                );
+                SignBoard PlatFormCrouchTutorialSign = new SignBoard(
+                    _whiteTexture,
                     "Press Down to crouch "+
                     "Crouch then Jump to drop below on platform", 
-                    TileMap.GetTileWorldPositionAt(123, 16), // TopLeft Position // TODO : More dynamic
-                    192,                    // Width
-                    96,                     // Height
+                    TileMap.GetTileWorldPositionAt(123, 4), // TopLeft Position // TODO : More dynamic
+                    256,                    // Width
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
                 SignBoard ItemTutorialSign = new SignBoard(
                     _whiteTexture,
                     "Preess F to pick up item "+ 
-                    "Press (1) (2) to use item",     
+                    "Press (1) (2) to use item " +
+                    "Hold (1) (2) to drop item",     
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
-                    TileMap.GetTileWorldPositionAt(149, 30), // TopLeft Position // TODO : More dynamic
-                    208,                    // Width 
-                    54,                     // Height
+                    TileMap.GetTileWorldPositionAt(148, 41  ), // TopLeft Position // TODO : More dynamic
+                    260,                    // Width 
+                    86,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -425,11 +434,11 @@ public class PlayScene : Scene
                     _whiteTexture,
                     "Press Q to Punch        "+
                     "Press E to Shoot        "+ 
-                    "Hold E to charge bullet ",     
+                    "Hold E to charge Shot ",     
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
-                    TileMap.GetTileWorldPositionAt(166, 31), // TopLeft Position // TODO : More dynamic
-                    192,                    // Width 
-                    70,                     // Height
+                    TileMap.GetTileWorldPositionAt(164, 30), // TopLeft Position // TODO : More dynamic
+                    240,                    // Width 
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -438,8 +447,8 @@ public class PlayScene : Scene
                     "Defeat an enemy have chance to spawn an item",
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                     TileMap.GetTileWorldPositionAt(181, 28), // TopLeft Position // TODO : More dynamic
-                    144,                    // Width 
-                    70,                     // Height
+                    202,                    // Width 
+                    80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -448,8 +457,8 @@ public class PlayScene : Scene
                     "Ready to escape from this place and go back to delete your history? Jump in the Portal!", 
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                     TileMap.GetTileWorldPositionAt(225, 22), // TopLeft Position // TODO : More dynamic
-                    230,                    // Width 
-                    70,                     // Height
+                    262,                    // Width 
+                    102,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -458,6 +467,7 @@ public class PlayScene : Scene
                 _gameObjects.Add(ClimbTutorialSign);
                 _gameObjects.Add(DashTutorialSign);
                 _gameObjects.Add(PlatFormJumpTutorialSign);
+                _gameObjects.Add(PlatFormCrouchTutorialSign);
                 _gameObjects.Add(ItemTutorialSign);
                 _gameObjects.Add(ShootTutorialSign);
                 _gameObjects.Add(ItemDropTutorialSign);
@@ -470,7 +480,7 @@ public class PlayScene : Scene
                     "Holding Jump button while mid air to glide!",
                     TileMap.GetTileWorldPositionAt(23, 100),  // TopLeft Position  // TODO : More dynamic
                     180,                    // Width
-                    56,                     // Height
+                    88,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -481,9 +491,9 @@ public class PlayScene : Scene
                 SignBoard GraplingTutorialSign = new SignBoard(
                     _whiteTexture,
                     "Press R to Grapple onto the hook",
-                    TileMap.GetTileWorldPositionAt(45, 73),  // TopLeft Position  // TODO : More dynamic
-                    200,                    // Width
-                    48,                     // Height
+                    TileMap.GetTileWorldPositionAt(43, 73),  // TopLeft Position  // TODO : More dynamic
+                    240,                    // Width
+                    64,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
                 );
@@ -939,6 +949,7 @@ public class PlayScene : Scene
         TextUI HealthText = new TextUI(            
             new Rectangle(20, 15, 200, 25),
             () => $"HP ({Singleton.Instance.Player.Health:F0} / {Singleton.Instance.Player.MaxHealth:F0})",
+            1,
             Color.White,
             TextUI.TextAlignment.Left
         );
@@ -953,6 +964,7 @@ public class PlayScene : Scene
         TextUI MPText = new TextUI(            
             new Rectangle(20, 70, 200, 25),
             () => $"MP ({Singleton.Instance.Player.MP:F0} / {Singleton.Instance.Player.MaxMP:F0})",
+            1,
             Color.White,
             TextUI.TextAlignment.Left
         );
@@ -967,6 +979,7 @@ public class PlayScene : Scene
         TextUI LifeText = new TextUI(            
             new Rectangle(1220, 25, 60, 25),
             () => $"x{Singleton.Instance.Player.Life}",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -982,6 +995,7 @@ public class PlayScene : Scene
         TextUI MeleeWeaponText = new TextUI(            
             new Rectangle(490, slotY - 25, 50, 20),
             "Melee",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -995,6 +1009,7 @@ public class PlayScene : Scene
         TextUI MeleeWeaponButtonText = new TextUI(            
             new Rectangle(490, slotY + 55, 50, 20),
             "Q",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1003,6 +1018,7 @@ public class PlayScene : Scene
         TextUI RangeWeaponText = new TextUI(            
             new Rectangle(550, slotY - 25, 50, 20),
             "Range",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1016,6 +1032,7 @@ public class PlayScene : Scene
         TextUI RangeWeaponButtonText = new TextUI(            
             new Rectangle(550, slotY + 55, 50, 20),
             "E",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1024,6 +1041,7 @@ public class PlayScene : Scene
         TextUI ItemsLabelText = new TextUI(            
             new Rectangle(640, slotY - 25, 50, 20),
             "Items",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1037,6 +1055,7 @@ public class PlayScene : Scene
         TextUI ItemButtonText1 = new TextUI(            
             new Rectangle(610, slotY + 55, 50, 20),
             "1",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );
@@ -1050,6 +1069,7 @@ public class PlayScene : Scene
         TextUI ItemButtonText2 = new TextUI(            
             new Rectangle(670, slotY + 55, 50, 20),
             "2",
+            1,
             Color.White,
             TextUI.TextAlignment.Center
         );

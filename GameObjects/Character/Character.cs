@@ -88,7 +88,7 @@ namespace FinalComGame {
         protected virtual bool IsOnGround(List<GameObject> gameObjects, TileMap tileMap)
         {
             Vector2 centerPosition = new(Position.X, Position.Y + Viewport.Height + Singleton.TILE_SIZE/2);
-            Vector2 rightFootPosition = new(Position.X + Viewport.Width, Position.Y + Viewport.Height + Singleton.TILE_SIZE/2);
+            Vector2 rightFootPosition = new(Position.X + Viewport.Width * 0.8f, Position.Y + Viewport.Height + Singleton.TILE_SIZE/2);
             
             // Check tile ground at each position
             Tile centerTile = tileMap.GetTileAtWorldPostion(centerPosition);
