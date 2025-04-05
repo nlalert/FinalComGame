@@ -201,7 +201,7 @@ namespace FinalComGame
         protected void SkipTutorialButton_OnClick(object sender, EventArgs e)
         {
             Singleton.Instance.CurrentGameState = Singleton.GameState.StartingGame; 
-            Singleton.Instance.Stage = 1;
+            Singleton.Instance.Stage = 3;
             ShowMainMenu();
         }
     }
