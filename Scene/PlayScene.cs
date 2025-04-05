@@ -1065,10 +1065,20 @@ public class PlayScene : Scene
             new Rectangle(670, slotY, 50, 50),
             _UITexture
         );
-        
+
         TextUI ItemButtonText2 = new TextUI(            
             new Rectangle(670, slotY + 55, 50, 20),
             "2",
+            1,
+            Color.White,
+            TextUI.TextAlignment.Center
+        );
+
+        //Pause Button
+
+        TextUI PauseButton = new TextUI(            
+            new Rectangle(100, slotY + 30, 50, 20),
+            "Press ESC to Pause",
             1,
             Color.White,
             TextUI.TextAlignment.Center
@@ -1098,6 +1108,9 @@ public class PlayScene : Scene
         _ui.AddHUDElement(ItemButtonText1);
         _ui.AddHUDElement(ItemSlot2);
         _ui.AddHUDElement(ItemButtonText2);
+
+        //Pause
+        _ui.AddHUDElement(PauseButton);
     }
 
     public void UnlockAbilityForStage()
