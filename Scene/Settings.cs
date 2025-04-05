@@ -46,7 +46,7 @@ public class Settings : Scene
         _settingsTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 7, TextWidth, TextHeight),
             "Settings",  
-            1,
+            4,
             Color.White, 
             TextUI.TextAlignment.Center
         );
