@@ -134,7 +134,7 @@ public class Item : GameObject, IItemDisplayable
     }
 
     // Add this method to the Item class
-    public void DrawInSlot(SpriteBatch spriteBatch, Rectangle slotBounds, float scale = 1.0f)
+    public virtual void DrawInSlot(SpriteBatch spriteBatch, Rectangle slotBounds, float scale = 1.0f)
     {
         Rectangle destinationRect = new Rectangle(
             slotBounds.X + (int)(slotBounds.Width * (1 - scale) / 2),

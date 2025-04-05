@@ -74,4 +74,37 @@ public class RangeWeapon : Item, IShootable
     {
         return $"\nDamage: {AttackDamage}\nAmmo: {_ammoAmount}";
     }
+
+    public override void DrawInSlot(SpriteBatch spriteBatch, Rectangle slotBounds, float scale = 1.0f)
+    {
+        base.DrawInSlot(spriteBatch, slotBounds, scale);
+
+        Rectangle destinationRect = new Rectangle(
+            slotBounds.X + (int)(slotBounds.Width * (1 - scale) / 2),
+            slotBounds.Y + (int)(slotBounds.Height * (1 - scale) / 2),
+            (int)(slotBounds.Width * scale),
+            (int)(slotBounds.Height * scale)
+        );
+
+        string text = _ammoAmount.ToString();
+        Vector2 textSize = Singleton.Instance.GameFont.MeasureString(text);
+
+        Vector2 destinationPosition = new Vector2(
+            destinationRect.Right - textSize.X,
+            destinationRect.Bottom - textSize.Y
+        );
+
+        spriteBatch.DrawString(
+            Singleton.Instance.GameFont,
+            _ammoAmount.ToString(),
+            destinationPosition,
+            Color.White,
+            0f,
+            Vector2.Zero,
+            1f,
+            SpriteEffects.None,
+            0f
+        );
+
+    }
 }
