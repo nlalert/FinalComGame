@@ -55,17 +55,12 @@ namespace FinalComGame
 
         public override void Shoot(Vector2 position, Vector2 direction)
         {
-            // if (player._isCrouching)
-            //     position += new Vector2(player.Direction * 20, 6); // Lower when crouching
-            // else
-            //     position += new Vector2(player.Direction * 20, 16); // At hand level
             DetonateTimer = DetonateDelayDuration;
             base.Shoot(position, direction);
         }
 
         public void StartExplosion(List<GameObject> gameObjects)
         {
-            grenade_Explode_sound.Play();
             IsActive = false; // Remove Grenade and left with only explosion
             Velocity = Vector2.Zero;
             Explosion newExplosion = BaseExplosion.Clone() as Explosion;
@@ -73,6 +68,7 @@ namespace FinalComGame
             newExplosion.Radius = Radius;
             newExplosion.Duration = ExplosionDuration;
             newExplosion.Damage = BaseDamageAmount * 0.8f;
+            newExplosion.ExplosionSound = grenade_Explode_sound;
             newExplosion.TriggerExplosion();
             gameObjects.Add(newExplosion);
             
