@@ -22,7 +22,6 @@ public class PlayScene : Scene
     private Texture2D _playerTexture;
     private Texture2D _projectileTexture; // Used by many objects
     private Texture2D _itemTexture; // Used for all items
-    private Texture2D _slotTexture; // For UI/inventory slots
     private Texture2D _skeletonTexture;
     private Texture2D _hellhoundTexture;
     private Texture2D _slimeTexture;
@@ -33,8 +32,8 @@ public class PlayScene : Scene
     private Texture2D _cerberusTexture;
     private Texture2D _rhulkTexture;
     private Texture2D _queueTexture;
-    private Texture2D _itemSlotTexture;
     private Texture2D _toolTipTexture;
+    private Texture2D _UITexture;
 
     // Sound 
     private Song[] _songs;
@@ -105,7 +104,6 @@ public class PlayScene : Scene
         _LaserTexture = _content.Load<Texture2D>("Laserbeam");
         _HookHeadTexture = _content.Load<Texture2D>("HookHead");
         _itemTexture = _content.Load<Texture2D>("Items");
-        _slotTexture = _content.Load<Texture2D>("ItemSlot");
         
         // Enemy textures
         _skeletonTexture = _content.Load<Texture2D>("Skeleton");
@@ -122,7 +120,7 @@ public class PlayScene : Scene
         _queueTexture = _content.Load<Texture2D>("Queue");
 
         //UI
-        _itemSlotTexture = _content.Load<Texture2D>("ItemSlot");
+        _UITexture = _content.Load<Texture2D>("UI");
         _toolTipTexture = _content.Load<Texture2D>("ButtonTexture"); // TODO: Change to REAL Tooltip texture
         //load song
     }
@@ -978,7 +976,6 @@ public class PlayScene : Scene
 
         // Bottom Section - Equipment (moved closer to bottom of screen)
         int slotY = 640; // Increased base Y position for slots (was 600)
-        
         // Melee weapon section
         TextUI MeleeWeaponText = new TextUI(            
             new Rectangle(490, slotY - 25, 50, 20),
@@ -990,7 +987,7 @@ public class PlayScene : Scene
         ItemSlot MeleeWeaponSlot = new ItemSlot(
             Inventory.MELEE_SLOT,
             new Rectangle(490, slotY, 50, 50),
-            _itemSlotTexture
+            _UITexture
         );
         
         TextUI MeleeWeaponButtonText = new TextUI(            
@@ -1011,7 +1008,7 @@ public class PlayScene : Scene
         ItemSlot RangeWeaponSlot = new ItemSlot(
             Inventory.RANGE_SLOT,
             new Rectangle(550, slotY, 50, 50),
-            _itemSlotTexture
+            _UITexture
         );
         
         TextUI RangeWeaponButtonText = new TextUI(            
@@ -1032,7 +1029,7 @@ public class PlayScene : Scene
         ItemSlot ItemSlot1 = new ItemSlot(
             Inventory.ITEM_SLOT_1,
             new Rectangle(610, slotY, 50, 50),
-            _itemSlotTexture
+            _UITexture
         );
         
         TextUI ItemButtonText1 = new TextUI(            
@@ -1045,7 +1042,7 @@ public class PlayScene : Scene
         ItemSlot ItemSlot2 = new ItemSlot(
             Inventory.ITEM_SLOT_2,
             new Rectangle(670, slotY, 50, 50),
-            _itemSlotTexture
+            _UITexture
         );
         
         TextUI ItemButtonText2 = new TextUI(            

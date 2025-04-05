@@ -11,6 +11,7 @@ namespace FinalComGame
         private Item item;
         private Texture2D slotTexture;
         private float scale;
+        Rectangle _itemSlotRectangle = new Rectangle(192, 112, 32, 32);
 
         public ItemSlot(int slotNumber, Rectangle bounds, Texture2D slotTexture, float scale = 0.8f) 
             : base(bounds)
@@ -30,7 +31,7 @@ namespace FinalComGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             // Draw the slot background
-            spriteBatch.Draw(slotTexture, _bounds, Color.White);
+            spriteBatch.Draw(slotTexture, _bounds,_itemSlotRectangle, Color.White);
 
             if (item != null && item.IsPickedUp)
             {
