@@ -279,10 +279,7 @@ public class PlayScene : Scene
     }
 
     private void UpdateStage()
-    {
-        if(Singleton.Instance.Stage != 0)
-            Singleton.Instance.Player.Life++; // Reward for clearing stage
-            
+    {   
         Singleton.Instance.Stage++;
 
         if (Singleton.Instance.Stage >= 4){
