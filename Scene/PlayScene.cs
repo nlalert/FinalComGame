@@ -885,7 +885,7 @@ public class PlayScene : Scene
 
         ItemManager.AddGameItem(ItemID.SoulStaff,
             new SoulStaff(_itemTexture,ItemType.Consumable){
-                Name =  "Staff",
+                Name =  "Soul Jar",
                 Description = "Summon Your best Minion!",
                 MPCost = 10,
                 UseSound = _MinionJar_sound,
