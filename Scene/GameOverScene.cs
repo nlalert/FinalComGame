@@ -40,7 +40,7 @@ public class GameOverScene : Scene
         _gameOverTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 5, TextWidth, TextHeight),
             "GAME OVER",  
-            1,
+            6,
             Color.White, 
             TextUI.TextAlignment.Center
         );

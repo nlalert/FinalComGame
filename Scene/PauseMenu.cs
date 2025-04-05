@@ -9,6 +9,7 @@ namespace FinalComGame;
 
 public class PauseMenu : Scene
 {
+    private Texture2D _pixelTexture;
     private Texture2D _UITexture;
     private TextUI _pauseTitle; // can change to ImageUI later
     private Button _resumeButton;
@@ -17,11 +18,18 @@ public class PauseMenu : Scene
     private Button _mainmenuButton;
     private Rectangle _buttonRectangle;
 
+    private Rectangle _fullScreenRect;
+
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
         _UITexture = _content.Load<Texture2D>("UI");
         _buttonRectangle = ViewportManager.Get("Button");
+
+        _fullScreenRect = new Rectangle(0, 0, Singleton.SCREEN_WIDTH, Singleton.SCREEN_HEIGHT);
+
+        _pixelTexture = new Texture2D(_graphicsDevice, 1, 1);
+        _pixelTexture.SetData(new[] { Color.White });
 
         SetupHUD();
     }
@@ -36,7 +44,13 @@ public class PauseMenu : Scene
             Singleton.Instance.CurrentGameState = Singleton.GameState.Playing;
         }
     }
-    
+    public override void Draw(GameTime gameTime)
+    {
+        _spriteBatch.Begin();
+        _spriteBatch.Draw(_pixelTexture, _fullScreenRect, Color.Black * 0.8f); // draw murky background
+        _spriteBatch.End();
+    }
+
     protected override void SetupHUD()
     {
         int TextWidth = Singleton.SCREEN_WIDTH / 2;
@@ -45,7 +59,7 @@ public class PauseMenu : Scene
         _pauseTitle = new TextUI(
             new Rectangle((Singleton.SCREEN_WIDTH - TextWidth) / 2 , (Singleton.SCREEN_HEIGHT - TextHeight) / 6, TextWidth, TextHeight),
             "Pause",  
-            1,
+            4,
             Color.White, 
             TextUI.TextAlignment.Center
         );
