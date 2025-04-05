@@ -630,7 +630,7 @@ namespace FinalComGame
                 }
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Attack) && (!_isClimbing || (_isCrouching && CanStandUp(tileMap)))){
+            if (Singleton.Instance.IsKeyJustPressed(Attack) && (!_isClimbing) && (!_isCrouching || CanStandUp(tileMap))){
 
                 if (_isCrouching) 
                 {

@@ -122,6 +122,7 @@ namespace FinalComGame
             if(IsTouchingBottom(Singleton.Instance.Player))
             {
                 Singleton.Instance.Player.Velocity.X += Velocity.X;
+                Singleton.Instance.Player._isAllowedJump = true;
             }
 
             Position.Y += Singleton.TILE_SIZE / 2;
