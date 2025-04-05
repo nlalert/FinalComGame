@@ -410,10 +410,10 @@ public class PlayScene : Scene
                 );
                 SignBoard PlatFormCrouchTutorialSign = new SignBoard(
                     _whiteTexture,
-                    "Press Down to crouch "+
+                    "Press Down Arrow Key to crouch "+
                     "Crouch then Jump to drop below on platform", 
-                    TileMap.GetTileWorldPositionAt(123, 4), // TopLeft Position // TODO : More dynamic
-                    256,                    // Width
+                    TileMap.GetTileWorldPositionAt(120, 4), // TopLeft Position // TODO : More dynamic
+                    348,                    // Width
                     80,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
                     Color.Gold
