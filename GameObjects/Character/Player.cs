@@ -46,6 +46,7 @@ namespace FinalComGame
         private float _coyoteTimeCounter;
         public float JumpBufferTime;
         private float _jumpBufferCounter;
+        public bool _isAllowedJump = true;
         public AbilityManager Abilities;
 
         // Dash 
@@ -62,7 +63,7 @@ namespace FinalComGame
         public float GlideMaxFallSpeed;        
         public float GlideMP;
 
-        // Grappring Hook
+        // Grappling Hook
         public Texture2D _grapplingHookTexture;
         private Vector2 GrapplingPosition;
         public bool _isGrappleTravelling;
@@ -629,7 +630,7 @@ namespace FinalComGame
                 }
             }
 
-            if (Singleton.Instance.IsKeyJustPressed(Attack) && !_isClimbing && CanStandUp(tileMap)){
+            if (Singleton.Instance.IsKeyJustPressed(Attack) && (!_isClimbing || (_isCrouching && CanStandUp(tileMap)))){
 
                 if (_isCrouching) 
                 {
@@ -694,15 +695,20 @@ namespace FinalComGame
                         Direction *= -1;
                         _isClimbing = false;
                     }
+                    
                     StartDash();
                 }
             }
-            if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _coyoteTimeCounter > 0)
+
+            Console.WriteLine(_isAllowedJump);
+
+            if (Singleton.Instance.IsKeyJustPressed(Jump) && !_isDashing && !_isAttacking && _isAllowedJump && _coyoteTimeCounter > 0)
             {
                 if (!(Singleton.Instance.IsKeyPressed(Crouch) && _isClimbing) && 
                 !(Singleton.Instance.IsKeyPressed(Crouch) && _isOnPlatform))
                 {
-                    _isClimbing = false;
+                    _isAllowedJump = false;
+
                     if (_isCrouching) {
                         Position.Y -= Singleton.TILE_SIZE;
                         Viewport.Height = Singleton.TILE_SIZE * 2;
@@ -712,7 +718,6 @@ namespace FinalComGame
 
                     _jumpBufferCounter = JumpBufferTime;
                 }
-
                 _isClimbing = false;
             }
             else
@@ -1055,7 +1060,7 @@ namespace FinalComGame
                         }
 
 
-                        if (tile.Type == TileType.Platform|| tile.Type == TileType.Ladder_Platform)
+                        if (tile.Type == TileType.Platform || tile.Type == TileType.Ladder_Platform)
                         {
                             if(IsTouchingTop(tile)){
                                 _isOnPlatform = true;
@@ -1071,6 +1076,11 @@ namespace FinalComGame
                             if (IsTouching(tile)) Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
                         }
 
+                        if((tile.IsSolid && IsTouchingTop(tile))|| _isClimbing) 
+                            _isAllowedJump = true;
+
+                        else if(_isDashing)
+                            _isAllowedJump = false;
                     }
                 }
             }

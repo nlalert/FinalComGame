@@ -481,7 +481,7 @@ public class PlayScene : Scene
                 SignBoard GraplingTutorialSign = new SignBoard(
                     _whiteTexture,
                     "Press R to Grapple onto the hook",
-                    TileMap.GetTileWorldPositionAt(45, 75),  // TopLeft Position  // TODO : More dynamic
+                    TileMap.GetTileWorldPositionAt(45, 73),  // TopLeft Position  // TODO : More dynamic
                     200,                    // Width
                     48,                     // Height
                     new Color(10, 10, 40, 220), // Dark blue, semi-transparent
@@ -511,10 +511,10 @@ public class PlayScene : Scene
             AttackWidth = 24, 
             AttackHeight = Singleton.TILE_SIZE * 2,
 
-            BaseJumpStrength = 600f,
-
+            BaseJumpStrength = 600f, //jump Height
             CoyoteTime = 0.1f, // 100ms of coyote time
-            JumpBufferTime = 0.15f, // 150ms jump buffer
+            JumpBufferTime = 0.1f, // 150ms jump buffer
+
             DashSpeed = 400f,
             DashDuration = 0.3f, // Dash lasts for 0.25 seconds
             DashCooldown = 0.2f,
@@ -533,7 +533,7 @@ public class PlayScene : Scene
             ChargeMPCost = 15f, // MP cost for fully charged shot
 
             MPRegenCooldown = 0.6f, // 0.5 seconds before starting MP regenaration
-            MPRegenRate = 30f, // MP regenaration per second
+            MPRegenRate = 35f, // MP regenaration per second
 
             Viewport = ViewportManager.Get("Player"),
             Left = Keys.Left,
