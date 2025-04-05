@@ -71,12 +71,8 @@ namespace FinalComGame {
 
         protected virtual void DrawDebug(SpriteBatch spriteBatch)
         {
-            // hitbox debug drawing
-            Texture2D debugTexture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
-            debugTexture.SetData(new Color[] { Color.Red });
-
             if (_attackTimer > 0)
-                spriteBatch.Draw(debugTexture, AttackHitbox, Color.Red);
+                spriteBatch.Draw(Singleton.Instance.PixelTexture, AttackHitbox, Color.Red);
         }
 
         protected Vector2 GetDrawingPosition()

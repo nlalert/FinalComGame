@@ -9,7 +9,6 @@ namespace FinalComGame;
 
 public class StageTransitionScene : Scene
 {
-    private Texture2D _pixelTexture;
     private TextUI _stageName;
     private Rectangle _fullScreenRect;
     
@@ -36,11 +35,7 @@ public class StageTransitionScene : Scene
     public override void LoadContent(SpriteBatch spriteBatch)
     {
         base.LoadContent(spriteBatch);
-        
-        // Create 1x1 white pixel texture for opacity overlay
-        _pixelTexture = new Texture2D(_graphicsDevice, 1, 1);
-        _pixelTexture.SetData(new[] { Color.White });
-        
+
         SetupHUD();
     }
 
@@ -80,7 +75,7 @@ public class StageTransitionScene : Scene
     public override void Draw(GameTime gameTime)
     {
         _spriteBatch.Begin();
-        _spriteBatch.Draw(_pixelTexture, _fullScreenRect, Color.Black * _opacity);
+        _spriteBatch.Draw(Singleton.Instance.PixelTexture, _fullScreenRect, Color.Black * _opacity);
         _spriteBatch.End();
     }
     

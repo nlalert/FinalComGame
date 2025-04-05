@@ -43,6 +43,9 @@ public class GameManager : Game
 
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        Singleton.Instance.PixelTexture = new Texture2D(GraphicsDevice, 1, 1);
+        Singleton.Instance.PixelTexture.SetData(new[] { Color.White });
+
         _playScene = new PlayScene();
         _playScene.Initialize(this, GraphicsDevice, _graphics, Content);
         _playScene.LoadContent(_spriteBatch);

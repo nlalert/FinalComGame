@@ -18,7 +18,6 @@ public class PlayScene : Scene
     private Texture2D _LaserTexture;
     private Texture2D _HookHeadTexture;
     private Texture2D _RopeTexture; 
-    private Texture2D _whiteTexture; // For SignBoard backgrounds         // TODO : Change to desire texture
     private Texture2D _playerTexture;
     private Texture2D _projectileTexture; // Used by many objects
     private Texture2D _itemTexture; // Used for all items
@@ -42,7 +41,6 @@ public class PlayScene : Scene
     private SoundEffect _punchSound;
     private SoundEffect _chargeBulletSound;
     private SoundEffect _bulletShotSound;
-    private SoundEffect _hitSound;
     private SoundEffect _potionUseSound;
     private SoundEffect _swordSlashSound;
     private SoundEffect _gunshotSound;
@@ -103,9 +101,6 @@ public class PlayScene : Scene
         _RopeTexture = _content.Load<Texture2D>("Rope");
         _textureAtlas = _content.Load<Texture2D>("Tileset");
         
-        _whiteTexture = new Texture2D(_graphicsDevice, 1, 1);
-        _whiteTexture.SetData(new[] { Color.White });
-        
         _playerTexture = _content.Load<Texture2D>("Char");
         _projectileTexture = _content.Load<Texture2D>("Projectile");
         _LaserTexture = _content.Load<Texture2D>("Laserbeam");
@@ -140,7 +135,6 @@ public class PlayScene : Scene
         _punchSound = _content.Load<SoundEffect>("PlayerPunch");
         _chargeBulletSound = _content.Load<SoundEffect>("ChargingBullet");
         _bulletShotSound = _content.Load<SoundEffect>("BulletShot");
-        _hitSound = _content.Load<SoundEffect>("HitEnemy");
         _potionUseSound = _content.Load<SoundEffect>("PotionUse");
         _swordSlashSound = _content.Load<SoundEffect>("SwordSlash");
         _gunshotSound = _content.Load<SoundEffect>("Gunshot");
@@ -376,7 +370,7 @@ public class PlayScene : Scene
         {
             case 0:
                 SignBoard WalkTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press Left or Right Arrow Key to move around!",
                     TileMap.GetTileWorldPositionAt(12, 30),  // TopLeft Position  // TODO : More dynamic
                     200,                    // Width
@@ -385,7 +379,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard JumpTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press Space Bar Key to Jump      " +
                     "Longer a you hold Jump Button, Higher the Jump!",
                     TileMap.GetTileWorldPositionAt(30, 28), // TopLeft Position // TODO : More dynamic
@@ -395,7 +389,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard ClimbTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press UP Arrow Key to climb ladder or vines!",
                     TileMap.GetTileWorldPositionAt(53, 22), // TopLeft Position // TODO : More dynamic
                     252,                    // Width
@@ -404,7 +398,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard DashTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press SHIFT to Dash pass the gap!",
                     TileMap.GetTileWorldPositionAt(90, 17), // TopLeft Position // TODO : More dynamic
                     160,                    // Width
@@ -413,7 +407,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard PlatFormJumpTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Jump to get on platform",     
                     TileMap.GetTileWorldPositionAt(123, 24), // TopLeft Position // TODO : More dynamic
                     144,                    // Width
@@ -422,7 +416,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard PlatFormCrouchTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press Down Arrow Key to crouch "+
                     "Crouch then Jump to drop below on platform", 
                     TileMap.GetTileWorldPositionAt(120, 4), // TopLeft Position // TODO : More dynamic
@@ -432,7 +426,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard ItemTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Preess F to pick up item "+ 
                     "Press (1) (2) to use item " +
                     "Hold (1) (2) to drop item",     
@@ -444,7 +438,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard ShootTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press Q to Punch        "+
                     "Press E to Shoot        "+ 
                     "Hold E to charge Shot ",     
@@ -456,7 +450,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard ItemDropTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Defeat an enemy have chance to spawn an item",
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                     TileMap.GetTileWorldPositionAt(181, 28), // TopLeft Position // TODO : More dynamic
@@ -466,7 +460,7 @@ public class PlayScene : Scene
                     Color.Gold
                 );
                 SignBoard GoodluckSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Ready to escape from this place and go back to delete your history? Jump in the Portal!", 
                     // TileMap.GetTileWorldPositionAt(10, 30), // TopLeft Position // TODO : More dynamic 
                     TileMap.GetTileWorldPositionAt(225, 22), // TopLeft Position // TODO : More dynamic
@@ -489,7 +483,7 @@ public class PlayScene : Scene
 
             case 2:
                 SignBoard GlideTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Holding Jump button while mid air to glide!",
                     TileMap.GetTileWorldPositionAt(23, 100),  // TopLeft Position  // TODO : More dynamic
                     180,                    // Width
@@ -502,7 +496,7 @@ public class PlayScene : Scene
 
             case 3:
                 SignBoard GraplingTutorialSign = new SignBoard(
-                    _whiteTexture,
+                    Singleton.Instance.PixelTexture,
                     "Press R to Grapple onto the hook",
                     TileMap.GetTileWorldPositionAt(43, 73),  // TopLeft Position  // TODO : More dynamic
                     240,                    // Width
@@ -517,7 +511,7 @@ public class PlayScene : Scene
 
     private void CreatePlayer()
     {
-        Singleton.Instance.Player = new Player(_playerTexture, _whiteTexture, _projectileTexture)
+        Singleton.Instance.Player = new Player(_playerTexture, Singleton.Instance.PixelTexture, _projectileTexture)
         {
             Name = "Player",
             Life = 3,
@@ -731,7 +725,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.GiantSlime,         
-            new GiantSlime(_giantSlimeTexture, _whiteTexture){
+            new GiantSlime(_giantSlimeTexture, Singleton.Instance.PixelTexture){
                 Name = "GiantSlime",
                 Viewport = ViewportManager.Get("GiantSlime"),
 
@@ -748,7 +742,7 @@ public class PlayScene : Scene
             });
 
         EnemyManager.AddGameEnemy(EnemyID.Cerberus,         
-            new Cerberus(_cerberusTexture, _whiteTexture){
+            new Cerberus(_cerberusTexture, Singleton.Instance.PixelTexture){
                 Name = "Cerberus",
                 Viewport = ViewportManager.Get("Cerberus"),
                 DogSound = _Dog_sound,
@@ -801,7 +795,6 @@ public class PlayScene : Scene
         Item.TooltipBackgroundTexture = _toolTipTexture;
         Item.PickUpSound = _pickUpSound;
 
-        //TODO : Change these to real ITEM ID
         ItemManager.AddGameItem(ItemID.HealthPotion,
             new Potion(_itemTexture, ItemType.Consumable){
                 Name =  "Medkit",

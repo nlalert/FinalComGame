@@ -9,7 +9,6 @@ namespace FinalComGame;
 
 public class PauseMenu : Scene
 {
-    private Texture2D _pixelTexture;
     private Texture2D _UITexture;
     private TextUI _pauseTitle; // can change to ImageUI later
     private Button _resumeButton;
@@ -28,9 +27,6 @@ public class PauseMenu : Scene
 
         _fullScreenRect = new Rectangle(0, 0, Singleton.SCREEN_WIDTH, Singleton.SCREEN_HEIGHT);
 
-        _pixelTexture = new Texture2D(_graphicsDevice, 1, 1);
-        _pixelTexture.SetData(new[] { Color.White });
-
         SetupHUD();
     }
 
@@ -47,7 +43,7 @@ public class PauseMenu : Scene
     public override void Draw(GameTime gameTime)
     {
         _spriteBatch.Begin();
-        _spriteBatch.Draw(_pixelTexture, _fullScreenRect, Color.Black * 0.8f); // draw murky background
+        _spriteBatch.Draw(Singleton.Instance.PixelTexture, _fullScreenRect, Color.Black * 0.8f); // draw murky background
         _spriteBatch.End();
     }
 
