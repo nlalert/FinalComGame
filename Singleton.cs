@@ -37,6 +37,7 @@ class Singleton
         Pause,
         Settings,
         StageCompleted,
+        ChangingStage,
         GameOver,
         GameWon,
         Exit,

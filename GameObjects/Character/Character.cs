@@ -91,14 +91,8 @@ namespace FinalComGame {
             Vector2 rightFootPosition = new(Position.X + Viewport.Width, Position.Y + Viewport.Height + Singleton.TILE_SIZE/2);
             
             // Check tile ground at each position
-
             Tile centerTile = tileMap.GetTileAtWorldPostion(centerPosition);
             Tile rightTile = tileMap.GetTileAtWorldPostion(rightFootPosition);
-
-            if(centerTile != null)
-            Console.WriteLine("CENTER:" + centerTile.Position);
-            if(rightTile != null)
-            Console.WriteLine("RIGHT:" + rightTile.Position);
             
             bool onSolidTile = (centerTile != null && centerTile.IsSolid) || 
                             (rightTile != null && rightTile.IsSolid);
@@ -117,6 +111,7 @@ namespace FinalComGame {
             
             return false;
         }
+        
         protected virtual void UpdateAnimation(float deltaTime)
         {
             Animation?.Update(deltaTime);

@@ -144,4 +144,19 @@ public class StageManager
     {
         return _ambushAreas;
     }
+
+    public static string GetNextStageName()
+    {
+        switch (Singleton.Instance.Stage + 1)
+        {
+            case 1:
+                return "Searing Roots";
+            case 2:
+                return "Blazing Hollow";
+            case 3:
+                return "Obsidian Keep";
+            default:
+                return "";
+        }
+    }
 }

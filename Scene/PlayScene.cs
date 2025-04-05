@@ -193,6 +193,10 @@ public class PlayScene : Scene
                 {
                     Singleton.Instance.CurrentGameState = Singleton.GameState.Pause;
                 }
+                                if(Singleton.Instance.IsKeyJustPressed(Keys.U))
+                {
+                    Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
+                }
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
                 _stageManager.UpdateAmbushAreas(gameTime, _gameObjects);
@@ -278,14 +282,12 @@ public class PlayScene : Scene
             
         Singleton.Instance.Stage++;
 
-        
-
         if (Singleton.Instance.Stage >= 4){
             Singleton.Instance.CurrentGameState = Singleton.GameState.GameWon;
         }
         else
         {
-            Singleton.Instance.CurrentGameState = Singleton.GameState.InitializingStage;
+            Singleton.Instance.CurrentGameState = Singleton.GameState.ChangingStage;
         }
     }
 
