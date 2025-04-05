@@ -145,9 +145,9 @@ public class StageManager
         return _ambushAreas;
     }
 
-    public static string GetNextStageName()
+    public static string GetStageName()
     {
-        switch (Singleton.Instance.Stage + 1)
+        switch (Singleton.Instance.Stage)
         {
             case 1:
                 return "Searing Roots";
