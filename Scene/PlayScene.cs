@@ -200,10 +200,6 @@ public class PlayScene : Scene
                 {
                     Singleton.Instance.CurrentGameState = Singleton.GameState.Pause;
                 }
-                                if(Singleton.Instance.IsKeyJustPressed(Keys.U))
-                {
-                    Singleton.Instance.CurrentGameState = Singleton.GameState.StageCompleted;
-                }
                 UpdateTileMap(gameTime);
                 UpdateAllObjects(gameTime);
                 _stageManager.UpdateAmbushAreas(gameTime, _gameObjects);
