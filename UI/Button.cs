@@ -15,14 +15,24 @@ namespace FinalComGame
         
         public event EventHandler OnClick;
         private bool wasPressed = false;
-        private float fontScale = 2.5f; // Half the original font size
-        public Button(Rectangle bounds, Texture2D texture, string text, Color textColor, Rectangle SpriteRectagle) : base(bounds)
+        private float fontScale; // Scale for the font
+
+        // Constructor with explicit scale parameter
+        public Button(Rectangle bounds, Texture2D texture, string text, Color textColor, 
+                      Rectangle spriteRectangle, float textScale = 1f) : base(bounds)
         {
             this.texture = texture;
             this.text = text;
             this.textColor = textColor;
-            this.rectangle = SpriteRectagle;
+            this.rectangle = spriteRectangle;
+            this.fontScale = textScale;
             
+            UpdateTextPosition();
+        }
+        
+        // Add this method to handle text positioning
+        private void UpdateTextPosition()
+        {
             // Center text - split into lines if needed
             if (text.Contains("\n"))
             {
@@ -40,19 +50,26 @@ namespace FinalComGame
                 
                 // Position first line, other lines will be positioned in Draw method
                 textPosition = new Vector2(
-                    bounds.X + (bounds.Width - maxWidth) / 2,
-                    bounds.Y + (bounds.Height - totalHeight) / 2
+                    _bounds.X + (_bounds.Width - maxWidth) / 2,
+                    _bounds.Y + (_bounds.Height - totalHeight) / 2
                 );
             }
             else
             {
-                // Single line centering (current approach)
+                // Single line centering
                 Vector2 textSize = Singleton.Instance.GameFont.MeasureString(text) * fontScale;
                 textPosition = new Vector2(
-                    bounds.X + (bounds.Width - textSize.X) / 2,
-                    bounds.Y + (bounds.Height - textSize.Y) / 2
+                    _bounds.X + (_bounds.Width - textSize.X) / 2,
+                    _bounds.Y + (_bounds.Height - textSize.Y) / 2
                 );
             }
+        }
+
+        // Method to change the scale after creation
+        public void SetTextScale(float scale)
+        {
+            this.fontScale = scale;
+            UpdateTextPosition();
         }
 
         public override void Update(GameTime gameTime)
@@ -107,7 +124,7 @@ namespace FinalComGame
             }
             else
             {
-                // Single line drawing (current approach)
+                // Single line drawing
                 spriteBatch.DrawString(
                     Singleton.Instance.GameFont,
                     text,
