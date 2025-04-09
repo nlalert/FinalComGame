@@ -211,7 +211,8 @@ namespace FinalComGame
                 int horizontalDir = Math.Sign(Singleton.Instance.Player.Position.X - Position.X);
                 Velocity = new Vector2(0, -JumpStrength * 1.8f); // Jump higher
                 CurrentState = EnemyState.Charging;
-                CanCollideTile = false;// ignore all tile
+                CanCollideTile = true;// ignore all tile
+                // CanCollideTile = false;// ignore all tile
                 _actionTimer = 2.0f;
             }
         }
@@ -234,7 +235,9 @@ namespace FinalComGame
                 //going to dash
                 //Console.WriteLine("Hellhound dashes!");
                 DogSound.Play();
-                CanCollideTile = false;
+                // CanCollideTile = false;
+                CanCollideTile = true;
+
                 CurrentState = EnemyState.Dash;
                 _dashStart = this.Position;
                 _isDashing = true;
@@ -325,7 +328,8 @@ namespace FinalComGame
         }
         public override void OnLandVerticle()
         {
-            _isJumping = false;
+            if(CurrentState != EnemyState.Charging)
+                _isJumping = false;
             if(CurrentState == EnemyState.Dash && _isDashing){
                 _isDashing = false;
                 CurrentState = EnemyState.Chase;
@@ -382,7 +386,7 @@ namespace FinalComGame
                 0f
             );
 
-            // //DrawDebug(spriteBatch);
+            // DrawDebug(spriteBatch);
         }
     
 
@@ -449,8 +453,11 @@ namespace FinalComGame
             GameObject newObject2 = (GameObject)this.Clone(); // Cloning the current object
             this._actionTimeOffset = 0.85f;
 
-            newObject1.Position = new Vector2(this.Position.X + 150, this.Position.Y-100);
-            newObject2.Position = new Vector2(this.Position.X - 150, this.Position.Y-100); 
+            newObject1.Position = new Vector2(this.Position.X , this.Position.Y);
+            newObject2.Position = new Vector2(this.Position.X , this.Position.Y); 
+
+            newObject2.Velocity = new Vector2(50, 0); 
+            newObject2.Velocity = new Vector2(-50, 0); 
 
             newObject1.Name = "Split Object"; // Give the new object a unique name if necessary
             newObject2.Name = "Split Object"; // Give the new object a unique name if necessary
